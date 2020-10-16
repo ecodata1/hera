@@ -2,26 +2,19 @@
 % Please edit documentation in R/hera-app.R
 \name{hera_app}
 \alias{hera_app}
-\title{Open RICT web app}
+\title{Open hera web app}
 \usage{
 hera_app()
 }
 \description{
-Open RICT as an interactive shiny web app.
+Open hera as an interactive shiny web app.
 }
 \details{
-\code{rict_app()} opens RICT as an interactive shiny app.
-
-Using the app:
-\enumerate{
- \item Select your required model/area/year type options.
- \item Click the Browse for .csv file button to select and upload a data file.
- \item View and download results.
- }
+\code{hera_app()} opens hera as an interactive shiny app.
 }
 \examples{
 \dontrun{
-rict_app()
+hera_app()
 }
 
 }

@@ -1,8 +1,8 @@
 ---
-title: "Request for Comment: Joint Platform for Aquatic Research and Development"
+title: "Request for Comment: Specifications"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Request for Comment: Joint Platform for Aquatic Research and Development}
+  %\VignetteIndexEntry{Request for Comment: Specifications}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}  
 editor_options: 

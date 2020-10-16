@@ -1,22 +1,15 @@
-#' Open RICT web app
+#' Open hera web app
 #'
-#' Open RICT as an interactive shiny web app.
+#' Open hera as an interactive shiny web app.
 #'
 #' @details
-#' \code{rict_app()} opens RICT as an interactive shiny app.
-#'
-#' Using the app:
-#' \enumerate{
-#'  \item Select your required model/area/year type options.
-#'  \item Click the Browse for .csv file button to select and upload a data file.
-#'  \item View and download results.
-#'  }
+#' \code{hera_app()} opens hera as an interactive shiny app.
 #'
 #' @importFrom shiny runApp
 #'
 #' @examples
 #' \dontrun{
-#' rict_app()
+#' hera_app()
 #' }
 #'
 #' @export hera_app

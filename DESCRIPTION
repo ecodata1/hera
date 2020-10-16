@@ -17,6 +17,12 @@ Imports:
 Suggests: 
     knitr,
     rmarkdown,
-    covr
+    covr,
+    Matrix,
+    rict,
+    fcs2,
+    tidyverse,
+    darleq3,
+    devtools
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
