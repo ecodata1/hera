@@ -7,31 +7,150 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(comment = "")
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+
+if(!require("devtools", character.only = TRUE)){
+  install.packages("devtools")
+}
+library(devtools)
+
+if(!require("INLA", character.only = TRUE)){
+install.packages("INLA",
+                 repos = c(getOption("repos"),
+                 INLA = "https://inla.r-inla-download.org/R/stable"),
+                 dep = TRUE)
+}
+
+library(INLA)
+
+if(!require("fcs2", character.only = TRUE)){
+  install_github("aquaMetrics/fcs2", dependencies = TRUE)
+}
+
+if(!require("rict", character.only = TRUE)){
+  install_github("aquaMetrics/rict", dependencies = TRUE)
+}
+
+if(!require("darleq3", character.only = TRUE)){
+  install_github("nsj3/darleq3", dependencies = TRUE, build_vignettes = TRUE, force = TRUE)
+}
+
 library(tidyverse)
 library(rict)
+library(hera)
+library(darleq3)
+library(fcs2)
 ```
+
+WORK IN PROGRESS - Drafting
+
+WARNING: Blue sky thinking ahead
 
 Notes on data collection > modelling > prediction/classification/forecast/scenario planning 
 
+## Summary
+
+How will agencies and partners develop and deploy environment models in 2025? 
+
+### Number of challenges have been identify with WFD classification tools
+  
+- Length of time to development and integrate into Agencies systems. 
+- Complexity to run and combine outputs together.
+- Different user interfaces, column names and operating procedures.
+- Access and data sharing of reference data and predictor values.
+- Calculations for confidence, uncertainty and model suitability have varied approaches.
+- Differing quality and validation rules. 
+- Varying levels of code review and testing.
+  
+### Opportunities
+  
+- A continued need to development new tools for WFD and for investigate diagnostic work.
+- Efficiency gains to deploying a joint research platform.
+- A chance to harmonise how tools are integrated into Agency systems.
+- Clearer path for researchers to engage and develop new models.
+- Improve data sharing.
+
+### Recommendation
+
+- All new model/tool development should be built on a shared platform with similar input/output formats.
+- The platform provides an API / web services to allow agencies to integrate into existing databases.
+- There is portal for researchers/consultancies to upload adhoc data if required.
+
+### Outstanding
+
+- Should all reference data be combined into a single repository / web service?
+- Should all predictor data be combined into a single repository / web service?
+
+### Future ideas / Out of scope?
+
+- Sharing a mobile and offline capable platform for planning and collecting monitoring data?
+
 ## Acceptable in the 80's
 
-In the beginning, aquatic ecological modelling was a novelty. In the 1980's really only rivpacs was widely used. In the 1990's more ecology elements joined the nascent modelling community with phytobenthos and macrophytes. In this period, there were one or two unsuccessful attempts to create a joined up system, encompassing multiple aspects of the aquatic ecosystem. Finally, with the WFD in the 2000's a patchwork approach was used allowing each biological element to create their own tool and outputs would feed into the overall classification result. 
+In the beginning, aquatic ecological modelling was a novelty. In the 1980's
+really only rivpacs was widely used. In the 1990's more ecology elements joined
+the nascent modelling community with phytobenthos and macrophytes. In this
+period, there were one or two unsuccessful attempts to create a joined up
+system, encompassing multiple aspects of the aquatic ecosystem (SERCON?).
+Finally, with the WFD in the 2000's a patchwork approach was used allowing each
+biological element to create their own tool, the outputs from each tools were
+feed into the overall classification result. Agencies used a number of different
+approaches internally to for aggregating of results as well as processing and
+compiling raw data from databases or other sources.
 
-The outputs would be inter-calibrated but the implementation details for each modelling tool was left to BQE group. Running and pulling together all this data was difficult. Equally, running these tools for investigative or scenario planning (rather than WFD classification) also was difficult. Ultimately, WFD delivered a good idea of where problems were but less detail on the nature of the pressure or options to fix it. 
+The outputs from these tools are inter-calibrated but the implementation details
+for each modelling tool was left to BQE group. Running and pulling together all
+this data was difficult. Equally, running these tools for investigative or
+scenario planning (rather than WFD classification) was also difficult.
+Ultimately, WFD tools delivered a good idea of where problems were but less
+detail on the nature of the pressure or options to fix it.
 
-## 2030 Dream
+## 2025 Dream
 
-The ease and access to modelling tools now means there is a proliferation of modelling tools, indices and metrics to choose from. We have seen many useful results from modelling techniques in weather forecasting, flood planning and climate change research. In the next 10 years, it is likely that aquatic ecological models will be subsumed into a more large scale environmental and climate models. These 'total environment' models may for instance use climate change models to forecast impact on invertebrates, water-use models the impact on fish, flooding models the impact on macrophytes. These large scale environmental models will integrate elements of existing invertebrate, fish and macrophytes models and reference data into large hybrid models also incorporating rainfall, flow and climate predictions. The outputs from which we be used across disciplines to plan flood management, biodiversity improvements, carbon sequestering. Allowing the impact and trade offs of each planning scenario on multiple disciplines allowing informed discussion on the best decisions. 
+The ease and access to modelling tools now means there is a proliferation of
+modelling tools, indices and metrics to choose from. We have seen many useful
+results from modelling techniques in weather forecasting, flood planning and
+climate change research. In the next 10 years, it is likely that aquatic
+ecological models will be subsumed into a more large scale environmental and
+climate models. These 'total environment' models may for instance use climate
+change models to forecast impact on invertebrates, water-use models the impact
+on fish, flooding models the impact on macrophytes. These large scale
+environmental models will integrate elements of existing invertebrate, fish and
+macrophytes models and reference data into large hybrid models also
+incorporating rainfall, flow and climate predictions. The outputs from which we
+be used across disciplines to plan flood management, biodiversity improvements,
+carbon sequestering. Allowing the impact and trade offs of each planning
+scenario on multiple disciplines allowing informed discussion on the best
+decisions.
 
-The idea of running a single model, with a single dataset to produce a single output will seem antiquated. All ecology data will be freely accessible and bundled together (along with chemistry, climate, meteorological, geological etc) and multiple models run across the same data, providing outputs on many aspects of ecology, chemistry, climate, flooding, biodiversity etc. 
+The idea of running a single model, with a single dataset to produce a single
+output will seem antiquated. All ecology data will be freely accessible and
+bundled together (along with chemistry, climate, meteorological, geological etc)
+and multiple models run across the same data, providing outputs on many aspects
+of ecology, chemistry, climate, flooding, biodiversity etc.
 
-As soon as an ecologist uploads fish counter data, plant DNA or aerial imagery, this data is ingested into the 'lake' of environmental data. A huge number of models and predictions automatically run based on this new data providing fresh insights in environmental harms, biodiversity trends, costs and impacts. Weekly, Monthly, Yearly...summary reports drafted (with a fair bit of automation) are produced where the new findings, improvements, harms, opportunities can be discussed and addressed.
+As soon as an ecologist uploads fish counter data, plant DNA or aerial imagery,
+this data is ingested into the 'lake' of environmental data. A huge number of
+models and predictions automatically run based on this new data providing fresh
+insights in environmental harms, biodiversity trends, costs and impacts. Weekly,
+Monthly, Yearly...summary reports drafted (with a fair bit of automation) are
+produced where the new findings, improvements, harms, opportunities can be
+discussed and addressed.
 
-These reports will help us effectively direct resources to targeting environment risks and tracking pressures. But more than identifying environment harm, these models outputs provide options and scenarios for us to explore how to best plan for the future and what different potential scenarios look like.  
+These reports will help us effectively direct resources to targeting environment
+risks and tracking pressures. But more than identifying environment harm, these
+models outputs provide options and scenarios for us to explore how to best plan
+for the future and what different potential scenarios look like.
 
 ## The problem
 
-Currently there are a large number of modelling and classification tools available for understanding and responding to environmental harm in aquatic systems. They do not share common input or output formats. Making integration and holistic understanding of the environment challenging: 
+Currently there are a large number of modelling and classification tools
+available for understanding and responding to environmental harm in aquatic
+systems. They do not share common input or output formats see
+[appendix](#appendix) for examples. Making integration and holistic
+understanding of the environment challenging:
 
  - Tools use different data structures and formats for input and outputs.
  - There is no single repository of 'reference' sites and results.
@@ -45,50 +164,92 @@ Currently there are a large number of modelling and classification tools availab
 
 ## Joint research platform
 
-To aid collaboration and to response to the changing environmentally pressures, we propose creating a joint research platform to share understanding on the environment while providing the software infrastructure to lighten the burden of more mundane tasks involved in maintaining and deploying new models and interfaces.
+To aid collaboration and to response to the changing environmentally pressures,
+we propose creating a joint research platform to share understanding on the
+environment while providing the software infrastructure to lighten the burden of
+more mundane tasks involved in maintaining and deploying new models and
+interfaces.
 
-This is influenced by the work of climate change research and weather forecasting communities. As well as larger science projects such as CERN. And smaller scale example such as ropenSci. 
+This is influenced by the work of climate change research and weather
+forecasting communities. As well as larger science projects such as CERN. And
+smaller scale example such as ropenSci.
 
 ## Who should be included in the reseach platform
 
-Most regulatory modelling work is development under the UKTAG group. This group has a number of sub-groups for freshwater, marine etc. This organisation has worked well and is active. The UKTAG group and it's nominated leads in the devolved agencies would continue to develop methods and tools. However, these tools would be incorporated into a joint platform for delivery. Where tools are agency specific, these could also make use of the platform. 
+Most regulatory modelling work is development under the UKTAG group. This group
+has a number of sub-groups for freshwater, marine etc. This organisation has
+worked well and is active. The UKTAG group and it's nominated leads in the
+devolved agencies would continue to develop methods and tools. However, these
+tools would be incorporated into a joint platform for delivery. Where tools are
+agency specific, these could also make use of the platform.
 
-Currently some models for environmental are shared on github e.g. phybenthos, fsc2, rict. They are published in different areas and have different access controls. The proposal would seek to share these tools under a single repo once the tool is finalised.
+Currently some models for environmental are shared on github e.g. darleq3, fsc2,
+rict. They are published in different areas and have different access controls.
+The proposal would seek to share these tools under a single repo once the tool
+is finalised.
 
-As agencies commission new tools to be developed, researchers can upload their predictive variables, reference data and models into a central repo for easier collaboration. 
+As agencies commission new tools to be developed, researchers can upload their
+predictive variables, reference data and models into a central repo for easier
+collaboration.
 
-### How can we collaborate on building models 
+## Lots of datasets - one underlying data structure?
 
-Ecological modelling relies on sampling. The samples come in a range of forms from points, transects, images, grabs, DNA etc. But the general feature of modelling is based on being able to predict what we expect to find from whatever sampling technique we deploy. The sample is the fundamental observation which we compare against our prediction The samples are discreet and independent, either observed instantaneously or perhaps over a few minutes or hours (where dynamic changes are not significant).
+Ecological modelling relies on sampling. The samples come in a range of forms
+from points, transects, images, grabs, DNA etc. But the general feature of
+modelling is based on being able to predict what we expect to find from whatever
+sampling technique we deploy. The sample is the fundamental observation which we
+compare against our prediction. The samples are discreet and independent, either
+observed instantaneously or perhaps over a few minutes or hours (where dynamic
+changes are not significant).
 
-Multiple samples can be aggregated to smooth variance but the sample still remains the fundamental building block. The sample could be a single pixel from an aerial image or a salmon moving through a fish counter. We still make predictions of what we expect this sample to be like even if the true picture only emerges after several samples are aggregated or compared.
+Multiple samples can be aggregated to smooth variance but the sample still
+remains the fundamental building block. The sample could be a single pixel from
+an aerial image or a salmon moving through a fish counter. We still make
+predictions of what we expect this sample to be like even if the true picture
+only emerges after several samples are aggregated or compared.
 
 ## What does this look like?
 
-Below is an example of diatom records, invert data and river flow in a shared input format. 
+Below is an example of diatom records, invert data and river flow in a shared
+input format.
 
-They share some reference/book keeping variables but not all. Ultimately, only one reference is needed which is a unique sample id. The other reference variables can be 'nested' or in others words there can be as many or a few as you like. These nested values could be sample type, collector, instrument details etc. Or variables later used for aggregation such as water body, river, geographic area etc. For example:
+They share some reference/book keeping variables but not all. Ultimately, only
+one reference is needed which is a unique sample id. The other reference
+variables can be 'nested' or in others words there can be as many or a few as
+you like. These nested values could be sample type, collector, instrument
+details etc. Or variables later used for aggregation such as water body, river,
+geographic area etc. For example:
 
 ```{r}
 data <- utils::read.csv(system.file("extdat",
                                     "test-data.csv",
-                                    package = "rict"
+                                    package = "hera"
 ))
 
 
-knitr::kable(data.frame("sample_id" = 192342, "Nested meta data" = names(data[, 2:6]), check.names = FALSE))
+knitr::kable(data.frame("sample_id" = 192342,
+                        "nested meta data" = names(data[, 2:6]),
+                        "question" = "whpt_aspt_abundance",
+                        "response" = 6.348,
+                        check.names = FALSE))
 
 
 ```
 
 ## Predictors
 
-Predictive variables such as temperature, altitude, slope etc are also metadata can can be nested, as they are the same for each sample. 
-
+Predictive variables such as temperature, altitude, slope etc are also metadata
+can can be nested, as they are the same for each sample.
 
 ## Observations 
 
-The observation comes in two parts, the unique name/id for what you are observing and the value associated with it. For clarity these variables are called 'question' and 'response'. The question could be "Taxon name?" and the response "Brown Trout". However, the question must be unique. As 'Taxon name?' will be different depending on what survey is being undertaken. So question_id and response_id are given to allow these to be unique with metadata to provide a more readable format. 
+The observation comes in two parts, the unique name/id for what you are
+observing and the value associated with it. For clarity these variables are
+called 'question' and 'response'. The question could be "Taxon name?" and the
+response "Brown Trout". However, the question must be unique. As 'Taxon name?'
+will be different depending on what survey is being undertaken. So question_id
+and response_id are given to allow these to be unique with metadata to provide a
+more readable format.
 
 UUID are used to provide unique IDs for this variables. 
 
@@ -102,21 +263,33 @@ knitr::kable(data[1:2,])
 
 ## Data input
 
-Data input is through mobile or internet connected devices. The question_id and related meta data is configured. Manual or automated data can be collected.
+Data input is through mobile or internet connected devices. The question_id and
+related meta data is configured. Manual or automated data can be collected.
 
 ## Model platform
 
-There is no prescribed modelling program or software. Researchers can download the data provided and use any software they desire - as long as it has an api. 
+There is no prescribed modelling program or software. Researchers can download
+the data provided and use any software they desire - as long as it has an api.
 
-Alternatively, if researchers can't provide an api for others. The recommendation is to use R - which integrates into the data collection back-end. 
+Alternatively, if researchers can't provide an api for others. The
+recommendation is to use R - which integrates more directly into Hera.
 
-Once modelling is complete in R, the model object is saved and deployed. Any existing or future data collected using the platform will be run through the model at the sample level.
+Once modelling is completed, the model object is saved and deployed. Any
+existing or future data collected using the platform will be run through the
+model at the sample level.
 
-Researchers can then build tools to display and aggregate the sample level results as required. Where it would be possible to share techniques for producing Confidence of Class, assessment of data suitablility and adjustment factors etc.
+Researchers can then build tools to display and aggregate the sample level
+results as required. Where it would be possible to share techniques for
+producing Confidence of Class, assessment of data suitablility and adjustment
+factors etc.
 
 ## Hera
 
-Here we introduce a prototype package called Hera. Hera provides a framework for taking in ecological data, detecting what type of data has been entered, running the relevant models and returning a classification. The examples below are based on 'fake' data, indices and classification methods but the mechanism and code is functional.
+Here we introduce a prototype package called Hera. Hera provides a framework for
+taking in ecological data, detecting what type of data has been entered, running
+the relevant models and returning a classification. The examples below are based
+on 'fake' data, indices and classification methods and is just 'dream code' at
+the moment.
 
 This demo dataset contains information on diatoms, fish and inverts:
 
@@ -126,7 +299,8 @@ str(demo_data)
 
 ```
 
-We run this dataset through Hera providing a prediction for each taxa in each sample:
+We run this dataset through Hera providing a prediction for each taxa in each
+sample:
 
 ```
 
@@ -169,7 +343,7 @@ step process. Not all tools/models will have all the features development if not
 required or if not prioritized:
 
 ```
-compare_report <- compare_aggregate(demo_data)
+compare_report <- compare(demo_data)
 compare_report
 
 ```
@@ -177,7 +351,7 @@ compare_report
 We now run a report assesses two samples assess a discharge (up and downstream):  
 
 ```
-compare_report <- compare_aggregate(demo_data)
+compare_report <- compare(demo_data)
 compare_report
 
 ```
@@ -193,6 +367,86 @@ elements.
 are shared and easily configurable for new models/methods.
 - Testing infrastructure. 
 - Confidence of class and data suitability algorithms. 
+
+## Appendix
+
+### Example of current input and output formats
+
+### FCS2 tool 
+
+Demo input data format (truncated) and full list of column names
+```{r}
+test <- head(fcs2::demo_data[, 1:5], 4)
+test$... <- "..."
+test
+row.names(test) <- NULL
+names(demo_data)
+```
+
+### Darleq tool
+
+Input data for DARLEQ3 tool is a list of dataframes. Here's an example of input
+data format (truncated) and full list of column names
+
+```{r}
+
+file <- system.file("extdata/DARLEQ2TestData.xlsx", package="darleq3")
+data <- read_DARLEQ(file, "Rivers TDI Test Data")
+test <- data$diatom_data[1:4, 1:8]
+test$... <- "..."
+test
+names(data$diatom_data)
+names(data$header)
+```
+
+
+### RICT
+
+Here's an example of input data format (truncated) and full list of column names
+
+```{r}
+test <- rict::demo_observed_values[1:4, 1:8]
+test$... <- "..."
+test
+names(demo_observed_values)
+```
+
+### FCS2 output example
+
+```{r, include=FALSE}
+results <- calcClassScot(data = fcs2::demo_data)
+```
+
+```{r}
+test <- results[1:4, 1:6]
+test$... <- "..."
+test
+names(results)
+```
+
+### RICT output example
+
+```{r, warning=F, message=F}
+test <- rict(demo_ni_observed_values)
+example <- head(test[1: 6], 4)
+example$... <- "..."
+example
+names(test)
+```
+
+### Darleq output data
+
+(list of dataframes)
+
+```{r}
+fn <- system.file("extdata/DARLEQ2TestData.xlsx", package="darleq3")
+d <- read_DARLEQ(fn, "Rivers TDI Test Data")
+results <- calc_Metric_EQR(d, metrics=c("TDI4", "TDI5LM"))
+head(results$TDI5LM$EQR[, 9:13])
+head(results$TDI5LM$Uncertainty[, 9:13])
+head(results$TDI5LM$Metric)
+head(results$TDI5LM$Job_Summary, 4)
+```
 
 
 
