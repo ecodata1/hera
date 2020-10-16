@@ -12,6 +12,8 @@
 #'  \item View and download results.
 #'  }
 #'
+#' @importFrom shiny runApp
+#'
 #' @examples
 #' \dontrun{
 #' rict_app()
@@ -24,5 +26,5 @@ hera_app <- function() {
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `rict`.", call. = FALSE)
   }
-  shiny::runApp(appDir, display.mode = "normal", launch.browser = T)
+  runApp(appDir, display.mode = "normal", launch.browser = T)
 }

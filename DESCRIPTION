@@ -9,11 +9,14 @@ Description: Hera is an opinionated collections of R packages designed
     All packages share an underlying design, grammar and data
     structures. This allows the separation of the concerns between
     models, post-modelling steps and visualisation. 
-License: GPL2
+License: GPL-2
 Encoding: UTF-8
 LazyData: true
+Imports:
+    shiny
 Suggests: 
     knitr,
     rmarkdown,
     covr
 VignetteBuilder: knitr
+RoxygenNote: 7.1.1
