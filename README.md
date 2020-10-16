@@ -18,8 +18,9 @@ environmental modelling. The package outlines possible approaches to
 creating a shared research platform for building, testing and deploying
 models used to assess environmental risk for regulatory purposes.
 
-See [Request for comment]() paper for an outline and broad technical
-specifications.
+See [Request for
+comment](https://ecodata1.github.io/hera/articles/hera_specifications.html)
+paper for an outline and broad technical specifications.
 
 Hera is envisaged as an opinionated collections of R packages designed
 for sharing environmental models. All packages share an underlying
@@ -43,9 +44,4 @@ This is a basic example which shows you how to solve a common problem:
 ``` r
 ## Currently no functions! Read the Request for Comment above! 
 library(hera) 
-#> 
-#> Attaching package: 'hera'
-#> The following object is masked from 'package:stats':
-#> 
-#>     predict
 ```

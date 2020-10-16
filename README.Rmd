@@ -27,7 +27,7 @@ modelling. The package outlines possible approaches to creating a shared
 research platform for building, testing and deploying models used to assess
 environmental risk for regulatory purposes.
 
-See [Request for comment]() paper for an outline and broad technical
+See [Request for comment](https://ecodata1.github.io/hera/articles/hera_specifications.html) paper for an outline and broad technical
 specifications.
 
 Hera is envisaged as an opinionated collections of R packages designed for sharing
