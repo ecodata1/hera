@@ -23,7 +23,7 @@ library(devtools)
 if(!require("INLA", character.only = TRUE)){
 install.packages("INLA",
                  repos = "https://inla.r-inla-download.org/R/stable",
-                 dep = TRUE)
+                 dependencies = TRUE)
 }
 
 # Don't need to load? - just dependency for fcs2: library(INLA)
