@@ -16,14 +16,13 @@ knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(message = FALSE)
 
 if(!require("devtools", character.only = TRUE)){
-  install.packages("devtools")
+  install.packages("devtools", repos = "https://cloud.r-project.org")
 }
 library(devtools)
 
 if(!require("INLA", character.only = TRUE)){
 install.packages("INLA",
-                 repos = c(getOption("repos"),
-                 INLA = "https://inla.r-inla-download.org/R/stable"),
+                 repos = "https://inla.r-inla-download.org/R/stable",
                  dep = TRUE)
 }
 
