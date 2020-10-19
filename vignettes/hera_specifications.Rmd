@@ -26,7 +26,7 @@ install.packages("INLA",
                  dep = TRUE)
 }
 
-library(INLA)
+# Don't need to load? - just dependency for fcs2: library(INLA)
 
 if(!require("fcs2", character.only = TRUE)){
   install_github("aquaMetrics/fcs2", dependencies = TRUE)
