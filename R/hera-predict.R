@@ -9,7 +9,6 @@
 #' @return Dataframe of predictions
 #' @examples
 #' hera_predictions <- hera_predict(demo_data)
-#'
 #' @importFrom rlang .data
 #' @importFrom tibble tibble
 #' @importFrom dplyr group_by inner_join mutate
@@ -24,17 +23,17 @@ hera_predict <- function(data) {
     group_by(.data$sample_number, .data$analysis_name) %>%
     nest()
 
-  # Create df with prediction model
-  models <- tibble(
-    "analysis_name" = "DIAT_TST",
-    "class" = list(darleq)
+  # Join raw dataset to model_dataframe
+  by_sample_number <- inner_join(by_sample_number,
+    hera::model_dataframe[, c("analysis_name", "predict_function")],
+    by = c("analysis_name" = "analysis_name")
   )
 
-  # Join predictions dataframe to data
-  by_sample_number <- inner_join(by_sample_number, models, by = c("analysis_name" = "analysis_name"))
+  # Loop through each sample and apply prediction function from 'model_dataframe'
   by_sample_number <- by_sample_number %>%
-    mutate(prediction = map(.data$data, .data$class))
+    mutate(prediction = map(.data$data, .data$predict_function))
 
+  # Unnest and return predictions
   by_sample_number <- unnest(by_sample_number, .data$prediction)
 
   return(by_sample_number)

@@ -20,9 +20,9 @@ darleq <- function(data) {
       "DATE_TAKEN" = as.Date(.data$date_taken, tz = "GB")
     ) %>%
     select(.data$SampleID,
-           "SiteID" = .data$location_code,
-           "SAMPLE_DATE" = .data$date_taken,
-           "Alkalinity" = .data$alkalinity
+      "SiteID" = .data$location_code,
+      "SAMPLE_DATE" = .data$date_taken,
+      "Alkalinity" = .data$alkalinity
     ) %>%
     unique()
 
@@ -32,7 +32,7 @@ darleq <- function(data) {
   header$lake_TYPE <- NA
   header$lake_TYPE[header$Alkalinity > 50] <- "HA"
   header$lake_TYPE[header$Alkalinity >= 10 &
-                     header$Alkalinity <= 50] <- "MA"
+    header$Alkalinity <= 50] <- "MA"
   header$lake_TYPE[header$Alkalinity < 10] <- "LA"
 
   header$SiteID <- as.character(header$SiteID)
@@ -55,7 +55,7 @@ darleq <- function(data) {
   diatom_taxonname <- diatom_taxon_abundance %>%
     select(.data$sample_id, .data$taxon, .data$value, .data$date_taken) %>%
     inner_join(dares_table[, c("TaxonName", "TaxonId", "TaxonNameSEPA")],
-              by = c("taxon" = "TaxonNameSEPA")
+      by = c("taxon" = "TaxonNameSEPA")
     )
 
   # Sum value if duplicate taxon names entered within a single sample
@@ -93,7 +93,7 @@ darleq <- function(data) {
 
   # Combine dataframes into named list ------------------------
   header <- data.frame(header)
-  output <- darleq3::calc_Metric(diatom_data, metric="TDI4")
+  output <- darleq3::calc_Metric(diatom_data, metric = "TDI4")
   output <- darleq3::calc_EQR(output, header, truncate_EQR = TRUE, verbose = TRUE)
   return(output$EQR$eTDI4)
 }

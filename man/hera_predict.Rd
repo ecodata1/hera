@@ -20,5 +20,4 @@ Predicts hera model reference indices.
 }
 \examples{
 hera_predictions <- hera_predict(demo_data)
-
 }

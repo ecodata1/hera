@@ -35,7 +35,8 @@ hera_indices <- function(data) {
 
   # Join predictions dataframe to data
   by_sample_number <- inner_join(by_sample_number, models,
-                                 by = c("analysis_name" = "analysis_name"))
+    by = c("analysis_name" = "analysis_name")
+  )
   by_sample_number <- by_sample_number %>%
     mutate(prediction = map(.data$data, .data$class))
 
