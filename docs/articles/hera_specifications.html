@@ -96,7 +96,7 @@ outline: 0 ;
 <div id="summary" class="section level1">
 <h1 class="hasAnchor">
 <a href="#summary" class="anchor"></a><span class="header-section-number">1</span> Summary</h1>
-<p>We propose all new method development be added to a collection of R packages which share the same design philosophy, interface and data structures.</p>
+<p>We propose all new tool development be added to a collection of R packages which share the same design philosophy, interface and data structures.</p>
 <p>This RFC proposes the creation of ‘hera’ - an official collection of R packages designed to provide collaborative workflow for building and using classification tools. This facilitates faster iteration and improved integration and knowledge exchange between method developers and practitioners.</p>
 </div>
 <div id="motivation" class="section level1">
@@ -125,16 +125,18 @@ outline: 0 ;
 <div id="preparing-for-change" class="section level2">
 <h2 class="hasAnchor">
 <a href="#preparing-for-change" class="anchor"></a><span class="header-section-number">3.1</span> Preparing for change</h2>
-<p>The ease and access to modelling tools now means there is a proliferation of models, indices and metrics to choose from. We have seen many useful results from modelling techniques in weather forecasting, flood planning and climate change research. In the next 10 years, it is likely that aquatic ecological models will be subsumed into a more large scale environmental and climate models. These ‘total environment’ models may for instance use climate change models to forecast impact on invertebrates, water-use models the predict the impact on fish or flooding models the response of macrophytes. These large scale environmental models could integrate elements of existing invertebrate, fish and macrophytes models and reference data into large hybrid models also incorporating rainfall, flow and climate predictions. The outputs from which we be used across disciplines to plan flood management, biodiversity improvements, carbon sequestering. Allowing the impact and trade offs of each planning scenario on multiple disciplines allowing informed discussion on the best decisions.</p>
+<p>In the next 10 years…</p>
+<p>The ease and access to modelling tools means there is a proliferation of models, indices and metrics. We have seen many useful results from modelling techniques in weather forecasting, flood planning and climate change research. It is likely that our aquatic ecological models will be subsumed into a more large scale environmental and climate models. These ‘total environment’ models may for instance use climate change models to forecast impact on invertebrates, water-use models to predict the impact on fish or flooding models the impact of macrophytes. These large scale environmental models could integrate elements of existing invertebrate, fish and macrophytes models and reference data into large hybrid models also incorporating rainfall, flow and climate predictions. The outputs from which we be used across disciplines to plan flood management, biodiversity improvements, carbon sequestering. Allowing multi-disciplines assessment of impacts and trade-offs for each planning scenario, ensuring informed decisions-making.</p>
 <p>All ecology data will be freely accessible and bundled together (along with chemistry, climate, meteorological, geological etc) and multiple models run across the same data, providing outputs on many aspects of ecology, chemistry, climate, flooding, biodiversity etc.</p>
-<p>As soon as an ecologist uploads fish counter data, plant DNA or aerial imagery, this data is ingested into the ‘lake’ of environmental data. A huge number of models and predictions automatically run based on this new data providing fresh insights in environmental harms, biodiversity trends, costs and impacts. Regular summary reports that are largely drafted automatically provide new findings, improvements, harms, scenarios can be discussed and addressed.</p>
+<p>We assume Ecologist will upload fish counter data, plant DNA or aerial imagery, which will be ingested into the ‘lake’ of environmental data. A huge number of models and predictions automatically run based on this new data providing fresh insights in environmental harms, biodiversity trends, pressures and impacts. Regular summary reports (largely drafted automatically) provide new findings and forecasts to be discussed and addressed.</p>
+<p>To make step towards this vision, the underlying design of a models and tools must be modular and easy to connect and integrate.</p>
 </div>
 </div>
 <div id="detailed-design" class="section level1">
 <h1 class="hasAnchor">
 <a href="#detailed-design" class="anchor"></a><span class="header-section-number">4</span> Detailed design</h1>
 <p>To aid collaboration and to response to the changing environmentally pressures, we propose creating a joint research platform to share understanding on the environment while providing the software infrastructure to lighten the burden of more mundane tasks involved in maintaining and deploying new models and interfaces.</p>
-<p>This is influenced by the work of climate change research and weather forecasting communities. And smaller scale example such as <a href="https://ropensci.org/">ropenSci</a>.</p>
+<p>This is influenced by the work of climate change research and weather forecasting communities. And on-going work in the R community such as <a href="https://ropensci.org/">ropenSci</a>.</p>
 <div id="groups" class="section level2">
 <h2 class="hasAnchor">
 <a href="#groups" class="anchor"></a><span class="header-section-number">4.1</span> Groups</h2>
@@ -143,7 +145,7 @@ outline: 0 ;
 <div id="organisation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#organisation" class="anchor"></a><span class="header-section-number">4.2</span> Organisation</h2>
-<p>Currently some model packages are shared on github for instance darleq3, fsc2, rict. We propose these tools are shared under a single package once the tool is finalised.</p>
+<p>Currently some model packages are shared on github for instance <a href="https://github.com/nsj3/darleq3">darleq3</a>, <a href="https://github.com/aquaMetrics/fcs2">fsc2</a>, <a href="https://github.com/aquaMetrics/rict">rict</a>. We propose these tools are shared under a single package once the tool is finalised.</p>
 <p>As agencies commission new tools to be developed, researchers can upload their predictive variables, reference data and models into a central repo for easier collaboration.</p>
 </div>
 <div id="lots-of-datasets---one-underlying-data-structure" class="section level2">

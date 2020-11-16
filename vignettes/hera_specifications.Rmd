@@ -50,7 +50,7 @@ Keywords: collection, modelling, prediction, classification, forecast, scenario
 
 # Summary
 
-We propose all new method development be added to a collection of R
+We propose all new tool development be added to a collection of R
 packages which share the same design philosophy, interface and data structures.
   
 This RFC proposes the creation of 'hera' - an official collection of R packages
@@ -87,33 +87,37 @@ integrate into existing databases.
 
 ## Preparing for change
 
-The ease and access to modelling tools now means there is a proliferation of
-models, indices and metrics to choose from. We have seen many useful
-results from modelling techniques in weather forecasting, flood planning and
-climate change research. In the next 10 years, it is likely that aquatic
-ecological models will be subsumed into a more large scale environmental and
-climate models. These 'total environment' models may for instance use climate
-change models to forecast impact on invertebrates, water-use models the predict
-the impact on fish or flooding models the response of macrophytes. These large
-scale environmental models could integrate elements of existing invertebrate,
-fish and macrophytes models and reference data into large hybrid models also
-incorporating rainfall, flow and climate predictions. The outputs from which we
-be used across disciplines to plan flood management, biodiversity improvements,
-carbon sequestering. Allowing the impact and trade offs of each planning
-scenario on multiple disciplines allowing informed discussion on the best
-decisions.
+In the next 10 years...
+  
+The ease and access to modelling tools means there is a proliferation of models,
+indices and metrics. We have seen many useful results from modelling techniques
+in weather forecasting, flood planning and climate change research. It is likely
+that our aquatic ecological models will be subsumed into a more large scale
+environmental and climate models. These 'total environment' models may for
+instance use climate change models to forecast impact on invertebrates,
+water-use models to predict the impact on fish or flooding models the impact of
+macrophytes. These large scale environmental models could integrate elements of
+existing invertebrate, fish and macrophytes models and reference data into large
+hybrid models also incorporating rainfall, flow and climate predictions. The
+outputs from which we be used across disciplines to plan flood management,
+biodiversity improvements, carbon sequestering. Allowing multi-disciplines
+assessment of impacts and trade-offs for each planning scenario, ensuring
+informed decisions-making.
 
-All ecology data will be freely accessible and
-bundled together (along with chemistry, climate, meteorological, geological etc)
-and multiple models run across the same data, providing outputs on many aspects
-of ecology, chemistry, climate, flooding, biodiversity etc.
+All ecology data will be freely accessible and bundled together (along with
+chemistry, climate, meteorological, geological etc) and multiple models run
+across the same data, providing outputs on many aspects of ecology, chemistry,
+climate, flooding, biodiversity etc.
 
-As soon as an ecologist uploads fish counter data, plant DNA or aerial imagery,
-this data is ingested into the 'lake' of environmental data. A huge number of
+We assume Ecologist will upload fish counter data, plant DNA or aerial imagery,
+which will be ingested into the 'lake' of environmental data. A huge number of
 models and predictions automatically run based on this new data providing fresh
-insights in environmental harms, biodiversity trends, costs and impacts. Regular
-summary reports that are largely drafted automatically provide new findings,
-improvements, harms, scenarios can be discussed and addressed.
+insights in environmental harms, biodiversity trends, pressures and impacts.
+Regular summary reports (largely drafted automatically) provide new findings and
+forecasts to be discussed and addressed.
+
+To make step towards this vision, the underlying design of a models and tools
+must be modular and easy to connect and integrate.
 
 # Detailed design
 
@@ -124,7 +128,7 @@ more mundane tasks involved in maintaining and deploying new models and
 interfaces. 
 
 This is influenced by the work of climate change research and weather
-forecasting communities. And smaller scale example such as [ropenSci](https://ropensci.org/).
+forecasting communities. And on-going work in the R community such as [ropenSci](https://ropensci.org/).
 
 ## Groups
 
@@ -135,9 +139,11 @@ required.
 
 ## Organisation
 
-Currently some model packages are shared on github for instance darleq3, fsc2,
-rict. We propose these tools are shared under a single package  once the tool is
-finalised.
+Currently some model packages are shared on github for instance
+[darleq3](https://github.com/nsj3/darleq3),
+[fsc2](https://github.com/aquaMetrics/fcs2),
+[rict](https://github.com/aquaMetrics/rict). We propose these tools are shared
+under a single package  once the tool is finalised.
   
 As agencies commission new tools to be developed, researchers can upload their
 predictive variables, reference data and models into a central repo for easier
