@@ -64,7 +64,7 @@ jobs:
             eval sudo $cmd
           done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
 
-        - name: "[Custom block] [Linux] Install spatial libraries"
+      - name: "[Custom block] [Linux] Install spatial libraries"
         if: runner.os == 'Linux'
         run: sudo apt install libgdal-dev libproj-dev libgeos-dev libudunits2-dev
 
