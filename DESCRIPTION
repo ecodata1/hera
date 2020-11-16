@@ -2,24 +2,43 @@ Package: hera
 Type: Package
 Title: Building environmental models together
 Version: 0.1.0
-Author: Tim Foster
-Maintainer: Tim Foster <tim.foster@sepa.org.uk>
+Authors@R: 
+    person(given = "Tim",
+           family = "Foster",
+           role = c("aut", "cre"),
+           email = "tim.foster@sepa.org.uk")
 Description: Hera is an opinionated collections of R packages designed
     for sharing environmental models used for regulatory purposes.
     All packages share an underlying design, grammar and data
     structures. This allows the separation of the concerns between
-    models, post-modelling steps and visualisation. 
+    models, post-modelling steps and visualisation.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
 Imports:
-    shiny
+    shiny,
+    darleq3,
+    rict,
+    fcs2,
+    tidyr,
+    dplyr,
+    purrr,
+    magrittr,
+    rlang,
+    tibble
 Suggests: 
     knitr,
     rmarkdown,
     covr,
     Matrix,
     tidyverse,
-    devtools
+    devtools,
+    testthat
+Remotes:
+    aquaMetrics/rict,
+    aquaMetrtics/fcs2,
+    nsj3/darleq3
 VignetteBuilder: knitr
 RoxygenNote: 7.1.1
+Depends: 
+    R (>= 2.10)

@@ -12,7 +12,7 @@
 #' hera_app()
 #' }
 #'
-#' @export hera_app
+#' @export
 
 hera_app <- function() {
   appDir <- system.file("shiny_apps", "heraapp", package = "hera")
