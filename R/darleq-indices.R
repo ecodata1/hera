@@ -5,7 +5,7 @@
 #' @importFrom magrittr `%>%`
 #' @importFrom purrr map
 
-darleq <- function(data) {
+darleq_indices <- function(data) {
   # Make list of 3 data frames matching the data structure produced
   # by darleq3::read_DARLEQ()
 
@@ -95,5 +95,5 @@ darleq <- function(data) {
   header <- data.frame(header)
   output <- darleq3::calc_Metric(diatom_data, metric = "TDI4")
   output <- darleq3::calc_EQR(output, header, truncate_EQR = TRUE, verbose = TRUE)
-  return(output$EQR$eTDI4)
+  return(output$EQR$TDI4)
 }

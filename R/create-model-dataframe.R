@@ -12,8 +12,8 @@ create_model_dataframe <- function() {
   tibble(
     "analysis_name" = "DIAT_TST",
     "validate_function" = NA,
-    "indices_function" = NA,
-    "predict_function" = list(darleq),
-    "classify_function" = NA
+    "indices_function" = list(darleq_indices),
+    "prediction_function" = list(darleq_prediction),
+    "classification_function" = list(darleq_classification)
   )
 }

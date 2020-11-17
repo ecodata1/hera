@@ -2,13 +2,13 @@
 #'
 #' Predicts hera model reference indices.
 #' @details
-#' \code{hera_predict()} predicts model indices.
+#' \code{prediction()} predicts model indices.
 #'
 #' @param data Dataframe of variables in WFD inter-change format
 #'
 #' @return Dataframe of predictions
 #' @examples
-#' hera_predictions <- hera_predict(demo_data)
+#' predictions <- prediction(demo_data)
 #' @importFrom rlang .data
 #' @importFrom tibble tibble
 #' @importFrom dplyr group_by inner_join mutate
@@ -16,25 +16,23 @@
 #' @importFrom magrittr `%>%`
 #' @importFrom purrr map
 #' @export
-hera_predict <- function(data) {
+prediction <- function(data = NULL) {
   message("Hello from hera, ...work in progress!")
   # Nest data by sample and analysis
-  by_sample_number <- hera::demo_data %>%
-    group_by(.data$sample_number, .data$analysis_name) %>%
-    nest()
+  data <- indices(data)
 
   # Join raw dataset to model_dataframe
-  by_sample_number <- inner_join(by_sample_number,
-    hera::model_dataframe[, c("analysis_name", "predict_function")],
+  data <- inner_join(data,
+    hera::model_dataframe[, c("analysis_name", "prediction_function")],
     by = c("analysis_name" = "analysis_name")
   )
 
   # Loop through each sample and apply prediction function from 'model_dataframe'
-  by_sample_number <- by_sample_number %>%
-    mutate(prediction = map(.data$data, .data$predict_function))
+  data <- data %>%
+    mutate(prediction = map(.data$data, .data$prediction_function))
 
-  # Unnest and return predictions
-  by_sample_number <- unnest(by_sample_number, .data$prediction)
+  # Unnest and return
+  data <- unnest(data, .data$prediction)
 
-  return(by_sample_number)
+  return(data)
 }

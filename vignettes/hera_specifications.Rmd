@@ -1,5 +1,5 @@
 ---
-title: "Request for Comment: Joint Platform for Aquatic Research and Deployment"
+title: "Request for Comment: Shared Design Principles for Creating and Deploying Classification Methods"
 date: "`r Sys.Date()`"
 pkgdown:
   as_is: yes
@@ -8,7 +8,7 @@ output:
     number_sections: yes
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{Request for Comment: Joint Platform for Aquatic Research and Deployment}
+  %\VignetteIndexEntry{Request for Comment: Shared Design Principles for Creating and Deploying Classification Methods}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}  
 editor_options: 
@@ -42,7 +42,7 @@ outline: 0 ;
 ```
 WORK IN PROGRESS - Drafting
 
-![](images/heraverse_logo_2.png){ width=60% }
+![](images/heraverse_logo_2.png){ width=50% }
 
 WARNING: Blue sky thinking ahead
 
@@ -50,23 +50,25 @@ Keywords: collection, modelling, prediction, classification, forecast, scenario
 
 # Summary
 
-We propose all new tool development be added to a collection of R
-packages which share the same design philosophy, interface and data structures.
-  
-This RFC proposes the creation of 'hera' - an official collection of R packages
-designed to provide collaborative workflow for building and using classification
-tools. This facilitates faster iteration and improved integration and knowledge
-exchange between method developers and practitioners.
+We propose all new tool development share a common set of design principles,
+interfaces and data structures.
+
+Specifically, we propose an official collection of R packages designed to
+provide collaborative workflow for building and using classification tools. In
+turn, these packages will be integrated into a single package called 'hera'.
+This provides a common interface to run classification. We expect this process
+will facilitate code re-use, faster integration and knowledge exchange
+between method developers and practitioners.
 
 # Motivation
 
-UKTAG has lead the development of an impressive range of classification tools.
+UKTAG has guided the development of an impressive range of classification tools.
 This has involved many developers, researchers and experts dedicating their time
 and effort to creating tools to better understand pressures on the environment.
 We are confident that there are many future opportunities for collaboration and
 tool development in response to changing environmental pressures and improving
-scientific understanding. For instance, new tools for investigate diagnostic
-work, updates to existing tools and catchment scale planning.
+scientific understanding. For instance, new tools for diagnosing pressures,
+updates to existing tools and catchment scale planning.
 
 The aims of a shared design philosophy for WFD classification R packages include:
   
@@ -80,7 +82,7 @@ The aims of a shared design philosophy for WFD classification R packages include
 
 # Key Ideas
   
-- Clearer path for researcher engagement and model develop.
+- Clearer path for researcher engagement and model development.
 - Provide common APIs / web services to allow agencies to
 integrate into existing databases.
 - Allowing researchers/consultancies to use the R packages directly or through a GUI.
@@ -95,14 +97,11 @@ in weather forecasting, flood planning and climate change research. It is likely
 that our aquatic ecological models will be subsumed into a more large scale
 environmental and climate models. These 'total environment' models may for
 instance use climate change models to forecast impact on invertebrates,
-water-use models to predict the impact on fish or flooding models the impact of
-macrophytes. These large scale environmental models could integrate elements of
-existing invertebrate, fish and macrophytes models and reference data into large
-hybrid models also incorporating rainfall, flow and climate predictions. The
-outputs from which we be used across disciplines to plan flood management,
-biodiversity improvements, carbon sequestering. Allowing multi-disciplines
-assessment of impacts and trade-offs for each planning scenario, ensuring
-informed decisions-making.
+water-use models to predict the impact on fish or flooding models the impact on
+macrophytes. The outputs from which we be used to plan flood management,
+biodiversity improvements, carbon sequestering etc. Allowing multi-discipline
+assessment of impacts and trade-offs for each planning scenario and proposed
+measures - ensuring well-informed decisions-making.
 
 All ecology data will be freely accessible and bundled together (along with
 chemistry, climate, meteorological, geological etc) and multiple models run
@@ -111,13 +110,13 @@ climate, flooding, biodiversity etc.
 
 We assume Ecologist will upload fish counter data, plant DNA or aerial imagery,
 which will be ingested into the 'lake' of environmental data. A huge number of
-models and predictions automatically run based on this new data providing fresh
-insights in environmental harms, biodiversity trends, pressures and impacts.
-Regular summary reports (largely drafted automatically) provide new findings and
-forecasts to be discussed and addressed.
+models and predictions will automatically run based, providing fresh insights in
+environmental harms, biodiversity trends, pressures and impacts. Regular summary
+reports (largely drafted automatically) provide new findings and forecasts to be
+discussed and addressed.
 
 To make step towards this vision, the underlying design of a models and tools
-must be modular and easy to connect and integrate.
+must be modular and easy to connect and integrate in a variety of ways.
 
 # Detailed design
 
@@ -142,8 +141,9 @@ required.
 Currently some model packages are shared on github for instance
 [darleq3](https://github.com/nsj3/darleq3),
 [fsc2](https://github.com/aquaMetrics/fcs2),
-[rict](https://github.com/aquaMetrics/rict). We propose these tools are shared
-under a single package  once the tool is finalised.
+[rict](https://github.com/aquaMetrics/rict). We propose these tools become part
+of official collection of packages that, overtime, integrate as key
+dependencies for the unifying 'hera' package.
   
 As agencies commission new tools to be developed, researchers can upload their
 predictive variables, reference data and models into a central repo for easier
@@ -190,7 +190,6 @@ knitr::kable(data.frame("sample_id" = 192342,
                         "response" = 6.348,
                         check.names = FALSE))
 
-
 ```
 
 ## Predictors
@@ -231,6 +230,7 @@ A workshop for lead data experts / R coders from each agency delivers
 institutional knowledge on how internally developed tools will fit with the
 design philosophy and expectations of how external researchers will collaborate
 on building new tools.
+
 ## Model platform
 
 There is no prescribed modelling program or software. Researchers can download
@@ -250,11 +250,23 @@ suitability and adjustment factors etc.
 
 ## hera
 
-Here we introduce a prototype package called hera. hera provides a framework for
-taking in ecological data, detecting what type of data has been entered, running
-the relevant models and returning a classification. The examples below are based
-on 'fake' data, indices and classification methods and is just 'dream code' at
-the moment.
+Here we introduce a prototype package called `hera`. We propose agreement around
+hera providing a common set of functions for running each step required for
+classification:
+
+1. Validate observations and predictor data.
+2. Calculate indices and predictors (if observed indices and predictors not pre-calculated).
+3. Predict expected indices score based on predictors provided.
+4. Classify observed over expected and provide confidence of class.
+5. Various reporting for water bodies or other aggregated classification results.
+6. Report comparisons (compare years, up and downstream, previous tool versions etc).
+
+Breaking the tools down into small steps allows these functions to be developed
+independently. Much of the code and rules can be re-used for future tool
+development.
+
+The examples below are based on 'fake' data, indices and classification methods
+and is just 'dream code' at the moment...
 
 This demo dataset contains information on diatoms, fish and inverts:
 
@@ -264,51 +276,58 @@ str(demo_data)
 
 ```
 
-We run this dataset through hera providing a prediction for each taxa in each
-sample:
+1. Validate predictors and observations are correct and within the bounds of the model:
 
 ```
 
-predictions <- hera_predict(demo_data)
-head(predictions)
+validations <- validation(demo_data)
 
 ```
 
-Based on an associated score for each taxa, we predict indices for each sample:
+2. We run this dataset through hera calculating observed indices required for each sample:
 
 ```
 
-indices <- hera_indices(demo_data)
+indices <- indices(demo_data)
 head(indices)
 
 ```
 
-Based on the predicted and observed indices - we classify each sample:
+3. We can also predict reference indices for each sample:
 
 ```
 
-class <- hera_classify(demo_data)
+predictions <- prediction(demo_data)
+head(predictions)
+
+```
+
+4. Based on the predicted and observed indices - we classify each sample:
+
+```
+
+class <- classification(demo_data)
 head(class)
 
 ```
 
-We now aggregated the samples by season, year or multi-year as required:
+5. We now aggregated the samples by season, year or multi-year as required:
 
 ```
 
-aggregate <- hera_aggregate(demo_data)
+aggregate <- aggregations(demo_data, c("year","season","waterbody"))
 head(class)
 
 ```
 
-We now run a report assesses samples from the same location for consistency.
-Note, that no report for fish is produced, the necessary adjustment/intreptation
-parameters have not been created for fish. This demostrates that it is step by
+6. We now run a report assesses samples from the same location for consistency.
+Note, that no report for fish is produced, the necessary adjustment/interpretation
+parameters have not been created for fish. This demonstrates that it is step by
 step process. Not all tools/models will have all the features development if not
 required or if not prioritized:
 
 ```
-compare_report <- compare(demo_data)
+compare_report <- compare(new_data, old_data)
 compare_report
 
 ```
@@ -316,7 +335,7 @@ compare_report
 We now run a report assesses two samples assess a discharge (up and downstream):  
 
 ```
-compare_report <- compare(demo_data)
+compare_report <- compare(site_one, site_two)
 compare_report
 
 ```
@@ -336,15 +355,15 @@ are shared and easily configurable for new models/methods.
 # How we Teach This
 
 As new WFD developments and updates requirements are identified, the lead
-contacts from the agencies and method developers are 'on-boarded' to explain the
-expectations and examples of building collaborative framework of packages. Where
-skill develop is required further training can be provided, or additional
-external or internal support from the agency commissioning the work.
+contacts from the agencies and method developers are 'on-boarded' to demonstrate
+the design principles and collaborative framework of packages. Where skill
+development is required further training can be provided, or additional external
+or internal support from the agency commissioning the work.
   
 A workshop for lead data experts / R coders from each agency delivers
 institutional knowledge on how internally developed tools will fit with the
-design philosophy and expectations of how external researchers will collaborate
-on building new tools.
+shared design philosophy as well as seeting expectations for colloaboration with
+external researchers.
 
 # Alternatives
 
