@@ -74,7 +74,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Request for Comment: Shared Design Principles for Creating and Deploying Classification Methods</h1>
             
-            <h4 class="date">2020-11-17</h4>
+            <h4 class="date">2020-11-20</h4>
       
       
       <div class="hidden name"><code>hera_specifications.Rmd</code></div>
@@ -90,7 +90,7 @@ outline: 0 ;
 }
 </style>
 <p>WORK IN PROGRESS - Drafting</p>
-<p><img src="images/heraverse_logo_2.png" style="width:60.0%"></p>
+<p><img src="images/heraverse_logo_2.png" style="width:50.0%"></p>
 <p>WARNING: Blue sky thinking ahead</p>
 <p>Keywords: collection, modelling, prediction, classification, forecast, scenario</p>
 <div id="summary" class="section level1">
@@ -102,61 +102,211 @@ outline: 0 ;
 <div id="motivation" class="section level1">
 <h1 class="hasAnchor">
 <a href="#motivation" class="anchor"></a><span class="header-section-number">2</span> Motivation</h1>
-<p>UKTAG has guided the development of an impressive range of classification tools. This has involved many developers, researchers and experts dedicating their time and effort to creating tools to better understand pressures on the environment. We are confident that there are many future opportunities for collaboration and tool development in response to changing environmental pressures and improving scientific understanding. For instance, new tools for diagnosing pressures, updates to existing tools and catchment scale planning.</p>
+<p>UKTAG has guided the development of an impressive range of classification tools. This has involved many developers, researchers and experts dedicating their time and effort to creating tools to better understand pressures on the environment. We are confident that there are many future opportunities for collaboration and tool development in response to changing environmental pressures and improving scientific understanding. As access to modelling tools become more routine, we expect a proliferation of models and indices in the years ahead. For instance, new tools for diagnosing pressures, updates to existing tools and catchment scale planning. To effectively combine multiple model and tools into an integrate system to understand the environment we propose a they share a common design philosophy to aid integration and management.</p>
+</div>
+<div id="key-ideas" class="section level1">
+<h1 class="hasAnchor">
+<a href="#key-ideas" class="anchor"></a><span class="header-section-number">3</span> Key Ideas</h1>
 <p>The aims of a shared design philosophy for WFD classification R packages include:</p>
 <ul>
 <li>Create a single user interfaces, similar data formats and operating procedures.</li>
 <li>Allow outputs from multiple tools to be quickly generated and combined together.</li>
 <li>Shorten the time between development and integration into Agencies systems.</li>
-<li>Where possible, define common routes to accessing and sharing of reference data and predictor values.</li>
-<li>Make it easier to share and re-use code for confidence, uncertainty and model suitability across current or future methods.</li>
+<li>Clearer path for researcher engagement and model development.</li>
+<li>Make it easier to share and re-use code between tools for common functions.</li>
 <li>Share data quality standards and data validation code.</li>
 <li>Apply similar approaches to code review, testing and documentation.</li>
 </ul>
-</div>
-<div id="key-ideas" class="section level1">
-<h1 class="hasAnchor">
-<a href="#key-ideas" class="anchor"></a><span class="header-section-number">3</span> Key Ideas</h1>
-<ul>
-<li>Clearer path for researcher engagement and model development.</li>
-<li>Provide common APIs / web services to allow agencies to integrate into existing databases.</li>
-<li>Allowing researchers/consultancies to use the R packages directly or through a GUI.</li>
-</ul>
-<div id="preparing-for-change" class="section level2">
+<div id="preparing-for-future" class="section level2">
 <h2 class="hasAnchor">
-<a href="#preparing-for-change" class="anchor"></a><span class="header-section-number">3.1</span> Preparing for change</h2>
+<a href="#preparing-for-future" class="anchor"></a><span class="header-section-number">3.1</span> Preparing for future</h2>
 <p>In the next 10 years…</p>
-<p>The ease and access to modelling tools means there is a proliferation of models, indices and metrics. We have seen many useful results from modelling techniques in weather forecasting, flood planning and climate change research. It is likely that our aquatic ecological models will be subsumed into a more large scale environmental and climate models. These ‘total environment’ models may for instance use climate change models to forecast impact on invertebrates, water-use models to predict the impact on fish or flooding models the impact on macrophytes. The outputs from which we be used to plan flood management, biodiversity improvements, carbon sequestering etc. Allowing multi-discipline assessment of impacts and trade-offs for each planning scenario and proposed measures - ensuring well-informed decisions-making.</p>
-<p>All ecology data will be freely accessible and bundled together (along with chemistry, climate, meteorological, geological etc) and multiple models run across the same data, providing outputs on many aspects of ecology, chemistry, climate, flooding, biodiversity etc.</p>
-<p>We assume Ecologist will upload fish counter data, plant DNA or aerial imagery, which will be ingested into the ‘lake’ of environmental data. A huge number of models and predictions will automatically run based, providing fresh insights in environmental harms, biodiversity trends, pressures and impacts. Regular summary reports (largely drafted automatically) provide new findings and forecasts to be discussed and addressed.</p>
-<p>To make step towards this vision, the underlying design of a models and tools must be modular and easy to connect and integrate in a variety of ways.</p>
+<p>We assume it is likely that our aquatic ecological models will be subsumed into a more large scale environmental and climate models. These ‘total environment’ models may for instance use climate change models to forecast impact on invertebrates, water-use models to predict the impact on fish or spatial planning tools the impact on nutrient levels. The outputs will be used across disciples both for RBMP and beyond for flood management, biodiversity improvements, carbon sequestering etc. Allowing multi-discipline assessment of impacts and trade-offs for each planning scenario and proposed measures - ensuring well-informed decisions-making.</p>
+<p>All ecological data along with chemistry, climate, meteorological, geological will be freely and easily accessible. We assume agencies will upload fish counter data, plant DNA or aerial imagery etc, which will be ingested into the ‘lake’ of environmental data.</p>
+<p>To take step towards this vision, the underlying design of a models and tools must be modular and easy to connect and integrate in a variety of ways.</p>
 </div>
 </div>
 <div id="detailed-design" class="section level1">
 <h1 class="hasAnchor">
 <a href="#detailed-design" class="anchor"></a><span class="header-section-number">4</span> Detailed design</h1>
-<p>To aid collaboration and to response to the changing environmentally pressures, we propose creating a joint research platform to share understanding on the environment while providing the software infrastructure to lighten the burden of more mundane tasks involved in maintaining and deploying new models and interfaces.</p>
+<p>To aid collaboration and to response to the changing environmentally pressures, we propose creating a joint collections of packages to share understanding on the environment while providing the software infrastructure to lighten the burden of more mundane tasks involved in maintaining and deploying new models and interfaces.</p>
 <p>This is influenced by the work of climate change research and weather forecasting communities. And on-going work in the R community such as <a href="https://ropensci.org/">ropenSci</a>.</p>
-<div id="groups" class="section level2">
+<div id="shared-packages" class="section level2">
 <h2 class="hasAnchor">
-<a href="#groups" class="anchor"></a><span class="header-section-number">4.1</span> Groups</h2>
-<p>All UKTAG sub-groups and their nominated leads in the devolved agencies would contribute new method develops and tools to the shared collection of packages. Where tools are agency specific, these could also make use of the platform if required.</p>
+<a href="#shared-packages" class="anchor"></a><span class="header-section-number">4.1</span> Shared Packages</h2>
+<p>Currently we have a number of model packages shared on github:</p>
+<ol style="list-style-type: decimal">
+<li>
+<a href="https://github.com/nsj3/darleq3">darleq3</a> - Phytobenthos<br>
+</li>
+<li>
+<a href="https://github.com/aquaMetrics/fcs2">fsc2</a> - Scottish river fish<br>
+</li>
+<li>
+<a href="https://github.com/aquaMetrics/rict">rict</a> - General invertebrate classification</li>
+</ol>
+<p>We propose these tools become part of official collection of packages and overtime, integrate more fully with each other.</p>
+</div>
+<div id="hera" class="section level2">
+<h2 class="hasAnchor">
+<a href="#hera" class="anchor"></a><span class="header-section-number">4.2</span> Hera</h2>
+<p>Here we introduce a prototype R package called <a href="https://github.com/ecodata1/hera">hera</a>. The key idea, is <code>hera</code> provides a common interface for existing WFD packages and future developments. This is achieved through a shared set of functions required to run and report classification. It builds on the best practice idea of how to <a href="https://r4ds.had.co.nz/many-models.html">run many models</a> simultaneously in R while keeping the input and output data formats simple and homogeneous. We explain each function in detail below.</p>
+<div id="key-steps" class="section level3">
+<h3 class="hasAnchor">
+<a href="#key-steps" class="anchor"></a><span class="header-section-number">4.2.1</span> Key steps</h3>
+<p>These key steps allows functions to be developed independently. Much of the code and rules can be re-used for future tool development.</p>
+<p>The examples below provide a taste of how this RFC could be implemented. Keep in mind, they are not full, complete or accurate. The data structure, naming and details could all change.</p>
+</div>
+<div id="validate" class="section level3">
+<h3 class="hasAnchor">
+<a href="#validate" class="anchor"></a><span class="header-section-number">4.2.2</span> Validate</h3>
+<p>Firstly, validate predictors and observations are correct and within the bounds of the model:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit">
+<span class="va">set.seed</span> <span class="op">&lt;-</span> <span class="fl">42</span>
+<span class="va">demo_data</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">::</span><span class="va"><a href="../reference/demo_data.html">demo_data</a></span>
+<span class="va">validations</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/validation.html">validation</a></span><span class="op">(</span><span class="va">demo_data</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">validations</span>, <span class="fl">5</span><span class="op">)</span></pre></div>
+<pre><code># A tibble: 5 x 40
+# Groups:   sample_number, analysis_repname [1]
+  sample_number analysis_repname location_code location_descri… national_grid_r…
+          &lt;int&gt; &lt;chr&gt;                    &lt;int&gt; &lt;fct&gt;            &lt;fct&gt;           
+1       3201863 invert                    8175 River Eden @ Ke… NO 41452 15796  
+2       3201863 invert                    8175 River Eden @ Ke… NO 41452 15796  
+3       3201863 invert                    8175 River Eden @ Ke… NO 41452 15796  
+4       3201863 invert                    8175 River Eden @ Ke… NO 41452 15796  
+5       3201863 invert                    8175 River Eden @ Ke… NO 41452 15796  
+# … with 35 more variables: easting &lt;dbl&gt;, northing &lt;dbl&gt;, latitude &lt;dbl&gt;,
+#   longitude &lt;dbl&gt;, catchment_id &lt;int&gt;, catchment &lt;fct&gt;, river_number &lt;dbl&gt;,
+#   river_name &lt;fct&gt;, hydro_distance &lt;dbl&gt;, hydro_code &lt;fct&gt;,
+#   local_authority &lt;fct&gt;, media &lt;fct&gt;, date_taken &lt;dttm&gt;, sampler_id &lt;fct&gt;,
+#   test_number &lt;int&gt;, comments &lt;fct&gt;, purpose &lt;fct&gt;, wfd_purpose &lt;lgl&gt;,
+#   analysis_name &lt;fct&gt;, result_number &lt;int&gt;, result_order &lt;int&gt;,
+#   determinand_code &lt;int&gt;, determinand &lt;fct&gt;, result &lt;fct&gt;, units &lt;fct&gt;,
+#   taxon &lt;fct&gt;, nbn_code &lt;fct&gt;, maitland_code &lt;int&gt;, whitton_code &lt;lgl&gt;,
+#   value &lt;dbl&gt;, value_warning &lt;chr&gt;, sample_id &lt;chr&gt;, result_id &lt;chr&gt;,
+#   season &lt;chr&gt;, mean_alkalinity &lt;dbl&gt;</code></pre>
+</div>
+<div id="calculate-indices" class="section level3">
+<h3 class="hasAnchor">
+<a href="#calculate-indices" class="anchor"></a><span class="header-section-number">4.2.3</span> Calculate Indices</h3>
+<p>We run validated data through the <code>indices</code> function, calculating observed indices scores as required for each sample:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit">
+ <span class="fu"><a href="../reference/indices.html">indices</a></span><span class="op">(</span><span class="va">demo_data</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+ <span class="fu">group_by</span><span class="op">(</span><span class="va">analysis_repname</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+ <span class="fu">slice_sample</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+ <span class="fu">select</span><span class="op">(</span><span class="va">sample_number</span>, <span class="va">indices</span><span class="op">)</span></pre></div>
+<pre><code># A tibble: 8 x 3
+# Groups:   analysis_repname [2]
+  analysis_repname sample_number indices
+  &lt;chr&gt;                    &lt;int&gt;   &lt;dbl&gt;
+1 Diatom Taxa            1800006    70.9
+2 Diatom Taxa             919681    70.2
+3 Diatom Taxa            1250462    64.6
+4 Diatom Taxa            2141643    74.6
+5 invert                 2959448    NA  
+6 invert                 1564589    NA  
+7 invert                 2828750    NA  
+8 invert                 2489784    NA  </code></pre>
+<p>Note, the invert indices are not calculated, they have been pre-calculated and are in the demo_data from the start.</p>
+</div>
+<div id="predict" class="section level3">
+<h3 class="hasAnchor">
+<a href="#predict" class="anchor"></a><span class="header-section-number">4.2.4</span> Predict</h3>
+<p>We then predict reference scores for each sample:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit">
+ <span class="fu"><a href="../reference/prediction.html">prediction</a></span><span class="op">(</span><span class="va">demo_data</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2200</span>, <span class="op">]</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+ <span class="fu">group_by</span><span class="op">(</span><span class="va">analysis_repname</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+ <span class="fu">slice_sample</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+ <span class="fu">select</span><span class="op">(</span><span class="va">sample_number</span>, <span class="va">prediction</span><span class="op">)</span> </pre></div>
+<pre><code># A tibble: 8 x 3
+# Groups:   analysis_repname [2]
+  analysis_repname sample_number prediction        
+  &lt;chr&gt;                    &lt;int&gt; &lt;list&gt;            
+1 Diatom Taxa            2489784 &lt;dbl [1]&gt;         
+2 Diatom Taxa            1564589 &lt;dbl [1]&gt;         
+3 Diatom Taxa            3201863 &lt;dbl [1]&gt;         
+4 Diatom Taxa            2489784 &lt;dbl [1]&gt;         
+5 invert                 3201863 &lt;df[,87] [1 × 87]&gt;
+6 invert                  621928 &lt;NULL&gt;            
+7 invert                 3294945 &lt;df[,87] [1 × 87]&gt;
+8 invert                 3294945 &lt;df[,87] [1 × 87]&gt;</code></pre>
+<p>See documentation <a href="https://ecodata1.github.io/hera/reference/prediction.html"><code>prediction()</code></a> for more information</p>
+</div>
+<div id="classify" class="section level3">
+<h3 class="hasAnchor">
+<a href="#classify" class="anchor"></a><span class="header-section-number">4.2.5</span> Classify</h3>
+<p>Based on the predicted and observed indices - we classify each sample:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit">
+ <span class="fu"><a href="../reference/classification.html">classification</a></span><span class="op">(</span><span class="va">demo_data</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+ <span class="fu">group_by</span><span class="op">(</span><span class="va">analysis_repname</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+ <span class="fu">slice_sample</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+ <span class="fu">select</span><span class="op">(</span><span class="va">sample_number</span>, <span class="va">classification</span><span class="op">)</span></pre></div>
+<pre><code># A tibble: 8 x 3
+# Groups:   analysis_repname [2]
+  analysis_repname sample_number classification
+  &lt;chr&gt;                    &lt;int&gt;          &lt;dbl&gt;
+1 Diatom Taxa            1672942          0.282
+2 Diatom Taxa            1800006          0.426
+3 Diatom Taxa            1672942          0.282
+4 Diatom Taxa            1672942          0.282
+5 invert                 2489784         NA    
+6 invert                  746461         NA    
+7 invert                 2252490         NA    
+8 invert                 1800006         NA    </code></pre>
+<p>Note, classification results for inverts are missing - this has not be implemented yet.</p>
+</div>
+<div id="aggegate" class="section level3">
+<h3 class="hasAnchor">
+<a href="#aggegate" class="anchor"></a><span class="header-section-number">4.2.6</span> Aggegate</h3>
+<p>We now aggregate the samples by season, year or multi-year as required:</p>
+<pre><code>
+aggregate &lt;- aggregations(demo_data, c("year","season","waterbody"))
+head(class)
+</code></pre>
+</div>
+<div id="report" class="section level3">
+<h3 class="hasAnchor">
+<a href="#report" class="anchor"></a><span class="header-section-number">4.2.7</span> Report</h3>
+<p>We now run a report assesses samples from the same location for consistency. Note, that no report for fish is produced, the necessary adjustment/interpretation parameters have not been created for fish. This demonstrates that it is step by step process. Not all tools/models will have all the features development if not required or if not prioritized:</p>
+<pre><code>compare_report &lt;- compare(new_data, old_data)
+compare_report
+</code></pre>
+<p>We now run a report assesses two samples assess a discharge (up and downstream):</p>
+<pre><code>compare_report &lt;- compare(site_one, site_two)
+compare_report
+</code></pre>
+</div>
+</div>
+<div id="sharing" class="section level2">
+<h2 class="hasAnchor">
+<a href="#sharing" class="anchor"></a><span class="header-section-number">4.3</span> Sharing</h2>
+<p>hera allows multiple ecological elements to be assessed through the same interface. But not just the interface is shared. Other areas of the infrastructure are shared including:</p>
+<ul>
+<li>Reporting and comparison tools can also be shared between multiple elements.</li>
+<li>Validation checks and other universally required mechanisms are shared and easily configurable for new models/methods.</li>
+<li>Testing infrastructure.</li>
+<li>Confidence of class and data suitability algorithms.</li>
+</ul>
 </div>
 <div id="organisation" class="section level2">
 <h2 class="hasAnchor">
-<a href="#organisation" class="anchor"></a><span class="header-section-number">4.2</span> Organisation</h2>
-<p>Currently some model packages are shared on github for instance <a href="https://github.com/nsj3/darleq3">darleq3</a>, <a href="https://github.com/aquaMetrics/fcs2">fsc2</a>, <a href="https://github.com/aquaMetrics/rict">rict</a>. We propose these tools become part of official collection of packages that, overtime, integrate as key dependencies for the unifying ‘hera’ package.</p>
+<a href="#organisation" class="anchor"></a><span class="header-section-number">4.4</span> Organisation</h2>
+<p>All UKTAG sub-groups and their nominated leads in the devolved agencies would contribute new method develops and tools to the shared collection of packages. Where tools are agency specific, these could also make use of the platform if required.</p>
 <p>As agencies commission new tools to be developed, researchers can upload their predictive variables, reference data and models into a central repo for easier collaboration.</p>
 </div>
 <div id="lots-of-datasets---one-underlying-data-structure" class="section level2">
 <h2 class="hasAnchor">
-<a href="#lots-of-datasets---one-underlying-data-structure" class="anchor"></a><span class="header-section-number">4.3</span> Lots of datasets - one underlying data structure?</h2>
+<a href="#lots-of-datasets---one-underlying-data-structure" class="anchor"></a><span class="header-section-number">4.5</span> Lots of datasets - one underlying data structure?</h2>
 <p>Ecological modelling relies on sampling. The samples come in a range of forms from points, transects, images, grabs, DNA etc. But the general feature of modelling is based on being able to predict what we expect to find from whatever sampling technique we deploy. The sample is the fundamental observation which we compare against our prediction. The samples are discreet and independent, either observed instantaneously or perhaps over a few minutes or hours (where dynamic changes are not significant).</p>
 <p>Multiple samples can be aggregated to smooth variance but the sample still remains the fundamental building block. The sample could be a single pixel from an aerial image or a salmon moving through a fish counter. We still make predictions of what we expect this sample to be like even if the true picture only emerges after several samples are aggregated or compared.</p>
 </div>
 <div id="what-does-this-look-like" class="section level2">
 <h2 class="hasAnchor">
-<a href="#what-does-this-look-like" class="anchor"></a><span class="header-section-number">4.4</span> What does this look like?</h2>
+<a href="#what-does-this-look-like" class="anchor"></a><span class="header-section-number">4.6</span> What does this look like?</h2>
+<p>This demo dataset contains information on diatoms, fish and inverts:</p>
+<pre><code>library(hera)
+str(demo_data)
+</code></pre>
 <p>Below is an example of diatom records, invert data and river flow in a shared input format.</p>
 <p>They share some reference/book keeping variables but not all. Ultimately, only one reference is needed which is a unique sample id. The other reference variables can be ‘nested’ or in others words there can be as many or a few as you like. These nested values could be sample type, collector, instrument details etc. Or variables later used for aggregation such as water body, river, geographic area etc. For example:</p>
 <table class="table">
@@ -202,12 +352,12 @@ outline: 0 ;
 </div>
 <div id="predictors" class="section level2">
 <h2 class="hasAnchor">
-<a href="#predictors" class="anchor"></a><span class="header-section-number">4.5</span> Predictors</h2>
+<a href="#predictors" class="anchor"></a><span class="header-section-number">4.7</span> Predictors</h2>
 <p>Predictive variables such as temperature, altitude, slope etc are also metadata can can be nested, as they are the same for each sample.</p>
 </div>
 <div id="observations" class="section level2">
 <h2 class="hasAnchor">
-<a href="#observations" class="anchor"></a><span class="header-section-number">4.6</span> Observations</h2>
+<a href="#observations" class="anchor"></a><span class="header-section-number">4.8</span> Observations</h2>
 <p>The observation comes in two parts, the unique name/id for what you are observing and the value associated with it. For clarity these variables are called ‘question’ and ‘response’. The question could be “Taxon name?” and the response “Brown Trout”. However, the question must be unique. As ‘Taxon name?’ will be different depending on what survey is being undertaken. So question_id and response_id are given to allow these to be unique with metadata to provide a more readable format.</p>
 <p>UUID are used to provide unique IDs for this variables.</p>
 <table class="table">
@@ -241,90 +391,16 @@ outline: 0 ;
 </div>
 <div id="data-input" class="section level2">
 <h2 class="hasAnchor">
-<a href="#data-input" class="anchor"></a><span class="header-section-number">4.7</span> Data input</h2>
+<a href="#data-input" class="anchor"></a><span class="header-section-number">4.9</span> Data input</h2>
 <p>Data input is through mobile or internet connected devices. The question_id and related meta data is configured. Manual or automated data can be collected. As new WFD developments and updates requirements are identified, the lead contacts from the agencies and method developers are ‘on-boarded’ to explain the expectations and examples of building collaborative framework of packages. Where skill develop is required further training can be provided, or additional external or internal support from the agency commissioning the work. A workshop for lead data experts / R coders from each agency delivers institutional knowledge on how internally developed tools will fit with the design philosophy and expectations of how external researchers will collaborate on building new tools.</p>
 </div>
 <div id="model-platform" class="section level2">
 <h2 class="hasAnchor">
-<a href="#model-platform" class="anchor"></a><span class="header-section-number">4.8</span> Model platform</h2>
+<a href="#model-platform" class="anchor"></a><span class="header-section-number">4.10</span> Model platform</h2>
 <p>There is no prescribed modelling program or software. Researchers can download the data provided and use any software they desire - as long as it has an API</p>
 <p>Alternatively, if researchers can’t provide an api for others. The recommendation is to use R - which integrates more directly into the pipeline.</p>
 <p>Once modelling is completed, the model object is saved and deployed. Any existing or future data collected using the platform will be run through the model at the sample level.</p>
 <p>Researchers can then build tools to display and aggregate the sample level results as required (Waterbody, Year, Catchment etc). Where it would be possible to share techniques for producing Confidence of Class, assessment of data suitability and adjustment factors etc.</p>
-</div>
-<div id="hera" class="section level2">
-<h2 class="hasAnchor">
-<a href="#hera" class="anchor"></a><span class="header-section-number">4.9</span> hera</h2>
-<p>Here we introduce a prototype package called <code>hera</code>. We propose agreement around hera providing a common set of functions for running each step required for classification:</p>
-<ol style="list-style-type: decimal">
-<li>Validate observations and predictor data.</li>
-<li>Calculate indices and predictors (if observed indices and predictors not pre-calculated).</li>
-<li>Predict expected indices score based on predictors provided.</li>
-<li>Classify observed over expected and provide confidence of class.</li>
-<li>Various reporting for water bodies or other aggregated classification results.</li>
-<li>Report comparisons (compare years, up and downstream, previous tool versions etc).</li>
-</ol>
-<p>Breaking the tools down into small steps allows these functions to be developed independently. Much of the code and rules can be re-used for future tool development.</p>
-<p>The examples below are based on ‘fake’ data, indices and classification methods and is just ‘dream code’ at the moment…</p>
-<p>This demo dataset contains information on diatoms, fish and inverts:</p>
-<pre><code>library(hera)
-str(demo_data)
-</code></pre>
-<ol style="list-style-type: decimal">
-<li>Validate predictors and observations are correct and within the bounds of the model:</li>
-</ol>
-<pre><code>
-validations &lt;- validation(demo_data)
-</code></pre>
-<ol start="2" style="list-style-type: decimal">
-<li>We run this dataset through hera calculating observed indices required for each sample:</li>
-</ol>
-<pre><code>
-indices &lt;- indices(demo_data)
-head(indices)
-</code></pre>
-<ol start="3" style="list-style-type: decimal">
-<li>We can also predict reference indices for each sample:</li>
-</ol>
-<pre><code>
-predictions &lt;- prediction(demo_data)
-head(predictions)
-</code></pre>
-<ol start="4" style="list-style-type: decimal">
-<li>Based on the predicted and observed indices - we classify each sample:</li>
-</ol>
-<pre><code>
-class &lt;- classification(demo_data)
-head(class)
-</code></pre>
-<ol start="5" style="list-style-type: decimal">
-<li>We now aggregated the samples by season, year or multi-year as required:</li>
-</ol>
-<pre><code>
-aggregate &lt;- aggregations(demo_data, c("year","season","waterbody"))
-head(class)
-</code></pre>
-<ol start="6" style="list-style-type: decimal">
-<li>We now run a report assesses samples from the same location for consistency. Note, that no report for fish is produced, the necessary adjustment/interpretation parameters have not been created for fish. This demonstrates that it is step by step process. Not all tools/models will have all the features development if not required or if not prioritized:</li>
-</ol>
-<pre><code>compare_report &lt;- compare(new_data, old_data)
-compare_report
-</code></pre>
-<p>We now run a report assesses two samples assess a discharge (up and downstream):</p>
-<pre><code>compare_report &lt;- compare(site_one, site_two)
-compare_report
-</code></pre>
-</div>
-<div id="sharing" class="section level2">
-<h2 class="hasAnchor">
-<a href="#sharing" class="anchor"></a><span class="header-section-number">4.10</span> Sharing</h2>
-<p>hera allows multiple ecological elements to be assessed through the same interface. But not just the interface is shared. Other areas of the infrastructure are shared including:</p>
-<ul>
-<li>Reporting and comparison tools can also be shared between multiple elements.</li>
-<li>Validation checks and other universally required mechanisms are shared and easily configurable for new models/methods.</li>
-<li>Testing infrastructure.</li>
-<li>Confidence of class and data suitability algorithms.</li>
-</ul>
 </div>
 </div>
 <div id="how-we-teach-this" class="section level1">
@@ -355,38 +431,33 @@ compare_report
 <h3 class="hasAnchor">
 <a href="#fcs2-tool" class="anchor"></a><span class="header-section-number">8.1.1</span> FCS2 tool</h3>
 <p>Demo input data format (truncated) and full list of column names</p>
-<pre><code>  DataHeldBy SiteCode Alternative.site.code Repeat.check SiteName ...
-1         EA   525052                    NA            N    13809 ...
-2         EA   507441                    NA            Y    13810 ...
-3         EA   525051                    NA            N    34611 ...
-4         EA   122881                    NA            Y     5435 ...</code></pre>
-<pre><code> [1] "DataHeldBy"                 "SiteCode"                  
- [3] "Alternative.site.code"      "Repeat.check"              
- [5] "SiteName"                   "Site.description"          
- [7] "Easting"                    "Northing"                  
- [9] "NGR"                        "SurveyDate"                
-[11] "WBId"                       "WBName"                    
-[13] "NumberOfRuns"               "SurveyArea"                
-[15] "WetWidth"                   "Slope"                     
-[17] "BarrierType"                "ImpassableBarriers"        
-[19] "Sense.check.passed."        "CatchmentAreaUpstream"     
-[21] "CatchmentDrainageDirection" "GeologyClass"              
-[23] "Altitude"                   "DistanceFromSource"        
-[25] "DistanceToSea"              "AnnualMeanFlow"            
-[27] "AlkalinityValue"            "TotalPValue"               
-[29] "DOCValue"                   "SuspendedSolidsValue"      
-[31] "IOH.hydrometric.area"       "HydrometricAreaNo"         
-[33] "LandUse.AgriculturalAreas"  "LandUse.ConiferousForests" 
-[35] "LandUse.Wetlands"           "Substrate.Small"           
-[37] "Substrate.Large"            "Substrate.Bedrock"         
-[39] "Salmon_fry.Run1Total"       "Salmon_fry.Run2Total"      
-[41] "Salmon_fry.Run3Total"       "Salmon_fry.Run4Total"      
-[43] "Salmon_parr.Run1Total"      "Salmon_parr.Run2Total"     
-[45] "Salmon_parr.Run3Total"      "Salmon_parr.Run4Total"     
-[47] "Trout_fry.Run1Total"        "Trout_fry.Run2Total"       
-[49] "Trout_fry.Run3Total"        "Trout_fry.Run4Total"       
-[51] "Trout_parr.Run1Total"       "Trout_parr.Run2Total"      
-[53] "Trout_parr.Run3Total"       "Trout_parr.Run4Total"      </code></pre>
+<pre><code># A tibble: 4 x 6
+  location_code location_description   national_grid_ref… easting northing ...  
+          &lt;int&gt; &lt;fct&gt;                  &lt;fct&gt;                &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;
+1          8175 River Eden @ Kemback … NO 41452 15796      341452   715796 ...  
+2          8175 River Eden @ Kemback … NO 41452 15796      341452   715796 ...  
+3          8175 River Eden @ Kemback … NO 41452 15796      341452   715796 ...  
+4          8175 River Eden @ Kemback … NO 41452 15796      341452   715796 ...  </code></pre>
+<pre><code> [1] "location_code"           "location_description"   
+ [3] "national_grid_reference" "easting"                
+ [5] "northing"                "latitude"               
+ [7] "longitude"               "catchment_id"           
+ [9] "catchment"               "river_number"           
+[11] "river_name"              "hydro_distance"         
+[13] "hydro_code"              "local_authority"        
+[15] "media"                   "date_taken"             
+[17] "sampler_id"              "sample_number"          
+[19] "test_number"             "comments"               
+[21] "purpose"                 "wfd_purpose"            
+[23] "analysis_name"           "analysis_repname"       
+[25] "result_number"           "result_order"           
+[27] "determinand_code"        "determinand"            
+[29] "result"                  "units"                  
+[31] "taxon"                   "nbn_code"               
+[33] "maitland_code"           "whitton_code"           
+[35] "value"                   "value_warning"          
+[37] "sample_id"               "result_id"              
+[39] "season"                  "mean_alkalinity"        </code></pre>
 </div>
 <div id="darleq-tool" class="section level3">
 <h3 class="hasAnchor">

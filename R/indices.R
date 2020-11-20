@@ -20,13 +20,14 @@ indices <- function(data) {
   message("Hello from hera, ...work in progress!")
   # Nest data by sample and analysis
   by_sample_number <- data %>%
-    group_by(.data$sample_number, .data$analysis_name, .data$mean_alkalinity) %>%
+    group_by(.data$sample_number, .data$analysis_repname) %>%
     nest()
 
+  model_dataframe <- hera:::create_model_dataframe()
   # Join predictions dataframe to data
   by_sample_number <- inner_join(by_sample_number,
-    hera::model_dataframe[, c("analysis_name", "indices_function")],
-    by = c("analysis_name" = "analysis_name")
+    model_dataframe[, c("analysis_repname", "indices_function")],
+    by = c("analysis_repname" = "analysis_repname")
   )
 
   # Loop through each sample and apply indices function from 'model_dataframe'
@@ -34,7 +35,7 @@ indices <- function(data) {
     mutate(indices = map(.data$data, .data$indices_function))
 
   # Unnest and return
-  by_sample_number <- unnest(by_sample_number, .data$indices)
-
+  by_sample_number <- select(by_sample_number, -.data$indices_function)
+  by_sample_number <- unnest(by_sample_number, cols = c(.data$indices, .data$data))
   return(by_sample_number)
 }

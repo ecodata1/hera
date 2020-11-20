@@ -19,7 +19,7 @@ logo <- function() {
   # Subjects: Microscopy Microscopes Natural history
   # Publisher: Philadelphia, P. Blackiston's Sons and Co.
   # Contributing Library: MBLWHOI Library#
-  img <- readPNG(system.file("extdat/images", "darleq_logo.png", package = "hera"))
+  img <- readPNG(system.file("extdat/images", "darleq.png", package = "hera"))
   g <- rasterGrob(img, interpolate = TRUE)
 
   sticker(g,
@@ -53,7 +53,7 @@ logo <- function() {
   # Abgebildete Person: Heraclitus . Radierung, 1701/1800, 95 x 53 mm hera_logo(Blatt), im Bestand der Universitätsbibliothek Leipzig, Porträtstichsammlung 21/176 ( siehe auch www.portraitindex.de/documents/obj/33203495 ).
   # This work has been identified as being free of known restrictions under copyright law, including all related and neighboring rights (creativecommons.org/publicdomain/mark/1.0/). Leipzig University Library, 2015.
 
-  img <- readPNG(system.file("extdat/images", "hera_logo.png", package = "hera"))
+  img <- readPNG(system.file("extdat/images", "hera.png", package = "hera"))
   g <- rasterGrob(img, interpolate = TRUE)
 
   sticker(g,

@@ -10,10 +10,25 @@
 #' @importFrom tibble tibble
 create_model_dataframe <- function() {
   tibble(
-    "analysis_name" = "DIAT_TST",
-    "validate_function" = NA,
-    "indices_function" = list(darleq_indices),
-    "prediction_function" = list(darleq_prediction),
-    "classification_function" = list(darleq_classification)
+    "analysis_repname" = c(
+      "Diatom Taxa",
+      "invert"
+    ),
+    "validation_function" = c(
+      NA,
+      NA
+    ),
+    "indices_function" = list(
+      darleq_indices,
+      rict_indices
+    ),
+    "prediction_function" = list(
+      darleq_prediction,
+      rict_prediction
+    ),
+    "classification_function" = list(
+      darleq_classification,
+      rict_classification
+    )
   )
 }

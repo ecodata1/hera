@@ -67,61 +67,51 @@ This has involved many developers, researchers and experts dedicating their time
 and effort to creating tools to better understand pressures on the environment.
 We are confident that there are many future opportunities for collaboration and
 tool development in response to changing environmental pressures and improving
-scientific understanding. For instance, new tools for diagnosing pressures,
-updates to existing tools and catchment scale planning.
+scientific understanding. As access to modelling tools become more routine, we
+expect a proliferation of models and indices in the years ahead. For instance,
+new tools for diagnosing pressures, updates to existing tools and catchment
+scale planning. To effectively combine multiple model and tools into an
+integrate system to understand the environment we propose a they share a common
+design philosophy to aid integration and management.
+
+# Key Ideas
 
 The aims of a shared design philosophy for WFD classification R packages include:
   
 - Create a single user interfaces, similar data formats and operating procedures.
 - Allow outputs from multiple tools to be quickly generated and combined together.
-- Shorten the time between development and integration into Agencies systems. 
-- Where possible, define common routes to accessing and sharing of reference data and predictor values.
-- Make it easier to share and re-use code for confidence, uncertainty and model suitability across current or future methods.
+- Shorten the time between development and integration into Agencies systems.
+- Clearer path for researcher engagement and model development.
+- Make it easier to share and re-use code between tools for common functions.
 - Share data quality standards and data validation code. 
 - Apply similar approaches to code review, testing and documentation.
 
-# Key Ideas
-  
-- Clearer path for researcher engagement and model development.
-- Provide common APIs / web services to allow agencies to
-integrate into existing databases.
-- Allowing researchers/consultancies to use the R packages directly or through a GUI.
-
-## Preparing for change
+## Preparing for future
 
 In the next 10 years...
   
-The ease and access to modelling tools means there is a proliferation of models,
-indices and metrics. We have seen many useful results from modelling techniques
-in weather forecasting, flood planning and climate change research. It is likely
-that our aquatic ecological models will be subsumed into a more large scale
-environmental and climate models. These 'total environment' models may for
-instance use climate change models to forecast impact on invertebrates,
-water-use models to predict the impact on fish or flooding models the impact on
-macrophytes. The outputs from which we be used to plan flood management,
-biodiversity improvements, carbon sequestering etc. Allowing multi-discipline
-assessment of impacts and trade-offs for each planning scenario and proposed
-measures - ensuring well-informed decisions-making.
+We assume it is likely that our aquatic ecological models will be subsumed into
+a more large scale environmental and climate models. These 'total environment'
+models may for instance use climate change models to forecast impact on
+invertebrates, water-use models to predict the impact on fish or spatial
+planning tools the impact on nutrient levels. The outputs will be used across
+disciples both for RBMP and beyond for flood management, biodiversity
+improvements, carbon sequestering etc. Allowing multi-discipline assessment of
+impacts and trade-offs for each planning scenario and proposed measures -
+ensuring well-informed decisions-making.
 
-All ecology data will be freely accessible and bundled together (along with
-chemistry, climate, meteorological, geological etc) and multiple models run
-across the same data, providing outputs on many aspects of ecology, chemistry,
-climate, flooding, biodiversity etc.
+All ecological data along with chemistry, climate, meteorological, geological
+will be freely and easily accessible. We assume agencies will upload fish
+counter data, plant DNA or aerial imagery etc, which will be ingested into the
+'lake' of environmental data.
 
-We assume Ecologist will upload fish counter data, plant DNA or aerial imagery,
-which will be ingested into the 'lake' of environmental data. A huge number of
-models and predictions will automatically run based, providing fresh insights in
-environmental harms, biodiversity trends, pressures and impacts. Regular summary
-reports (largely drafted automatically) provide new findings and forecasts to be
-discussed and addressed.
-
-To make step towards this vision, the underlying design of a models and tools
+To take step towards this vision, the underlying design of a models and tools
 must be modular and easy to connect and integrate in a variety of ways.
 
 # Detailed design
 
 To aid collaboration and to response to the changing environmentally pressures,
-we propose creating a joint research platform to share understanding on the
+we propose creating a joint collections of packages to share understanding on the
 environment while providing the software infrastructure to lighten the burden of
 more mundane tasks involved in maintaining and deploying new models and
 interfaces. 
@@ -129,22 +119,153 @@ interfaces.
 This is influenced by the work of climate change research and weather
 forecasting communities. And on-going work in the R community such as [ropenSci](https://ropensci.org/).
 
-## Groups
+## Shared Packages
+
+Currently we have a number of model packages shared on github:
+  
+1. [darleq3](https://github.com/nsj3/darleq3) - Phytobenthos  
+2. [fsc2](https://github.com/aquaMetrics/fcs2) - Scottish river fish  
+3. [rict](https://github.com/aquaMetrics/rict) - General invertebrate classification  
+  
+We propose these tools become part of official collection of packages and
+overtime, integrate more fully with each other.
+
+## Hera
+
+Here we introduce a prototype R package called
+[hera](https://github.com/ecodata1/hera). The key idea, is `hera` provides a
+common interface for existing WFD packages and future developments. This is
+achieved through a shared set of functions required to run and report
+classification. It builds on the best practice idea of how to [run many
+models](https://r4ds.had.co.nz/many-models.html) simultaneously in R while
+keeping the input and output data formats simple and homogeneous. We explain each
+function in detail below.
+
+### Key steps
+
+These key steps allows functions to be developed independently. Much of the code
+and rules can be re-used for future tool development.
+
+The examples below provide a taste of how this RFC could be implemented. Keep in mind,
+they are not full, complete or accurate. The data structure, naming and details
+could all change.
+
+### Validate
+
+Firstly, validate predictors and observations are correct and within the bounds of the model:
+
+```{r, echo=TRUE}
+set.seed <- 42
+demo_data <- hera::demo_data
+validations <- validation(demo_data)
+head(validations, 5)
+```
+
+### Calculate Indices
+
+We run validated data through the `indices` function, calculating observed indices scores as required for each sample:
+
+
+```{r, echo=TRUE}
+ 
+ indices(demo_data) %>% 
+ group_by(analysis_repname) %>% 
+ slice_sample(n = 4) %>% 
+ select(sample_number, indices)
+
+```
+
+Note, the invert indices are not calculated, they have been pre-calculated and are in the demo_data from the start. 
+
+### Predict 
+
+We then predict reference scores for each sample:
+
+```{r, echo=TRUE}
+ prediction(demo_data[1:2200, ]) %>% 
+ group_by(analysis_repname) %>% 
+ slice_sample(n = 4) %>% 
+ select(sample_number, prediction) 
+
+```
+
+See documentation [`prediction()`](https://ecodata1.github.io/hera/reference/prediction.html)
+for more information
+
+### Classify
+
+Based on the predicted and observed indices - we classify each sample:
+
+```{r, echo=TRUE}
+
+ classification(demo_data) %>% 
+ group_by(analysis_repname) %>% 
+ slice_sample(n = 4) %>% 
+ select(sample_number, classification)
+
+```
+
+Note, classification results for inverts are missing - this has not be implemented yet.
+
+### Aggegate
+
+We now aggregate the samples by season, year or multi-year as required:
+
+```
+
+aggregate <- aggregations(demo_data, c("year","season","waterbody"))
+head(class)
+
+```
+
+### Report
+
+We now run a report assesses samples from the same location for consistency.
+Note, that no report for fish is produced, the necessary adjustment/interpretation
+parameters have not been created for fish. This demonstrates that it is step by
+step process. Not all tools/models will have all the features development if not
+required or if not prioritized:
+
+```
+compare_report <- compare(new_data, old_data)
+compare_report
+
+```
+
+We now run a report assesses two samples assess a discharge (up and downstream):  
+
+```
+compare_report <- compare(site_one, site_two)
+compare_report
+
+```
+
+### Bringing it all together
+
+For the most part we don't expect users to go through each of these steps. But for developers and researchers it is useful to think about classification within this framework. For the majority of end users, agency staff or consultants, they can open a the GUI `hera_app()` (or hosted website). However advanced users can use the `hera` function to wrap all these steps together from example `hera(hera::demo_data)`.
+
+Furthermore, agencies can integrate these functions into their systems using web services. Please see the demo service that has been hosted to demonstrate this option. 
+
+## Sharing
+
+Hera allows multiple ecological elements to be assessed through the same
+interface. But not just the interface is shared. Other areas of the
+infrastructure are shared including:
+
+- Reporting and comparison tools can also be shared between multiple
+elements. 
+- Validation checks and other universally required mechanisms
+are shared and easily configurable for new models/methods.
+- Testing infrastructure. 
+- Confidence of class and data suitability algorithms. 
+
+## Organisation
 
 All UKTAG sub-groups and their nominated leads in the devolved agencies would
 contribute new method develops and tools to the shared collection of packages.
 Where tools are agency specific, these could also make use of the platform if
 required.
 
-## Organisation
-
-Currently some model packages are shared on github for instance
-[darleq3](https://github.com/nsj3/darleq3),
-[fsc2](https://github.com/aquaMetrics/fcs2),
-[rict](https://github.com/aquaMetrics/rict). We propose these tools become part
-of official collection of packages that, overtime, integrate as key
-dependencies for the unifying 'hera' package.
-  
 As agencies commission new tools to be developed, researchers can upload their
 predictive variables, reference data and models into a central repo for easier
 collaboration.
@@ -166,6 +287,14 @@ predictions of what we expect this sample to be like even if the true picture
 only emerges after several samples are aggregated or compared.
 
 ## What does this look like?
+
+This demo dataset contains information on diatoms, fish and inverts:
+
+```
+library(hera)
+str(demo_data)
+
+```
 
 Below is an example of diatom records, invert data and river flow in a shared
 input format.
@@ -248,109 +377,6 @@ results as required (Waterbody, Year, Catchment etc). Where it would be possible
 to share techniques for producing Confidence of Class, assessment of data
 suitability and adjustment factors etc.
 
-## hera
-
-Here we introduce a prototype package called `hera`. We propose agreement around
-hera providing a common set of functions for running each step required for
-classification:
-
-1. Validate observations and predictor data.
-2. Calculate indices and predictors (if observed indices and predictors not pre-calculated).
-3. Predict expected indices score based on predictors provided.
-4. Classify observed over expected and provide confidence of class.
-5. Various reporting for water bodies or other aggregated classification results.
-6. Report comparisons (compare years, up and downstream, previous tool versions etc).
-
-Breaking the tools down into small steps allows these functions to be developed
-independently. Much of the code and rules can be re-used for future tool
-development.
-
-The examples below are based on 'fake' data, indices and classification methods
-and is just 'dream code' at the moment...
-
-This demo dataset contains information on diatoms, fish and inverts:
-
-```
-library(hera)
-str(demo_data)
-
-```
-
-1. Validate predictors and observations are correct and within the bounds of the model:
-
-```
-
-validations <- validation(demo_data)
-
-```
-
-2. We run this dataset through hera calculating observed indices required for each sample:
-
-```
-
-indices <- indices(demo_data)
-head(indices)
-
-```
-
-3. We can also predict reference indices for each sample:
-
-```
-
-predictions <- prediction(demo_data)
-head(predictions)
-
-```
-
-4. Based on the predicted and observed indices - we classify each sample:
-
-```
-
-class <- classification(demo_data)
-head(class)
-
-```
-
-5. We now aggregated the samples by season, year or multi-year as required:
-
-```
-
-aggregate <- aggregations(demo_data, c("year","season","waterbody"))
-head(class)
-
-```
-
-6. We now run a report assesses samples from the same location for consistency.
-Note, that no report for fish is produced, the necessary adjustment/interpretation
-parameters have not been created for fish. This demonstrates that it is step by
-step process. Not all tools/models will have all the features development if not
-required or if not prioritized:
-
-```
-compare_report <- compare(new_data, old_data)
-compare_report
-
-```
-
-We now run a report assesses two samples assess a discharge (up and downstream):  
-
-```
-compare_report <- compare(site_one, site_two)
-compare_report
-
-```
-## Sharing
-
-hera allows multiple ecological elements to be assessed through the same
-interface. But not just the interface is shared. Other areas of the
-infrastructure are shared including:
-
-- Reporting and comparison tools can also be shared between multiple
-elements. 
-- Validation checks and other universally required mechanisms
-are shared and easily configurable for new models/methods.
-- Testing infrastructure. 
-- Confidence of class and data suitability algorithms. 
 
 # How we Teach This
 

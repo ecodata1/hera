@@ -6,7 +6,7 @@
 #' @format A data frame with 1 rows and 5 variables:
 #' \describe{
 #'   \item{analysis_name}{Name of WFD analysis}
-#'   \item{validate_function}{Function to validate data}
+#'   \item{validation_function}{Function to validate data}
 #'   \item{indices_function}{Functoin to calculate observed indices from raw data}
 #'   \item{prediction_function}{Function to predict reference indices based on predictors}
 #'   \item{classification_function}{Funciton to classify predictions based on observed against predicted indices}

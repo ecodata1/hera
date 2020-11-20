@@ -18,13 +18,17 @@
 #' @export
 classification <- function(data = NULL) {
   message("Hello from hera, ...work in progress!")
-  # Calculate indices and predictions
-  data <- prediction(data)
+  # Nest data by sample and analysis
 
+  data <- data %>%
+    group_by(.data$sample_number, .data$analysis_repname) %>%
+    nest()
+
+  model_dataframe <- hera:::create_model_dataframe()
   # Join raw dataset to model_dataframe
   data <- inner_join(data,
-    hera::model_dataframe[, c("analysis_name", "classification_function")],
-    by = c("analysis_name" = "analysis_name")
+    model_dataframe[, c("analysis_repname", "classification_function")],
+    by = c("analysis_repname" = "analysis_repname")
   )
 
   # Loop through each sample and apply prediction function from 'model_dataframe'
@@ -32,7 +36,8 @@ classification <- function(data = NULL) {
     mutate(classification = map(.data$data, .data$classification_function))
 
   # Unnest and return
-  data <- unnest(data, .data$classification)
+  data <- select(data, -.data$classification_function)
+  data <- unnest(data, cols = c(.data$data, .data$classification))
 
   return(data)
 }
