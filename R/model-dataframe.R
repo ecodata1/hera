@@ -7,7 +7,7 @@
 #' \describe{
 #'   \item{analysis_name}{Name of WFD analysis}
 #'   \item{validation_function}{Function to validate data}
-#'   \item{indices_function}{Functoin to calculate observed indices from raw data}
+#'   \item{indices_function}{Function to calculate observed indices from raw data}
 #'   \item{prediction_function}{Function to predict reference indices based on predictors}
 #'   \item{classification_function}{Funciton to classify predictions based on observed against predicted indices}
 #' }

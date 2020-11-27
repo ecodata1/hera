@@ -18,12 +18,13 @@
 #' @export
 prediction <- function(data = NULL) {
   message("Hello from hera, ...work in progress!")
+
   # Nest data by sample and analysis
   data <- data %>%
     group_by(.data$sample_number, .data$analysis_repname) %>%
     nest()
 
-  model_dataframe <- hera:::create_model_dataframe()
+  model_dataframe <- create_model_dataframe()
   # Join raw dataset to model_dataframe
   data <- inner_join(data,
     model_dataframe[, c("analysis_repname", "prediction_function")],

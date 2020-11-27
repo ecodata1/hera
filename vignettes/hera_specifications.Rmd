@@ -26,6 +26,7 @@ library(hera)
 library(darleq3)
 library(fcs2)
 library(rict)
+set.seed(42)
 
 ```
 
@@ -48,17 +49,20 @@ WARNING: Blue sky thinking ahead
 
 Keywords: collection, modelling, prediction, classification, forecast, scenario
 
+> **TL:DR - To get a flavour of running multiple classification tools using a shared**
+> **interface and data structures - check out the [hera demo website GUI]()**
+
 # Summary
 
-We propose all new tool development share a common set of design principles,
-interfaces and data structures.
+We propose regulatory tools share a common set of design principles, interfaces
+and data structures.
 
 Specifically, we propose an official collection of R packages designed to
 provide collaborative workflow for building and using classification tools. In
 turn, these packages will be integrated into a single package called 'hera'.
-This provides a common interface to run classification. We expect this process
-will facilitate code re-use, faster integration and knowledge exchange
-between method developers and practitioners.
+This provides a common interface to run regulatory classification. We expect
+this process will facilitate code re-use, faster integration and knowledge
+exchange between method developers and practitioners.
 
 # Motivation
 
@@ -70,9 +74,9 @@ tool development in response to changing environmental pressures and improving
 scientific understanding. As access to modelling tools become more routine, we
 expect a proliferation of models and indices in the years ahead. For instance,
 new tools for diagnosing pressures, updates to existing tools and catchment
-scale planning. To effectively combine multiple model and tools into an
-integrate system to understand the environment we propose a they share a common
-design philosophy to aid integration and management.
+scale planning. To aid better understanding of the environment through
+effectively combining multiple models and tools, we propose a they share a
+common design philosophy to aid integration and collaboration.
 
 # Key Ideas
 
@@ -95,15 +99,15 @@ a more large scale environmental and climate models. These 'total environment'
 models may for instance use climate change models to forecast impact on
 invertebrates, water-use models to predict the impact on fish or spatial
 planning tools the impact on nutrient levels. The outputs will be used across
-disciples both for RBMP and beyond for flood management, biodiversity
-improvements, carbon sequestering etc. Allowing multi-discipline assessment of
-impacts and trade-offs for each planning scenario and proposed measures -
-ensuring well-informed decisions-making.
+regulatory reporting for RBMP, flood management, biodiversity improvements,
+carbon sequestering etc. Allowing multi-discipline assessment of impacts and
+trade-offs for each planning scenario and proposed measures - ensuring
+well-informed decisions-making.
 
 All ecological data along with chemistry, climate, meteorological, geological
-will be freely and easily accessible. We assume agencies will upload fish
-counter data, plant DNA or aerial imagery etc, which will be ingested into the
-'lake' of environmental data.
+will be freely and easily accessible. We assume agencies will upload all data
+such as fish counter data, plant DNA or aerial imagery etc, into a 'lake' of
+environmental data.
 
 To take step towards this vision, the underlying design of a models and tools
 must be modular and easy to connect and integrate in a variety of ways.
@@ -121,21 +125,21 @@ forecasting communities. And on-going work in the R community such as [ropenSci]
 
 ## Shared Packages
 
-Currently we have a number of model packages shared on github:
+Currently we have a number of classification tool R packages shared on github:
   
 1. [darleq3](https://github.com/nsj3/darleq3) - Phytobenthos  
 2. [fsc2](https://github.com/aquaMetrics/fcs2) - Scottish river fish  
 3. [rict](https://github.com/aquaMetrics/rict) - General invertebrate classification  
   
 We propose these tools become part of official collection of packages and
-overtime, integrate more fully with each other.
+we work towards making them inter-operable via the `hera` package.
 
 ## Hera
 
 Here we introduce a prototype R package called
 [hera](https://github.com/ecodata1/hera). The key idea, is `hera` provides a
 common interface for existing WFD packages and future developments. This is
-achieved through a shared set of functions required to run and report
+achieved through a set of shared functions required to run and report
 classification. It builds on the best practice idea of how to [run many
 models](https://r4ds.had.co.nz/many-models.html) simultaneously in R while
 keeping the input and output data formats simple and homogeneous. We explain each
@@ -143,62 +147,66 @@ function in detail below.
 
 ### Key steps
 
-These key steps allows functions to be developed independently. Much of the code
-and rules can be re-used for future tool development.
+Below, we breakdown classification into independent steps. Each step resprents a
+function within the hera package. This allows the code and rules between
+existing and future tool development.
+  
+The examples below provide a taste of how this RFC could be implemented. 
+**Keep in mind, they are not full, complete or accurate. The data structure, naming and details could all change, they are presented as a rough draft**
 
-The examples below provide a taste of how this RFC could be implemented. Keep in mind,
-they are not full, complete or accurate. The data structure, naming and details
-could all change.
+### Validation
 
-### Validate
-
-Firstly, validate predictors and observations are correct and within the bounds of the model:
+Firstly, sense-check the predictor and observation data is with expect limits.
+Additionally, check the data is within the expect parameter space based on
+training data used to create the classification model. Return the passing
+data and list of warnings/fails.
 
 ```{r, echo=TRUE}
-set.seed <- 42
+library(hera)
+library(tidyverse)
 demo_data <- hera::demo_data
-validations <- validation(demo_data)
-head(validations, 5)
+validation(demo_data) %>% 
+  head(5)
 ```
 
-### Calculate Indices
+### Indices
 
-We run validated data through the `indices` function, calculating observed indices scores as required for each sample:
-
+Using the  `indices()` function, we calculate observed indices scores as required for each sample. 
 
 ```{r, echo=TRUE}
- 
- indices(demo_data) %>% 
- group_by(analysis_repname) %>% 
- slice_sample(n = 4) %>% 
- select(sample_number, indices)
+indices(demo_data) %>%
+  select(sample_number, indices) %>%
+  unnest(indices) %>% 
+  group_by(analysis_repname) %>%
+  slice_sample(n = 4) 
 
 ```
 
 Note, the invert indices are not calculated, they have been pre-calculated and are in the demo_data from the start. 
 
-### Predict 
+### Prediction 
 
 We then predict reference scores for each sample:
 
 ```{r, echo=TRUE}
- prediction(demo_data[1:2200, ]) %>% 
- group_by(analysis_repname) %>% 
- slice_sample(n = 4) %>% 
- select(sample_number, prediction) 
+prediction(demo_data[1:2200, ]) %>%
+  group_by(analysis_repname) %>%
+  slice_sample(n = 4) %>%
+  select(sample_number, prediction) %>%
+  unnest(prediction)
 
 ```
 
 See documentation [`prediction()`](https://ecodata1.github.io/hera/reference/prediction.html)
-for more information
+for more information.
 
-### Classify
+### Classification
 
-Based on the predicted and observed indices - we classify each sample:
+Based on the predicted and observed indices - we classify each sample using `classification()`:
 
 ```{r, echo=TRUE}
 
- classification(demo_data) %>% 
+classification(demo_data) %>% 
  group_by(analysis_repname) %>% 
  slice_sample(n = 4) %>% 
  select(sample_number, classification)
@@ -207,20 +215,20 @@ Based on the predicted and observed indices - we classify each sample:
 
 Note, classification results for inverts are missing - this has not be implemented yet.
 
-### Aggegate
+### Aggegation
 
 We now aggregate the samples by season, year or multi-year as required:
 
 ```
 
-aggregate <- aggregations(demo_data, c("year","season","waterbody"))
+aggregate <- aggregation(demo_data, c("year","season","waterbody"))
 head(class)
 
 ```
 
 ### Report
 
-We now run a report assesses samples from the same location for consistency.
+We now run a report assessing samples from the same location for consistency.
 Note, that no report for fish is produced, the necessary adjustment/interpretation
 parameters have not been created for fish. This demonstrates that it is step by
 step process. Not all tools/models will have all the features development if not
@@ -240,11 +248,221 @@ compare_report
 
 ```
 
-### Bringing it all together
+### Diagnosis
 
-For the most part we don't expect users to go through each of these steps. But for developers and researchers it is useful to think about classification within this framework. For the majority of end users, agency staff or consultants, they can open a the GUI `hera_app()` (or hosted website). However advanced users can use the `hera` function to wrap all these steps together from example `hera(hera::demo_data)`.
+As well as classification of water quality, additional we need to diagnose potential pressures. We use the `diagnosis()` function to report potential pressures.
 
-Furthermore, agencies can integrate these functions into their systems using web services. Please see the demo service that has been hosted to demonstrate this option. 
+```
+diagnosis(demo_data) %>% 
+select(sample_id, diagnosis)
+head()
+
+```
+
+### Scenarios
+
+A number of forecasting or scenario tools could be incorporated for either projecting current trends or assessing the impact of proposed measures. 
+
+```
+scenario(demo_data, trends) %>%  
+head()
+
+scenario(demo_data, measures) %>% 
+head()
+
+```
+
+### The Whole Game
+
+For the most part we don't expect users to go through each of these steps. But
+for developers and researchers it is useful to think about classification within
+this framework. For the majority of end users, agency staff or consultants, they
+can open the GUI `hera_app()` or visit the website directly. However, advanced
+users can use the `hera` function to wrap all these steps together fot example
+`hera(hera::demo_data)`.
+  
+Furthermore, agencies can integrate these functions into their systems using web
+services. Please see the [demo web
+service](https://cloud.opencpu.org/ocpu/apps/ecodata1/hera/info) and [api
+documentation](https://www.opencpu.org/api.html) for using
+[opencpu](https://www.opencpu.org/) hosted packages.
+
+## Lots of datasets - one underlying data structure?
+
+Ecological modelling relies on sampling. The samples come in a range of forms
+from points, transects, images, grabs, DNA etc. But the general feature of
+modelling is based on being able to predict what we expect to find from whatever
+sampling technique we deploy. The sample is the fundamental observation which we
+compare against our prediction. The samples are discreet, either observed
+instantaneously or perhaps over a few minutes or hours (where dynamic changes
+are not significant).
+  
+Multiple samples can be aggregated to smooth variance but the sample still
+remains the fundamental building block. The sample could be a single pixel from
+an aerial image or a salmon moving through a fish counter. We still make
+predictions of what we expect this sample to be like even if the true picture
+only emerges after several samples are aggregated or compared.
+
+Therefore, all our data share similarities, they consist of samples and
+observations. And additionally for each sample with have predictor variables to
+allow us to predict expected reference condition values.
+
+### Data dictionary
+
+The Europe Environment Agency as prodcued a data dictionary for reporting. However this is mainly for high-level reporting. We use some aspects of thi standard here to aid onward reporting to EEA.
+
+
+### What does this look like?
+
+A small sample demo dataset `demo_input` contains diatoms, macrophytes and inverts quality elements. 
+
+```{r}
+hera::demo_input %>%  
+  select(location_description, date_taken, sample_id, quality_element) %>% 
+  group_by(quality_element) %>% 
+  slice_sample() %>% 
+  head(5)
+  
+```
+
+### Book-keeping variables
+
+First of all, we have 'book-keeping' variables. These allow us to reference data
+associated with particular samples, locations or WFD methods. And allow results
+to be aggregate at different levels.
+
+```{r}
+hera::demo_input %>% select(location_id, sample_id, quality_element) %>% 
+  head(5)
+
+```
+
+All data passed into hera must have these three variables. For *ad hoc*
+reporting, consultancies and students etc who don't routinely record unique
+sample ids, a sample_id is generate if `date_taken` and `location_id` are
+provided.
+  
+These three variables are the minimal required, but in practice `water_body_id`
+maybe required for aggregation or simply `location_description` or `NGR` etc to
+help reference sites more easily. There is no restriction no what extra columns
+are added and these columns will be added to the outputs.
+
+### Observations
+
+An observation consists of three variables `question`, `response` and
+`observation_id`. The `observation_type` uniquely  identifies the type of
+observation made. The `question` variable identifies the what is being
+determined such as `alkalinity` or `depth` etc. And the `response` is the value
+observed or recorded for that question.
+
+Below is an example of diatom records, invert data and river flow in a shared
+input format.
+
+```
+demo_data %>% select(observation_id, question, response)
+
+```
+  
+In theory, this is all that is required. However for ease for interacting with
+existing dataset and *ad hoc* data, a fourth column `taxon` is useful due to the
+historic way taxon data is usually stored.
+
+```
+demo_data %>% select(taxon, question, response)
+
+```
+
+### Predictors
+
+Predictive variables such as `temperature`, `altitude`, `slope` are added as
+additional columns. There is a trade-off here as predictor variables are added
+for each row in the dataset, increasing the size of the dataset. However this
+does make data analysis straightforward and this repeated can be easily
+compressed if size becomes an issue.
+
+```
+demo_data %>%  select(`mean_alkalinity`, `altitude`, `distance_from_source`)
+
+```
+
+### Indices, predictions, classification, reports
+
+The outputs are all presented in a consistent format making
+outputs from different models instantly comparable and portable.
+
+## Data input
+
+For students and consultancies requiring *ad hoc* usage, templates and documentation for preparing data will be provided. 
+
+For Agencies, data queries can be written to prepare outputs in the correct format. 
+
+For instance, we imagine each agency will have an R package to pull data from their databases and convert to the required input format
+
+```
+tay_data <- import_data(river_name = "River Tay")
+hera(tay_data)
+
+```
+
+## Shared Data Tables 
+
+Following data tables are shared through `hera`...
+
+* Validation Rules
+* WFD Indices, Model and Environmental Standards
+* Taxon Table
+* EQR Boundaries
+* WFD Parameter Hierarchy
+
+### Models and Environmental Standards names
+
+```{r}
+
+hera:::create_model_dataframe() %>% 
+  select(standard, quality_element, classification_function)
+
+
+```
+
+
+
+## Model platform
+
+This RFC is mainly looking at a share design for inputs and outputs from
+classification tools.
+
+This framework does however encourage a shared principles in thinking about the
+approach to modelling required which drives the classification method. However,
+we see no need to prescribe a modelling program or software. Researchers can
+download the reference and predictor data required and use any software they
+desire. Ultimately, the model we need to be called by R. So either the model
+needs to be written into R or in language which can be called by R (Python,
+fortran, C++ etc).
+
+Alternatively, if researchers can't provide an api for R to call, the
+recommendation is to use R - which integrates more directly into the pipeline.
+
+Once modelling is completed, the model object is saved and deployed. Any
+existing or future data collected using the platform will be run through the
+model at the sample level.
+  
+Researchers can then build tools to display and aggregate the sample level
+results as required (Waterbody, Year, Catchment etc). Where it would be possible
+to share techniques for producing Confidence of Class, assessment of data
+suitability and adjustment factors etc.
+
+# How we Teach This
+
+As new WFD developments and updates requirements are identified, the lead
+contacts from the agencies and method developers are 'on-boarded' to demonstrate
+the design principles and collaborative framework of packages. Where skill
+development is required further training can be provided, or additional external
+or internal support from the agency commissioning the work.
+  
+A workshop for lead data experts / R coders from each agency delivers
+institutional knowledge on how internally developed tools will fit with the
+shared design philosophy as well as seeting expectations for colloaboration with
+external researchers.
 
 ## Sharing
 
@@ -270,126 +488,6 @@ As agencies commission new tools to be developed, researchers can upload their
 predictive variables, reference data and models into a central repo for easier
 collaboration.
 
-## Lots of datasets - one underlying data structure?
-
-Ecological modelling relies on sampling. The samples come in a range of forms
-from points, transects, images, grabs, DNA etc. But the general feature of
-modelling is based on being able to predict what we expect to find from whatever
-sampling technique we deploy. The sample is the fundamental observation which we
-compare against our prediction. The samples are discreet and independent, either
-observed instantaneously or perhaps over a few minutes or hours (where dynamic
-changes are not significant).
-  
-Multiple samples can be aggregated to smooth variance but the sample still
-remains the fundamental building block. The sample could be a single pixel from
-an aerial image or a salmon moving through a fish counter. We still make
-predictions of what we expect this sample to be like even if the true picture
-only emerges after several samples are aggregated or compared.
-
-## What does this look like?
-
-This demo dataset contains information on diatoms, fish and inverts:
-
-```
-library(hera)
-str(demo_data)
-
-```
-
-Below is an example of diatom records, invert data and river flow in a shared
-input format.
-  
-They share some reference/book keeping variables but not all. Ultimately, only
-one reference is needed which is a unique sample id. The other reference
-variables can be 'nested' or in others words there can be as many or a few as
-you like. These nested values could be sample type, collector, instrument
-details etc. Or variables later used for aggregation such as water body, river,
-geographic area etc. For example:
-
-```{r}
-data <- utils::read.csv(system.file("extdat",
-                                    "test-data.csv",
-                                    package = "hera"
-))
-
-
-knitr::kable(data.frame("sample_id" = 192342,
-                        "nested meta data" = names(data[, 2:6]),
-                        "question" = "whpt_aspt_abundance",
-                        "response" = 6.348,
-                        check.names = FALSE))
-
-```
-
-## Predictors
-
-Predictive variables such as temperature, altitude, slope etc are also metadata
-can can be nested, as they are the same for each sample.
-
-## Observations 
-
-The observation comes in two parts, the unique name/id for what you are
-observing and the value associated with it. For clarity these variables are
-called 'question' and 'response'. The question could be "Taxon name?" and the
-response "Brown Trout". However, the question must be unique. As 'Taxon name?'
-will be different depending on what survey is being undertaken. So question_id
-and response_id are given to allow these to be unique with metadata to provide a
-more readable format.
-  
-UUID are used to provide unique IDs for this variables. 
-
-```{r}
-
- data <- nest(data, meta_variables = c(2:6, 9:26))
-# data <- nest(meta_variables = c(2:6))
-knitr::kable(data[1:2,])
-
-```
-
-## Data input
-
-Data input is through mobile or internet connected devices. The question_id and
-related meta data is configured. Manual or automated data can be collected.
-As new WFD developments and updates requirements are identified, the lead
-contacts from the agencies and method developers are 'on-boarded' to explain the
-expectations and examples of building collaborative framework of packages. Where
-skill develop is required further training can be provided, or additional
-external or internal support from the agency commissioning the work.
-A workshop for lead data experts / R coders from each agency delivers
-institutional knowledge on how internally developed tools will fit with the
-design philosophy and expectations of how external researchers will collaborate
-on building new tools.
-
-## Model platform
-
-There is no prescribed modelling program or software. Researchers can download
-the data provided and use any software they desire - as long as it has an API
-
-Alternatively, if researchers can't provide an api for others. The
-recommendation is to use R - which integrates more directly into the pipeline.
-
-Once modelling is completed, the model object is saved and deployed. Any
-existing or future data collected using the platform will be run through the
-model at the sample level.
-
-Researchers can then build tools to display and aggregate the sample level
-results as required (Waterbody, Year, Catchment etc). Where it would be possible
-to share techniques for producing Confidence of Class, assessment of data
-suitability and adjustment factors etc.
-
-
-# How we Teach This
-
-As new WFD developments and updates requirements are identified, the lead
-contacts from the agencies and method developers are 'on-boarded' to demonstrate
-the design principles and collaborative framework of packages. Where skill
-development is required further training can be provided, or additional external
-or internal support from the agency commissioning the work.
-  
-A workshop for lead data experts / R coders from each agency delivers
-institutional knowledge on how internally developed tools will fit with the
-shared design philosophy as well as seeting expectations for colloaboration with
-external researchers.
 
 # Alternatives
 
@@ -397,8 +495,7 @@ external researchers.
 
 # Unresolved questions
 
-- Should all reference data be combined into a single repository / web service?
-- Should all predictor data be combined into a single repository / web service?
+- Should all reference/predictor data be combined into a single repository / web service?
 
 # Appendix
 
@@ -443,7 +540,7 @@ test
 names(demo_observed_values)
 ```
 
-## Input formats
+## Output formats
 
 ### FCS2 example
 

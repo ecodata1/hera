@@ -24,7 +24,7 @@ classification <- function(data = NULL) {
     group_by(.data$sample_number, .data$analysis_repname) %>%
     nest()
 
-  model_dataframe <- hera:::create_model_dataframe()
+  model_dataframe <- create_model_dataframe()
   # Join raw dataset to model_dataframe
   data <- inner_join(data,
     model_dataframe[, c("analysis_repname", "classification_function")],
@@ -38,6 +38,5 @@ classification <- function(data = NULL) {
   # Unnest and return
   data <- select(data, -.data$classification_function)
   data <- unnest(data, cols = c(.data$data, .data$classification))
-
   return(data)
 }

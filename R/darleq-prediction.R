@@ -11,7 +11,6 @@ darleq_prediction <- function(data) {
 
   # 1. Prepare data frame of 'header' ----------------------------------
   # include: SampleID, Site.Name, SAMPLE_DATE, Alkalinity
-
   data$alkalinity <- 75
   # Combine mean alkalinity with other site headers
   header <- data %>%
@@ -95,5 +94,9 @@ darleq_prediction <- function(data) {
   header <- data.frame(header)
   output <- darleq3::calc_Metric(diatom_data, metric = "TDI4")
   output <- darleq3::calc_EQR(output, header, truncate_EQR = TRUE, verbose = TRUE)
-  return(output$EQR$eTDI4)
+  output <- tibble(
+    "index" = "TDI4",
+    "predicted_value" = output$EQR$eTDI4
+  )
+  return(output)
 }

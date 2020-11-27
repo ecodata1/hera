@@ -17,7 +17,7 @@
 #' @importFrom purrr map
 #' @export
 hera <- function(data = NULL) {
-  validations <- validation(demo_data)
+  validations <- validation(data)
   indices <- indices(validations)
   predictions <- prediction(indices)
   classifications <- classification(predictions)

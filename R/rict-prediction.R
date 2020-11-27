@@ -28,7 +28,7 @@ rict_prediction <- function(data) {
 
   # NGR columns
   data <- tidyr::separate(data,
-    national_grid_reference,
+    .data$national_grid_reference,
     into = c(
       "NGR",
       "NGR_EASTING",
@@ -62,7 +62,7 @@ rict_prediction <- function(data) {
   }
 
 
-  data <- pivot_wider(data, names_from = determinand, values_from = value)
+  data <- pivot_wider(data, names_from = .data$determinand, values_from = .data$value)
   # Join to template
   rict_template <- function() {
     template <- data.frame(
@@ -109,14 +109,14 @@ rict_prediction <- function(data) {
   data <- data.frame(data, check.names = TRUE)
   summarise_data <- dplyr::group_by(
     data,
-    location,
-    ngr,
-    ngr_easting,
-    ngr_northing,
-    sample_id,
-    season,
-    s_discharge_cat,
-    water_body_id
+    .data$location,
+    .data$ngr,
+    .data$ngr_easting,
+    .data$ngr_northing,
+    .data$sample_id,
+    .data$season,
+    .data$s_discharge_cat,
+    .data$water_body_id
   )
   # Suppress warning because of missing values
   summarise_data <- suppressWarnings(dplyr::summarise_all(
@@ -126,37 +126,37 @@ rict_prediction <- function(data) {
 
   # Select
   rict_data <- dplyr::select(summarise_data,
-    "SITE" = location,
-    "Waterbody" = water_body_id,
-    "Year" = year,
-    "NGR" = ngr,
-    "Easting" = ngr_easting,
-    "Northing" = ngr_northing,
-    "Altitude" = s_altitude,
-    "Slope" = s_slope,
-    "Discharge" = s_discharge_cat,
-    "Dist_from_Source" = s_dist_from_source,
-    "Mean_Width" = river.width..m.,
-    "Mean_depth" = mean.depth..cm.,
-    "Alkalinity" = alkalinity,
-    "Total_samples" = sample_count,
-    "Samples_used" = samples_used,
-    "Alk_start" = min_date,
-    "Alk_end" = max_date,
-    Boulder_Cobbles = X..boulders.cobbles,
-    Pebbles_Gravel = X..pebbles.gravel,
-    Sand = X..sand,
-    Silt_Clay = X..silt.clay,
-    "Spr_Season_ID" = season,
+    "SITE" = .data$location,
+    "Waterbody" = .data$water_body_id,
+    "Year" = .data$year,
+    "NGR" = .data$ngr,
+    "Easting" = .data$ngr_easting,
+    "Northing" = .data$ngr_northing,
+    "Altitude" = .data$s_altitude,
+    "Slope" = .data$s_slope,
+    "Discharge" = .data$s_discharge_cat,
+    "Dist_from_Source" = .data$s_dist_from_source,
+    "Mean_Width" = .data$river.width..m.,
+    "Mean_depth" = .data$mean.depth..cm.,
+    "Alkalinity" = .data$alkalinity,
+    "Total_samples" = .data$sample_count,
+    "Samples_used" = .data$samples_used,
+    "Alk_start" = .data$min_date,
+    "Alk_end" = .data$max_date,
+    Boulder_Cobbles = .data$X..boulders.cobbles,
+    Pebbles_Gravel = .data$X..pebbles.gravel,
+    Sand = .data$X..sand,
+    Silt_Clay = .data$X..silt.clay,
+    "Spr_Season_ID" = .data$season,
     "Spr_TL2_WHPT_NTaxa (AbW,DistFam)" = "whpt.ntaxa.abund",
     "Spr_TL2_WHPT_ASPT (AbW,DistFam)" = "whpt.aspt.abund",
-    "Sum_Season_ID" = season,
+    "Sum_Season_ID" = .data$season,
     "Sum_TL2_WHPT_NTaxa (AbW,DistFam)" = "whpt.ntaxa.abund",
     "Sum_TL2_WHPT_ASPT (AbW,DistFam)" = "whpt.aspt.abund",
-    "Aut_Season_ID" = season,
+    "Aut_Season_ID" = .data$season,
     "Aut_TL2_WHPT_NTaxa (AbW,DistFam)" = "whpt.ntaxa.abund",
     "Aut_TL2_WHPT_ASPT (AbW,DistFam)" = "whpt.aspt.abund",
-    sample_id,
+    .data$sample_id,
     season = "season"
   )
 
@@ -202,10 +202,20 @@ rict_prediction <- function(data) {
   rict_data$Discharge <- 4
   rict_data$Dist_from_Source <- 15
 
-  rict_prediction <- rict::rict_validate(rict_data,stop_if_all_fail = FALSE)
-  if(nrow(rict_prediction$data) == 0) {
+  rict_prediction <- rict::rict_validate(rict_data, stop_if_all_fail = FALSE)
+  if (nrow(rict_prediction$data) == 0) {
     return(NULL)
   }
   rict_prediction <- rict::rict_predict(rict_data)
+  rict_prediction <- tibble(
+    "index" = c(
+      "WHPT ASPT",
+      "WHPT NTAXA"
+    ),
+    "predicted_value" = c(
+      rict_prediction$TL2_WHPT_ASPT_AbW_DistFam_spr,
+      rict_prediction$TL2_WHPT_NTAXA_AbW_DistFam_spr
+    )
+  )
   return(rict_prediction)
 }

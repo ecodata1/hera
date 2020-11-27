@@ -39,9 +39,8 @@ devtools::install_github("ecodata1/hera")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+In development…
 
 ``` r
-## Currently no functions! Read the Request for Comment above! 
 library(hera) 
 ```

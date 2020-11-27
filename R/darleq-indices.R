@@ -11,7 +11,6 @@ darleq_indices <- function(data) {
 
   # 1. Prepare data frame of 'header' ----------------------------------
   # include: SampleID, Site.Name, SAMPLE_DATE, Alkalinity
-
   data$alkalinity <- 75
   # Combine mean alkalinity with other site headers
   header <- data %>%
@@ -95,5 +94,35 @@ darleq_indices <- function(data) {
   header <- data.frame(header)
   output <- darleq3::calc_Metric(diatom_data, metric = "TDI4")
   output <- darleq3::calc_EQR(output, header, truncate_EQR = TRUE, verbose = TRUE)
-  return(output$EQR$TDI4)
+  output <- tibble(
+    "index" = c(
+      "Alkalinity",
+      "Lake Type",
+      "Total Count",
+      "Percent in TDI4",
+      "N TDI4",
+      "N2 TDI4",
+      "Max TDI4",
+      "TDI4",
+      "Motile",
+      "Organic Tolerant",
+      "Planktic",
+      "Saline"
+    ),
+    "value" = c(
+      output$EQR$Alkalinity,
+      output$EQR$lake_TYPE,
+      output$EQR$Total_count,
+      output$EQR$Percent_in_TDI4,
+      output$EQR$N_TDI4,
+      output$EQR$N2_TDI4,
+      output$EQR$Max_TDI4,
+      output$EQR$TDI4,
+      output$EQR$Motile,
+      output$EQR$OrganicTolerant,
+      output$EQR$Planktic,
+      output$EQR$Saline
+    )
+  )
+  return(output)
 }

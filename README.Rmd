@@ -46,10 +46,10 @@ devtools::install_github("ecodata1/hera")
 ```
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+In development...
 
-```{r example}
-## Currently no functions! Read the Request for Comment above! 
+```{r example, warning=F, message=F}
 library(hera) 
+
 ```
 

@@ -6,7 +6,7 @@
 #'
 #' @param data Dataframe of variables in WFD inter-change format
 #'
-#' @return Dataframe of Validation
+#' @return Dataframe of validation messages
 #' @examples
 #' validations <- validation(demo_data)
 #' @importFrom rlang .data
@@ -23,7 +23,7 @@ validation <- function(data = NULL) {
     group_by(.data$sample_number, .data$analysis_repname) %>%
     nest()
 
-  model_dataframe <- hera:::create_model_dataframe()
+  model_dataframe <- create_model_dataframe()
   # Join raw dataset to model_dataframe
   data <- inner_join(data,
     model_dataframe[, c("analysis_repname", "validation_function")],

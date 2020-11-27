@@ -7,5 +7,4 @@
 
 rict_classification <- function(data) {
   return()
-
 }

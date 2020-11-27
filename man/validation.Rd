@@ -10,7 +10,7 @@ validation(data = NULL)
 \item{data}{Dataframe of variables in WFD inter-change format}
 }
 \value{
-Dataframe of Validation
+Dataframe of validation messages
 }
 \description{
 Validation of input data.
