@@ -20,15 +20,19 @@ prediction <- function(data = NULL) {
   message("Hello from hera, ...work in progress!")
 
   # Nest data by sample and analysis
+  # create 'outer' reference for nesting - retaining the original ref inside the
+  data$sample_number <- data$sample_id
+  data$quality_elements <- data$quality_element
+  # nested data
   data <- data %>%
-    group_by(.data$sample_number, .data$analysis_repname) %>%
+    group_by(.data$sample_number, .data$quality_elements) %>%
     nest()
 
-  model_dataframe <- create_model_dataframe()
+  model_dataframe <- hera:::create_model_dataframe()
   # Join raw dataset to model_dataframe
   data <- inner_join(data,
-    model_dataframe[, c("analysis_repname", "prediction_function")],
-    by = c("analysis_repname" = "analysis_repname")
+    model_dataframe[, c("quality_element", "prediction_function")],
+    by = c("quality_elements" = "quality_element")
   )
 
   # Loop through each sample and apply prediction function from 'model_dataframe'

@@ -11,6 +11,7 @@ darleq_prediction <- function(data) {
 
   # 1. Prepare data frame of 'header' ----------------------------------
   # include: SampleID, Site.Name, SAMPLE_DATE, Alkalinity
+
   data$alkalinity <- 75
   # Combine mean alkalinity with other site headers
   header <- data %>%
@@ -19,7 +20,7 @@ darleq_prediction <- function(data) {
       "DATE_TAKEN" = as.Date(.data$date_taken, tz = "GB")
     ) %>%
     select(.data$SampleID,
-      "SiteID" = .data$location_code,
+      "SiteID" = .data$location_id,
       "SAMPLE_DATE" = .data$date_taken,
       "Alkalinity" = .data$alkalinity
     ) %>%
@@ -40,7 +41,7 @@ darleq_prediction <- function(data) {
 
   # 2. Prepare dataframe of 'diatom_data' -------------------------------
   # - Include columns for each diatom ID (from NEMS Dares table)
-  # - Values are abundances.
+  # - responses are abundances.
   # - row.names are SAMPLE_NUMBER.
 
   # DARES table
@@ -48,29 +49,32 @@ darleq_prediction <- function(data) {
   dares_table <- darleq3::darleq3_taxa
   # Filter for taxon abundance only
   diatom_taxon_abundance <- data %>%
-    filter(.data$determinand == "Taxon abundance")
+    filter(.data$question == "Taxon abundance")
 
   # Join to S_TAXON_DARES table using Taxon name.
   diatom_taxonname <- diatom_taxon_abundance %>%
-    select(.data$sample_id, .data$taxon, .data$value, .data$date_taken) %>%
+    select(.data$sample_id, .data$taxon, .data$response, .data$date_taken) %>%
     inner_join(dares_table[, c("TaxonName", "TaxonId", "TaxonNameSEPA")],
       by = c("taxon" = "TaxonNameSEPA")
     )
 
-  # Sum value if duplicate taxon names entered within a single sample
+  # Make sure numeric
+  diatom_taxonname$response <- as.numeric(as.character(diatom_taxonname$response))
+
+  # Sum response if duplicate taxon names entered within a single sample
   diatom_tidied <- diatom_taxonname %>%
     group_by(.data$sample_id, .data$TaxonId, .data$taxon, .data$date_taken) %>%
-    summarise(value = sum(.data$value))
+    summarise(response = sum(.data$response, na.rm = T))
   # Arrange to keep in same order as 'taxon_names' data.frame
   diatom_tidied <- diatom_tidied %>%
     ungroup() %>%
     arrange(.data$taxon) %>%
     select(-.data$taxon)
 
-  # DARLEQ3 requires Taxon IDs and Values pivoted into wide format
+  # DARLEQ3 requires Taxon IDs and responses pivoted into wide format
   diatom_data <- diatom_tidied %>% pivot_wider(
     names_from = .data$TaxonId,
-    values_from = .data$value,
+    values_from = .data$response,
   )
   diatom_data[is.na(diatom_data)] <- 0
 
@@ -96,7 +100,7 @@ darleq_prediction <- function(data) {
   output <- darleq3::calc_EQR(output, header, truncate_EQR = TRUE, verbose = TRUE)
   output <- tibble(
     "index" = "TDI4",
-    "predicted_value" = output$EQR$eTDI4
+    "predicted_response" = output$EQR$eTDI4
   )
   return(output)
 }

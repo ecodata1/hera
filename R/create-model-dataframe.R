@@ -1,7 +1,8 @@
 #' Knit Together Model Functions
 #'
 #' A low-level function for package developers to update the dataframe of model
-#' functions required for each WFD parameter
+#' functions required for each WFD parameter.
+#'
 #' @examples
 #' \dontrun{
 #' model_dataframe <- hera:::create_model_dataframe()

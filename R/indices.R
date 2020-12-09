@@ -21,16 +21,18 @@ indices <- function(data, index = NULL) {
   message("Hello from hera, ...work in progress!")
 
   data$index_to_run <- index
+  data$sample_number <- data$sample_id
+  data$quality_elements <- data$quality_element
   # Nest data by sample and analysis
   by_sample_number <- data %>%
-    group_by(.data$sample_number, .data$analysis_repname) %>%
+    group_by(.data$sample_number, .data$quality_elements) %>%
     nest()
 
   model_dataframe <- create_model_dataframe()
   # Join predictions dataframe to data
   by_sample_number <- inner_join(by_sample_number,
-    model_dataframe[, c("analysis_repname", "indices_function")],
-    by = c("analysis_repname" = "analysis_repname")
+    model_dataframe[, c("quality_element", "indices_function")],
+    by = c("quality_elements" = "quality_element")
   )
 
   # Loop through each sample and apply indices function from 'model_dataframe'

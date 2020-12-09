@@ -9,7 +9,7 @@ rict_prediction <- function(data) {
   # data <- demo_data
 
   bias <- 6.21
-  analysis <- "FW_TX_WHPT"
+  analysis <- "WHPT NTAXA Abund"
 
   names(data) <- tolower(names(data))
   # Remove any duplicate chemistry samples
@@ -28,7 +28,7 @@ rict_prediction <- function(data) {
 
   # NGR columns
   data <- tidyr::separate(data,
-    .data$national_grid_reference,
+    .data$grid_reference,
     into = c(
       "NGR",
       "NGR_EASTING",
@@ -37,7 +37,7 @@ rict_prediction <- function(data) {
     sep = " "
   )
 
-  data <- data[data$analysis_name %in% c("SURVEY_INV", "F_BMWP_SUM", "FW_TX_WHPT"), ]
+
   # needs refactoring - but if no Alk results returned then add blanks/NAs
   data$alkalinity <- 75
   data$sample_count <- NA
@@ -45,12 +45,13 @@ rict_prediction <- function(data) {
   data$min_date <- NA
   data$max_date <- NA
 
-  # Remove alkalinity samples (now that we have a mean alk for each ecology sample)
+  # Remove alkalinity samples (now that we have a mean alk for each predicted_responseecology sample)
   # data <- dplyr::filter(data, is.na(determinand_no))
 
   # Only with matching BMWP and SURVEY_INV
   data <- purrr::map_df(split(data, data$sample_id), function(sample) {
-    if (any(sample$analysis_name %in% analysis)) {
+
+    if (any(sample$question %in% analysis)) {
       return(sample)
     } else {
       return(NULL)
@@ -61,8 +62,8 @@ rict_prediction <- function(data) {
     return(NULL)
   }
 
-
-  data <- pivot_wider(data, names_from = .data$determinand, values_from = .data$value)
+  data$response <- as.numeric(as.character(data$response))
+  data <- pivot_wider(data, names_from = .data$question, values_from = .data$response)
   # Join to template
   rict_template <- function() {
     template <- data.frame(
@@ -103,10 +104,13 @@ rict_prediction <- function(data) {
   data <- dplyr::bind_rows(template_nems, data)
 
   # For each Ecology sample (survey_inv/F_BMWP_SUM) summarise
-  data$location <- paste0(data$location_code, ": ", data$location_description)
+  data$location <- paste0(data$location_id, ": ", data$location_description)
   data$water_body_id <- 3100
   names(data) <- tolower(names(data))
   data <- data.frame(data, check.names = TRUE)
+  names(data) <- tolower(names(data))
+
+
   summarise_data <- dplyr::group_by(
     data,
     .data$location,
@@ -143,10 +147,10 @@ rict_prediction <- function(data) {
     "Samples_used" = .data$samples_used,
     "Alk_start" = .data$min_date,
     "Alk_end" = .data$max_date,
-    Boulder_Cobbles = .data$X..boulders.cobbles,
-    Pebbles_Gravel = .data$X..pebbles.gravel,
-    Sand = .data$X..sand,
-    Silt_Clay = .data$X..silt.clay,
+    Boulder_Cobbles = .data$x..boulders.cobbles,
+    Pebbles_Gravel = .data$x..pebbles.gravel,
+    Sand = .data$x..sand,
+    Silt_Clay = .data$x..silt.clay,
     "Spr_Season_ID" = .data$season,
     "Spr_TL2_WHPT_NTaxa (AbW,DistFam)" = "whpt.ntaxa.abund",
     "Spr_TL2_WHPT_ASPT (AbW,DistFam)" = "whpt.aspt.abund",
@@ -212,7 +216,7 @@ rict_prediction <- function(data) {
       "WHPT ASPT",
       "WHPT NTAXA"
     ),
-    "predicted_value" = c(
+    "predicted_response" = c(
       rict_prediction$TL2_WHPT_ASPT_AbW_DistFam_spr,
       rict_prediction$TL2_WHPT_NTAXA_AbW_DistFam_spr
     )

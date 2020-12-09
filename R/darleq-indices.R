@@ -19,7 +19,7 @@ darleq_indices <- function(data) {
       "DATE_TAKEN" = as.Date(.data$date_taken, tz = "GB")
     ) %>%
     select(.data$SampleID,
-      "SiteID" = .data$location_code,
+      "SiteID" = .data$location_id,
       "SAMPLE_DATE" = .data$date_taken,
       "Alkalinity" = .data$alkalinity
     ) %>%
@@ -48,19 +48,20 @@ darleq_indices <- function(data) {
   dares_table <- darleq3::darleq3_taxa
   # Filter for taxon abundance only
   diatom_taxon_abundance <- data %>%
-    filter(.data$determinand == "Taxon abundance")
+    filter(.data$question == "Taxon abundance")
 
   # Join to S_TAXON_DARES table using Taxon name.
   diatom_taxonname <- diatom_taxon_abundance %>%
-    select(.data$sample_id, .data$taxon, .data$value, .data$date_taken) %>%
+    select(.data$sample_id, .data$taxon, .data$response, .data$date_taken) %>%
     inner_join(dares_table[, c("TaxonName", "TaxonId", "TaxonNameSEPA")],
       by = c("taxon" = "TaxonNameSEPA")
     )
 
+  diatom_taxonname$response <- as.numeric(diatom_taxonname$response)
   # Sum value if duplicate taxon names entered within a single sample
   diatom_tidied <- diatom_taxonname %>%
     group_by(.data$sample_id, .data$TaxonId, .data$taxon, .data$date_taken) %>%
-    summarise(value = sum(.data$value))
+    summarise(value = sum(.data$response))
   # Arrange to keep in same order as 'taxon_names' data.frame
   diatom_tidied <- diatom_tidied %>%
     ungroup() %>%

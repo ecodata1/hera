@@ -1,3 +1,5 @@
 test_that("multiplication works", {
-  expect_equal(length(prediction(demo_data)), 41)
+
+  test <- suppressWarnings(prediction(demo_data))
+  expect_equal(length(test), 24)
 })
