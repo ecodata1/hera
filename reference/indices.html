@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Articles • hera</title>
+<title>Calculate Observed Indices — indices • hera</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,8 @@
 
 
 
-<meta property="og:title" content="Articles" />
+<meta property="og:title" content="Calculate Observed Indices — indices" />
+<meta property="og:description" content="Calculates indices from raw data prior to predictions and classification." />
 
 
 
@@ -58,7 +59,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-article-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -114,18 +115,45 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Articles</h1>
+    <h1>Calculate Observed Indices</h1>
+    
+    <div class="hidden name"><code>indices.Rd</code></div>
     </div>
 
-    <div class="section ">
-      <h3>All vignettes</h3>
-      <p class="section-desc"></p>
-
-      <dl>
-        <dt><a href="hera_specifications.html">Request for Comment: Shared Design Principles for Creating and Deploying Classification Methods</a></dt>
-        <dd></dt>
-      </dl>
+    <div class="ref-description">
+    <p>Calculates indices from raw data prior to predictions and classification.</p>
     </div>
+
+    <pre class="usage"><span class='fu'>indices</span><span class='op'>(</span><span class='va'>data</span>, index <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>data</th>
+      <td><p>Dataframe of variables in WFD inter-change format</p></td>
+    </tr>
+    <tr>
+      <th>index</th>
+      <td><p>Optionally specify which indices to run e.g. c("tdi4", tdi3")</p></td>
+    </tr>
+    </table>
+
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Dataframe of predictions</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p><code>indices()</code> calculates observed indices.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>indices</span> <span class='op'>&lt;-</span> <span class='fu'>indices</span><span class='op'>(</span><span class='va'>demo_data</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>Hello from hera, ...work in progress!</span></div></pre>
+  </div>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+    <nav id="toc" data-toggle="toc" class="sticky-top">
+      <h2 data-toc-skip>Contents</h2>
+    </nav>
   </div>
 </div>
 
