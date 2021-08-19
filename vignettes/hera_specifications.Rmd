@@ -50,7 +50,7 @@ WARNING: Blue sky thinking ahead
 Keywords: collection, modelling, prediction, classification, forecast, scenario
 
 > **TL:DR - To get a flavour of running multiple classification tools using a shared**
-> **interface and data structures - check out the [hera demo website GUI]()**
+> **interface and data structures - check out the [hera demo website GUI](https://ecodata.shinyapps.io/heraapp/)**
 
 # Summary
 
