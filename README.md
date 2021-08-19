@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# hera <img src='man/figures/heraverse_logo_2.png' align="right" height="300" />
+# hera <img src='https://raw.githubusercontent.com/ecodata1/hera/main/man/figures/heraverse_logo_2.png' align="right" height="300" />
 
 <!-- badges: start -->
 
