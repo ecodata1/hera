@@ -38,12 +38,17 @@ sharing of methods and tools.
 
 ## Installation
 
-Install the development version from [GitHub](https://github.com/) with:
+Install the development version from [GitHub](https://github.com/ecodata1/hera) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("ecodata1/hera")
 ```
+
+## Documentation
+
+Read the [white paper article and documentation website](https://ecodata1.github.io/hera/index.html) (work in progress)
+
 ## Example
 
 In development...

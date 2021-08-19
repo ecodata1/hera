@@ -17,7 +17,7 @@ ui <- tagList(
   #  shinythemes::themeSelector(),
   navbarPage(
     # theme = "cerulean",  # <--- To use a theme, uncomment this
-    "hera",
+    HTML("<A href='https://ecodata1.github.io/hera/index.html'>hera</A>"),
     tabPanel(
       "Validation", sidebarPanel(
         h3("Options"),

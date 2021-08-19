@@ -5,9 +5,9 @@ account: ecodata
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4510769
-bundleId: 4940891
+bundleId: 4941624
 url: https://ecodata.shinyapps.io/heraapp/
-when: 1629372379.81797
-lastSyncTime: 1629372379.818
+when: 1629385530.70156
+lastSyncTime: 1629385530.70158
 asMultiple: FALSE
 asStatic: FALSE
