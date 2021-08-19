@@ -1,0 +1,13 @@
+name: heraapp
+title: heraapp
+username:
+account: ecodata
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4510769
+bundleId: 4940729
+url: https://ecodata.shinyapps.io/heraapp/
+when: 1629369540.48535
+lastSyncTime: 1629369540.48536
+asMultiple: FALSE
+asStatic: FALSE
