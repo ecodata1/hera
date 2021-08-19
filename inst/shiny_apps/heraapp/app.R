@@ -6,12 +6,8 @@
 #
 #    http://shiny.rstudio.com/
 
-library(remotes)
-if (!require(hera)) {
-  install_github("ecodata1/hera")
-  library(hera)
-}
 
+library(hera)
 library(shiny)
 library(tidyverse)
 library(leaflet)

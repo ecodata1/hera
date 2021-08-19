@@ -40,14 +40,3 @@ devtools::install_github("ecodata1/hera")
 ## Example
 
 In development…
-
-``` r
-library(remotes)
-if (!require(hera)) {
-  install_github("ecodata1/hera")
-  library(hera)
-}
-
-
-library(hera) 
-```
