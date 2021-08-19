@@ -22,7 +22,10 @@ Imports:
     purrr,
     magrittr,
     rlang,
-    tibble
+    tibble,
+    fcs2,
+    rict,
+    darleq3
 Suggests: 
     knitr,
     rmarkdown,
