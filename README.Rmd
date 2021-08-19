@@ -49,6 +49,13 @@ devtools::install_github("ecodata1/hera")
 In development...
 
 ```{r example, warning=F, message=F}
+library(remotes)
+if (!require(hera)) {
+  install_github("ecodata1/hera")
+  library(hera)
+}
+
+
 library(hera) 
 
 ```
