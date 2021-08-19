@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Request for Comment: Shared Design Principles for Creating and Deploying Classification Methods • hera</title>
+<title>Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods • hera</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Request for Comment: Shared Design Principles for Creating and Deploying Classification Methods">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods">
 <meta property="og:description" content="hera">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -39,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fas fa fas fa-home fa-lg"></span>
+    <span class="fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -54,7 +54,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/hera_specifications.html">Request for Comment: Shared Design Principles for Creating and Deploying Classification Methods</a>
+      <a href="../articles/development_guide.html">Development Guide</a>
+    </li>
+    <li>
+      <a href="../articles/hera_specifications.html">Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods</a>
     </li>
   </ul>
 </li>
@@ -69,13 +72,12 @@
 
       
 
-      </header><script src="hera_specifications_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="hera_specifications_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet">
-<script src="hera_specifications_files/anchor-sections-1.0/anchor-sections.js"></script><div class="row">
+      </header><script src="hera_specifications_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Request for Comment: Shared Design Principles for Creating and Deploying Classification Methods</h1>
+      <h1 data-toc-skip>Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods</h1>
             
-            <h4 class="date">2020-12-09</h4>
+            <h4 class="date">2021-08-19</h4>
       
       
       <div class="hidden name"><code>hera_specifications.Rmd</code></div>
@@ -154,8 +156,7 @@ outline: 0 ;
 <div id="key-steps" class="section level2">
 <h2 class="hasAnchor">
 <a href="#key-steps" class="anchor"></a><span class="header-section-number">4.2</span> Key steps</h2>
-<p>Here we introduce a prototype R package called <a href="https://github.com/ecodata1/hera">hera</a>. The key idea, is <code>hera</code> provides a common interface for existing WFD packages and future developments. This is achieved through a set of shared functions required to run and report classification. It builds on the best practice idea of how to <a href="https://r4ds.had.co.nz/many-models.html">run many models</a> simultaneously in R while keeping the input and output data formats simple and homogeneous. We explain each function in detail below.</p>
-<p>Below, we breakdown classification into independent steps. Each step represents a function within the hera package. This allows the re-use code and rules between existing and future tool development.</p>
+<p>Here we introduce a prototype R package called <a href="https://github.com/ecodata1/hera">hera</a>. The key idea, is <code>hera</code> provides a common interface for existing WFD packages and future developments. This is achieved through a set of shared functions required to run and report classification. It builds on the best practice idea of how to <a href="https://r4ds.had.co.nz/many-models.html">run many models</a> simultaneously in R while keeping the input and output data formats simple and homogeneous. We explain each function in detail below. In summary, each step represents a function within the hera package. This allows the re-use code and rules between existing and future tool development.</p>
 <p><strong>Steps</strong></p>
 <ol style="list-style-type: decimal">
 <li>Validation</li>
@@ -175,19 +176,19 @@ outline: 0 ;
 <code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
 <span class="co"># devtools::install_github("ecodata1/hera")</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">hera</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
 <span class="va">demo_data</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">::</span><span class="va"><a href="../reference/demo_data.html">demo_data</a></span>
 <span class="fu"><a href="../reference/validation.html">validation</a></span><span class="op">(</span><span class="va">demo_data</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></code></pre></div>
-<pre><code># A tibble: 5 x 23
+<pre><code># A tibble: 5 × 23
 # Groups:   sample_number, quality_elements [1]
-  sample_number quality_elements location_id location_descri… easting northing
-          &lt;int&gt; &lt;chr&gt;                  &lt;int&gt; &lt;fct&gt;              &lt;dbl&gt;    &lt;dbl&gt;
-1       3201863 River Invertebr…        8175 River Eden @ Ke…  341452   715796
-2       3201863 River Invertebr…        8175 River Eden @ Ke…  341452   715796
-3       3201863 River Invertebr…        8175 River Eden @ Ke…  341452   715796
-4       3201863 River Invertebr…        8175 River Eden @ Ke…  341452   715796
-5       3201863 River Invertebr…        8175 River Eden @ Ke…  341452   715796
+  sample_number quality_elements  location_id location_descrip… easting northing
+          &lt;int&gt; &lt;chr&gt;                   &lt;int&gt; &lt;fct&gt;               &lt;dbl&gt;    &lt;dbl&gt;
+1       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796
+2       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796
+3       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796
+4       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796
+5       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796
 # … with 17 more variables: latitude &lt;dbl&gt;, longitude &lt;dbl&gt;, date_taken &lt;dttm&gt;,
 #   sample_id &lt;int&gt;, analysis_name &lt;fct&gt;, question &lt;fct&gt;, response &lt;fct&gt;,
 #   units &lt;fct&gt;, taxon &lt;fct&gt;, mean_alkalinity &lt;dbl&gt;, result_id &lt;chr&gt;,
@@ -204,7 +205,7 @@ outline: 0 ;
   <span class="fu">unnest</span><span class="op">(</span><span class="va">indices</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">group_by</span><span class="op">(</span><span class="va">quality_elements</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">slice_sample</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> </code></pre></div>
-<pre><code># A tibble: 4 x 4
+<pre><code># A tibble: 4 × 4
 # Groups:   quality_elements [1]
   quality_elements sample_number index      value
   &lt;chr&gt;                    &lt;int&gt; &lt;chr&gt;      &lt;chr&gt;
@@ -224,7 +225,7 @@ outline: 0 ;
   <span class="fu">slice_sample</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">select</span><span class="op">(</span><span class="va">sample_number</span>, <span class="va">prediction</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">unnest</span><span class="op">(</span><span class="va">prediction</span><span class="op">)</span></code></pre></div>
-<pre><code># A tibble: 6 x 4
+<pre><code># A tibble: 6 × 4
 # Groups:   quality_elements [2]
   quality_elements    sample_number index      predicted_response
   &lt;chr&gt;                       &lt;int&gt; &lt;chr&gt;                   &lt;dbl&gt;
@@ -245,7 +246,7 @@ outline: 0 ;
  <span class="fu">group_by</span><span class="op">(</span><span class="va">quality_elements</span><span class="op">)</span> <span class="op">%&gt;%</span> 
  <span class="fu">slice_sample</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">%&gt;%</span> 
  <span class="fu">select</span><span class="op">(</span><span class="va">sample_number</span>, <span class="va">classification</span><span class="op">)</span></code></pre></div>
-<pre><code># A tibble: 8 x 3
+<pre><code># A tibble: 8 × 3
 # Groups:   quality_elements [2]
   quality_elements    sample_number classification
   &lt;chr&gt;                       &lt;int&gt;          &lt;dbl&gt;
@@ -322,21 +323,21 @@ head()
 <h3 class="hasAnchor">
 <a href="#what-does-this-look-like" class="anchor"></a><span class="header-section-number">4.3.2</span> What does this look like?</h3>
 <p>A small sample demo dataset <code>demo_data</code> contains diatoms, macrophytes and inverts quality elements.</p>
-<pre><code># A tibble: 5 x 4
+<pre><code># A tibble: 5 × 4
 # Groups:   quality_element [5]
-  location_description           date_taken          sample_id quality_element  
-  &lt;fct&gt;                          &lt;dttm&gt;                  &lt;int&gt; &lt;chr&gt;            
-1 River Eden @ Kemback Gauging … 2017-07-20 12:15:00   3256506 Algal_RQB        
-2 River Eden @ Kemback Gauging … 2011-05-04 13:45:00   1800006 Alien Species    
-3 River Eden @ Kemback Gauging … 2017-05-17 15:00:00   3201863 Comment          
-4 River Eden @ Kemback Gauging … 2014-05-20 08:10:00   2489784 Diatom Summary   
-5 River Eden @ Kemback Gauging … 2017-05-17 15:00:00   3201863 Diatom Survey Fi…</code></pre>
+  location_description                 date_taken          sample_id quality_element
+  &lt;fct&gt;                                &lt;dttm&gt;                  &lt;int&gt; &lt;chr&gt;          
+1 River Eden @ Kemback Gauging Station 2017-07-20 12:15:00   3256506 Algal_RQB      
+2 River Eden @ Kemback Gauging Station 2011-05-04 13:45:00   1800006 Alien Species  
+3 River Eden @ Kemback Gauging Station 2017-05-17 15:00:00   3201863 Comment        
+4 River Eden @ Kemback Gauging Station 2014-05-20 08:10:00   2489784 Diatom Summary 
+5 River Eden @ Kemback Gauging Station 2017-05-17 15:00:00   3201863 Diatom Survey …</code></pre>
 </div>
 <div id="book-keeping-variables" class="section level3">
 <h3 class="hasAnchor">
 <a href="#book-keeping-variables" class="anchor"></a><span class="header-section-number">4.3.3</span> Book-keeping variables</h3>
 <p>First of all, we have ‘book-keeping’ variables. These allow us to reference data associated with particular samples, locations or WFD methods. And allow results to be aggregate at different levels.</p>
-<pre><code># A tibble: 5 x 3
+<pre><code># A tibble: 5 × 3
   location_id sample_id quality_element        
         &lt;int&gt;     &lt;int&gt; &lt;chr&gt;                  
 1        8175   3256506 Macrophyte Reach Survey
@@ -352,7 +353,7 @@ head()
 <a href="#observations" class="anchor"></a><span class="header-section-number">4.3.4</span> Observations</h3>
 <p>An observation consists of three variables <code>question</code>, <code>response</code>. The <code>question</code> variable identifies what is being determined such as <code>alkalinity</code> or <code>depth</code> etc. And the <code>response</code> is the value observed or recorded for that question.</p>
 <p>Below is an example of diatom records, invert data and river flow in a shared input format.</p>
-<pre><code># A tibble: 8,477 x 2
+<pre><code># A tibble: 8,477 × 2
    question        response      
    &lt;fct&gt;           &lt;fct&gt;         
  1 Site altitude   7             
@@ -367,7 +368,7 @@ head()
 10 Northing        715796        
 # … with 8,467 more rows</code></pre>
 <p>In theory, this is all that is required. However for ease for interacting with existing dataset and <em>ad hoc</em> data, a fourth column <code>taxon</code> is useful due to the historic way taxon data is usually stored.</p>
-<pre><code># A tibble: 5 x 3
+<pre><code># A tibble: 5 × 3
   question        response         taxon                
   &lt;fct&gt;           &lt;fct&gt;            &lt;fct&gt;                
 1 Taxon abundance 40               Navicula saprophila  
@@ -413,12 +414,12 @@ hera(tay_data)
 <div id="models-and-environmental-standards-names" class="section level3">
 <h3 class="hasAnchor">
 <a href="#models-and-environmental-standards-names" class="anchor"></a><span class="header-section-number">4.5.1</span> Models and Environmental Standards names</h3>
-<pre><code># A tibble: 3 x 3
-  standard                             quality_element     classification_funct…
-  &lt;chr&gt;                                &lt;chr&gt;               &lt;list&gt;               
-1 River Phytobenthos                   River Diatoms       &lt;fn&gt;                 
-2 Lake Phytobenthos                    Lake Diatoms        &lt;fn&gt;                 
-3 Rivers Invertebrates (General Degra… River Invertebrates &lt;fn&gt;                 </code></pre>
+<pre><code># A tibble: 3 × 3
+  standard                                   quality_element     classification_…
+  &lt;chr&gt;                                      &lt;chr&gt;               &lt;list&gt;          
+1 River Phytobenthos                         River Diatoms       &lt;fn&gt;            
+2 Lake Phytobenthos                          Lake Diatoms        &lt;fn&gt;            
+3 Rivers Invertebrates (General Degradation) River Invertebrates &lt;fn&gt;            </code></pre>
 </div>
 </div>
 <div id="model-platform" class="section level2">
@@ -662,11 +663,11 @@ $N_taxa_gt_zero
 [33] "Aut_Ntaxa_Bias"                  </code></pre>
 <p>Output</p>
 <pre><code>  ROW        SITE YEAR FAIL
-1  15 TST-NI-03-D 2018  ---
-2   3 TST-NI-03-R 2018  ---
-                                                             WARNING
-1 You provided MSUBST: 6.6125, max value used to train model: 6.61. 
-2 You provided MSUBST: 6.6125, max value used to train model: 6.61. 
+1  16 TST-NI-04-D 2018  ---
+2   4 TST-NI-04-R 2018  ---
+                                                                               WARNING
+1 You provided LATITUDE: 55.1996487989298, max value used to train model: 55.1995835. 
+2 You provided LATITUDE: 55.1996487989298, max value used to train model: 55.1995835. 
   REPLACEMENT
 1         ---
 2         ---</code></pre>
