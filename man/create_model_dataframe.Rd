@@ -8,7 +8,7 @@ create_model_dataframe()
 }
 \description{
 A low-level function for package developers to update the dataframe of model
-functions required for each WFD parameter
+functions required for each WFD parameter.
 }
 \examples{
 \dontrun{

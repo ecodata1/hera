@@ -1,5 +1,5 @@
 ---
-title: "Request for Comment: Shared Design Principles for Creating and Deploying Classification Methods"
+title: "Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods"
 date: "`r Sys.Date()`"
 pkgdown:
   as_is: yes
@@ -8,7 +8,7 @@ output:
     number_sections: yes
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{Request for Comment: Shared Design Principles for Creating and Deploying Classification Methods}
+  %\VignetteIndexEntry{Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}  
 editor_options: 
@@ -142,12 +142,10 @@ common interface for existing WFD packages and future developments. This is
 achieved through a set of shared functions required to run and report
 classification. It builds on the best practice idea of how to [run many
 models](https://r4ds.had.co.nz/many-models.html) simultaneously in R while
-keeping the input and output data formats simple and homogeneous. We explain each
-function in detail below.
-
-Below, we breakdown classification into independent steps. Each step represents
-a function within the hera package. This allows the re-use code and rules between
-existing and future tool development.
+keeping the input and output data formats simple and homogeneous. We explain
+each function in detail below. In summary, each step represents a function
+within the hera package. This allows the re-use code and rules between existing
+and future tool development.
 
 **Steps**
 

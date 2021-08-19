@@ -17,9 +17,6 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     shiny,
-    darleq3,
-    rict,
-    fcs2,
     tidyr,
     dplyr,
     purrr,

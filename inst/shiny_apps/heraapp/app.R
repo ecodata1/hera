@@ -5,9 +5,15 @@
 # Find out more about building applications with Shiny here:
 #
 #    http://shiny.rstudio.com/
+
+library(remotes)
+if (!require(hera)) {
+  install_github("ecodata1/hera")
+  library(hera)
+}
+
 library(shiny)
 library(tidyverse)
-library(hera)
 library(leaflet)
 library(htmltools)
 
@@ -17,29 +23,58 @@ library(htmltools)
     navbarPage(
       # theme = "cerulean",  # <--- To use a theme, uncomment this
       "hera",
-      tabPanel("Validation",
-               sidebarPanel(
-      h3("Options"),
-      fileInput("dataset", "Choose CSV File",
-        accept = c(
-          "text/csv",
-          "text/comma-separated-values,text/plain",
-          ".csv"
-        )
+      tabPanel("Validation",  sidebarPanel(
+        h3("Options"),
+        fileInput("dataset", "Choose CSV File",
+                  accept = c(
+                    "text/csv",
+                    "text/comma-separated-values,text/plain",
+                    ".csv"
+                  )
+        ),
+        h4("On try..."),
+        actionButton(inputId = "demo", label =  "Demo Data"),
+        p()
       ),
-      actionButton(inputId = "demo", label =  "demo"),
-      htmlOutput("standard")
-    ),
+      # Show tables
+      mainPanel(
+        leafletOutput("map_first"),
+        #p(),
+        htmlOutput("data_table")
+      )
+      ),
+      tabPanel("Indices",
+           #    sidebarPanel(
+      # h3("Options"),
+      # fileInput("dataset", "Choose CSV File",
+      #   accept = c(
+      #     "text/csv",
+      #     "text/comma-separated-values,text/plain",
+      #     ".csv"
+      #   )
+      # ),
+      # h4("On try..."),
+      # actionButton(inputId = "demo", label =  "Demo Data"),
+      # p(),
+      # htmlOutput("standard")
+    # )
+    # ,
     # Show tables
     mainPanel(
-      leafletOutput("map"),
+       leafletOutput("map")
+       ,
       p(),
       htmlOutput("tables")
     )
   ),
-  tabPanel("Indices", "This panel is intentionally left blank."),
-  tabPanel("Predict", "This panel is intentionally left blank."),
-  tabPanel("Classify", "This panel is intentionally left blank."),
+
+  tabPanel("Predict",    mainPanel(
+           htmlOutput("predictions")
+
+           )),
+  tabPanel("Compliance",  mainPanel(
+    htmlOutput("compliance")
+  )),
   tabPanel("Aggregate", "This panel is intentionally left blank."),
   tabPanel("Compare", "This panel is intentionally left blank."),
   tabPanel("Diagnose", "This panel is intentionally left blank."),
@@ -50,19 +85,19 @@ library(htmltools)
 # Define server logic ------------------------------------------------------------------
 server <- function(input, output) {
   output$tables <- renderUI({
-    if(input$demo) {
-      input$dataset <- hera::demo_data
-    }
     inFile <- input$dataset
-    if (is.null(inFile)) {
-      return(NULL)
-    }
     # Create a Progress object
     progress <- shiny::Progress$new()
     # Make sure it closes when we exit this reactive, even if there's an error
     on.exit(progress$close())
     progress$set(message = "Calculating", value = 1)
-    data <- read.csv(inFile$datapath, check.names = F)
+    if(is.null(inFile) & input$demo) {
+      data <- hera::demo_data
+    }
+    else if (is.null(inFile)) {
+      return(NULL)
+    }  else {
+    data <- read.csv(inFile$datapath, check.names = F) }
     indices <- indices(data) %>%
       select(sample_number, indices) %>%
       unnest(indices)
@@ -95,26 +130,49 @@ server <- function(input, output) {
 
     map <- leaflet(data[1:10,]) %>%
              addTiles() %>%
-              addMarkers(~longitude, ~latitude, popup = ~ htmlEscape(location_code))
+              addMarkers(~longitude, ~latitude, popup = ~ htmlEscape(location_id))
 
     output$map <- renderLeaflet(map)
+    output$map_first <- renderLeaflet(map)
 
     output$standard <- renderUI(selectInput(inputId = "standard",
                                    label = "Select Standard",
-                                   choices = unique(data$analysis_repname)))
+                                   choices = unique(data$standard)))
 
-    chart_data <- inner_join(data, indices, by = c("sample_number" = "sample_number"))
+    chart_data <- inner_join(data, indices, by = c("sample_id" = "sample_number"))
     options(digits = 3)
-    chart_data$value.y <- as.numeric(chart_data$value.y)
-    chart <- ggplot(chart_data, aes(x = date_taken, y = value.y)) +
+    chart_data$value <- as.numeric(chart_data$value)
+    chart <- ggplot(chart_data, aes(x = date_taken, y = value)) +
       geom_point() +
       facet_wrap(vars(index), scales = "free_y")
 
+    output$data_table <- renderUI(list(
+      h3("Data"), DT::renderDataTable({
+        select(data, location_id, location_description, sample_id, question, response)
+      })))
+
+    output$predictions <- renderUI(list(
+      h3("Predictions"), DT::renderDataTable({
+        prediction(demo_data[1:2200, ]) %>%
+          group_by(quality_elements) %>%
+          select(sample_number, prediction) %>%
+          unnest(prediction)
+      })))
+
+    output$compliance <- renderUI(list(
+      h3("Compliance"), DT::renderDataTable({
+        classification(data) %>%
+          group_by(quality_elements) %>%
+          slice_sample(n = 4) %>%
+          select(sample_number, classification)
+      })))
+
+
     return(list(
       download_data,
-      h3("Data"), DT::renderDataTable({
-        select(data, location_code, location_description, sample_number, determinand, value)
-      }),
+      # h3("Data"), DT::renderDataTable({
+      #   select(data, location_id, location_description, sample_id, question, response)
+      # }),
       h3("Chart"), renderPlot({
         chart
       }),

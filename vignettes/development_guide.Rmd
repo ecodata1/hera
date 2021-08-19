@@ -1,0 +1,33 @@
+---
+title: "Development Guide"
+date: "`r Sys.Date()`"
+pkgdown:
+  as_is: yes
+output: 
+  rmarkdown::html_vignette:
+    number_sections: yes
+    toc: yes
+vignette: >
+  %\VignetteIndexEntry{Development Guide}
+  %\VignetteEncoding{UTF-8}  
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Work In Progress!...
+
+## Quick Start
+
+To add a new metric to `hera` package:
+
+- Firstly define any new variables in the supporting file `inst/ext/column-names.csv`.
+- Then update the `data/model_dataframe` to add the function for indcies, predictions and classification
+
+
+## Models
+
