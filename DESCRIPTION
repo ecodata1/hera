@@ -39,7 +39,7 @@ Remotes:
     aquaMetrics/rict,
     aquaMetrics/fcs2,
     nsj3/darleq3,
-    aquaMetrics/ead
+    aquaMetrics/eadata
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Depends: 
