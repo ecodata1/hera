@@ -77,7 +77,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods</h1>
             
-            <h4 class="date">2021-08-19</h4>
+            <h4 class="date">2021-09-29</h4>
       
       
       <div class="hidden name"><code>hera_specifications.Rmd</code></div>
@@ -103,7 +103,7 @@ outline: 0 ;
 <h1 class="hasAnchor">
 <a href="#summary" class="anchor"></a><span class="header-section-number">1</span> Summary</h1>
 <p>We propose regulatory tools share a common set of design principles, interfaces and data structures.</p>
-<p>Specifically, we propose an official collection of R packages designed to provide collaborative workflow for building and using classification tools. In turn, these packages will be integrated into a single package called ‘hera’. This provides a common interface to run regulatory classification. We expect this process will facilitate code re-use, faster integration and knowledge exchange between method developers and practitioners.</p>
+<p>Specifically, we propose an official collection of R packages designed to provide collaborative workflow for building and using classification tools. In turn, these packages will be unified into a single package called ‘hera’. This provides a common interface to run regulatory classification. We expect this process will facilitate code re-use, faster integration and knowledge exchange between method developers and practitioners.</p>
 </div>
 <div id="motivation" class="section level1">
 <h1 class="hasAnchor">
@@ -128,7 +128,7 @@ outline: 0 ;
 <a href="#preparing-for-future" class="anchor"></a><span class="header-section-number">3.1</span> Preparing for future</h2>
 <p>In the next 10 years…</p>
 <p>We assume it is likely that our aquatic ecological models will be subsumed into a more large scale environmental and climate models. These ‘total environment’ models may for instance use climate change models to forecast impact on invertebrates, water-use models to predict the impact on fish or spatial planning tools the impact on nutrient levels. The outputs will be used across regulatory reporting for RBMP, flood management, biodiversity improvements, carbon sequestering etc. Allowing multi-discipline assessment of impacts and trade-offs for each planning scenario and proposed measures - ensuring well-informed decisions-making.</p>
-<p>All ecological data along with chemistry, climate, meteorological, geological will be freely and easily accessible. We assume agencies will upload all data such as fish counter data, plant DNA or aerial imagery etc, into a ‘lake’ of environmental data.</p>
+<p>All ecological data along with supporting data such as chemistry, climate, meteorological, geological, and satellite imagery, will be freely and easily accessible. We assume agencies will upload all data such as fish counter data, plant DNA or aerial imagery etc, into a ‘lake’ of environmental data.</p>
 <p>To take step towards this vision, the underlying design of a models and tools must be modular and easy to connect and integrate in a variety of ways.</p>
 </div>
 </div>
@@ -136,7 +136,7 @@ outline: 0 ;
 <h1 class="hasAnchor">
 <a href="#detailed-design" class="anchor"></a><span class="header-section-number">4</span> Detailed design</h1>
 <p>To aid collaboration and to response to the changing environmentally pressures, we propose creating a joint collections of packages to share understanding on the environment while providing the software infrastructure to lighten the burden of more mundane tasks involved in maintaining and deploying new models and interfaces.</p>
-<p>This is influenced by the work of climate change research and weather forecasting communities. And on-going work in the R community such as <a href="https://ropensci.org/">ropenSci</a>.</p>
+<p>This proposal is influenced by the work within the climate change research community such as the <a href="https://climt.readthedocs.io/en/latest/index.html">Climate Modelling and Diagnostics Toolkit</a>, the MET office’s <a href="https://www.metoffice.gov.uk/research/approach/modelling-systems/unified-model/index">unified model</a> approach. As well as best software practices such as on-going work in the R community such as <a href="https://ropensci.org/">ropenSci</a>.</p>
 <div id="shared-packages" class="section level2">
 <h2 class="hasAnchor">
 <a href="#shared-packages" class="anchor"></a><span class="header-section-number">4.1</span> Shared Packages</h2>
@@ -263,7 +263,7 @@ outline: 0 ;
 <div id="aggegation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#aggegation" class="anchor"></a><span class="header-section-number">4.2.5</span> Aggegation</h3>
-<p>We now aggregate the samples by season, year or multi-year as required:</p>
+<p>We now aggregate the samples by season, year, multi-year or waterbody as required:</p>
 <pre><code>
 aggregate &lt;- aggregation(demo_data, c("year","season","waterbody"))
 head(class)
@@ -304,7 +304,7 @@ head()
 <div id="the-whole-game" class="section level3">
 <h3 class="hasAnchor">
 <a href="#the-whole-game" class="anchor"></a><span class="header-section-number">4.2.9</span> The Whole Game</h3>
-<p>For the most part we don’t expect users to go through each of these steps. But for developers and researchers it is useful to think about classification within this framework. For the majority of end users, agency staff or consultants, they can open the GUI <code><a href="../reference/hera_app.html">hera_app()</a></code> or visit the website directly. However, advanced users can use the <code>hera</code> function to wrap all these steps together fot example <code><a href="../reference/hera.html">hera(hera::demo_data)</a></code>.</p>
+<p>For the most part we don’t expect users to go through each of these steps. But for developers and researchers it is useful to think about classification within this framework of discrete steps. For the majority of end users, agency staff or consultants, they can open the GUI <code><a href="../reference/hera_app.html">hera_app()</a></code> or visit the website directly. However, advanced users can use the <code>hera</code> function to wrap all these steps together for example <code><a href="../reference/hera.html">hera(hera::demo_data)</a></code>.</p>
 <p>Furthermore, agencies can integrate these functions into their systems using web services. Please see the <a href="https://cloud.opencpu.org/ocpu/apps/ecodata1/hera/info">demo web service</a> and <a href="https://www.opencpu.org/api.html">api documentation</a> for using <a href="https://www.opencpu.org/">opencpu</a> hosted packages.</p>
 </div>
 </div>
@@ -313,11 +313,12 @@ head()
 <a href="#lots-of-datasets---one-underlying-data-structure" class="anchor"></a><span class="header-section-number">4.3</span> Lots of datasets - one underlying data structure?</h2>
 <p>Ecological modelling relies on sampling. The samples come in a range of forms from points, transects, images, grabs, DNA etc. But the general feature of modelling is based on being able to predict what we expect to find from whatever sampling technique we deploy. The sample is the fundamental observation which we compare against our prediction. The samples are discreet, either observed instantaneously or perhaps over a few minutes or hours (where dynamic changes are not significant).</p>
 <p>Multiple samples can be aggregated to smooth variance but the sample still remains the fundamental building block. The sample could be a single pixel from an aerial image or a salmon moving through a fish counter. We still make predictions of what we expect this sample to be like even if the true picture only emerges after several samples are aggregated or compared.</p>
-<p>Therefore, all our data share similarities, they consist of samples and observations. And additionally for each sample with have predictor variables to allow us to predict expected reference condition values.</p>
+<p>Therefore, all our data share similarities, they consist of samples and observations. And additionally each sample will have predictor variables to allow us to predict expected reference values or outcomes.</p>
 <div id="data-dictionary" class="section level3">
 <h3 class="hasAnchor">
 <a href="#data-dictionary" class="anchor"></a><span class="header-section-number">4.3.1</span> Data dictionary</h3>
-<p>The Europe Environment Agency as produced a data dictionary for reporting. However this is mainly for high-level reporting. In particular, taxonomic results are not exchanged using this data strucuture. However, we use some aspects of this standard here to aid onward reporting to EEA.</p>
+<p>There are a number of data dictionaries, metadata standards and semantic data definition across disciplines and organisations. It’s unclear exactly how we define out input and output datasets. We propose using best practice and make strides towards using common definition and standards where possible. In a similarly way to the climate model communities use of the <a href="http://cfconventions.org/index.html">Climate and Forecast Standard Names</a>.</p>
+<p>The Europe Environment Agency has produced a data dictionary for reporting. However this is mainly for high-level reporting. In particular, taxonomic results are not exchanged using this data structure. However, we use some aspects of this standard within hera to aid onward reporting to EEA.</p>
 </div>
 <div id="what-does-this-look-like" class="section level3">
 <h3 class="hasAnchor">
@@ -337,16 +338,16 @@ head()
 <h3 class="hasAnchor">
 <a href="#book-keeping-variables" class="anchor"></a><span class="header-section-number">4.3.3</span> Book-keeping variables</h3>
 <p>First of all, we have ‘book-keeping’ variables. These allow us to reference data associated with particular samples, locations or WFD methods. And allow results to be aggregate at different levels.</p>
-<pre><code># A tibble: 5 × 3
-  location_id sample_id quality_element        
-        &lt;int&gt;     &lt;int&gt; &lt;chr&gt;                  
-1        8175   3256506 Macrophyte Reach Survey
-2        8175   3256506 Macrophyte Reach Survey
-3        8175   3256506 Macrophyte Reach Survey
-4        8175   3256506 Macrophyte Reach Survey
-5        8175   3256506 Macrophyte Reach Survey</code></pre>
-<p>All data passed into hera must have these three variables. For <em>ad hoc</em> reporting, consultancies and students etc who don’t routinely record unique sample ids, a sample_id is generate if <code>date_taken</code> and <code>location_id</code> are provided.</p>
-<p>These three variables are the minimal required, but in practice <code>water_body_id</code> maybe required for aggregation or simply <code>location_description</code> or <code>NGR</code> etc to help reference sites more easily. There is no restriction no what extra columns are added and these columns will be added to the outputs.</p>
+<pre><code># A tibble: 5 × 4
+  location_id sample_id date_taken          quality_element        
+        &lt;int&gt;     &lt;int&gt; &lt;dttm&gt;              &lt;chr&gt;                  
+1        8175   3256506 2017-07-20 12:15:00 Macrophyte Reach Survey
+2        8175   3256506 2017-07-20 12:15:00 Macrophyte Reach Survey
+3        8175   3256506 2017-07-20 12:15:00 Macrophyte Reach Survey
+4        8175   3256506 2017-07-20 12:15:00 Macrophyte Reach Survey
+5        8175   3256506 2017-07-20 12:15:00 Macrophyte Reach Survey</code></pre>
+<p>All data passed into hera must have these four variables. For <em>ad hoc</em> reporting, consultancies and students etc who don’t routinely record unique sample ids, a sample_id is generate if <code>date_taken</code> and <code>location_id</code> are provided.</p>
+<p>These three variables are the minimal required, but in practice <code>water_body_id</code> maybe required for aggregation or simply <code>location_description</code> or <code>NGR</code> etc to help reference sites more easily. There is no restriction to the number of extra columns and these extra columns will be appended to outputs.</p>
 </div>
 <div id="observations" class="section level3">
 <h3 class="hasAnchor">
@@ -395,10 +396,21 @@ head()
 <a href="#data-input" class="anchor"></a><span class="header-section-number">4.4</span> Data input</h2>
 <p>For students and consultancies requiring <em>ad hoc</em> usage, templates and documentation for preparing data will be provided.</p>
 <p>For Agencies, data queries can be written to prepare outputs in the correct format.</p>
-<p>For instance, we imagine each agency will have an R package to pull data from their databases and convert to the required input format</p>
-<pre><code>tay_data &lt;- import_data(river_name = "River Tay")
-hera(tay_data)
-</code></pre>
+<p>For instance, here is a prototype function to pull data Environment Agency’s data.gov.uk web service and convert to the required <code>hera</code> input format.</p>
+<pre><code>                                            location_id sample_id date_taken
+1 http://environment.data.gov.uk/ecology/site/bio/43378    771094 2019-02-28
+2 http://environment.data.gov.uk/ecology/site/bio/43378    771094 2019-02-28
+3 http://environment.data.gov.uk/ecology/site/bio/43378    771094 2019-02-28
+4 http://environment.data.gov.uk/ecology/site/bio/43378    771094 2019-02-28
+5 http://environment.data.gov.uk/ecology/site/bio/43378    771094 2019-02-28
+6 http://environment.data.gov.uk/ecology/site/bio/43378    771094 2019-02-28
+      quality_element    question response
+1 River Invertebrates   BMWP_ASPT     6.33
+2 River Invertebrates    BMWP_CoS     7.00
+3 River Invertebrates BMWP_N_TAXA    30.00
+4 River Invertebrates  BMWP_TOTAL   190.00
+5 River Invertebrates         CCI    15.00
+6 River Invertebrates    CCI_ASPT     2.14</code></pre>
 </div>
 <div id="shared-data-tables" class="section level2">
 <h2 class="hasAnchor">
@@ -408,7 +420,7 @@ hera(tay_data)
 <li>Validation Rules</li>
 <li>Indices, Model and Environmental Standards</li>
 <li>Taxon Table</li>
-<li>EQR Boundaries</li>
+<li>EQR / assessment / compliance boundaries</li>
 <li>Parameter Hierarchy</li>
 </ul>
 <div id="models-and-environmental-standards-names" class="section level3">
