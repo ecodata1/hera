@@ -59,7 +59,7 @@ and data structures.
 
 Specifically, we propose an official collection of R packages designed to
 provide collaborative workflow for building and using classification tools. In
-turn, these packages will be integrated into a single package called 'hera'.
+turn, these packages will be unified into a single package called 'hera'.
 This provides a common interface to run regulatory classification. We expect
 this process will facilitate code re-use, faster integration and knowledge
 exchange between method developers and practitioners.
@@ -104,10 +104,10 @@ carbon sequestering etc. Allowing multi-discipline assessment of impacts and
 trade-offs for each planning scenario and proposed measures - ensuring
 well-informed decisions-making.
 
-All ecological data along with chemistry, climate, meteorological, geological
-will be freely and easily accessible. We assume agencies will upload all data
-such as fish counter data, plant DNA or aerial imagery etc, into a 'lake' of
-environmental data.
+All ecological data along with supporting data such as chemistry, climate,
+meteorological, geological, and satellite imagery, will be freely and easily
+accessible. We assume agencies will upload all data such as fish counter data,
+plant DNA or aerial imagery etc, into a 'lake' of environmental data.
 
 To take step towards this vision, the underlying design of a models and tools
 must be modular and easy to connect and integrate in a variety of ways.
@@ -115,13 +115,18 @@ must be modular and easy to connect and integrate in a variety of ways.
 # Detailed design
 
 To aid collaboration and to response to the changing environmentally pressures,
-we propose creating a joint collections of packages to share understanding on the
-environment while providing the software infrastructure to lighten the burden of
-more mundane tasks involved in maintaining and deploying new models and
-interfaces. 
+we propose creating a joint collections of packages to share understanding on
+the environment while providing the software infrastructure to lighten the
+burden of more mundane tasks involved in maintaining and deploying new models
+and interfaces.
 
-This is influenced by the work of climate change research and weather
-forecasting communities. And on-going work in the R community such as [ropenSci](https://ropensci.org/).
+This proposal is influenced by the work within the climate change research
+community such as the [Climate Modelling and Diagnostics
+Toolkit](https://climt.readthedocs.io/en/latest/index.html), the MET office's
+[unified
+model](https://www.metoffice.gov.uk/research/approach/modelling-systems/unified-model/index)
+approach. As well as best software practices such as on-going work in the R
+community such as [ropenSci](https://ropensci.org/).
 
 ## Shared Packages
 
@@ -205,12 +210,14 @@ prediction(demo_data[1:2200, ]) %>%
 
 ```
 
-See documentation [`prediction()`](https://ecodata1.github.io/hera/reference/prediction.html)
-for more information.
+See documentation
+[`prediction()`](https://ecodata1.github.io/hera/reference/prediction.html) for
+more information.
 
 ### Classification
 
-Based on the predicted and observed indices - we classify each sample using `classification()`:
+Based on the predicted and observed indices - we classify each sample using
+`classification()`:
 
 ```{r, echo=TRUE}
 
@@ -221,11 +228,13 @@ classification(demo_data) %>%
 
 ```
 
-Note, classification results for inverts are missing - this has not be implemented yet.
+Note, classification results for inverts are missing - this has not be
+implemented yet.
 
 ### Aggegation
 
-We now aggregate the samples by season, year or multi-year as required:
+We now aggregate the samples by season, year, multi-year or waterbody as
+required:
 
 ```
 
@@ -237,10 +246,10 @@ head(class)
 ### Report
 
 We now run a report assessing samples from the same location for consistency.
-Note, that no report for fish is produced, the necessary adjustment/interpretation
-parameters have not been created for fish. This demonstrates that it is step by
-step process. Not all tools/models will have all the features development if not
-required or if not prioritized:
+Note, that no report for fish is produced, the necessary
+adjustment/interpretation parameters have not been created for fish. This
+demonstrates that it is step by step process. Not all tools/models will have all
+the features development if not required or if not prioritized:
 
 ```
 compare_report <- compare(new_data, old_data)
@@ -284,10 +293,10 @@ head()
 
 For the most part we don't expect users to go through each of these steps. But
 for developers and researchers it is useful to think about classification within
-this framework. For the majority of end users, agency staff or consultants, they
-can open the GUI `hera_app()` or visit the website directly. However, advanced
-users can use the `hera` function to wrap all these steps together fot example
-`hera(hera::demo_data)`.
+this framework of discrete steps. For the majority of end users, agency staff or
+consultants, they can open the GUI `hera_app()` or visit the website directly.
+However, advanced users can use the `hera` function to wrap all these steps
+together for example `hera(hera::demo_data)`.
   
 Furthermore, agencies can integrate these functions into their systems using web
 services. Please see the [demo web
@@ -312,16 +321,27 @@ predictions of what we expect this sample to be like even if the true picture
 only emerges after several samples are aggregated or compared.
 
 Therefore, all our data share similarities, they consist of samples and
-observations. And additionally for each sample with have predictor variables to
-allow us to predict expected reference condition values.
+observations. And additionally each sample will have predictor variables to
+allow us to predict expected reference values or outcomes.
 
 ### Data dictionary
 
-The Europe Environment Agency as produced a data dictionary for reporting. However this is mainly for high-level reporting. In particular, taxonomic results are not exchanged using this data strucuture. However, we use some aspects of this standard here to aid onward reporting to EEA.
+There are a number of data dictionaries, metadata standards and semantic data
+definition across disciplines and organisations. It's unclear exactly how we
+define out input and output datasets. We propose using best practice and make
+strides towards using common definition and standards where possible. In a
+similarly way to the climate model communities use of the [Climate and Forecast
+Standard Names](http://cfconventions.org/index.html).
+
+The Europe Environment Agency has produced a data dictionary for reporting.
+However this is mainly for high-level reporting. In particular, taxonomic
+results are not exchanged using this data structure. However, we use some
+aspects of this standard within hera to aid onward reporting to EEA.
 
 ### What does this look like?
 
-A small sample demo dataset `demo_data` contains diatoms, macrophytes and inverts quality elements. 
+A small sample demo dataset `demo_data` contains diatoms, macrophytes and
+inverts quality elements.
 
 ```{r}
 hera::demo_data %>%  
@@ -339,20 +359,20 @@ associated with particular samples, locations or WFD methods. And allow results
 to be aggregate at different levels.
 
 ```{r}
-hera::demo_data %>% select(location_id, sample_id, quality_element) %>% 
+hera::demo_data %>% select(location_id, sample_id, date_taken, quality_element) %>% 
   head(5)
 
 ```
 
-All data passed into hera must have these three variables. For *ad hoc*
+All data passed into hera must have these four variables. For *ad hoc*
 reporting, consultancies and students etc who don't routinely record unique
 sample ids, a sample_id is generate if `date_taken` and `location_id` are
 provided.
   
 These three variables are the minimal required, but in practice `water_body_id`
 maybe required for aggregation or simply `location_description` or `NGR` etc to
-help reference sites more easily. There is no restriction no what extra columns
-are added and these columns will be added to the outputs.
+help reference sites more easily. There is no restriction to the number of extra
+columns and these extra columns will be appended to outputs.
 
 ### Observations
 
@@ -399,15 +419,18 @@ outputs from different models instantly comparable and portable.
 
 ## Data input
 
-For students and consultancies requiring *ad hoc* usage, templates and documentation for preparing data will be provided. 
+For students and consultancies requiring *ad hoc* usage, templates and
+documentation for preparing data will be provided.
+  
+For Agencies, data queries can be written to prepare outputs in the correct
+format.
+  
+For instance, here is a prototype function to pull data Environment Agency's
+data.gov.uk web service and convert to the required `hera` input format.
 
-For Agencies, data queries can be written to prepare outputs in the correct format. 
-
-For instance, we imagine each agency will have an R package to pull data from their databases and convert to the required input format
-
-```
-tay_data <- import_data(river_name = "River Tay")
-hera(tay_data)
+```{r}
+environment_agency_data <- hera:::ead(site_id = 43378)
+head(environment_agency_data[, 1:6])
 
 ```
 
@@ -418,7 +441,7 @@ Following data tables are shared through `hera`...
 * Validation Rules
 * Indices, Model and Environmental Standards
 * Taxon Table
-* EQR Boundaries
+* EQR / assessment / compliance boundaries
 * Parameter Hierarchy
 
 ### Models and Environmental Standards names
@@ -430,8 +453,6 @@ hera:::create_model_dataframe() %>%
 
 
 ```
-
-
 
 ## Model platform
 

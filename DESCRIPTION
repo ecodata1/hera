@@ -25,7 +25,8 @@ Imports:
     tibble,
     fcs2,
     rict,
-    darleq3
+    darleq3,
+    ead
 Suggests: 
     knitr,
     rmarkdown,
@@ -37,8 +38,9 @@ Suggests:
 Remotes:
     aquaMetrics/rict,
     aquaMetrics/fcs2,
-    nsj3/darleq3
+    nsj3/darleq3,
+    aquaMetrics/ead
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Depends: 
     R (>= 2.10)
