@@ -77,7 +77,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods</h1>
             
-            <h4 class="date">2021-09-29</h4>
+            <h4 class="date">2021-09-30</h4>
       
       
       <div class="hidden name"><code>hera_specifications.Rmd</code></div>
@@ -317,8 +317,8 @@ head()
 <div id="data-dictionary" class="section level3">
 <h3 class="hasAnchor">
 <a href="#data-dictionary" class="anchor"></a><span class="header-section-number">4.3.1</span> Data dictionary</h3>
-<p>There are a number of data dictionaries, metadata standards and semantic data definition across disciplines and organisations. It’s unclear exactly how we define out input and output datasets. We propose using best practice and make strides towards using common definition and standards where possible. In a similarly way to the climate model communities use of the <a href="http://cfconventions.org/index.html">Climate and Forecast Standard Names</a>.</p>
-<p>The Europe Environment Agency has produced a data dictionary for reporting. However this is mainly for high-level reporting. In particular, taxonomic results are not exchanged using this data structure. However, we use some aspects of this standard within hera to aid onward reporting to EEA.</p>
+<p>There are a number of data dictionaries, <a href="https://en.wikipedia.org/wiki/Metadata_standard">metadata standards</a> and <a href="https://en.wikipedia.org/wiki/Semantic_Web">semantic data</a> definition across disciplines and organisations. It’s unclear exactly how we define our input and output datasets. Therefore, we propose using common definition and standards where possible. In a similar way to the climate model communities use of the <a href="http://cfconventions.org/index.html">Climate and Forecast Standard Names</a>.</p>
+<p>The Europe Environment Agency has produced a <a href="https://dd.eionet.europa.eu/">data dictionary for reporting</a>. However, this is mainly for high-level reporting. In particular, taxonomic results are not exchanged using this data structure. However, we use some aspects of this standard within hera to aid onward reporting to EEA.</p>
 </div>
 <div id="what-does-this-look-like" class="section level3">
 <h3 class="hasAnchor">
@@ -397,6 +397,9 @@ head()
 <p>For students and consultancies requiring <em>ad hoc</em> usage, templates and documentation for preparing data will be provided.</p>
 <p>For Agencies, data queries can be written to prepare outputs in the correct format.</p>
 <p>For instance, here is a prototype function to pull data Environment Agency’s data.gov.uk web service and convert to the required <code>hera</code> input format.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">environment_agency_data</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">:::</span><span class="fu">ead</span><span class="op">(</span>site_id <span class="op">=</span> <span class="fl">43378</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">environment_agency_data</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span></code></pre></div>
 <pre><code>                                            location_id sample_id date_taken
 1 http://environment.data.gov.uk/ecology/site/bio/43378    771094 2019-02-28
 2 http://environment.data.gov.uk/ecology/site/bio/43378    771094 2019-02-28
