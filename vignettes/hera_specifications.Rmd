@@ -21,7 +21,9 @@ knitr::opts_chunk$set(comment = "")
 knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(message = FALSE)
 
-library(tidyverse)
+library(tidyr)
+library(dplyr)
+library(purrr)
 library(hera)
 library(darleq3)
 library(fcs2)
@@ -326,15 +328,15 @@ allow us to predict expected reference values or outcomes.
 
 ### Data dictionary
 
-There are a number of data dictionaries, metadata standards and semantic data
+There are a number of data dictionaries, [metadata standards](https://en.wikipedia.org/wiki/Metadata_standard) and [semantic data](https://en.wikipedia.org/wiki/Semantic_Web)
 definition across disciplines and organisations. It's unclear exactly how we
-define out input and output datasets. We propose using best practice and make
-strides towards using common definition and standards where possible. In a
-similarly way to the climate model communities use of the [Climate and Forecast
-Standard Names](http://cfconventions.org/index.html).
+define our input and output datasets. Therefore, we propose using common
+definition and standards where possible. In a similar way to the climate model
+communities use of the [Climate and Forecast Standard
+Names](http://cfconventions.org/index.html).
 
-The Europe Environment Agency has produced a data dictionary for reporting.
-However this is mainly for high-level reporting. In particular, taxonomic
+The Europe Environment Agency has produced a [data dictionary for reporting](https://dd.eionet.europa.eu/).
+However, this is mainly for high-level reporting. In particular, taxonomic
 results are not exchanged using this data structure. However, we use some
 aspects of this standard within hera to aid onward reporting to EEA.
 
@@ -428,7 +430,7 @@ format.
 For instance, here is a prototype function to pull data Environment Agency's
 data.gov.uk web service and convert to the required `hera` input format.
 
-```{r}
+```{r, echo=TRUE}
 environment_agency_data <- hera:::ead(site_id = 43378)
 head(environment_agency_data[, 1:6])
 
