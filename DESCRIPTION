@@ -26,7 +26,8 @@ Imports:
     fcs2,
     rict,
     darleq3,
-    ead
+    ead,
+    lubridate
 Suggests: 
     knitr,
     rmarkdown,

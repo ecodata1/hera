@@ -34,7 +34,7 @@ ead <- function(site_id) {
   data$result_id <- data$obs_id
 
   data$quality_element <- "River Invertebrates"
-  data <- data %>%  rename("question" = label.y,
+  data <- data %>%  dplyr::rename("question" = label.y,
                            "response" = result.value,
                            "date_taken" = date,
                            "location_id" = site_id,
@@ -44,12 +44,17 @@ ead <- function(site_id) {
 
   data$question[data$question == "WHPT_ASPT"] <- "WHPT ASPT Abund"
   data$question[data$question == "WPHT_N_TAXA"] <- "WHPT NTAXA Abund"
-  data$season <- 1 # todo
 
 
-  data <- data %>% select(location_id,
+  data$Month <- lubridate::month(data$date_taken)
+  data$season <- ifelse((data$Month >= 3) & (data$Month <= 5), "1",
+                        ifelse((data$Month >= 6) & (data$Month <= 8), "2",
+                               ifelse((data$Month >= 9) & (data$Month <= 11), "3", "4")))
+
+  data <- data %>% dplyr::select(location_id,
                           sample_id,
                           date_taken,
+                          season,
                           quality_element,
                           question,
                           response,
