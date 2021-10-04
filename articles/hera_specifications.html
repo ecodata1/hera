@@ -77,7 +77,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods</h1>
             
-            <h4 class="date">2021-09-30</h4>
+            <h4 class="date">2021-10-04</h4>
       
       
       <div class="hidden name"><code>hera_specifications.Rmd</code></div>
@@ -135,8 +135,8 @@ outline: 0 ;
 <div id="detailed-design" class="section level1">
 <h1 class="hasAnchor">
 <a href="#detailed-design" class="anchor"></a><span class="header-section-number">4</span> Detailed design</h1>
-<p>To aid collaboration and to response to the changing environmentally pressures, we propose creating a joint collections of packages to share understanding on the environment while providing the software infrastructure to lighten the burden of more mundane tasks involved in maintaining and deploying new models and interfaces.</p>
-<p>This proposal is influenced by the work within the climate change research community such as the <a href="https://climt.readthedocs.io/en/latest/index.html">Climate Modelling and Diagnostics Toolkit</a>, the MET office’s <a href="https://www.metoffice.gov.uk/research/approach/modelling-systems/unified-model/index">unified model</a> approach. As well as best software practices such as on-going work in the R community such as <a href="https://ropensci.org/">ropenSci</a>.</p>
+<p>To aid collaboration and respond to the changing environmentally pressures, we propose creating a joint collections of packages to share understanding on the environment while providing the software infrastructure to lighten the burden of more mundane tasks involved in maintaining and deploying new models and interfaces.</p>
+<p>This proposal is influenced by the work within the climate change research community such as the <a href="https://climt.readthedocs.io/en/latest/index.html">Climate Modelling and Diagnostics Toolkit</a>, the MET office’s <a href="https://www.metoffice.gov.uk/research/approach/modelling-systems/unified-model/index">unified model</a> approach. As well as best software practices such as on-going work in the R community such as <a href="https://ropensci.org/">ropenSci</a> and research projects such as the <a href="https://research-information.bris.ac.uk/ws/portalfiles/portal/63598981/evo_final_report_2014.pdf">Virtual Observatory’</a>.</p>
 <div id="shared-packages" class="section level2">
 <h2 class="hasAnchor">
 <a href="#shared-packages" class="anchor"></a><span class="header-section-number">4.1</span> Shared Packages</h2>
@@ -399,21 +399,27 @@ head()
 <p>For instance, here is a prototype function to pull data Environment Agency’s data.gov.uk web service and convert to the required <code>hera</code> input format.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">environment_agency_data</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">:::</span><span class="fu">ead</span><span class="op">(</span>site_id <span class="op">=</span> <span class="fl">43378</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">environment_agency_data</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span></code></pre></div>
-<pre><code>                                            location_id sample_id date_taken
-1 http://environment.data.gov.uk/ecology/site/bio/43378    771094 2019-02-28
-2 http://environment.data.gov.uk/ecology/site/bio/43378    771094 2019-02-28
-3 http://environment.data.gov.uk/ecology/site/bio/43378    771094 2019-02-28
-4 http://environment.data.gov.uk/ecology/site/bio/43378    771094 2019-02-28
-5 http://environment.data.gov.uk/ecology/site/bio/43378    771094 2019-02-28
-6 http://environment.data.gov.uk/ecology/site/bio/43378    771094 2019-02-28
-      quality_element    question response
-1 River Invertebrates   BMWP_ASPT     6.33
-2 River Invertebrates    BMWP_CoS     7.00
-3 River Invertebrates BMWP_N_TAXA    30.00
-4 River Invertebrates  BMWP_TOTAL   190.00
-5 River Invertebrates         CCI    15.00
-6 River Invertebrates    CCI_ASPT     2.14</code></pre>
+
+<span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">::</span><span class="fu"><a href="../reference/prediction.html">prediction</a></span><span class="op">(</span><span class="va">environment_agency_data</span><span class="op">)</span>
+
+<span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html">unnest</a></span><span class="op">(</span><span class="va">predictions</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">prediction</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">select</span><span class="op">(</span><span class="va">date_taken</span>, <span class="va">index</span>, <span class="va">predicted_response</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code># A tibble: 30 × 5
+# Groups:   sample_number, quality_elements [15]
+   sample_number quality_elements    date_taken index      predicted_response
+   &lt;chr&gt;         &lt;chr&gt;               &lt;chr&gt;      &lt;chr&gt;                   &lt;dbl&gt;
+ 1 771094        River Invertebrates 2019-02-28 WHPT ASPT                5.53
+ 2 771094        River Invertebrates 2019-02-28 WHPT NTAXA              28.7 
+ 3 786963        River Invertebrates 2019-02-28 WHPT ASPT                5.53
+ 4 786963        River Invertebrates 2019-02-28 WHPT NTAXA              28.7 
+ 5 745396        River Invertebrates 2017-02-27 WHPT ASPT                5.53
+ 6 745396        River Invertebrates 2017-02-27 WHPT NTAXA              28.7 
+ 7 738569        River Invertebrates 2016-12-20 WHPT ASPT                5.53
+ 8 738569        River Invertebrates 2016-12-20 WHPT NTAXA              28.7 
+ 9 728372        River Invertebrates 2016-02-11 WHPT ASPT                5.53
+10 728372        River Invertebrates 2016-02-11 WHPT NTAXA              28.7 
+# … with 20 more rows</code></pre>
 </div>
 <div id="shared-data-tables" class="section level2">
 <h2 class="hasAnchor">
