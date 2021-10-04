@@ -6,7 +6,7 @@
 #' @importFrom purrr map
 
 rict_prediction <- function(data) {
-  # data <- demo_data
+  # data <- hera::demo_data
 
   bias <- 6.21
   analysis <- "WHPT NTAXA Abund"
@@ -25,7 +25,16 @@ rict_prediction <- function(data) {
   # Add year  columns
   data$YEAR <- format.Date(data$date_taken, "%Y")
   data$YEAR <- as.integer(data$YEAR)
-
+  check <- FALSE
+  if(!is.null(data$river.width..m.)) {
+    data$river.width..m. <- as.numeric(data$river.width..m.)
+    data$mean.depth..cm. <- as.numeric(data$mean.depth..cm.)
+    data$x..boulders.cobbles <- as.numeric(data$x..boulders.cobbles)
+    data$x..pebbles.gravel <- as.numeric(data$x..pebbles.gravel)
+    data$x..silt.clay <- as.numeric(data$x..silt.clay)
+    data$x..sand <- as.numeric(data$x..sand)
+    check <- TRUE
+  }
   # NGR columns
   data <- tidyr::separate(data,
     .data$grid_reference,
@@ -93,7 +102,7 @@ rict_prediction <- function(data) {
       "Aut_Season_ID" = numeric(),
       "Aut_TL2_WHPT_NTaxa (AbW,DistFam)" = numeric(),
       "Aut_TL2_WHPT_ASPT (AbW,DistFam)" = numeric(),
-      check.names = FALSE
+      check.names = check
     )
   }
   template_nems <- rict_template()
@@ -110,7 +119,10 @@ rict_prediction <- function(data) {
   data <- data.frame(data, check.names = TRUE)
   names(data) <- tolower(names(data))
 
-
+  data$date_taken <- as.Date(data$date_taken)
+  if(is.null(data$season)) {
+  data$season <- 1
+  }
   summarise_data <- dplyr::group_by(
     data,
     .data$location,
@@ -120,13 +132,15 @@ rict_prediction <- function(data) {
     .data$sample_id,
     .data$season,
     .data$s_discharge_cat,
-    .data$water_body_id
+    .data$water_body_id, .name_repair = T
   )
   # Suppress warning because of missing values
   summarise_data <- suppressWarnings(dplyr::summarise_all(
     summarise_data,
     ~ mean(.x, na.rm = TRUE)
   ))
+
+
 
   # Select
   rict_data <- dplyr::select(summarise_data,

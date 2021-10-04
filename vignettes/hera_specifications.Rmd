@@ -116,7 +116,7 @@ must be modular and easy to connect and integrate in a variety of ways.
 
 # Detailed design
 
-To aid collaboration and to response to the changing environmentally pressures,
+To aid collaboration and respond to the changing environmentally pressures,
 we propose creating a joint collections of packages to share understanding on
 the environment while providing the software infrastructure to lighten the
 burden of more mundane tasks involved in maintaining and deploying new models
@@ -128,7 +128,9 @@ Toolkit](https://climt.readthedocs.io/en/latest/index.html), the MET office's
 [unified
 model](https://www.metoffice.gov.uk/research/approach/modelling-systems/unified-model/index)
 approach. As well as best software practices such as on-going work in the R
-community such as [ropenSci](https://ropensci.org/).
+community such as [ropenSci](https://ropensci.org/) and research projects such
+as the [Virtual
+Observatory'](https://research-information.bris.ac.uk/ws/portalfiles/portal/63598981/evo_final_report_2014.pdf).
 
 ## Shared Packages
 
@@ -432,7 +434,12 @@ data.gov.uk web service and convert to the required `hera` input format.
 
 ```{r, echo=TRUE}
 environment_agency_data <- hera:::ead(site_id = 43378)
-head(environment_agency_data[, 1:6])
+
+predictions <- hera::prediction(environment_agency_data)
+
+tidyr::unnest(predictions, cols = c(prediction)) %>%
+  select(date_taken, index, predicted_response) %>%
+  unique()
 
 ```
 
