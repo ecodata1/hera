@@ -6,5 +6,5 @@
 #' @importFrom purrr map
 
 rict_indices <- function(data) {
-  return()
+  return(tibble(value = "Not calculated"))
 }

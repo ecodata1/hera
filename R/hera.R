@@ -8,7 +8,7 @@
 #'
 #' @return Dataframe of classifications
 #' @examples
-#' classifications <- classification(demo_data)
+#' classifications <- hera(demo_data)
 #' @importFrom rlang .data
 #' @importFrom tibble tibble
 #' @importFrom dplyr group_by inner_join mutate

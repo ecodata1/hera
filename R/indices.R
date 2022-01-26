@@ -29,7 +29,7 @@ indices <- function(data, index = NULL) {
     nest()
 
   model_dataframe <- create_model_dataframe()
-  # Join predictions dataframe to data
+  # Join indices function dataframe to data
   by_sample_number <- inner_join(by_sample_number,
     model_dataframe[, c("quality_element", "indices_function")],
     by = c("quality_elements" = "quality_element")
@@ -40,6 +40,7 @@ indices <- function(data, index = NULL) {
     mutate(indices = map(.data$data, .data$indices_function))
   # Unnest and return
   by_sample_number <- select(by_sample_number, -.data$indices_function)
-  # by_sample_number <- unnest(by_sample_number, cols = c(.data$indices, .data$data))
+  # by_sample_number <- unnest(by_sample_number, cols = c(.data$indices))
+  by_sample_number <- unnest(by_sample_number, cols = c(.data$data))
   return(by_sample_number)
 }

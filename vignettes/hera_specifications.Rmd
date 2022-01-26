@@ -218,17 +218,17 @@ See documentation
 [`prediction()`](https://ecodata1.github.io/hera/reference/prediction.html) for
 more information.
 
-### Classification
+### Compliance
 
-Based on the predicted and observed indices - we classify each sample using
-`classification()`:
+Based on the predicted and observed indices - we check the compliance of each sample using
+`classification()`. The 'compliance' stage includes any type of test or assessment of our data. This could be WFD classification, compliance check, bathing water or discharge assessment. Really any type of grading or assessment against some type of expected value. 
 
 ```{r, echo=TRUE}
 
 classification(demo_data) %>% 
  group_by(quality_elements) %>% 
  slice_sample(n = 4) %>% 
- select(sample_number, classification)
+ select(sample_number, index, assessment, value)
 
 ```
 

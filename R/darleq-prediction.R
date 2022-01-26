@@ -11,8 +11,12 @@ darleq_prediction <- function(data) {
 
   # 1. Prepare data frame of 'header' ----------------------------------
   # include: SampleID, Site.Name, SAMPLE_DATE, Alkalinity
-
-  data$alkalinity <- 75
+  if (any(names(data) %in% "alkalinity")) {
+    data$alkalinity[is.na(data$alkalinity)] <- 75
+  } else {
+    data$alkalinity <- 75
+  }
+  data$alkalinity <- as.numeric(data$alkalinity)
   # Combine mean alkalinity with other site headers
   header <- data %>%
     mutate(
@@ -96,6 +100,8 @@ darleq_prediction <- function(data) {
 
   # Combine dataframes into named list ------------------------
   header <- data.frame(header)
+  header <- header[header$SampleID %in% row.names(diatom_data), ]
+  header <- header[!duplicated(header$SampleID), ]
   output <- darleq3::calc_Metric(diatom_data, metric = "TDI4")
   output <- darleq3::calc_EQR(output, header, truncate_EQR = TRUE, verbose = TRUE)
   output <- tibble(

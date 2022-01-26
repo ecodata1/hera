@@ -1,0 +1,17 @@
+TYPE OF VARIABLE,ATTRIBUTE,WHPT RICT – ASPT,AWIC – RIVERS,EPSI,WHPT – ASPT,DISCHARGE
+bookkeeping,WFD compliance,TRUE,TRUE,FALSE,FALSE,FALSE
+bookkeeping,analytical_function,freshwater_inverts,freshwater_inverts,freshwater_inverts,freshwater_inverts,freshwater_inverts
+bookkeeping,quality_element,freshwater_inverts,freshwater_inverts,freshwater_inverts,freshwater_inverts,freshwater_inverts
+bookkeeping,media,biota,biota,biota,biota,biota
+bookkeeping,method,lab analysis,lab analysis,lab analysis,lab analysis,bank side
+bookkeeping,standard,UKTAG WHPT RICT standards,UKTAG WHPT RICT standards,,,
+bookkeeping,scientific_paper,,,,,
+bookkeeping,tool,RICT,,macroinvertebrateMetrics,macroinvertebrateMetrics,
+calculated value,calculated value,WHPT ASPT Abund,,,,WHPT ASPT Abund
+observation,question,,Taxon,Taxon,Taxon,
+predictor,width,TRUE,,,,TRUE
+predictor,depth,TRUE,,,,TRUE
+predictor,distance_from_source,TRUE,,,,TRUE
+predictor,altitude,TRUE,,,,TRUE
+bookkeeping,discharge_point,,,,,TRUE
+bookkeeping,sister_site,,,,,TRUE

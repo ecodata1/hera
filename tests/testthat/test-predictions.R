@@ -11,7 +11,7 @@ test_that("metrics works", {
   classification(demo_data) %>%
     group_by(quality_elements) %>%
     dplyr::slice_sample(n = 4) %>%
-    select(sample_number, classification)
+    select(sample_number, index, assessment, value)
 })
 
 

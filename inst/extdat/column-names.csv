@@ -1,43 +1,45 @@
-minimal,reference,predictor,observation,readable_name_eea,sepa_view,eea_nov_2015,hera_v1,hera_latest
-TRUE,TRUE,,,Monitoring site identifier,location_code,monitoringSiteIdentifier,location_code,location_id
-,TRUE,,,,location_description,,location_description,location_description
-TRUE,TRUE,TRUE,,,national_grid_reference,,national_grid_reference,grid_reference
-,TRUE,TRUE,,,easting,,easting,easting
-,TRUE,TRUE,,,northing,,northing,northing
-,TRUE,TRUE,,,latitude,,latitude,latitude
-,TRUE,TRUE,,,longitude,,longitude,longitude
-,TRUE,,,,catchment_id,,catchment_id,
-,TRUE,,,,catchment,,catchment,
-,TRUE,,,,river_number,,river_number,
-,TRUE,,,,river_name,,river_name,
-,TRUE,,,,hydro_distance,,hydro_distance,
-,TRUE,,,,hydro_code,,hydro_code,
-,TRUE,,,,local_authority,,local_authority,
-,TRUE,,,,media,,media,
-TRUE,TRUE,TRUE,,Sampling Time,date_taken,phenomenonTimeSamplingDate,date_taken,date_taken
-,TRUE,,,,sampler_id,,sampler_id,sample_id
-,TRUE,,,,sample_number,,sample_number,
-,TRUE,,,,test_number,,test_number,
-,TRUE,,,,comments,,comments,
-,TRUE,,,,purpose,,purpose,
-,TRUE,,,,wfd_purpose,,wfd_purpose,
-,TRUE,,,,analysis_name,,analysis_name,
-,TRUE,,,,analysis_repname,,analysis_repname,
-,TRUE,,,,result_number,,result_number,
-,TRUE,,,,result_order,,result_order,
-,,,TRUE,Determinand Code,determinand_code,determinandCode,determinand_code,
-TRUE,,,TRUE,,determinand,,determinand,question
-TRUE,,,TRUE,Observed value,result,resultObservedValue,result,response
-,,,TRUE,Unit of measure,units,resultUom,units,units
-,,,TRUE,,taxon,,taxon,taxon
-,TRUE,,,,nbn_code,,nbn_code,taxon_id
-,TRUE,,,,maitland_code,,maitland_code,taxon_id
-,TRUE,,,,whitton_code,,whitton_code,taxon_id
-,,,TRUE,,value,,value,
-,,,TRUE,,value_warning,,value_warning,
-,TRUE,,,,sample_id,,sample_id,
-,TRUE,,,,result_id,,result_id,result_id
-,TRUE,TRUE,,,season,,season,season
-,,TRUE,,,mean_alkalinity,,mean_alkalinity,mean_alkalinity
-TRUE,TRUE,,,,analytical_function,,,quality_element
-,TRUE,,,Water body identifier,water_body_id,waterBodyIdentifier,water_body_id,water_body_id
+minimal,reference,predictor,observation,readable_name_eea,sepa_view,ea_api,eea_nov_2015,hera_v1,hera_latest
+TRUE,TRUE,,,Monitoring site identifier,location_code,site_id,monitoringSiteIdentifier,location_code,location_id
+,TRUE,,,,location_description,,,location_description,location_description
+TRUE,TRUE,TRUE,,,national_grid_reference,,,national_grid_reference,grid_reference
+,TRUE,TRUE,,,easting,,,easting,easting
+,TRUE,TRUE,,,northing,,,northing,northing
+,TRUE,TRUE,,,latitude,lat,,latitude,latitude
+,TRUE,TRUE,,,longitude,long,,longitude,longitude
+,TRUE,,,,catchment_id,,,catchment_id,
+,TRUE,,,,catchment,Catchment,,catchment,
+,TRUE,,,,river_number,,,river_number,
+,TRUE,,,,river_name,,,river_name,
+,TRUE,,,,hydro_distance,,,hydro_distance,
+,TRUE,,,,hydro_code,,,hydro_code,
+,TRUE,,,,local_authority,,,local_authority,
+,TRUE,,,,media,,,media,
+TRUE,TRUE,TRUE,,Sampling Time,date_taken,date,phenomenonTimeSamplingDate,date_taken,date_taken
+,TRUE,,,,sampler_id,,,sampler_id,sample_id
+,TRUE,,,,sample_number,,,sample_number,
+,TRUE,,,,test_number,,,test_number,
+,TRUE,,,,comments,,,comments,
+,TRUE,,,,purpose,,,purpose,
+,TRUE,,,,wfd_purpose,,,wfd_purpose,
+,TRUE,,,,analysis_name,obs_type,,analysis_name,
+,TRUE,,,,analysis_repname,,,analysis_repname,
+,TRUE,,,,result_number,full_result_id,,result_number,
+,TRUE,,,,result_order,,,result_order,
+,,,TRUE,Determinand Code,determinand_code,,determinandCode,determinand_code,
+TRUE,,,TRUE,,determinand,label,,determinand,question
+TRUE,,,TRUE,Observed value,result,result.value,resultObservedValue,result,response
+,,,TRUE,Unit of measure,units,,resultUom,units,units
+,,,TRUE,,taxon,,,taxon,taxon
+,TRUE,,,,nbn_code,,,nbn_code,taxon_id
+,TRUE,,,,maitland_code,,,maitland_code,taxon_id
+,TRUE,,,,whitton_code,,,whitton_code,taxon_id
+,,,TRUE,,value,,,value,
+,,,TRUE,,value_warning,,,value_warning,
+,TRUE,,,,sample_id,,,sample_id,
+,TRUE,,,,result_id,,,result_id,result_id
+,TRUE,TRUE,,,season,,,season,season
+,,TRUE,,,mean_alkalinity,,,mean_alkalinity,mean_alkalinity
+TRUE,TRUE,,,,analytical_function,,,,quality_element
+,TRUE,,,Water body identifier,water_body_id,WFD Waterbody ID,waterBodyIdentifier,water_body_id,water_body_id
+,,TRUE,,,altitude,altitude,,altitude,altitude
+,,,,,dist_from_source,Distance from Source,,Dist_from_Source,Dist_from_Source

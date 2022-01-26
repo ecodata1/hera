@@ -6,5 +6,8 @@
 #' @importFrom purrr map
 
 rict_classification <- function(data) {
-  return()
+
+
+
+  return(tibble(assessment = "", value = "", index = ""))
 }

@@ -4,7 +4,7 @@
 #' @details
 #' \code{classification()} classification
 #'
-#' @param data Dataframe of variables in WFD inter-change format
+#' @param data Dataframe of variables in hera inter-change format
 #'
 #' @return Dataframe of classifications
 #' @examples
@@ -37,9 +37,8 @@ classification <- function(data = NULL) {
   # Loop through each sample and apply prediction function from 'model_dataframe'
   data <- data %>%
     mutate(classification = map(.data$data, .data$classification_function))
-
   # Unnest and return
   data <- select(data, -.data$classification_function)
-  data <- unnest(data, cols = c(.data$data, .data$classification))
+  data <- unnest(data, cols = c(.data$classification))
   return(data)
 }

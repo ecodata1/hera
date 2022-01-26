@@ -1,7 +1,7 @@
 #' @importFrom rlang .data
 #' @importFrom tibble tibble
-#' @importFrom dplyr group_by inner_join mutate select arrange filter summarise ungroup
-#' @importFrom tidyr unnest nest pivot_wider
+#' @importFrom dplyr group_by inner_join mutate select arrange filter summarise ungroup mutate_all
+#' @importFrom tidyr unnest nest pivot_wider pivot_longer
 #' @importFrom magrittr `%>%`
 #' @importFrom purrr map
 
@@ -9,7 +9,12 @@ darleq_classification <- function(data) {
   # 1. Prepare 'header'  dataframe ----------------------------------
   # include: SampleID, Site.Name, SAMPLE_DATE, Alkalinity
 
-  data$alkalinity <- 75
+  if (any(names(data) %in% "alkalinity")) {
+    data$alkalinity[is.na(data$alkalinity)] <- 75
+  } else {
+    data$alkalinity <- 75
+  }
+  data$alkalinity <- as.numeric(data$alkalinity)
   # Combine mean alkalinity with other site headers
   header <- data %>%
     mutate(
@@ -92,7 +97,25 @@ darleq_classification <- function(data) {
 
   # 4. Combine dataframes into named list ------------------------
   header <- data.frame(header)
+  header <- header[header$SampleID %in% row.names(diatom_data), ]
   output <- darleq3::calc_Metric(diatom_data, metric = "TDI4")
   output <- darleq3::calc_EQR(output, header, truncate_EQR = TRUE, verbose = TRUE)
-  return(output$EQR$EQR_TDI4)
+  output <- output$EQR
+  output <- output %>%
+    mutate_all(as.character)
+  output <- output %>% pivot_longer(!SampleID,
+    names_to = "assessment",
+    values_to = "value"
+  )
+  output$index <- "TDI4"
+  output$assessment <- as.character(output$assessment)
+  output <- dplyr::filter(output, assessment %in% c(
+    "EQR_TDI4",
+    "Class_TDI4"
+  ))
+  output <- dplyr::select(output, !SampleID)
+  if (any(is.na(output$value))) {
+    output$value <- "NA"
+  }
+  return(output)
 }

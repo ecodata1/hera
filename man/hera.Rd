@@ -19,5 +19,5 @@ Validate, Predict and Classify.
 \code{classification()} classification
 }
 \examples{
-classifications <- classification(demo_data)
+classifications <- hera(demo_data)
 }

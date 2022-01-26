@@ -7,7 +7,7 @@
 classification(data = NULL)
 }
 \arguments{
-\item{data}{Dataframe of variables in WFD inter-change format}
+\item{data}{Dataframe of variables in hera inter-change format}
 }
 \value{
 Dataframe of classifications
