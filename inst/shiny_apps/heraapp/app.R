@@ -182,10 +182,6 @@ server <- function(input, output) {
         }
       )
 
-      # output$download_data <- renderUI({
-      #   downloadButton("download_file", "Download Outputs")
-      # })
-
       map_data <- select(data, longitude, latitude, location_id)
       map_data <- unique(map_data)
       map <- leaflet(map_data) %>%
@@ -254,9 +250,6 @@ server <- function(input, output) {
         renderUI({
           downloadButton("download_file", "Download Outputs")
         }),
-        # h3("Data"), DT::renderDataTable({
-        #   select(data, location_id, location_description, sample_id, question, response)
-        # }),
         h3("Chart"), renderPlot({
           chart
         }),
