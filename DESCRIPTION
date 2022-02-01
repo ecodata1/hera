@@ -27,6 +27,7 @@ Imports:
     rict,
     darleq3,
     ead,
+    whpts,
     lubridate
 Suggests: 
     knitr,
@@ -40,7 +41,8 @@ Remotes:
     aquaMetrics/rict,
     aquaMetrics/fcs2,
     nsj3/darleq3,
-    aquaMetrics/eadata
+    aquaMetrics/eadata,
+    ecodata1/whpt
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Depends: 

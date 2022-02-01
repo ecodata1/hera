@@ -62,7 +62,7 @@ and data structures.
 Specifically, we propose an official collection of R packages designed to
 provide collaborative workflow for building and using classification tools. In
 turn, these packages will be unified into a single package called 'hera'.
-This provides a common interface to run regulatory classification. We expect
+This provides a common interface to run regulatory assessments. We expect
 this process will facilitate code re-use, faster integration and knowledge
 exchange between method developers and practitioners.
 
@@ -82,7 +82,8 @@ common design philosophy to aid integration and collaboration.
 
 # Key Ideas
 
-The aims of a shared design philosophy for regulatory classification R packages include:
+The aims of a shared design philosophy for regulatory classification R packages
+include:
   
 - Create a single user interfaces, similar data formats and operating procedures.
 - Allow outputs from multiple tools to be quickly generated and combined together.
@@ -130,7 +131,7 @@ model](https://www.metoffice.gov.uk/research/approach/modelling-systems/unified-
 approach. As well as best software practices such as on-going work in the R
 community such as [ropenSci](https://ropensci.org/) and research projects such
 as the [Virtual
-Observatory'](https://research-information.bris.ac.uk/ws/portalfiles/portal/63598981/evo_final_report_2014.pdf).
+Observatory](https://research-information.bris.ac.uk/ws/portalfiles/portal/63598981/evo_final_report_2014.pdf).
 
 ## Shared Packages
 
@@ -176,7 +177,7 @@ Additionally, check the data is within the expect parameter space based on
 training data used to create the classification model. Return the passing
 data and list of warnings/fails.
 
-```{r, echo=TRUE}
+```{r, echo=TRUE, warning=F, message=F}
 # install.packages("devtools")
 # devtools::install_github("ecodata1/hera")
 library(hera)
@@ -188,9 +189,9 @@ validation(demo_data) %>%
 
 ### Indices
 
-Using the  `indices()` function, we calculate observed indices scores as required for each sample. 
+Using the  `indices()` function, we calculate observed indices scores if required for each sample. 
 
-```{r, echo=TRUE}
+```{r, echo=TRUE, warning=F, message=F}
 indices(demo_data) %>%
   select(sample_number, indices) %>%
   unnest(indices) %>% 
@@ -205,7 +206,7 @@ Note, the invert indices are not calculated, they have been pre-calculated and a
 
 We then predict reference scores for each sample:
 
-```{r, echo=TRUE}
+```{r, echo=TRUE, warning=F, message=F}
 prediction(demo_data[1:2200, ]) %>%
   group_by(quality_elements) %>%
   slice_sample(n = 4) %>%
@@ -223,7 +224,7 @@ more information.
 Based on the predicted and observed indices - we check the compliance of each sample using
 `classification()`. The 'compliance' stage includes any type of test or assessment of our data. This could be WFD classification, compliance check, bathing water or discharge assessment. Really any type of grading or assessment against some type of expected value. 
 
-```{r, echo=TRUE}
+```{r, echo=TRUE, warning=F, message=F}
 
 classification(demo_data) %>% 
  group_by(quality_elements) %>% 
@@ -247,6 +248,8 @@ head(class)
 
 ```
 
+We could also aggregate by the WFD hierarchy.
+
 ### Report
 
 We now run a report assessing samples from the same location for consistency.
@@ -256,6 +259,7 @@ demonstrates that it is step by step process. Not all tools/models will have all
 the features development if not required or if not prioritized:
 
 ```
+# TODO!
 compare_report <- compare(new_data, old_data)
 compare_report
 
@@ -264,6 +268,7 @@ compare_report
 We now run a report assesses two samples assess a discharge (up and downstream):  
 
 ```
+# TODO!
 compare_report <- compare(site_one, site_two)
 compare_report
 
@@ -271,9 +276,12 @@ compare_report
 
 ### Diagnosis
 
-As well as classification of water quality, additional we need to diagnose potential pressures. We use the `diagnosis()` function to report potential pressures.
+As well as classification of water quality, additional we need to diagnose
+potential pressures. We use the `diagnosis()` function to report potential
+pressures.
 
 ```
+# TODO!
 diagnosis(demo_data) %>% 
 select(sample_id, diagnosis)
 head()
@@ -285,6 +293,7 @@ head()
 A number of forecasting or scenario tools could be incorporated for either projecting current trends or assessing the impact of proposed measures. 
 
 ```
+# TODO!
 scenario(demo_data, trends) %>%  
 head()
 
@@ -310,7 +319,7 @@ documentation](https://www.opencpu.org/api.html) for using
 
 ## Lots of datasets - one underlying data structure?
 
-Ecological modelling relies on sampling. The samples come in a range of forms
+Models rely on observed sampling for training. Samples come in a range of forms
 from points, transects, images, grabs, DNA etc. But the general feature of
 modelling is based on being able to predict what we expect to find from whatever
 sampling technique we deploy. The sample is the fundamental observation which we
@@ -394,7 +403,7 @@ demo_data %>% select(question, response)
 ```
   
 In theory, this is all that is required. However for ease for interacting with
-existing dataset and *ad hoc* data, a fourth column `taxon` is useful due to the
+existing datasets and *ad hoc* data, a third column `taxon` is useful due to the
 historic way taxon data is usually stored.
 
 ```{r}
@@ -408,13 +417,15 @@ demo_data %>% select(question, response, taxon) %>%
 Predictive variables such as `temperature`, `altitude`, `slope` are added as
 additional columns. There is a trade-off here as predictor variables are added
 for each row in the dataset, increasing the size of the dataset. However this
-does make data analysis straightforward and this repeated can be easily
-compressed if size becomes an issue.
+does make data analysis straightforward and this repeated data can be easily
+compressed if size becomes an issue. For instance, nested JSON data or
+dataframes in R.
 
-```
-demo_data %>%  select(`mean_alkalinity`, `altitude`, `distance_from_source`)
 
+```{r}
+demo_data %>%  select(`mean_alkalinity`, `grid_reference`, `season`)
 ```
+
 
 ### Indices, predictions, classification, reports
 
@@ -434,6 +445,12 @@ data.gov.uk web service and convert to the required `hera` input format.
 
 ```{r, echo=TRUE}
 environment_agency_data <- hera:::ead(site_id = 43378)
+tibble(environment_agency_data)
+```
+
+We can then run this EA data through `hera`:
+
+```{r, echo=TRUE, warning=F, message=F}
 
 predictions <- hera::prediction(environment_agency_data)
 
