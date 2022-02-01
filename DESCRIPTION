@@ -23,11 +23,6 @@ Imports:
     magrittr,
     rlang,
     tibble,
-    fcs2,
-    rict,
-    darleq3,
-    ead,
-    whpts,
     lubridate
 Suggests: 
     knitr,
