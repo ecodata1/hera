@@ -224,7 +224,7 @@ more information.
 Based on the predicted and observed indices - we check the compliance of each sample using
 `classification()`. The 'compliance' stage includes any type of test or assessment of our data. This could be WFD classification, compliance check, bathing water or discharge assessment. Really any type of grading or assessment against some type of expected value. 
 
-```{r, echo=TRUE, warning=F, message=F}
+```{r, echo=TRUE, warning=F}
 
 classification(demo_data) %>% 
  group_by(quality_elements) %>% 
@@ -472,7 +472,7 @@ Following data tables are shared through `hera`...
 
 ### Models and Environmental Standards names
 
-```{r}
+```{r echo=TRUE, warning=F}
 
 hera:::create_model_dataframe() %>% 
   select(standard, quality_element, classification_function)
