@@ -73,7 +73,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods</h1>
             
-            <h4 data-toc-skip class="date">2022-01-26</h4>
+            <h4 data-toc-skip class="date">2022-02-01</h4>
       
       
       <div class="hidden name"><code>hera_specifications.Rmd</code></div>
@@ -100,7 +100,7 @@ outline: 0 ;
 <span class="header-section-number">1</span> Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
 </h2>
 <p>We propose regulatory tools share a common set of design principles, interfaces and data structures.</p>
-<p>Specifically, we propose an official collection of R packages designed to provide collaborative workflow for building and using classification tools. In turn, these packages will be unified into a single package called ‘hera’. This provides a common interface to run regulatory classification. We expect this process will facilitate code re-use, faster integration and knowledge exchange between method developers and practitioners.</p>
+<p>Specifically, we propose an official collection of R packages designed to provide collaborative workflow for building and using classification tools. In turn, these packages will be unified into a single package called ‘hera’. This provides a common interface to run regulatory assessments. We expect this process will facilitate code re-use, faster integration and knowledge exchange between method developers and practitioners.</p>
 </div>
 <div class="section level2">
 <h2 id="motivation">
@@ -137,7 +137,7 @@ outline: 0 ;
 <span class="header-section-number">4</span> Detailed design<a class="anchor" aria-label="anchor" href="#detailed-design"></a>
 </h2>
 <p>To aid collaboration and respond to the changing environmentally pressures, we propose creating a joint collections of packages to share understanding on the environment while providing the software infrastructure to lighten the burden of more mundane tasks involved in maintaining and deploying new models and interfaces.</p>
-<p>This proposal is influenced by the work within the climate change research community such as the <a href="https://climt.readthedocs.io/en/latest/index.html" class="external-link">Climate Modelling and Diagnostics Toolkit</a>, the MET office’s <a href="https://www.metoffice.gov.uk/research/approach/modelling-systems/unified-model/index" class="external-link">unified model</a> approach. As well as best software practices such as on-going work in the R community such as <a href="https://ropensci.org/" class="external-link">ropenSci</a> and research projects such as the <a href="https://research-information.bris.ac.uk/ws/portalfiles/portal/63598981/evo_final_report_2014.pdf" class="external-link">Virtual Observatory’</a>.</p>
+<p>This proposal is influenced by the work within the climate change research community such as the <a href="https://climt.readthedocs.io/en/latest/index.html" class="external-link">Climate Modelling and Diagnostics Toolkit</a>, the MET office’s <a href="https://www.metoffice.gov.uk/research/approach/modelling-systems/unified-model/index" class="external-link">unified model</a> approach. As well as best software practices such as on-going work in the R community such as <a href="https://ropensci.org/" class="external-link">ropenSci</a> and research projects such as the <a href="https://research-information.bris.ac.uk/ws/portalfiles/portal/63598981/evo_final_report_2014.pdf" class="external-link">Virtual Observatory</a>.</p>
 <div class="section level3">
 <h3 id="shared-packages">
 <span class="header-section-number">4.1</span> Shared Packages<a class="anchor" aria-label="anchor" href="#shared-packages"></a>
@@ -203,7 +203,7 @@ outline: 0 ;
 <h4 id="indices">
 <span class="header-section-number">4.2.2</span> Indices<a class="anchor" aria-label="anchor" href="#indices"></a>
 </h4>
-<p>Using the <code><a href="../reference/indices.html">indices()</a></code> function, we calculate observed indices scores as required for each sample.</p>
+<p>Using the <code><a href="../reference/indices.html">indices()</a></code> function, we calculate observed indices scores if required for each sample.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/indices.html">indices</a></span><span class="op">(</span><span class="va">demo_data</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">sample_number</span>, <span class="va">indices</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
@@ -280,16 +280,19 @@ outline: 0 ;
 <p>We now aggregate the samples by season, year, multi-year or waterbody as required:</p>
 <pre><code><span class="va">aggregate</span> <span class="op">&lt;-</span> <span class="fu">aggregation</span><span class="op">(</span><span class="va">demo_data</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>,<span class="st">"season"</span>,<span class="st">"waterbody"</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">class</span><span class="op">)</span></code></pre>
+<p>We could also aggregate by the WFD hierarchy.</p>
 </div>
 <div class="section level4">
 <h4 id="report">
 <span class="header-section-number">4.2.6</span> Report<a class="anchor" aria-label="anchor" href="#report"></a>
 </h4>
 <p>We now run a report assessing samples from the same location for consistency. Note, that no report for fish is produced, the necessary adjustment/interpretation parameters have not been created for fish. This demonstrates that it is step by step process. Not all tools/models will have all the features development if not required or if not prioritized:</p>
-<pre><code><span class="va">compare_report</span> <span class="op">&lt;-</span> <span class="fu">compare</span><span class="op">(</span><span class="va">new_data</span>, <span class="va">old_data</span><span class="op">)</span>
+<pre><code><span class="co"># TODO!</span>
+<span class="va">compare_report</span> <span class="op">&lt;-</span> <span class="fu">compare</span><span class="op">(</span><span class="va">new_data</span>, <span class="va">old_data</span><span class="op">)</span>
 <span class="va">compare_report</span></code></pre>
 <p>We now run a report assesses two samples assess a discharge (up and downstream):</p>
-<pre><code><span class="va">compare_report</span> <span class="op">&lt;-</span> <span class="fu">compare</span><span class="op">(</span><span class="va">site_one</span>, <span class="va">site_two</span><span class="op">)</span>
+<pre><code><span class="co"># TODO!</span>
+<span class="va">compare_report</span> <span class="op">&lt;-</span> <span class="fu">compare</span><span class="op">(</span><span class="va">site_one</span>, <span class="va">site_two</span><span class="op">)</span>
 <span class="va">compare_report</span></code></pre>
 </div>
 <div class="section level4">
@@ -297,7 +300,8 @@ outline: 0 ;
 <span class="header-section-number">4.2.7</span> Diagnosis<a class="anchor" aria-label="anchor" href="#diagnosis"></a>
 </h4>
 <p>As well as classification of water quality, additional we need to diagnose potential pressures. We use the <code>diagnosis()</code> function to report potential pressures.</p>
-<pre><code><span class="fu">diagnosis</span><span class="op">(</span><span class="va">demo_data</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+<pre><code><span class="co"># TODO!</span>
+<span class="fu">diagnosis</span><span class="op">(</span><span class="va">demo_data</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">sample_id</span>, <span class="va">diagnosis</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre>
 </div>
@@ -306,7 +310,8 @@ outline: 0 ;
 <span class="header-section-number">4.2.8</span> Scenarios<a class="anchor" aria-label="anchor" href="#scenarios"></a>
 </h4>
 <p>A number of forecasting or scenario tools could be incorporated for either projecting current trends or assessing the impact of proposed measures.</p>
-<pre><code><span class="fu">scenario</span><span class="op">(</span><span class="va">demo_data</span>, <span class="va">trends</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  
+<pre><code><span class="co"># TODO!</span>
+<span class="fu">scenario</span><span class="op">(</span><span class="va">demo_data</span>, <span class="va">trends</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="fu">scenario</span><span class="op">(</span><span class="va">demo_data</span>, <span class="va">measures</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
@@ -324,7 +329,7 @@ outline: 0 ;
 <h3 id="lots-of-datasets---one-underlying-data-structure">
 <span class="header-section-number">4.3</span> Lots of datasets - one underlying data structure?<a class="anchor" aria-label="anchor" href="#lots-of-datasets---one-underlying-data-structure"></a>
 </h3>
-<p>Ecological modelling relies on sampling. The samples come in a range of forms from points, transects, images, grabs, DNA etc. But the general feature of modelling is based on being able to predict what we expect to find from whatever sampling technique we deploy. The sample is the fundamental observation which we compare against our prediction. The samples are discreet, either observed instantaneously or perhaps over a few minutes or hours (where dynamic changes are not significant).</p>
+<p>Models rely on observed sampling for training. Samples come in a range of forms from points, transects, images, grabs, DNA etc. But the general feature of modelling is based on being able to predict what we expect to find from whatever sampling technique we deploy. The sample is the fundamental observation which we compare against our prediction. The samples are discreet, either observed instantaneously or perhaps over a few minutes or hours (where dynamic changes are not significant).</p>
 <p>Multiple samples can be aggregated to smooth variance but the sample still remains the fundamental building block. The sample could be a single pixel from an aerial image or a salmon moving through a fish counter. We still make predictions of what we expect this sample to be like even if the true picture only emerges after several samples are aggregated or compared.</p>
 <p>Therefore, all our data share similarities, they consist of samples and observations. And additionally each sample will have predictor variables to allow us to predict expected reference values or outcomes.</p>
 <div class="section level4">
@@ -385,7 +390,7 @@ outline: 0 ;
  [38;5;250m 9 [39m Easting         341452        
  [38;5;250m10 [39m Northing        715796        
  [38;5;246m# … with 8,467 more rows [39m</code></pre>
-<p>In theory, this is all that is required. However for ease for interacting with existing dataset and <em>ad hoc</em> data, a fourth column <code>taxon</code> is useful due to the historic way taxon data is usually stored.</p>
+<p>In theory, this is all that is required. However for ease for interacting with existing datasets and <em>ad hoc</em> data, a third column <code>taxon</code> is useful due to the historic way taxon data is usually stored.</p>
 <pre><code> [38;5;246m# A tibble: 5 × 3 [39m
   question        response taxon                  
    [3m [38;5;246m&lt;fct&gt; [39m [23m            [3m [38;5;246m&lt;fct&gt; [39m [23m     [3m [38;5;246m&lt;fct&gt; [39m [23m                  
@@ -399,8 +404,21 @@ outline: 0 ;
 <h4 id="predictors">
 <span class="header-section-number">4.3.5</span> Predictors<a class="anchor" aria-label="anchor" href="#predictors"></a>
 </h4>
-<p>Predictive variables such as <code>temperature</code>, <code>altitude</code>, <code>slope</code> are added as additional columns. There is a trade-off here as predictor variables are added for each row in the dataset, increasing the size of the dataset. However this does make data analysis straightforward and this repeated can be easily compressed if size becomes an issue.</p>
-<pre><code><span class="va">demo_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">`mean_alkalinity`</span>, <span class="va">`altitude`</span>, <span class="va">`distance_from_source`</span><span class="op">)</span></code></pre>
+<p>Predictive variables such as <code>temperature</code>, <code>altitude</code>, <code>slope</code> are added as additional columns. There is a trade-off here as predictor variables are added for each row in the dataset, increasing the size of the dataset. However this does make data analysis straightforward and this repeated data can be easily compressed if size becomes an issue. For instance, nested JSON data or dataframes in R.</p>
+<pre><code> [38;5;246m# A tibble: 8,477 × 3 [39m
+   mean_alkalinity grid_reference season
+              [3m [38;5;246m&lt;dbl&gt; [39m [23m  [3m [38;5;246m&lt;chr&gt; [39m [23m           [3m [38;5;246m&lt;chr&gt; [39m [23m 
+ [38;5;250m 1 [39m              75 NO 41452 15796 SUM   
+ [38;5;250m 2 [39m              75 NO 41452 15796 SUM   
+ [38;5;250m 3 [39m              75 NO 41452 15796 SUM   
+ [38;5;250m 4 [39m              75 NO 41452 15796 SUM   
+ [38;5;250m 5 [39m              75 NO 41452 15796 SUM   
+ [38;5;250m 6 [39m              75 NO 41452 15796 SUM   
+ [38;5;250m 7 [39m              75 NO 41452 15796 SUM   
+ [38;5;250m 8 [39m              75 NO 41452 15796 SUM   
+ [38;5;250m 9 [39m              75 NO 41452 15796 SUM   
+ [38;5;250m10 [39m              75 NO 41452 15796 SUM   
+ [38;5;246m# … with 8,467 more rows [39m</code></pre>
 </div>
 <div class="section level4">
 <h4 id="indices-predictions-classification-reports">
@@ -418,8 +436,28 @@ outline: 0 ;
 <p>For instance, here is a prototype function to pull data Environment Agency’s data.gov.uk web service and convert to the required <code>hera</code> input format.</p>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">environment_agency_data</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">:::</span><span class="fu">ead</span><span class="op">(</span>site_id <span class="op">=</span> <span class="fl">43378</span><span class="op">)</span>
-
-<span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">::</span><span class="fu"><a href="../reference/prediction.html">prediction</a></span><span class="op">(</span><span class="va">environment_agency_data</span><span class="op">)</span>
+<span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span><span class="va">environment_agency_data</span><span class="op">)</span></code></pre></div>
+<pre><code> [38;5;246m# A tibble: 549 × 22 [39m
+   location_id      location_descri… sample_id date_taken season quality_element
+    [3m [38;5;246m&lt;chr&gt; [39m [23m             [3m [38;5;246m&lt;chr&gt; [39m [23m             [3m [38;5;246m&lt;chr&gt; [39m [23m      [3m [38;5;246m&lt;chr&gt; [39m [23m       [3m [38;5;246m&lt;chr&gt; [39m [23m   [3m [38;5;246m&lt;chr&gt; [39m [23m          
+ [38;5;250m 1 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
+ [38;5;250m 2 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
+ [38;5;250m 3 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
+ [38;5;250m 4 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
+ [38;5;250m 5 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
+ [38;5;250m 6 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
+ [38;5;250m 7 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
+ [38;5;250m 8 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
+ [38;5;250m 9 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
+ [38;5;250m10 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
+ [38;5;246m# … with 539 more rows, and 16 more variables: question &lt;chr&gt;, response &lt;chr&gt;, [39m
+ [38;5;246m#   taxon &lt;chr&gt;, latitude &lt;dbl&gt;, longitude &lt;dbl&gt;, grid_reference &lt;chr&gt;, [39m
+ [38;5;246m#   alkalinity &lt;chr&gt;, river.width..m. &lt;chr&gt;, mean.depth..cm. &lt;chr&gt;, [39m
+ [38;5;246m#   x..boulders.cobbles &lt;chr&gt;, x..pebbles.gravel &lt;chr&gt;, x..sand &lt;chr&gt;, [39m
+ [38;5;246m#   x..silt.clay &lt;chr&gt;, result_id &lt;chr&gt;, northing &lt;int&gt;, easting &lt;int&gt; [39m</code></pre>
+<p>We can then run this EA data through <code>hera</code>:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">::</span><span class="fu"><a href="../reference/prediction.html">prediction</a></span><span class="op">(</span><span class="va">environment_agency_data</span><span class="op">)</span>
 
 <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">predictions</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">prediction</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">date_taken</span>, <span class="va">index</span>, <span class="va">predicted_response</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
