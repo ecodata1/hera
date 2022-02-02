@@ -73,7 +73,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods</h1>
             
-            <h4 data-toc-skip class="date">2022-02-01</h4>
+            <h4 data-toc-skip class="date">2022-02-02</h4>
       
       
       <div class="hidden name"><code>hera_specifications.Rmd</code></div>
@@ -176,52 +176,46 @@ outline: 0 ;
 <span class="header-section-number">4.2.1</span> Validation<a class="anchor" aria-label="anchor" href="#validation"></a>
 </h4>
 <p>Firstly, sense-check the predictor and observation data is with expect limits. Additionally, check the data is within the expect parameter space based on training data used to create the classification model. Return the passing data and list of warnings/fails.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
-<span class="co"># devtools::install_github("ecodata1/hera")</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">hera</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span>
-<span class="va">demo_data</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">::</span><span class="va"><a href="../reference/demo_data.html">demo_data</a></span>
-<span class="fu"><a href="../reference/validation.html">validation</a></span><span class="op">(</span><span class="va">demo_data</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></code></pre></div>
-<pre><code> [38;5;246m# A tibble: 5 × 23 [39m
- [38;5;246m# Groups:   sample_number, quality_elements [1] [39m
-  sample_number quality_elements   location_id location_descri… easting northing
-           [3m [38;5;246m&lt;int&gt; [39m [23m  [3m [38;5;246m&lt;chr&gt; [39m [23m                     [3m [38;5;246m&lt;int&gt; [39m [23m  [3m [38;5;246m&lt;fct&gt; [39m [23m               [3m [38;5;246m&lt;dbl&gt; [39m [23m     [3m [38;5;246m&lt;dbl&gt; [39m [23m
- [38;5;250m1 [39m       3 [4m2 [24m [4m0 [24m [4m1 [24m863 River Invertebrat…         [4m8 [24m175 River Eden @ Ke…   [4m3 [24m [4m4 [24m [4m1 [24m452    [4m7 [24m [4m1 [24m [4m5 [24m796
- [38;5;250m2 [39m       3 [4m2 [24m [4m0 [24m [4m1 [24m863 River Invertebrat…         [4m8 [24m175 River Eden @ Ke…   [4m3 [24m [4m4 [24m [4m1 [24m452    [4m7 [24m [4m1 [24m [4m5 [24m796
- [38;5;250m3 [39m       3 [4m2 [24m [4m0 [24m [4m1 [24m863 River Invertebrat…         [4m8 [24m175 River Eden @ Ke…   [4m3 [24m [4m4 [24m [4m1 [24m452    [4m7 [24m [4m1 [24m [4m5 [24m796
- [38;5;250m4 [39m       3 [4m2 [24m [4m0 [24m [4m1 [24m863 River Invertebrat…         [4m8 [24m175 River Eden @ Ke…   [4m3 [24m [4m4 [24m [4m1 [24m452    [4m7 [24m [4m1 [24m [4m5 [24m796
- [38;5;250m5 [39m       3 [4m2 [24m [4m0 [24m [4m1 [24m863 River Invertebrat…         [4m8 [24m175 River Eden @ Ke…   [4m3 [24m [4m4 [24m [4m1 [24m452    [4m7 [24m [4m1 [24m [4m5 [24m796
- [38;5;246m# … with 17 more variables: latitude &lt;dbl&gt;, longitude &lt;dbl&gt;, date_taken &lt;dttm&gt;, [39m
- [38;5;246m#   sample_id &lt;int&gt;, analysis_name &lt;fct&gt;, question &lt;fct&gt;, response &lt;fct&gt;, [39m
- [38;5;246m#   units &lt;fct&gt;, taxon &lt;fct&gt;, mean_alkalinity &lt;dbl&gt;, result_id &lt;chr&gt;, [39m
- [38;5;246m#   taxon_id &lt;int&gt;, grid_reference &lt;chr&gt;, standard &lt;chr&gt;, [39m
- [38;5;246m#   quality_element &lt;chr&gt;, season &lt;chr&gt;, water_body_id &lt;dbl&gt; [39m</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># install.packages("devtools")</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="co"># devtools::install_github("ecodata1/hera")</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">library</span>(hera)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="kw">library</span>(tidyverse)</span>
+<span id="cb1-5"><a href="#cb1-5"></a>demo_data &lt;-<span class="st"> </span>hera<span class="op">::</span>demo_data</span>
+<span id="cb1-6"><a href="#cb1-6"></a>data &lt;-<span class="st"> </span><span class="kw">validation</span>(demo_data) </span>
+<span id="cb1-7"><a href="#cb1-7"></a>data[<span class="dv">5</span>, ]</span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="co"># A tibble: 1 × 23</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="co"># Groups:   sample_number, quality_elements [1]</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>  sample_number quality_elements   location_id location_descri… easting northing</span>
+<span id="cb1-11"><a href="#cb1-11"></a>          <span class="op">&lt;</span>int<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">                    </span><span class="er">&lt;</span>int<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>fct<span class="op">&gt;</span><span class="st">              </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span><span class="st">    </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="dv">1</span>       <span class="dv">3201863</span> River Invertebrat…        <span class="dv">8175</span> River Eden <span class="op">@</span><span class="st"> </span>Ke…  <span class="dv">341452</span>   <span class="dv">715796</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="co"># … with 17 more variables: latitude &lt;dbl&gt;, longitude &lt;dbl&gt;, date_taken &lt;dttm&gt;,</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="co">#   sample_id &lt;int&gt;, analysis_name &lt;fct&gt;, question &lt;fct&gt;, response &lt;fct&gt;,</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a><span class="co">#   units &lt;fct&gt;, taxon &lt;fct&gt;, mean_alkalinity &lt;dbl&gt;, result_id &lt;chr&gt;,</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a><span class="co">#   taxon_id &lt;int&gt;, grid_reference &lt;chr&gt;, standard &lt;chr&gt;,</span></span>
+<span id="cb1-17"><a href="#cb1-17"></a><span class="co">#   quality_element &lt;chr&gt;, season &lt;chr&gt;, water_body_id &lt;dbl&gt;</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="indices">
 <span class="header-section-number">4.2.2</span> Indices<a class="anchor" aria-label="anchor" href="#indices"></a>
 </h4>
 <p>Using the <code><a href="../reference/indices.html">indices()</a></code> function, we calculate observed indices scores if required for each sample.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/indices.html">indices</a></span><span class="op">(</span><span class="va">demo_data</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">sample_number</span>, <span class="va">indices</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">indices</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">quality_elements</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> </code></pre></div>
-<pre><code> [38;5;246m# A tibble: 8 × 4 [39m
- [38;5;246m# Groups:   quality_elements [2] [39m
-  quality_elements    sample_number value            index  
-   [3m [38;5;246m&lt;chr&gt; [39m [23m                        [3m [38;5;246m&lt;int&gt; [39m [23m  [3m [38;5;246m&lt;chr&gt; [39m [23m             [3m [38;5;246m&lt;chr&gt; [39m [23m  
- [38;5;250m1 [39m River Diatoms             1 [4m4 [24m [4m1 [24m [4m9 [24m451 0                Saline 
- [38;5;250m2 [39m River Diatoms               [4m6 [24m [4m4 [24m [4m8 [24m750 13.61            N2 TDI4
- [38;5;250m3 [39m River Diatoms               [4m7 [24m [4m4 [24m [4m6 [24m461 5.99             Saline 
- [38;5;250m4 [39m River Diatoms             2 [4m1 [24m [4m4 [24m [4m1 [24m643 69.3970226714013 TDI4   
- [38;5;250m5 [39m River Invertebrates       2 [4m6 [24m [4m3 [24m [4m2 [24m159 Not calculated    [31mNA [39m     
- [38;5;250m6 [39m River Invertebrates       2 [4m2 [24m [4m5 [24m [4m2 [24m490 Not calculated    [31mNA [39m     
- [38;5;250m7 [39m River Invertebrates       2 [4m2 [24m [4m5 [24m [4m2 [24m490 Not calculated    [31mNA [39m     
- [38;5;250m8 [39m River Invertebrates       2 [4m9 [24m [4m5 [24m [4m9 [24m448 Not calculated    [31mNA [39m     </code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">indices</span>(demo_data) <span class="op">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="st">  </span><span class="kw">select</span>(sample_number, indices) <span class="op">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="st">  </span><span class="kw">unnest</span>(indices) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="st">  </span><span class="kw">group_by</span>(quality_elements) <span class="op">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="st">  </span><span class="kw">slice_sample</span>(<span class="dt">n =</span> <span class="dv">4</span>) </span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co"># A tibble: 8 × 4</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="co"># Groups:   quality_elements [2]</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>  quality_elements    sample_number value            index  </span>
+<span id="cb2-9"><a href="#cb2-9"></a>  <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">                       </span><span class="er">&lt;</span>int<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">            </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">  </span></span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="dv">1</span> River Diatoms             <span class="dv">1419451</span> <span class="dv">0</span>                Saline </span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="dv">2</span> River Diatoms              <span class="dv">648750</span> <span class="fl">13.61</span>            N2 TDI4</span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="dv">3</span> River Diatoms              <span class="dv">746461</span> <span class="fl">5.99</span>             Saline </span>
+<span id="cb2-13"><a href="#cb2-13"></a><span class="dv">4</span> River Diatoms             <span class="dv">2141643</span> <span class="fl">69.3970226714013</span> TDI4   </span>
+<span id="cb2-14"><a href="#cb2-14"></a><span class="dv">5</span> River Invertebrates       <span class="dv">2632159</span> Not calculated   <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">   </span></span>
+<span id="cb2-15"><a href="#cb2-15"></a><span class="dv">6</span> River Invertebrates       <span class="dv">2252490</span> Not calculated   <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">   </span></span>
+<span id="cb2-16"><a href="#cb2-16"></a><span class="dv">7</span> River Invertebrates       <span class="dv">2252490</span> Not calculated   <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">   </span></span>
+<span id="cb2-17"><a href="#cb2-17"></a><span class="dv">8</span> River Invertebrates       <span class="dv">2959448</span> Not calculated   <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">   </span></span></code></pre></div>
 <p>Note, the invert indices are not calculated, they have been pre-calculated and are in the demo_data from the start.</p>
 </div>
 <div class="section level4">
@@ -229,24 +223,23 @@ outline: 0 ;
 <span class="header-section-number">4.2.3</span> Prediction<a class="anchor" aria-label="anchor" href="#prediction"></a>
 </h4>
 <p>We then predict reference scores for each sample:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/prediction.html">prediction</a></span><span class="op">(</span><span class="va">demo_data</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2200</span>, <span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">quality_elements</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">sample_number</span>, <span class="va">prediction</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">prediction</span><span class="op">)</span></code></pre></div>
-<pre><code> [38;5;246m# A tibble: 8 × 4 [39m
- [38;5;246m# Groups:   quality_elements [2] [39m
-  quality_elements    sample_number index      predicted_response
-   [3m [38;5;246m&lt;chr&gt; [39m [23m                        [3m [38;5;246m&lt;int&gt; [39m [23m  [3m [38;5;246m&lt;chr&gt; [39m [23m                    [3m [38;5;246m&lt;dbl&gt; [39m [23m
- [38;5;250m1 [39m River Diatoms             1 [4m5 [24m [4m6 [24m [4m4 [24m589 TDI4                    45.4 
- [38;5;250m2 [39m River Diatoms             1 [4m6 [24m [4m7 [24m [4m2 [24m942 TDI4                    45.4 
- [38;5;250m3 [39m River Diatoms             2 [4m9 [24m [4m5 [24m [4m9 [24m448 TDI4                    45.4 
- [38;5;250m4 [39m River Diatoms             1 [4m6 [24m [4m7 [24m [4m2 [24m942 TDI4                    45.4 
- [38;5;250m5 [39m River Invertebrates       3 [4m2 [24m [4m0 [24m [4m1 [24m863 WHPT ASPT                6.85
- [38;5;250m6 [39m River Invertebrates       3 [4m2 [24m [4m0 [24m [4m1 [24m863 WHPT NTAXA              24.5 
- [38;5;250m7 [39m River Invertebrates       3 [4m2 [24m [4m0 [24m [4m1 [24m863 WHPT ASPT                6.85
- [38;5;250m8 [39m River Invertebrates       3 [4m2 [24m [4m0 [24m [4m1 [24m863 WHPT NTAXA              24.5 </code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">prediction</span>(demo_data[<span class="dv">1</span><span class="op">:</span><span class="dv">2200</span>, ]) <span class="op">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="st">  </span><span class="kw">group_by</span>(quality_elements) <span class="op">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="st">  </span><span class="kw">slice_sample</span>(<span class="dt">n =</span> <span class="dv">4</span>) <span class="op">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="st">  </span><span class="kw">select</span>(sample_number, prediction) <span class="op">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="st">  </span><span class="kw">unnest</span>(prediction)</span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="co"># A tibble: 8 × 4</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="co"># Groups:   quality_elements [2]</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a>  quality_elements    sample_number index      predicted_response</span>
+<span id="cb3-9"><a href="#cb3-9"></a>  <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">                       </span><span class="er">&lt;</span>int<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">                   </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="dv">1</span> River Diatoms             <span class="dv">1564589</span> TDI4                    <span class="fl">45.4</span> </span>
+<span id="cb3-11"><a href="#cb3-11"></a><span class="dv">2</span> River Diatoms             <span class="dv">1672942</span> TDI4                    <span class="fl">45.4</span> </span>
+<span id="cb3-12"><a href="#cb3-12"></a><span class="dv">3</span> River Diatoms             <span class="dv">2959448</span> TDI4                    <span class="fl">45.4</span> </span>
+<span id="cb3-13"><a href="#cb3-13"></a><span class="dv">4</span> River Diatoms             <span class="dv">1672942</span> TDI4                    <span class="fl">45.4</span> </span>
+<span id="cb3-14"><a href="#cb3-14"></a><span class="dv">5</span> River Invertebrates       <span class="dv">3201863</span> WHPT ASPT                <span class="fl">6.85</span></span>
+<span id="cb3-15"><a href="#cb3-15"></a><span class="dv">6</span> River Invertebrates       <span class="dv">3201863</span> WHPT NTAXA              <span class="fl">24.5</span> </span>
+<span id="cb3-16"><a href="#cb3-16"></a><span class="dv">7</span> River Invertebrates       <span class="dv">3201863</span> WHPT ASPT                <span class="fl">6.85</span></span>
+<span id="cb3-17"><a href="#cb3-17"></a><span class="dv">8</span> River Invertebrates       <span class="dv">3201863</span> WHPT NTAXA              <span class="fl">24.5</span> </span></code></pre></div>
 <p>See documentation <a href="https://ecodata1.github.io/hera/reference/prediction.html" class="external-link"><code>prediction()</code></a> for more information.</p>
 </div>
 <div class="section level4">
@@ -254,23 +247,23 @@ outline: 0 ;
 <span class="header-section-number">4.2.4</span> Compliance<a class="anchor" aria-label="anchor" href="#compliance"></a>
 </h4>
 <p>Based on the predicted and observed indices - we check the compliance of each sample using <code><a href="../reference/classification.html">classification()</a></code>. The ‘compliance’ stage includes any type of test or assessment of our data. This could be WFD classification, compliance check, bathing water or discharge assessment. Really any type of grading or assessment against some type of expected value.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/classification.html">classification</a></span><span class="op">(</span><span class="va">demo_data</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
- <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">quality_elements</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
- <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_sample</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
- <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">sample_number</span>, <span class="va">index</span>, <span class="va">assessment</span>, <span class="va">value</span><span class="op">)</span></code></pre></div>
-<pre><code> [38;5;246m# A tibble: 8 × 5 [39m
- [38;5;246m# Groups:   quality_elements [2] [39m
-  quality_elements    sample_number index  assessment   value              
-   [3m [38;5;246m&lt;chr&gt; [39m [23m                        [3m [38;5;246m&lt;int&gt; [39m [23m  [3m [38;5;246m&lt;chr&gt; [39m [23m   [3m [38;5;246m&lt;chr&gt; [39m [23m         [3m [38;5;246m&lt;chr&gt; [39m [23m              
- [38;5;250m1 [39m River Diatoms             1 [4m4 [24m [4m1 [24m [4m9 [24m451  [38;5;246m" [39mTDI4 [38;5;246m" [39m  [38;5;246m" [39mEQR_TDI4 [38;5;246m" [39m    [38;5;246m" [39m0.379607552282085 [38;5;246m" [39m
- [38;5;250m2 [39m River Diatoms             1 [4m1 [24m [4m0 [24m [4m1 [24m214  [38;5;246m" [39mTDI4 [38;5;246m" [39m  [38;5;246m" [39mClass_TDI4 [38;5;246m" [39m  [38;5;246m" [39mModerate [38;5;246m" [39m         
- [38;5;250m3 [39m River Diatoms               [4m9 [24m [4m1 [24m [4m9 [24m681  [38;5;246m" [39mTDI4 [38;5;246m" [39m  [38;5;246m" [39mClass_TDI4 [38;5;246m" [39m  [38;5;246m" [39mModerate [38;5;246m" [39m         
- [38;5;250m4 [39m River Diatoms             2 [4m2 [24m [4m5 [24m [4m2 [24m490  [38;5;246m" [39mTDI4 [38;5;246m" [39m  [38;5;246m" [39mClass_TDI4 [38;5;246m" [39m  [38;5;246m" [39mModerate [38;5;246m" [39m         
- [38;5;250m5 [39m River Invertebrates       1 [4m2 [24m [4m5 [24m [4m0 [24m462  [38;5;246m" [39m [38;5;246m" [39m      [38;5;246m" [39m [38;5;246m" [39m            [38;5;246m" [39m [38;5;246m" [39m                 
- [38;5;250m6 [39m River Invertebrates         [4m4 [24m [4m8 [24m [4m1 [24m101  [38;5;246m" [39m [38;5;246m" [39m      [38;5;246m" [39m [38;5;246m" [39m            [38;5;246m" [39m [38;5;246m" [39m                 
- [38;5;250m7 [39m River Invertebrates       1 [4m5 [24m [4m8 [24m [4m2 [24m198  [38;5;246m" [39m [38;5;246m" [39m      [38;5;246m" [39m [38;5;246m" [39m            [38;5;246m" [39m [38;5;246m" [39m                 
- [38;5;250m8 [39m River Invertebrates         [4m3 [24m [4m3 [24m [4m8 [24m458  [38;5;246m" [39m [38;5;246m" [39m      [38;5;246m" [39m [38;5;246m" [39m            [38;5;246m" [39m [38;5;246m" [39m                 </code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="kw">classification</span>(demo_data) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="st"> </span><span class="kw">group_by</span>(quality_elements) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="st"> </span><span class="kw">slice_sample</span>(<span class="dt">n =</span> <span class="dv">4</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="st"> </span><span class="kw">select</span>(sample_number, index, assessment, value)</span>
+<span id="cb4-6"><a href="#cb4-6"></a><span class="co"># A tibble: 8 × 5</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="co"># Groups:   quality_elements [2]</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a>  quality_elements    sample_number index  assessment   value              </span>
+<span id="cb4-9"><a href="#cb4-9"></a>  <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">                       </span><span class="er">&lt;</span>int<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">  </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">        </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">              </span></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="dv">1</span> River Diatoms             <span class="dv">1419451</span> <span class="st">"TDI4"</span> <span class="st">"EQR_TDI4"</span>   <span class="st">"0.379607552282085"</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="dv">2</span> River Diatoms             <span class="dv">1101214</span> <span class="st">"TDI4"</span> <span class="st">"Class_TDI4"</span> <span class="st">"Moderate"</span>         </span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="dv">3</span> River Diatoms              <span class="dv">919681</span> <span class="st">"TDI4"</span> <span class="st">"Class_TDI4"</span> <span class="st">"Moderate"</span>         </span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="dv">4</span> River Diatoms             <span class="dv">2252490</span> <span class="st">"TDI4"</span> <span class="st">"Class_TDI4"</span> <span class="st">"Moderate"</span>         </span>
+<span id="cb4-14"><a href="#cb4-14"></a><span class="dv">5</span> River Invertebrates       <span class="dv">1250462</span> <span class="st">""</span>     <span class="st">""</span>           <span class="st">""</span>                 </span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="dv">6</span> River Invertebrates        <span class="dv">481101</span> <span class="st">""</span>     <span class="st">""</span>           <span class="st">""</span>                 </span>
+<span id="cb4-16"><a href="#cb4-16"></a><span class="dv">7</span> River Invertebrates       <span class="dv">1582198</span> <span class="st">""</span>     <span class="st">""</span>           <span class="st">""</span>                 </span>
+<span id="cb4-17"><a href="#cb4-17"></a><span class="dv">8</span> River Invertebrates        <span class="dv">338458</span> <span class="st">""</span>     <span class="st">""</span>           <span class="st">""</span>                 </span></code></pre></div>
 <p>Note, classification results for inverts are missing - this has not be implemented yet.</p>
 </div>
 <div class="section level4">
@@ -301,8 +294,8 @@ outline: 0 ;
 </h4>
 <p>As well as classification of water quality, additional we need to diagnose potential pressures. We use the <code>diagnosis()</code> function to report potential pressures.</p>
 <pre><code><span class="co"># TODO!</span>
-<span class="fu">diagnosis</span><span class="op">(</span><span class="va">demo_data</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">sample_id</span>, <span class="va">diagnosis</span><span class="op">)</span>
+<span class="fu">diagnosis</span><span class="op">(</span><span class="va">demo_data</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="fu">select</span><span class="op">(</span><span class="va">sample_id</span>, <span class="va">diagnosis</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre>
 </div>
 <div class="section level4">
@@ -311,10 +304,10 @@ outline: 0 ;
 </h4>
 <p>A number of forecasting or scenario tools could be incorporated for either projecting current trends or assessing the impact of proposed measures.</p>
 <pre><code><span class="co"># TODO!</span>
-<span class="fu">scenario</span><span class="op">(</span><span class="va">demo_data</span>, <span class="va">trends</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>  
+<span class="fu">scenario</span><span class="op">(</span><span class="va">demo_data</span>, <span class="va">trends</span><span class="op">)</span> <span class="op">%&gt;%</span>  
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span>
 
-<span class="fu">scenario</span><span class="op">(</span><span class="va">demo_data</span>, <span class="va">measures</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
+<span class="fu">scenario</span><span class="op">(</span><span class="va">demo_data</span>, <span class="va">measures</span><span class="op">)</span> <span class="op">%&gt;%</span> 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre>
 </div>
 <div class="section level4">
@@ -344,29 +337,29 @@ outline: 0 ;
 <span class="header-section-number">4.3.2</span> What does this look like?<a class="anchor" aria-label="anchor" href="#what-does-this-look-like"></a>
 </h4>
 <p>A small sample demo dataset <code>demo_data</code> contains diatoms, macrophytes and inverts quality elements.</p>
-<pre><code> [38;5;246m# A tibble: 5 × 4 [39m
- [38;5;246m# Groups:   quality_element [5] [39m
+<pre><code># A tibble: 5 × 4
+# Groups:   quality_element [5]
   location_description             date_taken          sample_id quality_element
-   [3m [38;5;246m&lt;fct&gt; [39m [23m                             [3m [38;5;246m&lt;dttm&gt; [39m [23m                   [3m [38;5;246m&lt;int&gt; [39m [23m  [3m [38;5;246m&lt;chr&gt; [39m [23m          
- [38;5;250m1 [39m River Eden @ Kemback Gauging St… 2017-07-20  [38;5;246m12:15:00 [39m   3 [4m2 [24m [4m5 [24m [4m6 [24m506 Algal_RQB      
- [38;5;250m2 [39m River Eden @ Kemback Gauging St… 2013-10-09  [38;5;246m13:29:00 [39m   2 [4m3 [24m [4m5 [24m [4m5 [24m899 Alien Species  
- [38;5;250m3 [39m River Eden @ Kemback Gauging St… 2017-05-17  [38;5;246m15:00:00 [39m   3 [4m2 [24m [4m0 [24m [4m1 [24m863 Comment        
- [38;5;250m4 [39m River Eden @ Kemback Gauging St… 2013-10-09  [38;5;246m13:29:00 [39m   2 [4m3 [24m [4m5 [24m [4m5 [24m899 Diatom Summary 
- [38;5;250m5 [39m River Eden @ Kemback Gauging St… 2014-05-20  [38;5;246m08:10:00 [39m   2 [4m4 [24m [4m8 [24m [4m9 [24m784 Diatom Survey …</code></pre>
+  &lt;fct&gt;                            &lt;dttm&gt;                  &lt;int&gt; &lt;chr&gt;          
+1 River Eden @ Kemback Gauging St… 2017-07-20 12:15:00   3256506 Algal_RQB      
+2 River Eden @ Kemback Gauging St… 2013-10-09 13:29:00   2355899 Alien Species  
+3 River Eden @ Kemback Gauging St… 2017-05-17 15:00:00   3201863 Comment        
+4 River Eden @ Kemback Gauging St… 2013-10-09 13:29:00   2355899 Diatom Summary 
+5 River Eden @ Kemback Gauging St… 2014-05-20 08:10:00   2489784 Diatom Survey …</code></pre>
 </div>
 <div class="section level4">
 <h4 id="book-keeping-variables">
 <span class="header-section-number">4.3.3</span> Book-keeping variables<a class="anchor" aria-label="anchor" href="#book-keeping-variables"></a>
 </h4>
 <p>First of all, we have ‘book-keeping’ variables. These allow us to reference data associated with particular samples, locations or WFD methods. And allow results to be aggregate at different levels.</p>
-<pre><code> [38;5;246m# A tibble: 5 × 4 [39m
+<pre><code># A tibble: 5 × 4
   location_id sample_id date_taken          quality_element        
-         [3m [38;5;246m&lt;int&gt; [39m [23m      [3m [38;5;246m&lt;int&gt; [39m [23m  [3m [38;5;246m&lt;dttm&gt; [39m [23m               [3m [38;5;246m&lt;chr&gt; [39m [23m                  
- [38;5;250m1 [39m         [4m8 [24m175   3 [4m2 [24m [4m5 [24m [4m6 [24m506 2017-07-20  [38;5;246m12:15:00 [39m Macrophyte Reach Survey
- [38;5;250m2 [39m         [4m8 [24m175   3 [4m2 [24m [4m5 [24m [4m6 [24m506 2017-07-20  [38;5;246m12:15:00 [39m Macrophyte Reach Survey
- [38;5;250m3 [39m         [4m8 [24m175   3 [4m2 [24m [4m5 [24m [4m6 [24m506 2017-07-20  [38;5;246m12:15:00 [39m Macrophyte Reach Survey
- [38;5;250m4 [39m         [4m8 [24m175   3 [4m2 [24m [4m5 [24m [4m6 [24m506 2017-07-20  [38;5;246m12:15:00 [39m Macrophyte Reach Survey
- [38;5;250m5 [39m         [4m8 [24m175   3 [4m2 [24m [4m5 [24m [4m6 [24m506 2017-07-20  [38;5;246m12:15:00 [39m Macrophyte Reach Survey</code></pre>
+        &lt;int&gt;     &lt;int&gt; &lt;dttm&gt;              &lt;chr&gt;                  
+1        8175   3256506 2017-07-20 12:15:00 Macrophyte Reach Survey
+2        8175   3256506 2017-07-20 12:15:00 Macrophyte Reach Survey
+3        8175   3256506 2017-07-20 12:15:00 Macrophyte Reach Survey
+4        8175   3256506 2017-07-20 12:15:00 Macrophyte Reach Survey
+5        8175   3256506 2017-07-20 12:15:00 Macrophyte Reach Survey</code></pre>
 <p>All data passed into hera must have these four variables. For <em>ad hoc</em> reporting, consultancies and students etc who don’t routinely record unique sample ids, a sample_id is generate if <code>date_taken</code> and <code>location_id</code> are provided.</p>
 <p>These three variables are the minimal required, but in practice <code>water_body_id</code> maybe required for aggregation or simply <code>location_description</code> or <code>NGR</code> etc to help reference sites more easily. There is no restriction to the number of extra columns and these extra columns will be appended to outputs.</p>
 </div>
@@ -376,49 +369,49 @@ outline: 0 ;
 </h4>
 <p>An observation consists of three variables <code>question</code>, <code>response</code>. The <code>question</code> variable identifies what is being determined such as <code>alkalinity</code> or <code>depth</code> etc. And the <code>response</code> is the value observed or recorded for that question.</p>
 <p>Below is an example of diatom records, invert data and river flow in a shared input format.</p>
-<pre><code> [38;5;246m# A tibble: 8,477 × 2 [39m
+<pre><code># A tibble: 8,477 × 2
    question        response      
-    [3m [38;5;246m&lt;fct&gt; [39m [23m            [3m [38;5;246m&lt;fct&gt; [39m [23m         
- [38;5;250m 1 [39m Site altitude   7             
- [38;5;250m 2 [39m Source altitude 210           
- [38;5;250m 3 [39m nems alkalinity 118.8889      
- [38;5;250m 4 [39m Mean alkalinity 118.8889      
- [38;5;250m 5 [39m nems slope      2.6000        
- [38;5;250m 6 [39m Slope           2.6000        
- [38;5;250m 7 [39m Dist to source  36.4          
- [38;5;250m 8 [39m Site NGR        NO 41452 15796
- [38;5;250m 9 [39m Easting         341452        
- [38;5;250m10 [39m Northing        715796        
- [38;5;246m# … with 8,467 more rows [39m</code></pre>
+   &lt;fct&gt;           &lt;fct&gt;         
+ 1 Site altitude   7             
+ 2 Source altitude 210           
+ 3 nems alkalinity 118.8889      
+ 4 Mean alkalinity 118.8889      
+ 5 nems slope      2.6000        
+ 6 Slope           2.6000        
+ 7 Dist to source  36.4          
+ 8 Site NGR        NO 41452 15796
+ 9 Easting         341452        
+10 Northing        715796        
+# … with 8,467 more rows</code></pre>
 <p>In theory, this is all that is required. However for ease for interacting with existing datasets and <em>ad hoc</em> data, a third column <code>taxon</code> is useful due to the historic way taxon data is usually stored.</p>
-<pre><code> [38;5;246m# A tibble: 5 × 3 [39m
+<pre><code># A tibble: 5 × 3
   question        response taxon                  
-   [3m [38;5;246m&lt;fct&gt; [39m [23m            [3m [38;5;246m&lt;fct&gt; [39m [23m     [3m [38;5;246m&lt;fct&gt; [39m [23m                  
- [38;5;250m1 [39m Planktonic      No       Navicula claytonii     
- [38;5;250m2 [39m Taxon abundance 6        Simuliidae             
- [38;5;250m3 [39m Taxon abundance 300      Simuliidae             
- [38;5;250m4 [39m Taxon abundance 5        Elmidae                
- [38;5;250m5 [39m Planktonic      No       Achnanthidium subatomus</code></pre>
+  &lt;fct&gt;           &lt;fct&gt;    &lt;fct&gt;                  
+1 Planktonic      No       Navicula claytonii     
+2 Taxon abundance 6        Simuliidae             
+3 Taxon abundance 300      Simuliidae             
+4 Taxon abundance 5        Elmidae                
+5 Planktonic      No       Achnanthidium subatomus</code></pre>
 </div>
 <div class="section level4">
 <h4 id="predictors">
 <span class="header-section-number">4.3.5</span> Predictors<a class="anchor" aria-label="anchor" href="#predictors"></a>
 </h4>
 <p>Predictive variables such as <code>temperature</code>, <code>altitude</code>, <code>slope</code> are added as additional columns. There is a trade-off here as predictor variables are added for each row in the dataset, increasing the size of the dataset. However this does make data analysis straightforward and this repeated data can be easily compressed if size becomes an issue. For instance, nested JSON data or dataframes in R.</p>
-<pre><code> [38;5;246m# A tibble: 8,477 × 3 [39m
+<pre><code># A tibble: 8,477 × 3
    mean_alkalinity grid_reference season
-              [3m [38;5;246m&lt;dbl&gt; [39m [23m  [3m [38;5;246m&lt;chr&gt; [39m [23m           [3m [38;5;246m&lt;chr&gt; [39m [23m 
- [38;5;250m 1 [39m              75 NO 41452 15796 SUM   
- [38;5;250m 2 [39m              75 NO 41452 15796 SUM   
- [38;5;250m 3 [39m              75 NO 41452 15796 SUM   
- [38;5;250m 4 [39m              75 NO 41452 15796 SUM   
- [38;5;250m 5 [39m              75 NO 41452 15796 SUM   
- [38;5;250m 6 [39m              75 NO 41452 15796 SUM   
- [38;5;250m 7 [39m              75 NO 41452 15796 SUM   
- [38;5;250m 8 [39m              75 NO 41452 15796 SUM   
- [38;5;250m 9 [39m              75 NO 41452 15796 SUM   
- [38;5;250m10 [39m              75 NO 41452 15796 SUM   
- [38;5;246m# … with 8,467 more rows [39m</code></pre>
+             &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt; 
+ 1              75 NO 41452 15796 SUM   
+ 2              75 NO 41452 15796 SUM   
+ 3              75 NO 41452 15796 SUM   
+ 4              75 NO 41452 15796 SUM   
+ 5              75 NO 41452 15796 SUM   
+ 6              75 NO 41452 15796 SUM   
+ 7              75 NO 41452 15796 SUM   
+ 8              75 NO 41452 15796 SUM   
+ 9              75 NO 41452 15796 SUM   
+10              75 NO 41452 15796 SUM   
+# … with 8,467 more rows</code></pre>
 </div>
 <div class="section level4">
 <h4 id="indices-predictions-classification-reports">
@@ -434,48 +427,47 @@ outline: 0 ;
 <p>For students and consultancies requiring <em>ad hoc</em> usage, templates and documentation for preparing data will be provided.</p>
 <p>For Agencies, data queries can be written to prepare outputs in the correct format.</p>
 <p>For instance, here is a prototype function to pull data Environment Agency’s data.gov.uk web service and convert to the required <code>hera</code> input format.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">environment_agency_data</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">:::</span><span class="fu">ead</span><span class="op">(</span>site_id <span class="op">=</span> <span class="fl">43378</span><span class="op">)</span>
-<span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span><span class="va">environment_agency_data</span><span class="op">)</span></code></pre></div>
-<pre><code> [38;5;246m# A tibble: 549 × 22 [39m
-   location_id      location_descri… sample_id date_taken season quality_element
-    [3m [38;5;246m&lt;chr&gt; [39m [23m             [3m [38;5;246m&lt;chr&gt; [39m [23m             [3m [38;5;246m&lt;chr&gt; [39m [23m      [3m [38;5;246m&lt;chr&gt; [39m [23m       [3m [38;5;246m&lt;chr&gt; [39m [23m   [3m [38;5;246m&lt;chr&gt; [39m [23m          
- [38;5;250m 1 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
- [38;5;250m 2 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
- [38;5;250m 3 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
- [38;5;250m 4 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
- [38;5;250m 5 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
- [38;5;250m 6 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
- [38;5;250m 7 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
- [38;5;250m 8 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
- [38;5;250m 9 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
- [38;5;250m10 [39m http://environm… TEST - 43378     717525    2015-06-22 2      River Inverteb…
- [38;5;246m# … with 539 more rows, and 16 more variables: question &lt;chr&gt;, response &lt;chr&gt;, [39m
- [38;5;246m#   taxon &lt;chr&gt;, latitude &lt;dbl&gt;, longitude &lt;dbl&gt;, grid_reference &lt;chr&gt;, [39m
- [38;5;246m#   alkalinity &lt;chr&gt;, river.width..m. &lt;chr&gt;, mean.depth..cm. &lt;chr&gt;, [39m
- [38;5;246m#   x..boulders.cobbles &lt;chr&gt;, x..pebbles.gravel &lt;chr&gt;, x..sand &lt;chr&gt;, [39m
- [38;5;246m#   x..silt.clay &lt;chr&gt;, result_id &lt;chr&gt;, northing &lt;int&gt;, easting &lt;int&gt; [39m</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>environment_agency_data &lt;-<span class="st"> </span>hera<span class="op">:::</span><span class="kw">ead</span>(<span class="dt">site_id =</span> <span class="dv">43378</span>)</span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="kw">tibble</span>(environment_agency_data)</span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="co"># A tibble: 549 × 22</span></span>
+<span id="cb15-4"><a href="#cb15-4"></a>   location_id      location_descri… sample_id date_taken season quality_element</span>
+<span id="cb15-5"><a href="#cb15-5"></a>   <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">            </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">            </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">     </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">      </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">  </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">          </span></span>
+<span id="cb15-6"><a href="#cb15-6"></a><span class="st"> </span><span class="dv">1</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
+<span id="cb15-7"><a href="#cb15-7"></a> <span class="dv">2</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
+<span id="cb15-8"><a href="#cb15-8"></a> <span class="dv">3</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
+<span id="cb15-9"><a href="#cb15-9"></a> <span class="dv">4</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
+<span id="cb15-10"><a href="#cb15-10"></a> <span class="dv">5</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
+<span id="cb15-11"><a href="#cb15-11"></a> <span class="dv">6</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
+<span id="cb15-12"><a href="#cb15-12"></a> <span class="dv">7</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
+<span id="cb15-13"><a href="#cb15-13"></a> <span class="dv">8</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
+<span id="cb15-14"><a href="#cb15-14"></a> <span class="dv">9</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
+<span id="cb15-15"><a href="#cb15-15"></a><span class="dv">10</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
+<span id="cb15-16"><a href="#cb15-16"></a><span class="co"># … with 539 more rows, and 16 more variables: question &lt;chr&gt;, response &lt;chr&gt;,</span></span>
+<span id="cb15-17"><a href="#cb15-17"></a><span class="co">#   taxon &lt;chr&gt;, latitude &lt;dbl&gt;, longitude &lt;dbl&gt;, grid_reference &lt;chr&gt;,</span></span>
+<span id="cb15-18"><a href="#cb15-18"></a><span class="co">#   alkalinity &lt;chr&gt;, river.width..m. &lt;chr&gt;, mean.depth..cm. &lt;chr&gt;,</span></span>
+<span id="cb15-19"><a href="#cb15-19"></a><span class="co">#   x..boulders.cobbles &lt;chr&gt;, x..pebbles.gravel &lt;chr&gt;, x..sand &lt;chr&gt;,</span></span>
+<span id="cb15-20"><a href="#cb15-20"></a><span class="co">#   x..silt.clay &lt;chr&gt;, result_id &lt;chr&gt;, northing &lt;int&gt;, easting &lt;int&gt;</span></span></code></pre></div>
 <p>We can then run this EA data through <code>hera</code>:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">::</span><span class="fu"><a href="../reference/prediction.html">prediction</a></span><span class="op">(</span><span class="va">environment_agency_data</span><span class="op">)</span>
-
-<span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html" class="external-link">unnest</a></span><span class="op">(</span><span class="va">predictions</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">prediction</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">date_taken</span>, <span class="va">index</span>, <span class="va">predicted_response</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span>
-  <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code> [38;5;246m# A tibble: 10 × 5 [39m
- [38;5;246m# Groups:   sample_number, quality_elements [5] [39m
-   sample_number quality_elements    date_taken index      predicted_response
-    [3m [38;5;246m&lt;chr&gt; [39m [23m          [3m [38;5;246m&lt;chr&gt; [39m [23m                [3m [38;5;246m&lt;chr&gt; [39m [23m       [3m [38;5;246m&lt;chr&gt; [39m [23m                    [3m [38;5;246m&lt;dbl&gt; [39m [23m
- [38;5;250m 1 [39m 717525        River Invertebrates 2015-06-22 WHPT ASPT                5.79
- [38;5;250m 2 [39m 717525        River Invertebrates 2015-06-22 WHPT NTAXA              30.1 
- [38;5;250m 3 [39m 700368        River Invertebrates 2014-12-24 WHPT ASPT                5.79
- [38;5;250m 4 [39m 700368        River Invertebrates 2014-12-24 WHPT NTAXA              30.1 
- [38;5;250m 5 [39m 688865        River Invertebrates 2014-06-13 WHPT ASPT                5.79
- [38;5;250m 6 [39m 688865        River Invertebrates 2014-06-13 WHPT NTAXA              30.1 
- [38;5;250m 7 [39m 678494        River Invertebrates 2014-02-05 WHPT ASPT                5.79
- [38;5;250m 8 [39m 678494        River Invertebrates 2014-02-05 WHPT NTAXA              30.1 
- [38;5;250m 9 [39m 661523        River Invertebrates 2013-11-05 WHPT ASPT                5.79
- [38;5;250m10 [39m 661523        River Invertebrates 2013-11-05 WHPT NTAXA              30.1 </code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a></span>
+<span id="cb16-2"><a href="#cb16-2"></a>predictions &lt;-<span class="st"> </span>hera<span class="op">::</span><span class="kw">prediction</span>(environment_agency_data)</span>
+<span id="cb16-3"><a href="#cb16-3"></a></span>
+<span id="cb16-4"><a href="#cb16-4"></a>tidyr<span class="op">::</span><span class="kw">unnest</span>(predictions, <span class="dt">cols =</span> <span class="kw">c</span>(prediction)) <span class="op">%&gt;%</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a><span class="st">  </span><span class="kw">select</span>(date_taken, index, predicted_response) <span class="op">%&gt;%</span></span>
+<span id="cb16-6"><a href="#cb16-6"></a><span class="st">  </span><span class="kw">unique</span>()</span>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="co"># A tibble: 10 × 5</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a><span class="co"># Groups:   sample_number, quality_elements [5]</span></span>
+<span id="cb16-9"><a href="#cb16-9"></a>   sample_number quality_elements    date_taken index      predicted_response</span>
+<span id="cb16-10"><a href="#cb16-10"></a>   <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">         </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">               </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">      </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">                   </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span></span>
+<span id="cb16-11"><a href="#cb16-11"></a><span class="st"> </span><span class="dv">1</span> <span class="dv">717525</span>        River Invertebrates <span class="dv">2015-06-22</span> WHPT ASPT                <span class="fl">5.79</span></span>
+<span id="cb16-12"><a href="#cb16-12"></a> <span class="dv">2</span> <span class="dv">717525</span>        River Invertebrates <span class="dv">2015-06-22</span> WHPT NTAXA              <span class="fl">30.1</span> </span>
+<span id="cb16-13"><a href="#cb16-13"></a> <span class="dv">3</span> <span class="dv">700368</span>        River Invertebrates <span class="dv">2014-12-24</span> WHPT ASPT                <span class="fl">5.79</span></span>
+<span id="cb16-14"><a href="#cb16-14"></a> <span class="dv">4</span> <span class="dv">700368</span>        River Invertebrates <span class="dv">2014-12-24</span> WHPT NTAXA              <span class="fl">30.1</span> </span>
+<span id="cb16-15"><a href="#cb16-15"></a> <span class="dv">5</span> <span class="dv">688865</span>        River Invertebrates <span class="dv">2014-06-13</span> WHPT ASPT                <span class="fl">5.79</span></span>
+<span id="cb16-16"><a href="#cb16-16"></a> <span class="dv">6</span> <span class="dv">688865</span>        River Invertebrates <span class="dv">2014-06-13</span> WHPT NTAXA              <span class="fl">30.1</span> </span>
+<span id="cb16-17"><a href="#cb16-17"></a> <span class="dv">7</span> <span class="dv">678494</span>        River Invertebrates <span class="dv">2014-02-05</span> WHPT ASPT                <span class="fl">5.79</span></span>
+<span id="cb16-18"><a href="#cb16-18"></a> <span class="dv">8</span> <span class="dv">678494</span>        River Invertebrates <span class="dv">2014-02-05</span> WHPT NTAXA              <span class="fl">30.1</span> </span>
+<span id="cb16-19"><a href="#cb16-19"></a> <span class="dv">9</span> <span class="dv">661523</span>        River Invertebrates <span class="dv">2013-11-05</span> WHPT ASPT                <span class="fl">5.79</span></span>
+<span id="cb16-20"><a href="#cb16-20"></a><span class="dv">10</span> <span class="dv">661523</span>        River Invertebrates <span class="dv">2013-11-05</span> WHPT NTAXA              <span class="fl">30.1</span> </span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="shared-data-tables">
@@ -493,15 +485,15 @@ outline: 0 ;
 <h4 id="models-and-environmental-standards-names">
 <span class="header-section-number">4.5.1</span> Models and Environmental Standards names<a class="anchor" aria-label="anchor" href="#models-and-environmental-standards-names"></a>
 </h4>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">hera</span><span class="fu">:::</span><span class="fu"><a href="../reference/create_model_dataframe.html">create_model_dataframe</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">standard</span>, <span class="va">quality_element</span>, <span class="va">classification_function</span><span class="op">)</span></code></pre></div>
-<pre><code> [38;5;246m# A tibble: 3 × 3 [39m
-  standard                                   quality_element    classification_…
-   [3m [38;5;246m&lt;chr&gt; [39m [23m                                       [3m [38;5;246m&lt;chr&gt; [39m [23m               [3m [38;5;246m&lt;list&gt; [39m [23m          
- [38;5;250m1 [39m River Phytobenthos                         River Diatoms       [38;5;246m&lt;fn&gt; [39m            
- [38;5;250m2 [39m Lake Phytobenthos                          Lake Diatoms        [38;5;246m&lt;fn&gt; [39m            
- [38;5;250m3 [39m Rivers Invertebrates (General Degradation) River Invertebrat…  [38;5;246m&lt;fn&gt; [39m            </code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a></span>
+<span id="cb17-2"><a href="#cb17-2"></a>hera<span class="op">:::</span><span class="kw">create_model_dataframe</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="st">  </span><span class="kw">select</span>(standard, quality_element, classification_function)</span>
+<span id="cb17-4"><a href="#cb17-4"></a><span class="co"># A tibble: 3 × 3</span></span>
+<span id="cb17-5"><a href="#cb17-5"></a>  standard                                   quality_element    classification_…</span>
+<span id="cb17-6"><a href="#cb17-6"></a>  <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">                                      </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">              </span><span class="er">&lt;</span>list<span class="op">&gt;</span><span class="st">          </span></span>
+<span id="cb17-7"><a href="#cb17-7"></a><span class="dv">1</span> River Phytobenthos                         River Diatoms      <span class="op">&lt;</span>fn<span class="op">&gt;</span><span class="st">            </span></span>
+<span id="cb17-8"><a href="#cb17-8"></a><span class="dv">2</span> Lake Phytobenthos                          Lake Diatoms       <span class="op">&lt;</span>fn<span class="op">&gt;</span><span class="st">            </span></span>
+<span id="cb17-9"><a href="#cb17-9"></a><span class="dv">3</span> Rivers <span class="kw">Invertebrates</span> (General Degradation) River Invertebrat… <span class="op">&lt;</span>fn<span class="op">&gt;</span><span class="st">            </span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
@@ -576,8 +568,8 @@ outline: 0 ;
 1            13809 ...
 2            13810 ...
 3            34611 ...
-4             5435 ...</code></pre>
-<pre><code> [1] "DataHeldBy"                 "SiteCode"                  
+4             5435 ...
+ [1] "DataHeldBy"                 "SiteCode"                  
  [3] "Alternative.site.code"      "Repeat.check"              
  [5] "SiteName"                   "Site.description"          
  [7] "Easting"                    "Northing"                  
@@ -609,8 +601,8 @@ outline: 0 ;
 1         EA 03/09/2015   525052    13809 10675                          ...
 2         EA 04/09/2015   507441    13810 10675 White Esk (u/s Rae Burn) ...
 3         EA 03/09/2015   525051    34611 10676                          ...
-4         EA 01/09/2015   122881     5435 10676            Garwald Water ...</code></pre>
-<pre><code> [1] "DataHeldBy"                                 
+4         EA 01/09/2015   122881     5435 10676            Garwald Water ...
+ [1] "DataHeldBy"                                 
  [2] "SurveyDate"                                 
  [3] "SiteCode"                                   
  [4] "SiteName"                                   
@@ -662,8 +654,8 @@ outline: 0 ;
 SPR001 0.000000      0      0      0      0 0.31348 0.000000      0 ...
 AUT001 0.000000      0      0      0      0 0.00000 0.000000      0 ...
 SPR002 0.332226      0      0      0      0 0.00000 0.332226      0 ...
-AUT002 0.000000      0      0      0      0 0.00000 0.000000      0 ...</code></pre>
-<pre><code>  [1] "AC023A" "AC083A" "AC143A" "AC161A" "AC9999" "AD009A" "AM001A" "AM004A"
+AUT002 0.000000      0      0      0      0 0.00000 0.000000      0 ...
+  [1] "AC023A" "AC083A" "AC143A" "AC161A" "AC9999" "AD009A" "AM001A" "AM004A"
   [9] "AM011A" "AM012A" "AM013A" "AM084A" "AM9999" "AP001A" "AS001A" "AS003A"
  [17] "AU003A" "AU9999" "BR001A" "BR9999" "CA002A" "CA9999" "CC9999" "CI002A"
  [25] "CI005A" "CL001A" "CM004A" "CM006A" "CM007A" "CM009A" "CM013A" "CM022A"
@@ -696,8 +688,8 @@ AUT002 0.000000      0      0      0      0 0.00000 0.000000      0 ...</code></
 [241] "ZZZ896" "ZZZ897" "ZZZ900" "ZZZ901" "ZZZ905" "ZZZ907" "ZZZ908" "ZZZ910"
 [249] "ZZZ911" "ZZZ912" "ZZZ920" "ZZZ921" "ZZZ922" "ZZZ923" "ZZZ926" "ZZZ927"
 [257] "ZZZ939" "ZZZ941" "ZZZ949" "ZZZ953" "ZZZ980" "ZZZ982" "ZZZ985" "ZZZ986"
-[265] "ZZZ987"</code></pre>
-<pre><code>[1] "SampleID"    "SiteID"      "SAMPLE_DATE" "Alkalinity"  "Stream"     
+[265] "ZZZ987"
+[1] "SampleID"    "SiteID"      "SAMPLE_DATE" "Alkalinity"  "Stream"     
 [6] "Reach"      </code></pre>
 <p>Output (list of dataframes)</p>
 <pre><code>       N_TDI5LM N2_TDI5LM Max_TDI5LM   TDI5LM  eTDI5LM
@@ -706,16 +698,16 @@ AUT001       23      3.09      51.57 70.01608 68.49447
 SPR002       55     13.14      20.93 70.66666 69.28261
 AUT002       39      7.69      26.91 66.08840 69.28261
 SPR003       39      9.37      27.30 50.40770 65.48689
-AUT003       32      5.87      37.14 39.65652 65.48689</code></pre>
-<pre><code>   CoCB   ROM  CoCHG CoCMPB ROM_GM
+AUT003       32      5.87      37.14 39.65652 65.48689
+   CoCB   ROM  CoCHG CoCMPB ROM_GM
 43 0.00 20.41  98.43   1.57   1.57
 33 0.00 39.91  96.99   3.01   3.01
 42 0.00  0.00 100.00   0.00   0.00
 41 0.00  0.00 100.00   0.00   0.00
 36 0.21 87.48  12.56  87.44  12.56
-35 0.00 28.74  86.12  13.88  13.88</code></pre>
-<pre><code>[1] "TDI5LM"</code></pre>
-<pre><code>$N_samples
+35 0.00 28.74  86.12  13.88  13.88
+[1] "TDI5LM"
+$N_samples
 [1] 100
 
 $N_samples_gt_zero
@@ -736,8 +728,8 @@ $N_taxa_gt_zero
 1 MYR-GB-01-R Waterbody name 2016  SE   94200    91000       60   2.7 ...
 2 MYR-GB-01-R Waterbody name 2017  SE   94200    91000       60   2.7 ...
 3 MYR-GB-01-R Waterbody name 2018  SE   94200    91000       60   2.7 ...
-4 MYR-GB-05-R Waterbody name 2016  TL   92100    27200       15   1.3 ...</code></pre>
-<pre><code> [1] "SITE"                             "Waterbody"                       
+4 MYR-GB-05-R Waterbody name 2016  TL   92100    27200       15   1.3 ...
+ [1] "SITE"                             "Waterbody"                       
  [3] "Year"                             "NGR"                             
  [5] "Easting"                          "Northing"                        
  [7] "Altitude"                         "Slope"                           
@@ -763,8 +755,8 @@ $N_taxa_gt_zero
 2 You provided LATITUDE: 55.1996487989298, max value used to train model: 55.1995835. 
   REPLACEMENT
 1         ---
-2         ---</code></pre>
-<pre><code>         SITE YEAR      WATERBODY H_NTAXA_spr_aut G_NTAXA_spr_aut
+2         ---
+         SITE YEAR      WATERBODY H_NTAXA_spr_aut G_NTAXA_spr_aut
 1 TST-NI-01-R 2018 Waterbody name           96.61             3.3
 2 TST-NI-02-R 2018 Waterbody name            4.51           28.34
 3 TST-NI-03-R 2018 Waterbody name           83.04           15.63
@@ -773,8 +765,8 @@ $N_taxa_gt_zero
 1            0.09 ...
 2           48.65 ...
 3            1.32 ...
-4            0.01 ...</code></pre>
-<pre><code> [1] "SITE"                              "YEAR"                             
+4            0.01 ...
+ [1] "SITE"                              "YEAR"                             
  [3] "WATERBODY"                         "H_NTAXA_spr_aut"                  
  [5] "G_NTAXA_spr_aut"                   "M_NTAXA_spr_aut"                  
  [7] "P_NTAXA_spr_aut"                   "B_NTAXA_spr_aut"                  
