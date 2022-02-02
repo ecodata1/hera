@@ -23,7 +23,12 @@ Imports:
     magrittr,
     rlang,
     tibble,
-    lubridate
+    lubridate,
+    darleq3,
+    rict,
+    whpts,
+    ead,
+    fcs2
 Suggests: 
     knitr,
     rmarkdown,

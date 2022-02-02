@@ -20,6 +20,8 @@ knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(comment = "")
 knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(collapse = TRUE)
+options(cli.num_colors = 1) # bug? https://community.rstudio.com/t/glimpse-output-encoding-issue-with-pkgdown/117526/4
 
 library(tidyr)
 library(dplyr)
@@ -183,8 +185,8 @@ data and list of warnings/fails.
 library(hera)
 library(tidyverse)
 demo_data <- hera::demo_data
-validation(demo_data) %>% 
-  head(5)
+data <- validation(demo_data) 
+data[5, ]
 ```
 
 ### Indices
