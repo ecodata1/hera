@@ -38,9 +38,9 @@ Suggests:
     devtools,
     testthat
 Remotes:
+    nsj3/darleq3,
     aquaMetrics/rict,
     aquaMetrics/fcs2,
-    nsj3/darleq3,
     aquaMetrics/eadata,
     ecodata1/whpt
 VignetteBuilder: knitr
