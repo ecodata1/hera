@@ -6,7 +6,7 @@
 #' @importFrom purrr map
 
 rat_prediction <- function(data) {
- data <- whpts::whpt_predict(data)
+ # data <- whpt::whpt_predict(data)
  data <- select(data, index, predicted_response)
 
  return(data)

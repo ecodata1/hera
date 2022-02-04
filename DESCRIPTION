@@ -28,8 +28,7 @@ Imports:
     rict,
     fcs2,
     leafpacs,
-    eadata,
-    whpt
+    eadata
 Suggests: 
     knitr,
     rmarkdown,
@@ -43,8 +42,7 @@ Remotes:
     aquaMetrics/rict,
     aquaMetrics/fcs2,
     aquaMetrics/eadata,
-    aquaMetrics/leafpacs,
-    ecodata1/whpt
+    aquaMetrics/leafpacs
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Depends: 
