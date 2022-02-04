@@ -109,7 +109,7 @@ server <- function(input, output) {
 
     if (length(input$sites) == 0) {
      sites_data_frame <- reactive({
-    sites <- ead::get_sites(take = 1000)
+    sites <- eadata::get_sites(take = 1000)
     sites <- sites[complete.cases(sites), ]
     })
     output$sites <-  renderUI(list(

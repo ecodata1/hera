@@ -26,9 +26,10 @@ Imports:
     lubridate,
     darleq3,
     rict,
-    whpts,
-    ead,
-    fcs2
+    fcs2,
+    leafpacs,
+    eadata,
+    whpt
 Suggests: 
     knitr,
     rmarkdown,
@@ -42,6 +43,7 @@ Remotes:
     aquaMetrics/rict,
     aquaMetrics/fcs2,
     aquaMetrics/eadata,
+    aquaMetrics/leafpacs,
     ecodata1/whpt
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2

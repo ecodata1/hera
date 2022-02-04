@@ -2,7 +2,7 @@ ead <- function(site_id) {
   # Function to download EA data from data.gov.uk and convert into 'hera' format:
   # site_id = c(43378, 43296)
   site_id <- paste0("http://environment.data.gov.uk/ecology/site/bio/", site_id)
-  obs <- ead::get_observations(
+  obs <- eadata::get_observations(
     site_id,
     # type_id = "http://environment.data.gov.uk/ecology/def/bio/RiverInvMetricsObservation",
     date_from = "2013-01-01",
@@ -12,7 +12,7 @@ ead <- function(site_id) {
   if(length(obs) == 0) {
     return()
   }
-  taxa <- ead::get_taxa()
+  taxa <- eadata::get_taxa()
   ultimate_foi_id <- strsplit(obs$ultimate_foi_id, "/|-")
   ultimate_foi_id <- map(ultimate_foi_id, function(x) {
     x[7]
@@ -20,14 +20,14 @@ ead <- function(site_id) {
   obs$ultimate_foi_id <- unlist(ultimate_foi_id)
   obs <- dplyr::left_join(obs, taxa, by = c("ultimate_foi_id" = "notation"))
   site <- unique(obs$site_id)
-  site_info <- ead::get_site_info(site_id = site)
+  site_info <- eadata::get_site_info(site_id = site)
   site_info_wide <- tidyr::pivot_wider(site_info,
     names_from = properties.property_label,
     values_from = properties.value
   )
 
   data <- dplyr::inner_join(obs, site_info_wide, by = c("site_id" = "site_id"))
-  properties <- ead::get_properties()
+  properties <- eadata::get_properties()
   data <- dplyr::inner_join(data, properties, by = c("property_id" = "property"))
   sample_id <- strsplit(data$truncated_id, "/|-")
   sample_id <- map(sample_id, function(x) {
@@ -57,6 +57,8 @@ ead <- function(site_id) {
   data$quality_element[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverDiatMetricsObservation"] <- "River Diatoms"
   data$quality_element[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvMetricsObservation"] <- "River Invertebrates"
   data$quality_element[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvTaxaObservation"] <- "River Invertebrates"
+  data$quality_element[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpMetricsObservation"] <- "River Macrophytes"
+
 
   data <- data %>% dplyr::rename(
     "question" = label,
