@@ -28,15 +28,15 @@ Imports:
     rict,
     fcs2,
     leafpacs,
-    eadata
+    eadata,
+    testthat
 Suggests: 
     knitr,
     rmarkdown,
     covr,
     Matrix,
     tidyverse,
-    devtools,
-    testthat
+    devtools
 Remotes:
     nsj3/darleq3,
     aquaMetrics/rict,

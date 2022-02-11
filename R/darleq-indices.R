@@ -96,7 +96,7 @@ darleq_indices <- function(data) {
   output <- darleq3::calc_Metric(diatom_data, metric = "TDI4")
   output <- darleq3::calc_EQR(output, header, truncate_EQR = TRUE, verbose = TRUE)
   output <- tibble(
-    "index" = c(
+    "question" = c(
       "Alkalinity",
       "Lake Type",
       "Total Count",
@@ -110,7 +110,7 @@ darleq_indices <- function(data) {
       "Planktic",
       "Saline"
     ),
-    "value" = c(
+    "response" = c(
       output$EQR$Alkalinity,
       output$EQR$lake_TYPE,
       output$EQR$Total_count,

@@ -1,0 +1,129 @@
+---
+title: "Standard"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{development-template}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = F
+)
+library(hera)
+library(tidyverse)
+```
+
+<!-- Create a new regulatory assessment by changing the CAPITLIZE info below: -->
+
+## Assessment:
+
+```{r setup}
+
+standard <- tibble(
+  standard = NA, # Long name for standard
+  standard_short = NA, # Short name for standard < 26 characters
+  quality_element = NA, # Quality element  < 26 characters
+  parameter = NA, # My parameter
+  aggregation = NA # Optional - usually "waterbody" or "area"
+  
+)
+
+standard_format <- hera:::hera_format(standard = standard) # check and format assessment data
+knitr::kable(standard_format$standard) # print
+```
+
+## Raw data:
+
+```{r}
+data <- tibble(
+  question = NA, # Replace NA with your question
+  response = NA, # Replace NA with demo response. For instance, Demo string, numeric, dna read, geographic etc
+  units = NA, # Optional units
+  min = NA, # Optional Max value
+  max = NA # Optional Min value
+)
+```
+
+## Index function (if applicable):
+
+```{r}
+
+data <- function(data) {
+  # Some calculated index e.g. summary of sample responses: 
+  # index = sum(data$response, na.rm = TRUE)
+  index <- "MY_INDEX_CALCULATION"
+
+  data <- tibble(
+    question = "MY_INDEX",
+    response = index
+  )
+
+ 
+  
+  return(data)
+}
+```
+
+## Predictors
+
+```{r}
+data <- tibble(
+  MY_PREDICTOR = "MY_PREDICTOR",
+  # ...
+)
+```
+
+## Prediction function
+
+```{r}
+prediction <- function(predictors) {
+
+  # Generates prediction based on predictors...
+  prediction <- NULL
+  return(prediction)
+}
+```
+
+## Assessment function
+
+```{r}
+assessment <- function(prediction, data) {
+
+  # Compares observation against prediction...
+  # usually: assessment <- prediction / data$response
+
+  assessment <- NULL
+  return(assessment)
+}
+```
+
+## Aggregation function 
+
+```{r}
+aggrgation <- function(assessment) {
+
+  # Aggregates assessments across waterbody or some other level...
+  # e.g. aggregate <- assesment %>% group_by(waterbody) %>% summarise(min_assessment = min(assessment))
+  aggregate <- NULL
+  return(aggregate)
+}
+```
+
+## Standard checklist:
+
+```{r}
+check_list <- hera:::hera_test(standard = standard)
+knitr::kable(check_list$standard_check)
+```
+
+
+```{r}
+
+```
+

@@ -4,10 +4,12 @@
 \alias{classification}
 \title{Classification}
 \usage{
-classification(data = NULL)
+classification(data = NULL, model_dataframe = NULL)
 }
 \arguments{
 \item{data}{Dataframe of variables in hera inter-change format}
+
+\item{model_dataframe}{Dataframe of model_dataframe see `model_dataframe`}
 }
 \value{
 Dataframe of classifications

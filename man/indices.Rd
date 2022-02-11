@@ -4,12 +4,12 @@
 \alias{indices}
 \title{Calculate Observed Indices}
 \usage{
-indices(data, index = NULL)
+indices(data, model_dataframe = NULL)
 }
 \arguments{
 \item{data}{Dataframe of variables in WFD inter-change format}
 
-\item{index}{Optionally specify which indices to run e.g. c("tdi4", tdi3")}
+\item{model_dataframe}{Dataframe of model_dataframe see `model_dataframe`}
 }
 \value{
 Dataframe of predictions

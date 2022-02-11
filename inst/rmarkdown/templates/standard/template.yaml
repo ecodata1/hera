@@ -1,0 +1,4 @@
+name: Standard
+description: >
+   Tempalte for creating a regulatory standard
+create_dir: FALSE

@@ -4,10 +4,12 @@
 \alias{prediction}
 \title{Predict hera models}
 \usage{
-prediction(data = NULL)
+prediction(data = NULL, model_dataframe = NULL)
 }
 \arguments{
 \item{data}{Dataframe of variables in WFD inter-change format}
+
+\item{model_dataframe}{Dataframe of model_dataframe see `model_dataframe`}
 }
 \value{
 Dataframe of predictions

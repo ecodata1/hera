@@ -5,42 +5,54 @@
 #' \code{indices()} calculates observed indices.
 #'
 #' @param data Dataframe of variables in WFD inter-change format
-#' @param index Optionally specify which indices to run e.g. c("tdi4", tdi3")
+#' @param model_dataframe Dataframe of model_dataframe see `model_dataframe`
 #'
 #' @return Dataframe of predictions
 #' @examples
 #' indices <- indices(demo_data)
 #' @importFrom rlang .data
 #' @importFrom tibble tibble
-#' @importFrom dplyr group_by inner_join mutate
-#' @importFrom tidyr unnest nest
+#' @importFrom dplyr inner_join select filter
 #' @importFrom magrittr `%>%`
 #' @importFrom purrr map
 #' @export
-indices <- function(data, index = NULL) {
+indices <- function(data, model_dataframe = NULL) {
   message("Hello from hera, ...work in progress!")
 
-  data$index_to_run <- index
-  data$sample_number <- data$sample_id
-  data$quality_elements <- data$quality_element
-  # Nest data by sample and analysis
-  by_sample_number <- data %>%
-    group_by(.data$sample_number, .data$quality_elements) %>%
-    nest()
+  if (is.null(model_dataframe)) {
+    model_dataframe <- hera::model_dataframe
+  }
 
-  model_dataframe <- create_model_dataframe()
-  # Join indices function dataframe to data
-  by_sample_number <- inner_join(by_sample_number,
-    model_dataframe[, c("quality_element", "indices_function")],
-    by = c("quality_elements" = "quality_element")
-  )
+  indices <- purrr::map_df(split(model_dataframe, 1:nrow(model_dataframe)), function(model) {
 
-  # Loop through each sample and apply indices function from 'model_dataframe'
-  by_sample_number <- by_sample_number %>%
-    mutate(indices = map(.data$data, .data$indices_function))
-  # Unnest and return
-  by_sample_number <- select(by_sample_number, -.data$indices_function)
-  # by_sample_number <- unnest(by_sample_number, cols = c(.data$indices))
-  by_sample_number <- unnest(by_sample_number, cols = c(.data$data))
-  return(by_sample_number)
+    if (is.null(model$indices_function[[1]])) {
+      return(NULL)
+    }
+    data <- data %>% dplyr::filter(parameter == model$analysis_name)
+    if(any(unique(data$question) %in% model$indices[[1]]$question)) {
+      message(paste("You provided indices for ", model$analysis_name,
+                    "in data, therefore indices not calculated"))
+      return(NULL)
+    }
+    data <- data %>% dplyr::filter(question %in% unique(model$questions[[1]]$question))
+    if(nrow(data) == 0) {
+      return(NULL)
+    }
+
+    index <- model$indices_function[[1]](data)
+    index$parameter <- model$analysis_name
+    index$response <- as.character(index$response) # indices can be character or numbers
+    return(index)
+  })
+
+  if(nrow(indices) > 0) {
+  data <- data %>%
+    select(sample_id, date_taken, location_id, water_body_id) %>%
+    distinct()
+  indices <- inner_join(indices, data, by = c("sample_id"))
+
+  return(indices)
+  } else {
+  return(NULL)
+  }
 }

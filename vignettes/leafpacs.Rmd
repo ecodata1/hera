@@ -1,0 +1,651 @@
+---
+title: "LEAPACS Assessment"
+output: rmarkdown::html_vignette
+editor_options: 
+  chunk_output_type: console
+  markdown: 
+    wrap: 80
+runtime: shiny
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = F
+)
+library(hera)
+library(tidyverse)
+library(testthat)
+library(rlang)
+```
+
+## Details
+
+This classification method enables the assessment of macrophytes in
+rivers according to the requirements of the Water Framework Directive
+(WFD). Macrophytes are larger plants of fresh water which are easily
+seen with the naked eye, including all vascular plants, bryophytes,
+stoneworts (Characeae) and macro-algal growths. River LEAFPACS2 uses a
+species nutrient index together with measures of diversity and
+abundance. This method replaces the classification tool River LEAFPACS
+used in the first river basin planning cycle in the UK.
+
+```{r setup}
+
+standard <- tibble(
+  standard_short = "LEAFPACS",
+  quality_element = "Ecology",
+  parameter = "River Macrophytes",
+  standard_long = "UKTAG River Assessment Method Macrophytes and Phytobenthos",
+  standard_reference = "http://wfduk.org/sites/default/files/Media/Characterisation%20of%20the%20water%20environment/Biological%20Method%20Statements/River%20Macrophytes%20UKTAG%20Method%20Statement.pdf",
+  aggregation = "waterbody",
+  status = "testing"
+)
+
+standard_format <- hera:::hera_format(standard = standard) # format assessment data
+standard_format$standard %>%
+  filter(attribute != "standard_reference") %>%
+  knitr::kable()
+```
+
+## Data
+
+A dataframe containing all the variables required for assessment.
+
+Example:
+
+```{r data}
+
+# Web
+# all_data <- get_data(location_id = c(92751, 100))
+# all_data <- filter(all_data , question == "percentagecoverband")
+
+# Bulk Web
+# all_data <- get_bulk_data()
+# all_data$label <- NA
+# latlon <- rict::osg_parse(all_data$grid_reference, coord_system = "WGS84")
+# all_data$latitude <- latlon$lat
+# all_data$longitude <- latlon$lon
+
+# Sepa
+attach(hera::demo_data)
+demo_data <- demo_data
+demo_data$label <- demo_data$taxon
+demo_data$dist_from_source <- 32
+demo_data$alkalinity <- demo_data$mean_alkalinity
+demo_data$slope <- 2
+demo_data$source_altitude <- 280
+demo_data$parameter <- NA
+demo_data$parameter[demo_data$analysis_name == "MAC_R_TST"] <- "River Macrophytes"
+demo_data$parameter[demo_data$analysis_name == "DIAT_R_TST"] <- "River Diatoms"
+demo_data$question <- as.character(demo_data$question)
+demo_data$question[demo_data$question == "Taxon Cover Value"] <- "percentagecoverband"
+demo_data$sample_id <- as.character(demo_data$sample_id)
+
+all_data <- demo_data
+
+
+```
+
+## Observations
+
+The survey method used should conform to CEN 14184 : 2003 Water quality
+-- Guidance standard for the surveying of aquatic macrophytes in running
+waters.
+
+```{r}
+# A list of questions and responses collected through observation
+questions <- all_data %>% select(
+  location_id,
+  location_description,
+  parameter,
+  sample_id,
+  question,
+  response,
+  label,
+  date_taken,
+  grid_reference,
+  water_body_id,
+)
+questions <- questions %>% filter(parameter == "River Macrophytes")
+questions <- questions %>% filter(question == "percentagecoverband")
+questions
+```
+
+## Indices
+
+Dataframe of indices used in this assessment.
+
+```{r indices}
+indices_function <- function(data) {
+  # Some calculated index e.g. summary of sample responses:
+  # index = sum(data$response, na.rm = TRUE)
+  message("Calculating indices...")
+
+  if (!is.null(nrow(data$question[data$question == "rmni"]))) {
+    return(NULL)
+  }
+
+  if (!"label" %in% colnames(data)) {
+    return(NULL)
+  }
+  if (all(is.na(data$label))) {
+    return(NULL)
+  }
+
+  # Join data to taxa macrophyte scores ------------------------------------
+  macrophyte_scores <- utils::read.csv(system.file("extdat",
+    "macrophyte-taxa.csv",
+    package = "leafpacs"
+  ))
+
+  data$label[data$label == "Cladophora"] <-
+    "Cladophora glomerata/Rhizoclonium hieroglyphicum"
+  data <- inner_join(data, macrophyte_scores, by = c("label" = "Taxon.Name"))
+  names(data) <- tolower(names(data))
+
+  # Calculate scores -------------------------------------------------------
+  data <- group_by(data, .data$sample_id)
+  data$response <- as.numeric(data$response)
+
+  # Calculate algae
+  data$cover <- NA
+  data$cover[data$response == 1] <- 0.05
+  data$cover[data$response == 2] <- 0.5
+  data$cover[data$response == 3] <- 1.7
+  data$cover[data$response == 4] <- 3.8
+  data$cover[data$response == 5] <- 7.5
+  data$cover[data$response == 6] <- 17.5
+  data$cover[data$response == 7] <- 37.5
+  data$cover[data$response == 9] <- 62.5
+  data$cover[data$response == 10] <- 87.5
+
+  algae <- data %>%
+    group_by(.data$cover) %>%
+    summarise(
+      n = n_distinct(.data$label[.data$algal.taxon == "Y"])
+    )
+  algae_cover <- sum(algae$cover * algae$n, na.rm = TRUE)
+
+  # Calculate indices
+  data <- data %>% summarise(
+    rmni = sum(.data$rmni * .data$response, na.rm = TRUE) /
+      sum(.data$response[!is.na(.data$rmni)]),
+    rn_a_taxa = n_distinct(.data$label[.data$aquatic.taxon == "Y"]),
+    n_rfg = n_distinct(.data$plant.fn.gp[.data$plant.fn.gp != 0 &
+      !is.na(.data$plant.fn.gp)]),
+    rfa_pc = algae_cover
+  )
+
+  data <- pivot_longer(data, -.data$sample_id,
+    names_to = "question",
+    values_to = "response"
+  )
+  data$sample_id <- as.character(data$sample_id)
+  data$response <- as.character(data$response)
+  data <- ungroup(data)
+  return(data)
+}
+indexes <- indices_function(questions)
+head(indexes)
+```
+
+## Predictors
+
+Predictors or expected values used in this assessment.
+
+```{r predictors}
+predictors <- all_data %>%
+  select(
+    dist_from_source,
+    alkalinity,
+    source_altitude,
+    slope,
+    location_id
+  ) %>%
+  unique()
+knitr::kable(head(predictors))
+```
+
+## Prediction
+
+```{r prediction}
+prediction <- function(predictors, reference_algae = 0.05) {
+  message("Calculating predictions...")
+
+  # Predict reference RMNI
+  prediction <-
+    transmute(predictors,
+      ref_rmni =
+        (5.239 + (1.384 * log10(.data$alkalinity + 1)) +
+          (-0.68 * log10(.data$slope + 1)) +
+          (0.711 * log10(.data$dist_from_source + 1)) +
+          (-1.074 * log10(.data$source_altitude + 1))
+        )
+    )
+
+  # Calculate Reference Taxa
+  prediction$ref_taxa <- (10.026 * exp(log10(predictors$slope + 1) * -0.426))
+
+  # Calculate Reference Number of Functional Groups
+  prediction$ref_nfg <- (6.304 * exp(log10(predictors$slope + 1) * -0.377))
+
+  # Add Reference Algae
+  prediction$ref_algae <- reference_algae
+
+  # Sample ID
+  prediction$location_id <- predictors$location_id
+
+  # Transform to standard format --------------------------------------------
+  prediction <- prediction %>%
+    distinct() %>%
+    pivot_longer(
+      cols = c(
+        .data$ref_taxa,
+        .data$ref_algae,
+        .data$ref_nfg,
+        .data$ref_rmni
+      ),
+      names_to = "question",
+      values_to = "response"
+    )
+
+  prediction$response <- as.character(prediction$response)
+  return(prediction)
+}
+predictions <- prediction(predictors)
+head(predictions)
+```
+
+# All Together Now
+
+Bring it home
+
+```{r together}
+sample_ids <- questions %>%
+  select(-question, -response, -label) 
+if(any(names(data)%in% "result_id")) {
+  sample_ids %>% select(-result_id)
+}
+sample_ids <- sample_ids %>% unique()
+
+indexes <- right_join(sample_ids, indexes,
+  by = c("sample_id" = "sample_id")
+)
+
+predictions <- right_join(sample_ids, predictions,
+  by = c("location_id" = "location_id")
+)
+
+data <- bind_rows(questions, predictions, indexes)
+```
+
+### Assessment
+
+We now have observed and expected values, let's assess them!
+
+## Categories
+
+A table of categories to assess your observed against expected (or predicted) values.
+
+```{r assessment_table}
+
+assessment_table <- tibble(
+  assesssment = c("high", "good", "moderate", "poor", "bad"),
+  value = c(0.80, 0.60, 0.40, 0.20, 0),
+  level = c(1:5)
+)
+
+assessment_table
+```
+
+## Assessing
+
+A function to compare observed against expected.
+
+```{r Assessing}
+assessment_function <- function(data, assessment_table = NULL) {
+  message("Calculating Assessment")
+
+  if (length(data$question[data$question == "rmni"]) == 0) {
+    return(NULL)
+  }
+
+  # Transform data -----------------------------------------------------------
+  data <- data %>%
+    select(.data$sample_id, .data$question, .data$response) %>%
+    filter(.data$question %in% c(
+      "rmni",
+      "rn_a_taxa",
+      "n_rfg",
+      "ref_taxa",
+      "ref_algae",
+      "ref_nfg",
+      "ref_rmni",
+      "rfa_pc"
+    ))
+  data$response <- as.numeric(data$response)
+
+  data <- data %>%
+    distinct() %>%
+    group_by(.data$sample_id) %>%
+    pivot_wider(names_from = .data$question, values_from = .data$response) %>%
+    ungroup()
+  data[is.na(data)] <- 0
+
+  # Check if classifiable
+
+  data$status <- NA
+  data$status[data$rn_a_taxa < 1] <- "unclassifiable - no aquatic taxa present"
+  data$status[data$rn_a_taxa > 0] <- "classified"
+
+  # Calculate EQRs ------------------------------------------------------------
+  # RMNI EQR
+  data <- data %>% mutate(rmni_eqr = (.data$rmni - 10) / (.data$ref_rmni - 10))
+
+  # NTAXA EQR
+  data <- data %>%
+    mutate(ntaxa_eqr = (.data$rn_a_taxa / .data$ref_taxa)) %>%
+    mutate(rmni_eqr_adj = .data$rmni_eqr)
+
+  # NFG EQR
+  data <- data %>% mutate(nfg_eqr = (.data$n_rfg / .data$ref_nfg))
+
+  # Algal EQR
+  data <- data %>%
+    mutate(alg_eqr = (.data$rfa_pc - 100) / (.data$ref_algae - 100))
+
+  # Adjust RMNI EQR------------------------------------------------
+  data$rmni_eqr_adj[data$rmni_eqr >= 0.85] <-
+    (data$rmni_eqr[data$rmni_eqr >= 0.85]
+    - 0.85) / (1 - 0.85) * 0.2 + 0.8
+
+  data$rmni_eqr_adj[data$rmni_eqr < 0.85] <-
+    (data$rmni_eqr[data$rmni_eqr < 0.85]
+    - 0.7) / (0.85 - 0.7) * 0.2 + 0.6
+
+  data$rmni_eqr_adj[data$rmni_eqr < 0.7] <-
+    (data$rmni_eqr[data$rmni_eqr < 0.7]
+    - 0.52) / (0.7 - 0.52) * 0.2 + 0.4
+
+  data$rmni_eqr_adj[data$rmni_eqr < 0.52] <-
+    (data$rmni_eqr[data$rmni_eqr < 0.52]
+    - 0.34) / (0.52 - 0.34) * 0.2 + 0.2
+
+  data$rmni_eqr_adj[data$rmni_eqr < 0.34] <-
+    (data$rmni_eqr[data$rmni_eqr < 0.34]
+    - 0.16) / (0.34 - 0.16) * 0.2
+
+  # Adjust Ntaxa or NFG EQR ---------------------------------------------------
+  data$min_eqr <- pmin(data$ntaxa_eqr, data$nfg_eqr)
+  data$diversity_eqr_adj <- NA
+  data$diversity_eqr_adj[data$min_eqr >= 0.83] <-
+    ((data$min_eqr[data$min_eqr >= 0.83]
+    - 0.83) / (1 - 0.83)) * 0.2 + 0.8
+
+  data$diversity_eqr_adj[data$min_eqr < 0.83] <-
+    ((data$min_eqr[data$min_eqr < 0.83]
+    - 0.66) / (0.83 - 0.66)) * 0.2 + 0.6
+
+  data$diversity_eqr_adj[data$min_eqr < 0.66] <-
+    ((data$min_eqr[data$min_eqr < 0.66]
+    - 0.49) / (0.66 - 0.49)) * 0.2 + 0.4
+
+  data$diversity_eqr_adj[data$min_eqr < 0.49] <-
+    ((data$min_eqr[data$min_eqr < 0.49]
+    - 0.32) / (0.49 - 0.32)) * 0.2 + 0.2
+
+  data$diversity_eqr_adj[data$min_eqr < 0.32] <-
+    ((data$min_eqr[data$min_eqr < 0.32]
+    - 0.15) / (0.32 - 0.15)) * 0.2
+
+  # Adjust ALGAL EQR ----------------------------------------------------------
+  data$alg_eqr_adj <- NA
+  data$alg_eqr_adj[data$alg_eqr >= 0.975] <-
+    ((data$alg_eqr[data$alg_eqr >= 0.975]
+    - 0.975) / (1 - 0.975)) * 0.2 + 0.8
+
+  data$alg_eqr_adj[data$alg_eqr < 0.975] <-
+    ((data$alg_eqr[data$alg_eqr < 0.975]
+    - 0.925) / (0.975 - 0.925)) * 0.2 + 0.6
+
+  data$alg_eqr_adj[data$alg_eqr < 0.925] <-
+    ((data$alg_eqr[data$alg_eqr < 0.925]
+    - 0.825) / (0.925 - 0.825)) * 0.2 + 0.4
+
+  data$alg_eqr_adj[data$alg_eqr < 0.825] <-
+    ((data$alg_eqr[data$alg_eqr < 0.825]
+    - 0.625) / (0.825 - 0.625)) * 0.2 + 0.2
+
+  data$alg_eqr_adj[data$alg_eqr < 0.625] <-
+    (data$alg_eqr[data$alg_eqr < 0.625]
+    / 0.625) * 0.2
+
+  # Combine EQR for each metric ---------------------------
+  data$composition_diversity <- data$rmni_eqr_adj
+  data$composition_diversity[data$diversity_eqr_adj < data$rmni_eqr_adj] <-
+    ((0.5 * data$diversity_eqr_adj[data$diversity_eqr_adj < data$rmni_eqr_adj] +
+      data$rmni_eqr_adj[data$diversity_eqr_adj < data$rmni_eqr_adj])) / 1.5
+
+  data$z <-
+    (2 * (1 / (exp(log(2600000000) + data$ref_rmni * log(0.0166)) + 1 / 0.5)))
+
+  data$eqr_leafpacs <-
+    (data$z * data$alg_eqr_adj + data$composition_diversity) / (data$z + 1)
+
+  data$eqr_leafpacs[data$composition_diversity < data$alg_eqr_adj] <-
+    data$composition_diversity[data$composition_diversity < data$alg_eqr_adj]
+
+  # Cap final EQR -------------------------------------------------------------
+  data$eqr <- data$eqr_leafpacs
+  data$eqr[data$eqr_leafpacs > 1] <- 1
+  data$eqr[data$rn_a_taxa < 1] <- NA
+
+  # Final EQR cut! ------------------------------------------------------------
+  class <- cut(data$eqr,
+    breaks = c(1, assessment_table$value),
+    labels = assessment_table$assesssment
+  )
+
+  assessments <- data.frame(
+    sample_id = data$sample_id,
+    class = class,
+    eqr = data$eqr,
+    status = data$status
+  )
+
+  assessments$class <- as.character(assessments$class)
+  assessments$level <- NA
+  assessments$level[assessments$class == "high"] <-
+    assessment_table$level[assessment_table$assesssment == "high"]
+  assessments$level[assessments$class == "good"] <-
+    assessment_table$level[assessment_table$assesssment == "good"]
+  assessments$level[assessments$class == "moderate"] <-
+    assessment_table$level[assessment_table$assesssment == "moderate"]
+  assessments$level[assessments$class == "poor"] <-
+    assessment_table$level[assessment_table$assesssment == "poor"]
+  assessments$level[assessments$class == "bad"] <-
+    assessment_table$level[assessment_table$assesssment == "bad"]
+
+  assessments <- as_tibble(assessments)
+
+  assessments$eqr <- as.character(assessments$eqr)
+  assessments$class <- as.character(assessments$class)
+  assessments$level <- as.character(assessments$level)
+  assessments <- pivot_longer(assessments, -sample_id,
+    names_to = "question", values_to = "response"
+  )
+
+  return(assessments)
+}
+assessments <- assessment_function(data, assessment_table)
+assessments
+```
+
+## Confidence
+
+Confidence of assessment
+
+```{r}
+confidence_function <- function(data) {
+  message("Calculating confidence...")
+  if (!any(names(data) %in% "n_sample")) {
+    data$n_sample <- 1
+  }
+  data <- data %>% filter(question == "eqr")
+  data <- pivot_wider(data, names_from = "question", values_from = "response")
+  data$eqr <- as.numeric(data$eqr)
+
+  # Add confidence columns ---------------------------------------------------
+  data <- data %>% mutate(
+    se = NA,
+    trsfd_mean = NA,
+    trsfd_error = NA,
+    norm_dist_1 = NA,
+    norm_dist_2 = NA,
+    norm_dist_3 = NA,
+    norm_dist_4 = NA,
+    bad = NA,
+    poor = NA,
+    moderate = NA,
+    good = NA,
+    high = NA
+  )
+  # SE value ------------------------------------------------------------------
+  data$se <- (0.04 + -2.98 * data$eqr + 2.96 * data$eqr^0.95) / sqrt(data$n_sample)
+  data$trsfd_mean <- log(data$eqr / (1 - data$eqr))
+  data$trsfd_error <- (data$se) / (data$eqr * (1 - data$eqr))
+  data$norm_dist_1 <- pnorm((-1.386 - data$trsfd_mean) / (data$trsfd_error))
+  data$norm_dist_2 <- pnorm((-0.405 - data$trsfd_mean) / (data$trsfd_error))
+  data$norm_dist_3 <- pnorm((0.405 - data$trsfd_mean) / (data$trsfd_error))
+  data$norm_dist_4 <- pnorm((1.386 - data$trsfd_mean) / (data$trsfd_error))
+
+  data$bad <- round((100 * data$norm_dist_1), 1)
+  data$bad[data$eqr > 0.95] <- 0
+  data$bad[data$eqr <= 0.056] <- 88.1
+
+  data$poor <- round((100 * (data$norm_dist_2 - data$norm_dist_1)), 1)
+  data$poor[data$eqr > 0.95] <- 0
+  data$poor[data$eqr <= 0.056] <- 9.6
+
+  data$moderate <- round((100 * (data$norm_dist_3 - data$norm_dist_2)), 1)
+  data$moderate[data$eqr > 0.95] <- 0
+  data$moderate[data$eqr <= 0.056] <- 2
+
+  data$good <- round((100 * (data$norm_dist_4 - data$norm_dist_3)), 1)
+  data$good[data$eqr > 0.95] <- 0
+  data$good[data$eqr <= 0.056] <- 0.4
+
+  data$high <- round((100 * (1 - data$norm_dist_4)), 1)
+  data$high[data$eqr > 0.95] <- 100
+  data$high[data$eqr <= 0.056] <- 0
+
+  data <- data %>% select(1, high, good, moderate, poor, bad)
+
+  data <- pivot_longer(data,
+    cols = (-1),
+    names_to = "question",
+    values_to = "response"
+  )
+  data$response <- as.character(data$response)
+  return(data)
+}
+
+
+confidences <- confidence_function(data = assessments)
+confidences
+```
+
+# Bring It All Back Home
+
+```{r}
+
+# assessments <- bind_rows(assessments, confidences)
+# 
+# assessments <- right_join(sample_ids, assessments,
+#   by = c("sample_id" = "sample_id")
+# )
+# 
+# data <- bind_rows(data, assessments)
+# data$date_taken <- as.Date(data$date_taken, "%Y-%m-%d")
+# data$year <- lubridate::year(data$date_taken)
+```
+
+## Aggregation 
+
+```{r}
+
+# aggregates <- hera:::aggregation(
+#   data[data$question =="eqr", ],
+#   aggregation_variables <- c("water_body_id", "year", "parameter")
+# )
+# 
+# confidences <- hera:::confidences(data = aggregates, confidence_function)
+# water_body_ids <- sample_ids(-sample_id, )
+# confidences <- inner_join(aggregates, confidences, by = "water_body_id")
+# 
+# 
+# 
+# aggregates <- pivot_wider(aggregates,
+#   names_from = question,
+#   values_from = response
+# )
+# 
+# aggregates <- aggregates %>%
+#   select(
+#     water_body_id,
+#     year,
+#     eqr,
+#     high,
+#     good,
+#     moderate,
+#     poor,
+#     bad,
+#     level
+#   ) %>%
+#   drop_na()
+```
+
+## Checklist
+
+```{r checklist}
+check_list <- hera:::hera_test(standard = standard)
+knitr::kable(check_list$standard_check)
+```
+
+## Update hera
+
+```{r}
+
+model_dataframe <- hera::model_dataframe
+
+model <- tibble(
+  analysis_name = standard$parameter,
+  validation_function = NA,
+  indices_function = list(indices_function),
+  prediction_function = list(prediction),
+  assessment_function = list(assessment_function),
+  confidence_function = list(confidence_function),
+  indices = list(indexes[indexes$sample_id == indexes$sample_id[1], ]),
+  assessment_table = list(assessment_table),
+  questions = list(questions[questions$sample_id == questions$sample_id[1], ]),
+  predictors = list(predictors[1, ])
+)
+
+model_dataframe <- model_dataframe[model_dataframe$analysis_name != standard$parameter, ]
+
+model_dataframe <- bind_rows(model_dataframe, model)
+new_model_dataframe <- model_dataframe
+new_model_dataframe 
+usethis::use_data(model_dataframe, overwrite = TRUE)
+```
+
+## Launch app
+
+```{r launch_app, echo=FALSE}
+
+# all_data <- all_data  %>% dplyr::filter(parameter == "River Macrophytes")
+
+launch_app(new_model_dataframe = new_model_dataframe, data = all_data)
+```

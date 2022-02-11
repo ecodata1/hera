@@ -1,0 +1,454 @@
+---
+title: "DARLEQ"
+output: rmarkdown::html_vignette
+editor_options: 
+  chunk_output_type: console
+runtime: shiny
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = F
+)
+library(hera)
+library(tidyverse)
+library(testthat)
+library(rlang)
+```
+
+<!-- Create a new regulatory assessment by changing the CAPITLIZE info below: -->
+
+## Details
+
+```{r setup}
+
+standard <- tibble(
+  standard_short = "River Diatoms", # Short name for standard < 26 characters
+  quality_element = "Ecology", # Quality element  < 26 characters
+  parameter = "River Diatoms", # My parameter
+  standard_long = "River Diatoms (phytobenthos)", # Optional - Long name for standard
+  standard_reference = NA,
+  aggregation = NA, # Optional - usually "waterbody" or "area"
+  status = "testing" # Optional - "development", "on-hold", "consultation", "deprecated" or "deployed"
+)
+
+standard_format <- hera:::hera_format(standard = standard) # format assessment data
+standard_format$standard %>%
+  filter(attribute != "standard_reference") %>%
+  knitr::kable()
+```
+
+## Data
+
+```{r data}
+ all_data <- get_data(location_id = c(92751, 100))
+#  all_data <- all_data %>% filter(parameter == "River Diatoms")
+ # all_data <- filter(all_data , question == "percentagecoverband")
+
+
+# attach(demo_data)
+# demo_data$label <- demo_data$taxon
+# demo_data$dist_from_source <- 32
+# demo_data$alkalinity <- demo_data$mean_alkalinity
+# demo_data$slope <- 2
+# demo_data$source_altitude <- 280
+# demo_data$parameter <- NA
+# demo_data$parameter[demo_data$analysis_name == "MAC_R_TST"] <- "River Macrophytes"
+# demo_data$parameter[demo_data$analysis_name == "DIAT_R_TST"] <- "River Diatoms"
+# demo_data$sample_id <- as.character(demo_data$sample_id)
+# 
+# all_data <- demo_data
+# data <- demo_data %>%  filter(parameter == "River Diatoms")
+# data <- data %>% filter(question == "Taxon abundance")
+
+```
+
+## Questions
+
+```{r}
+
+data <- all_data %>%  filter(parameter == "River Diatoms")
+data <- data %>% filter(question == "Taxon abundance")
+questions <- data
+```
+
+
+
+## Index
+
+Trophic Diatom Index
+
+```{r indices}
+
+indices_function <- function(data) {
+  if (!"label" %in% colnames(data)) {
+    return(NULL)
+  }
+  if (all(is.na(data$label))) {
+    return(NULL)
+  }
+
+  data <- data %>% dplyr::filter(parameter == "River Diatoms")
+  # Combine mean alkalinity with other site headers
+  header <- data %>%
+    mutate(
+      "SampleID" = as.factor(.data$sample_id),
+      "DATE_TAKEN" = as.Date(.data$date_taken, tz = "GB")
+    ) %>%
+    select(.data$SampleID,
+      "SiteID" = .data$location_id,
+      "SAMPLE_DATE" = .data$date_taken,
+      "Alkalinity" = .data$alkalinity
+    ) %>%
+    unique()
+
+  # Loch samples also require an Alkalinity 'type';
+  # 'HA' - High Alkalninty etc
+  # This will be ignored if running river classification
+  header$lake_TYPE <- NA
+  header$lake_TYPE[header$Alkalinity > 50] <- "HA"
+  header$lake_TYPE[header$Alkalinity >= 10 &
+    header$Alkalinity <= 50] <- "MA"
+  header$lake_TYPE[header$Alkalinity < 10] <- "LA"
+
+  header$SiteID <- as.character(header$SiteID)
+  ## Important: Arrange to match order of 'diatom_data' data frame.
+  header <- arrange(header, .data$SampleID)
+
+  # 2. Prepare dataframe of 'diatom_data' -------------------------------
+  # - Include columns for each diatom ID (from NEMS Dares table)
+  # - Values are abundances.
+  # - row.names are SAMPLE_NUMBER.
+
+  # DARES table
+  # - must use table from NEMS - this links TAXON to TAXONLD code
+  dares_table <- darleq3::darleq3_taxa
+  # Filter for taxon abundance only
+  diatom_taxon_abundance <- data %>%
+    filter(.data$question == "taxon abundance" | .data$question == "Taxon abundance")
+
+  # Join to S_TAXON_DARES table using Taxon name.
+  diatom_taxonname <- diatom_taxon_abundance %>%
+    select(.data$sample_id, .data$label, .data$response, .data$date_taken) %>%
+    inner_join(dares_table[, c("TaxonName", "TaxonId", "TaxonNameSEPA")],
+      by = c("label" = "TaxonNameSEPA")
+    )
+
+  diatom_taxonname$response <- as.numeric(diatom_taxonname$response)
+  # Sum value if duplicate taxon names entered within a single sample
+  diatom_tidied <- diatom_taxonname %>%
+    group_by(.data$sample_id, .data$TaxonId, .data$label, .data$date_taken) %>%
+    summarise(value = sum(.data$response), .groups = "drop")
+  # Arrange to keep in same order as 'taxon_names' data.frame
+  diatom_tidied <- diatom_tidied %>%
+    ungroup() %>%
+    arrange(.data$label) %>%
+    select(-.data$label)
+
+  # DARLEQ3 requires Taxon IDs and Values pivoted into wide format
+  diatom_data <- diatom_tidied %>% pivot_wider(
+    names_from = .data$TaxonId,
+    values_from = .data$value,
+  )
+  diatom_data[is.na(diatom_data)] <- 0
+
+  # Arrange by sampled_date to match order of 'header' data frame.
+  diatom_data <- arrange(diatom_data, .data$sample_id)
+  # darleq3 requires row.names equal SAMPLE_NUMBER. Must convert
+  # to be data.frame first (row.names deprecated on tibble).
+  diatom_data <- data.frame(diatom_data, check.names = F)
+  row.names(diatom_data) <- diatom_data$sample_id
+  diatom_data <- select(diatom_data, -.data$sample_id, -.data$date_taken)
+
+  # 3. Prepare dataframe of 'taxon_names'  ------------------------------
+  # include columns 'TaxonCode','TaxonName'
+  taxon_names <- diatom_taxonname %>%
+    select("TaxonCode" = .data$TaxonId, "TaxonName" = .data$TaxonName) %>%
+    unique()
+
+  taxon_names <- arrange(taxon_names, .data$TaxonName)
+
+  # Combine dataframes into named list ------------------------
+  header <- data.frame(header)
+  output <- darleq3::calc_Metric(diatom_data, metric = "TDI4")
+  output <- darleq3::calc_EQR(output, header, truncate_EQR = TRUE, verbose = TRUE)
+
+  output$EQR <- output$EQR %>%
+    mutate(across(everything(), as.character))
+  output <- output$EQR %>%
+    pivot_longer(c(-SAMPLE_DATE, -SiteID, -SampleID),
+      names_to = "question",
+      values_to = "response"
+    )
+ 
+  output$sample_id <- output$SampleID
+  output <- output %>% select(sample_id, question, response)
+  output$response <- as.character(output$response)
+  
+  output <- output %>% filter(question %in% c(
+          "Total_count",      
+          "Percent_in_TDI4",
+          "N_TDI4",             
+          "N2_TDI4",            
+          "Max_TDI4",              
+          "TDI4", 
+          "Motile",                
+          "OrganicTolerant",    
+          "Planktic",           
+          "Saline",             
+          "Comments"))      
+  
+  return(output)
+}
+indexes <- indices_function(data)
+indexes
+```
+
+## Predictors
+
+```{r predictors}
+predictors <- select(
+  data,
+  location_id,
+  sample_id,
+  question,
+  response,
+  label,
+  date_taken,
+  alkalinity
+
+  # ...
+)
+knitr::kable(head(predictors))
+```
+
+## Prediction
+
+```{r prediction}
+prediction <- function(data) {
+  data$response <- as.numeric(data$response)
+  # Generates prediction based on predictors...
+  if (any(names(data) %in% "alkalinity")) {
+    data$alkalinity[is.na(data$alkalinity)] <- 75
+  } else {
+    data$alkalinity <- 75
+  }
+  data$alkalinity <- as.numeric(data$alkalinity)
+  # Combine mean alkalinity with other site headers
+  header <- data %>%
+    mutate(
+      "SampleID" = as.factor(.data$sample_id),
+      "DATE_TAKEN" = as.Date(.data$date_taken, tz = "GB")
+    ) %>%
+    select(.data$SampleID,
+      "SiteID" = .data$location_id,
+      "SAMPLE_DATE" = .data$date_taken,
+      "Alkalinity" = .data$alkalinity
+    ) %>%
+    unique()
+
+  # Loch samples also require an Alkalinity 'type';
+  # 'HA' - High Alkalninty etc
+  # This will be ignored if running river classification
+  header$lake_TYPE <- NA
+  header$lake_TYPE[header$Alkalinity > 50] <- "HA"
+  header$lake_TYPE[header$Alkalinity >= 10 &
+    header$Alkalinity <= 50] <- "MA"
+  header$lake_TYPE[header$Alkalinity < 10] <- "LA"
+
+  header$SiteID <- as.character(header$SiteID)
+  ## Important: Arrange to match order of 'diatom_data' data frame.
+  header <- arrange(header, .data$SampleID)
+
+  # 2. Prepare dataframe of 'diatom_data' -------------------------------
+  # - Include columns for each diatom ID (from NEMS Dares table)
+  # - responses are abundances.
+  # - row.names are SAMPLE_NUMBER.
+
+  # DARES table
+  # - must use table from NEMS - this links TAXON to TAXONLD code
+  dares_table <- darleq3::darleq3_taxa
+  # Filter for taxon abundance only
+  diatom_taxon_abundance <- data %>%
+    filter(.data$question == "taxon abundance" |
+           .data$question == "Taxon abundance")
+
+  # Join to S_TAXON_DARES table using Taxon name.
+  diatom_taxonname <- diatom_taxon_abundance %>%
+    select(.data$sample_id, .data$label, .data$response, .data$date_taken) %>%
+    inner_join(dares_table[, c("TaxonName", "TaxonId", "TaxonNameSEPA")],
+      by = c("label" = "TaxonNameSEPA")
+    )
+
+  # Make sure numeric
+  diatom_taxonname$response <- as.numeric(as.character(diatom_taxonname$response))
+
+  # Sum response if duplicate taxon names entered within a single sample
+  diatom_tidied <- diatom_taxonname %>%
+    group_by(.data$sample_id, .data$TaxonId, .data$label, .data$date_taken) %>%
+    summarise(response = sum(.data$response, na.rm = T), .groups = "drop")
+  # Arrange to keep in same order as 'taxon_names' data.frame
+  diatom_tidied <- diatom_tidied %>%
+    ungroup() %>%
+    arrange(.data$label) %>%
+    select(-.data$label)
+
+  # DARLEQ3 requires Taxon IDs and responses pivoted into wide format
+  diatom_data <- diatom_tidied %>% pivot_wider(
+    names_from = .data$TaxonId,
+    values_from = .data$response,
+  )
+  diatom_data[is.na(diatom_data)] <- 0
+
+  # Arrange by sampled_date to match order of 'header' data frame.
+  diatom_data <- arrange(diatom_data, .data$sample_id)
+  # darleq3 requires row.names equal SAMPLE_NUMBER. Must convert
+  # to be data.frame first (row.names deprecated on tibble).
+  diatom_data <- data.frame(diatom_data, check.names = F)
+  row.names(diatom_data) <- diatom_data$sample_id
+  diatom_data <- select(diatom_data, -.data$sample_id, -.data$date_taken)
+
+  # 3. Prepare dataframe of 'taxon_names'  ------------------------------
+  # include columns 'TaxonCode','TaxonName'
+  taxon_names <- diatom_taxonname %>%
+    select("TaxonCode" = .data$TaxonId, "TaxonName" = .data$TaxonName) %>%
+    unique()
+
+  taxon_names <- arrange(taxon_names, .data$TaxonName)
+
+  # Combine dataframes into named list ------------------------
+  header <- data.frame(header)
+  header <- header[header$SampleID %in% row.names(diatom_data), ]
+  header <- header[!duplicated(header$SampleID), ]
+  output <- darleq3::calc_Metric(diatom_data, metric = "TDI4")
+  output <- darleq3::calc_EQR(output, header, truncate_EQR = TRUE, verbose = TRUE)
+  output <- tibble(
+    "location_id" = output$EQR$SiteID,
+    "question" = "TDI4",
+    "response" = output$EQR$eTDI4
+  )
+  return(output)
+}
+
+
+prediction$response <- as.character(prediction$response)
+predictions <- prediction(data = predictors)
+predictions
+```
+
+## Assessment table
+```{r assessment_table}
+
+assessment_table <- tibble(
+  assesssment = c(
+    "high",
+    "good",
+    "moderate",
+    "poor",
+    "bad"
+  ),
+  value = c(
+    0.80,
+    0.60,
+    0.40,
+    0.20,
+    0
+  )
+  # ...
+  # "red" = 0.33
+  # "amber" = 0.5
+  # "green" = 0.66
+
+  # "pass" = 0.5
+  # "fail" = 0.0
+)
+
+assessment_table
+```
+
+## Assessment
+
+```{r assessment}
+assessment <- function(predictions, data, assessment_table) {
+
+  # Compares observation against prediction...
+  # usually: eqr <- prediction / data$response
+
+  # eqr <- 1 - predictions / data$response
+  #
+  # # Final EQR cut! ------------------------------------------------------------
+  # class <- cut(eqr,
+  #            breaks = c(1, assessment_table$value),
+  #            labels = assessment_table$asesssment)
+  # return(class)
+  return(NULL)
+}
+assessments <- assessment(data)
+assessments
+```
+
+
+## Confidence
+
+```{r}
+
+```
+
+
+
+## Aggregation
+
+```{r aggrgation}
+aggrgation <- function(assessment) {
+
+  # Aggregates assessments across waterbody or some other level...
+  # e.g. aggregate <- assesment %>% group_by(waterbody) %>% summarise(min_assessment = min(assessment))
+  aggregate <- NA
+  return(aggregate)
+}
+aggrgation(assessment)
+
+```
+
+## Checklist
+
+```{r checklist}
+check_list <- hera:::hera_test(standard = standard)
+knitr::kable(check_list$standard_check)
+```
+
+## Update hera
+
+```{r}
+
+model_dataframe <- hera::model_dataframe
+model <- tibble(
+  analysis_name = standard$parameter,
+  validation_function = NA,
+  indices_function = list(indices_function),
+  prediction_function = list(prediction),
+  classification_function = list(assessment),
+  indices = list(indexes[indexes$sample_id == indexes$sample_id[1], ]),
+  assessment_table = list(assessment_table),
+  questions = list(questions[data$sample_id == questions$sample_id[1], ]),
+  predictors = list(predictors[1, ])
+)
+
+model_dataframe <- model_dataframe[model_dataframe$analysis_name != standard$parameter, ]
+
+model_dataframe <- bind_rows(model_dataframe, model)
+new_model_dataframe <- model_dataframe
+new_model_dataframe
+usethis::use_data(model_dataframe, overwrite = TRUE)
+```
+
+## Launch app
+
+```{r launch_app, echo=FALSE}
+
+# data <- all_data  %>% dplyr::filter(parameter == "River Diatoms")
+
+launch_app(new_model_dataframe = new_model_dataframe, data = all_data)
+```

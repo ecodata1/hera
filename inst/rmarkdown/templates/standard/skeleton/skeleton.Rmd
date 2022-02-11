@@ -1,0 +1,303 @@
+---
+title: "Assessment Template"
+output: rmarkdown::html_vignette
+editor_options: 
+  chunk_output_type: console
+runtime: shiny
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = F
+)
+library(hera)
+library(tidyverse)
+library(testthat)
+```
+
+<!-- Create a new regulatory assessment by changing the CAPITLIZE info below: -->
+
+## Details
+
+```{r setup}
+
+standard <- tibble(
+  standard_short = NA, # Short name for standard < 26 characters
+  quality_element = NA, # Quality element  < 26 characters
+  parameter = NA, # My parameter
+  standard_long = NA, # Optional - Long name for standard
+  standard_reference = NA,
+  aggregation = NA, # Optional - usually "waterbody" or "area"
+  status = NA # Optional - "development", "on-hold", "consultation", "deprecated" or "deployed"
+)
+
+standard_format <- hera:::hera_format(standard = standard) # format assessment data
+standard_format$standard %>%
+  filter(attribute != "standard_reference") %>%
+  knitr::kable()
+```
+
+## Data
+
+```{r data}
+data <- tibble(
+  question = NA, # Replace NA with your question
+  response = NA, # Replace NA with demo response. For instance, Demo string, numeric, dna, geographic etc
+  sample_id = NA,
+  location_id = NA,
+  latitude, NA,
+  longitude = NA,
+  date_taken = NA,
+  units = NA, # Optional units
+  min = NA, # Optional Max value
+  max = NA, # Optional Min value
+  # Optional aggregations levels:
+  #  date = NA
+  # waterbody = NA,
+  # area = NA
+)
+data
+```
+
+## Questions
+
+```{r}
+
+```
+
+## Indices
+
+If applicable...
+
+```{r indices}
+
+indices_function <- function(data) {
+  # Some calculated index e.g. summary of sample responses: 
+  # index = sum(data$response, na.rm = TRUE)
+  index <- NA
+
+  data <- tibble(
+    question = NA,
+    response = NA
+  )
+  return(data)
+}
+indexes <- indices(data)
+indexes
+```
+
+## Predictors
+
+```{r predictors}
+predictors <- tibble(
+  predicted_response = NA
+  # ...
+)
+knitr::kable(predictors) 
+```
+
+## Prediction
+
+```{r prediction}
+prediction <- function(predictors) {
+
+  # Generates prediction based on predictors...
+  prediction <- predictors$predicted_response
+  return(prediction)
+}
+predictions <- prediction(predictors)
+predictions
+```
+
+## Assessment table
+```{r assessment_table}
+
+assessment_table <- tibble(
+  asesssment = c( "high", 
+                  "good", 
+                  "moderate",
+                  "poor",
+                  "bad"),
+  value = c(0.80,
+            0.60,
+            0.40,
+            0.20,
+            0)
+  # ...
+  # "red" = 0.33
+  # "amber" = 0.5
+  # "green" = 0.66
+  
+  # "pass" = 0.5
+  # "fail" = 0.0
+)
+
+assessment_table
+```
+
+## Assessment
+
+```{r assessment}
+assessment <- function(predictions, data, assessment_table) {
+
+  # Compares observation against prediction...
+  # usually: eqr <- prediction / data$response
+  
+  eqr <- 1 - predictions / data$response
+  
+  # Final EQR cut! ------------------------------------------------------------
+  class <- cut(eqr,
+             breaks = c(1, assessment_table$value),
+             labels = assessment_table$asesssment)
+  return(class)
+}
+assessments <- assessment(predictions, data, assessment_table)
+assessments
+```
+
+
+## Confidence
+
+Confidence of assessment
+
+```{r}
+
+confidence_function <- function(data) {
+  
+}
+
+```
+
+
+
+## Aggregation
+
+```{r aggrgation}
+
+ aggregates <- hera:::aggregation(data, 
+                        aggregation_variables <- c("water_body_id", "year"))
+ aggregates <- pivot_wider(aggregates,
+                           names_from = question,
+                           values_from = response)
+ aggregates <- aggregates %>% 
+   select(water_body_id, year, eqr, high, good, moderate, poor, bad, level )
+
+```
+
+## Checklist
+
+```{r checklist}
+check_list <- hera:::hera_test(standard = standard)
+knitr::kable(check_list$standard_check)
+```
+
+## Update hera
+
+```{r hera_update}
+
+
+model_dataframe <- hera::model_dataframe
+
+model <- tibble(
+  analysis_name = standard$parameter,
+  quality_element = standard$parameter,
+  validation_function = NA,
+  indices_function = list(indices_function),
+  prediction_function = list(prediction),
+  classification_function = list(assessment),
+  confidence_function = list(confidence),
+  indices = list(indexes[indexes$sample_id == indexes$sample_id[1], ]),
+  assessment_table = list(assessment_table),
+  questions = list(questions[questions$sample_id == questions$sample_id[1], ]),
+  predictors = list(predictors[1, ])
+)
+
+model_dataframe <- model_dataframe[model_dataframe$analysis_name != standard$parameter, ]
+
+model_dataframe <- bind_rows(model_dataframe, model)
+new_model_dataframe <- model_dataframe
+new_model_dataframe
+usethis::use_data(model_dataframe, overwrite = TRUE)
+```
+
+## Launch app
+
+```{r launch_app, echo=FALSE}
+# shiny::shinyAppDir(
+#   system.file("shiny_apps/heraapp", package="hera"),
+#   options = list(width = "100%", height = 700)
+# )
+
+launch_app <- function(new_model_dataframe=NULL){
+  new_model_dataframe <<- new_model_dataframe
+  shiny::shinyAppDir(appDir = system.file("shiny_apps/heraapp", package="hera"))
+}
+
+launch_app(new_model_dataframe = new_model_dataframe)
+
+```
+
+<!-- Optional setting below!!! -->
+
+TODO
+
+## Diagnose
+
+```{r}
+diagnose <- function(assessment) {
+
+  # Aggregates assessments across waterbody or some other level...
+  # e.g. aggregate <- assesment %>% group_by(waterbody) %>% summarise(min_assessment = min(assessment))
+  diagnosis <- tibble(
+    diagnosis = NA,
+    measure = NA
+  )
+  return(diagnosis)
+}
+diagnose <- diagnose(assessment)
+diagnose
+```
+
+## Action
+
+```{r}
+action <- function(diagnose, data, assessment) {
+
+  # Aggregates assessments across waterbody or some other level...
+  # e.g. aggregate <- assesment %>% group_by(waterbody) %>% summarise(min_assessment = min(assessment))
+  action <- tibble(
+    measure = diagnose$measure,
+    value = data$response,
+    assessment = assessment + 0.5)
+  return(action)
+}
+action <- action(diagnose, data, assessments)
+action
+```
+
+## Monitoring locations
+
+```{r}
+locations <- tibble(
+  
+    location_id = NA
+  
+)
+```
+
+## Monitoring strategy
+
+```{r}
+
+monitor <- function(locations) {
+
+  # Aggregates assessments across waterbody or some other level...
+  # e.g. aggregate <- assesment %>% group_by(waterbody) %>% summarise(min_assessment = min(assessment))
+  monitor <- locations$location_id
+  return(monitor)
+}
+monitor(locations)
+
+```

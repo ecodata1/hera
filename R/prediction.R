@@ -5,43 +5,53 @@
 #' \code{prediction()} predicts model indices.
 #'
 #' @param data Dataframe of variables in WFD inter-change format
+#' @param model_dataframe Dataframe of model_dataframe see `model_dataframe`
 #'
 #' @return Dataframe of predictions
 #' @examples
 #' predictions <- prediction(demo_data)
 #' @importFrom rlang .data
 #' @importFrom tibble tibble
-#' @importFrom dplyr group_by inner_join mutate
+#' @importFrom dplyr group_by inner_join mutate filter
 #' @importFrom tidyr unnest nest
 #' @importFrom magrittr `%>%`
 #' @importFrom purrr map
 #' @export
-prediction <- function(data = NULL) {
+prediction <- function(data = NULL, model_dataframe = NULL) {
   message("Hello from hera, ...work in progress!")
+  if (is.null(model_dataframe)) {
+    model_dataframe <- hera::model_dataframe
+  }
 
-  # Nest data by sample and analysis
-  # create 'outer' reference for nesting - retaining the original ref inside the
-  data$sample_number <- data$sample_id
-  data$quality_elements <- data$quality_element
-  # nested data
+  predictions <- purrr::map_df(split(model_dataframe, 1:nrow(model_dataframe)), function(model) {
+
+    if (is.null(model$prediction_function[[1]])) {
+      return(NULL)
+    }
+    data <- data %>% dplyr::filter(parameter == model$analysis_name)
+    if(any(names(model$predictors[[1]]) %in% "question")) {
+      warning("Warning: question column shouldn't be required for prediction")
+      data <- data %>% dplyr::filter(question %in% unique(model$predictors[[1]]$question))
+    }
+
+    if (nrow(data) == 0) {
+      return(NULL)
+    }
+    prediction <- model$prediction_function[[1]](data)
+    prediction$parameter <- model$analysis_name
+    prediction$response <- as.character(prediction$response) # predictions can be character or numbers
+    return(prediction)
+  })
+
+  browser()
+  if(nrow(predictions) > 0) {
   data <- data %>%
-    group_by(.data$sample_number, .data$quality_elements) %>%
-    nest()
+    select(location_id, water_body_id) %>%
+    distinct()
 
-  model_dataframe <- create_model_dataframe()
-  # Join raw dataset to model_dataframe
-  data <- inner_join(data,
-    model_dataframe[, c("quality_element", "prediction_function")],
-    by = c("quality_elements" = "quality_element")
-  )
+  predictions <- inner_join(predictions, data, by = "location_id")
+  return(predictions) } else {
+    return(NULL)
+  }
 
-  # Loop through each sample and apply prediction function from 'model_dataframe'
-  data <- data %>%
-    mutate(prediction = map(.data$data, .data$prediction_function))
-
-  # Unnest and return
-  data <- select(data, -.data$prediction_function)
-  data <- unnest(data, cols = c(.data$data))
-  # data <- unnest(data, cols = c(.data$prediction),names_repair  = "universal")
-  return(data)
 }

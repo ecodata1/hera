@@ -9,7 +9,8 @@
 #'   \item{validation_function}{Function to validate data}
 #'   \item{indices_function}{Function to calculate observed indices from raw data}
 #'   \item{prediction_function}{Function to predict reference indices based on predictors}
-#'   \item{classification_function}{Funciton to classify predictions based on observed against predicted indices}
+#'   \item{classification_function}{Function to classify predictions based on observed against predicted indices}
+#'   \item{assessment_table}{Assessment table}
 #' }
 #' @source Agency sampling data
 "model_dataframe"

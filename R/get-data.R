@@ -21,6 +21,7 @@
 #' data <- get_data(location_id = 92751)
 #' class <- leafpacs::leafpacs(data)
 get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to = NULL) {
+  message("Downloading data from data.gov.uk web services...")
   location_id <- paste0("http://environment.data.gov.uk/ecology/site/bio/", location_id)
   obs <- get_observations(
     location_id,
@@ -28,7 +29,7 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
     date_to = date_to,
     take = take
   )
-  if(length(obs) == 0) {
+  if (length(obs) == 0) {
     return()
   }
 
@@ -48,110 +49,115 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
 
   site_info <- get_site_info(site_id = site)
   site_info_wide <- tidyr::pivot_wider(site_info,
-                                       names_from = properties.property_label,
-                                       values_from = properties.value
+    names_from = properties.property_label,
+    values_from = properties.value
   )
 
+  site_info_wide$location_description <-  site_info_wide$label
+  site_info_wide$label <- NULL
   data <- dplyr::inner_join(obs, site_info_wide, by = c("site_id" = "site_id"))
 
   # Join properties of the observations ----------------------------------------
   properties <- eadata::get_properties()
   data <- dplyr::inner_join(data, properties, by = c("property_id" = "property"))
+
+  # Format columns --------------------------------------------------------------
   sample_id <- strsplit(data$truncated_id, "/|-")
   sample_id <- map(sample_id, function(x) {
     x[2]
   })
-
-  # Format columns --------------------------------------------------------------
-  data$location_description <- data$label.y
   data$sample_id <- unlist(sample_id)
 
-
   data$grid_reference <- hera:::en_to_os(dplyr::select(data, easting, northing))
-  data$grid_reference <- paste0(substr(data$grid_reference, 1 ,2),
-                                " ",
-                                substr(data$grid_reference, 3 ,6),
-                                "0 ",
-                                substr(data$grid_reference, 7 ,10),
-                                "0")
+  data$grid_reference <- paste0(
+    substr(data$grid_reference, 1, 2),
+    " ",
+    substr(data$grid_reference, 3, 6),
+    "0 ",
+    substr(data$grid_reference, 7, 10),
+    "0"
+  )
 
-  data$quality_element <- NA
-  data$quality_element[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverDiatTaxaObservation"] <- "River Diatoms"
-  data$quality_element[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverDiatMetricsObservation"] <- "River Diatoms"
-  data$quality_element[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvMetricsObservation"] <- "River Invertebrates"
-  data$quality_element[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvTaxaObservation"] <- "River Invertebrates"
-  data$quality_element[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpMetricsObservation"] <- "River Macrophytes"
-  data$quality_element[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpTaxaObservation"] <- "River Macrophytes"
-
-
-  data$river_width <- data$Width
-  data$mean_depth <- data$Depth
-  data$boulders_cobbles <- data$`Boulders/Cobbles`
-  data$pebbles_gravel <- data$`Pebbles/Gravel`
-  data$sand <- data$Sand
-  data$silt_clay <- data$`Silt/Clay`
-  data$result_id <- data$obs_id
-  data$dist_from_source <- data$`Distance from Source`
-  data$source_altitude <- data$`Source Altitude`
-
+  data$parameter <- NA
+  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverDiatTaxaObservation"] <- "River Diatoms"
+  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverDiatMetricsObservation"] <- "River Diatoms"
+  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvMetricsObservation"] <- "River Invertebrates"
+  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvTaxaObservation"] <- "River Invertebrates"
+  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpMetricsObservation"] <- "River Macrophytes"
+  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpTaxaObservation"] <- "River Macrophytes"
 
   data <- data %>% dplyr::rename(
-    "question" = label,
+    "question" = label.y,
     "response" = simple_result,
     "date_taken" = date,
     "location_id" = site_id,
     "latitude" = lat,
-    "longitude" = long
+    "longitude" = long,
+    "sand" = Sand,
+    "water_body_id" = `WFD Waterbody ID`,
+    "water_body_type" = `Waterbody Type`,
+    "water_body" = `Water Body`,
+    "river_width" = Width,
+    "mean_depth" = Depth,
+    "boulders_cobbles" = `Boulders/Cobbles`,
+    "pebbles_gravel" = `Pebbles/Gravel`,
+    "silt_clay" = `Silt/Clay`,
+    "result_id" = obs_id,
+    "dist_from_source" = `Distance from Source`,
+    "source_altitude" = `Source Altitude`,
+    "label" = pref_label
   )
 
 
-  data$question[grep("unitsFound", data$result_id)] <- "Taxon abundance"
   data$question[grep("-percentageCoverBand", data$result_id)] <- "PercentageCoverBand"
-
   data$question[data$question == "WHPT_ASPT"] <- "WHPT ASPT Abund"
   data$question[data$question == "WPHT_N_TAXA"] <- "WHPT NTAXA Abund"
   data$question <- tolower(data$question)
-
+  data$question[grep("unitsFound", data$result_id)] <- "Taxon abundance"
+  # Generate season -----------------------------------------------------------
   data$Month <- lubridate::month(data$date_taken)
   data$season <- ifelse((data$Month >= 3) & (data$Month <= 5), "1",
-                        ifelse((data$Month >= 6) & (data$Month <= 8), "2",
-                               ifelse((data$Month >= 9) & (data$Month <= 11), "3", "4")
-                        )
+    ifelse((data$Month >= 6) & (data$Month <= 8), "2",
+      ifelse((data$Month >= 9) & (data$Month <= 11), "3", "4")
+    )
   )
 
-
-  data <- data %>% dplyr::select(contains(c("location_id",
-                                            "location_description",
-                                            "sample_id",
-                                            "date_taken",
-                                            "season",
-                                            "quality_element",
-                                            "question",
-                                            "response",
-                                            "pref_label",
-                                            "latitude",
-                                            "longitude",
-                                            "grid_reference",
-                                            "Alkalinity",
-                                            "river_width",
-                                            "mean_depth",
-                                            "boulders_cobbles",
-                                            "pebbles_gravel",
-                                            "sand",
-                                            "silt_clay",
-                                            "result_id",
-                                            "northing",
-                                            "easting",
-                                            "dist_from_source",
-                                            "source_altitude",
-                                            "Slope",
-                                            "grid_reference"
-  )) )
-
+  data <- data %>% dplyr::select(contains(c(
+    "location_id",
+    "location_description",
+    "sample_id",
+    "date_taken",
+    "season",
+    "parameter",
+    "question",
+    "response",
+    "label",
+    "latitude",
+    "longitude",
+    "grid_reference",
+    "Alkalinity",
+    "river_width",
+    "mean_depth",
+    "boulders_cobbles",
+    "pebbles_gravel",
+    "sand",
+    "silt_clay",
+    "result_id",
+    "northing",
+    "easting",
+    "dist_from_source",
+    "source_altitude",
+    "Slope",
+    "grid_reference",
+    "water_body_id",
+    "water_body_type",
+    "water_body"
+  )))
 
   names(data) <- tolower(names(data))
-
-  data <- data %>% dplyr::rename(taxon = pref_label)
+  data <- utils::type.convert(data, as.is = TRUE)
   data$sample_id <- as.character(data$sample_id)
+  data$label.x <- NULL
   data <- tibble(data)
+  return(data)
 }

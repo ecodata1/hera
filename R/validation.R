@@ -18,28 +18,17 @@
 #' @export
 validation <- function(data = NULL) {
   message("Hello from hera, ...work in progress!")
-  # create 'outer' reference for nesting - retaining the original ref inside the
-  data$sample_number <- data$sample_id
-  data$quality_elements <- data$quality_element
-  # Nest data
-  data <- data %>%
-    group_by(.data$sample_number, .data$quality_elements) %>%
-    nest()
 
-  model_dataframe <- create_model_dataframe()
-  # Join raw dataset to model_dataframe
-  data <- inner_join(data,
-    model_dataframe[, c("quality_element", "validation_function")],
-    by = c("quality_elements" = "quality_element")
-  )
+  if(any(names(data) %in% "sample_id")) {
+    data$sample_id <- as.character(data$sample_id)
+  }
 
-  # Loop through each sample and apply prediction function from 'model_dataframe'
-  # data <- data %>%
-  #  mutate(classification = map(.data$data, .data$validation_function))
 
-  # Unnest and return
-  data <- select(data, -.data$validation_function)
-  data <- unnest(data, cols = c(.data$data))
+  if(any(names(data) %in% "location_id")) {
+    data$location_id <- as.character(data$location_id)
+  }
+
+
 
   return(data)
 }
