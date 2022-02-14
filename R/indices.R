@@ -42,17 +42,14 @@ indices <- function(data, model_dataframe = NULL) {
     index <- model$indices_function[[1]](data)
     index$parameter <- model$analysis_name
     index$response <- as.character(index$response) # indices can be character or numbers
+    if(nrow(index) > 0) {
+      index <- combine(index, data)
+
+    } else {
+      return(NULL)
+    }
     return(index)
   })
 
-  if(nrow(indices) > 0) {
-  data <- data %>%
-    select(sample_id, date_taken, location_id, water_body_id) %>%
-    distinct()
-  indices <- inner_join(indices, data, by = c("sample_id"))
 
-  return(indices)
-  } else {
-  return(NULL)
-  }
 }

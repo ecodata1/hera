@@ -240,7 +240,10 @@ server <- function(input, output) {
         h3("Compliance"), DT::renderDataTable({
 
           if(nrow(assessments) == 0) {return(NULL)}
-          filter_assessments <- assessments %>% select(sample_id, eqr, class, level, high, good, moderate, poor, bad) %>%
+          filter_assessments <- assessments %>% select(location_id, sample_id, eqr,
+                                                       class, level, high,
+                                                       good, moderate, poor,
+                                                       bad) %>%
             unique()
         })
       ))
@@ -270,7 +273,7 @@ server <- function(input, output) {
 
       output$aggregation <- renderUI(list(
         h3("Aggregates"), DT::renderDataTable({
-          aggregates <- aggregation(data,
+          aggregates <- hera:::aggregation(data,
                           aggregation_variables <- c("water_body_id", "year"))
           aggregates <- pivot_wider(aggregates,
                                     names_from = question,

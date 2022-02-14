@@ -224,7 +224,7 @@ predictors <- select(
 knitr::kable(head(predictors))
 ```
 
-## Prediction
+## Predict
 
 ```{r prediction}
 prediction <- function(data) {
@@ -368,7 +368,7 @@ assessment_table <- tibble(
 assessment_table
 ```
 
-## Assessment
+## Assess
 
 ```{r assessment}
 assessment <- function(predictions, data, assessment_table) {

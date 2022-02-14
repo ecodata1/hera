@@ -4,12 +4,14 @@
 \alias{prediction}
 \title{Predict hera models}
 \usage{
-prediction(data = NULL, model_dataframe = NULL)
+prediction(data = NULL, model_dataframe = NULL, combine = TRUE)
 }
 \arguments{
 \item{data}{Dataframe of variables in WFD inter-change format}
 
 \item{model_dataframe}{Dataframe of model_dataframe see `model_dataframe`}
+
+\item{combine}{Specify if predictions should be combined within location/sample attributes}
 }
 \value{
 Dataframe of predictions

@@ -51,12 +51,12 @@ standard_format$standard %>%
 
 ## Data
 
-A dataframe containing all the variables required for assessment.
+If available, add a dataframe containing all the data variables including the questions, predictors, and aggregations required to complete the assessment process.
 
 Example:
 
 ```{r data}
-
+data <- function() {
 # Web
 # all_data <- get_data(location_id = c(92751, 100))
 # all_data <- filter(all_data , question == "percentagecoverband")
@@ -69,6 +69,7 @@ Example:
 # all_data$longitude <- latlon$lon
 
 # Sepa
+
 attach(hera::demo_data)
 demo_data <- demo_data
 demo_data$label <- demo_data$taxon
@@ -82,11 +83,46 @@ demo_data$parameter[demo_data$analysis_name == "DIAT_R_TST"] <- "River Diatoms"
 demo_data$question <- as.character(demo_data$question)
 demo_data$question[demo_data$question == "Taxon Cover Value"] <- "percentagecoverband"
 demo_data$sample_id <- as.character(demo_data$sample_id)
+data <- demo_data
+return(data)
 
-all_data <- demo_data
+}
 
-
+data <- data()
+data <- data %>% filter(parameter == "River Macrophytes") 
+head(data)
 ```
+
+## Location details
+
+Metadata required about the location
+
+```{r}
+# A list of questions and responses collected through observation
+location <- data %>% select(
+  location_id, # optional (recommended)
+  location_description, 
+  grid_reference
+)
+location <- location %>% unique()
+head(location)
+```
+
+## Sample Details
+
+Metadata required to assess each sample. (Excluding direct observations)
+
+```{r}
+# A list of questions and responses collected through observation
+sample <- data %>% select(
+  parameter,
+  sample_id, # optional (recommended)
+  date_taken
+)
+sample <- sample %>% unique()
+head(sample)
+```
+
 
 ## Observations
 
@@ -94,28 +130,22 @@ The survey method used should conform to CEN 14184 : 2003 Water quality
 -- Guidance standard for the surveying of aquatic macrophytes in running
 waters.
 
+
+A list of question and example responses that are collected one or more times per sample.
 ```{r}
 # A list of questions and responses collected through observation
-questions <- all_data %>% select(
-  location_id,
-  location_description,
-  parameter,
-  sample_id,
+questions <- data %>% select(
   question,
   response,
-  label,
-  date_taken,
-  grid_reference,
-  water_body_id,
+  label # optional (usually for taxonomic/species name)
 )
-questions <- questions %>% filter(parameter == "River Macrophytes")
 questions <- questions %>% filter(question == "percentagecoverband")
 questions
 ```
 
-## Indices
+## Metrics
 
-Dataframe of indices used in this assessment.
+Create metrics from observed data. Metrics are statistical summaries of the observed data or indices derived from the observed data. 
 
 ```{r indices}
 indices_function <- function(data) {
@@ -187,7 +217,7 @@ indices_function <- function(data) {
   data <- ungroup(data)
   return(data)
 }
-indexes <- indices_function(questions)
+indexes <- indices_function(data)
 head(indexes)
 ```
 
@@ -196,7 +226,7 @@ head(indexes)
 Predictors or expected values used in this assessment.
 
 ```{r predictors}
-predictors <- all_data %>%
+predictors <- data %>%
   select(
     dist_from_source,
     alkalinity,
@@ -208,7 +238,9 @@ predictors <- all_data %>%
 knitr::kable(head(predictors))
 ```
 
-## Prediction
+## Predict
+
+Create predicted or expected responses to questions. 
 
 ```{r prediction}
 prediction <- function(predictors, reference_algae = 0.05) {
@@ -255,26 +287,26 @@ prediction <- function(predictors, reference_algae = 0.05) {
   return(prediction)
 }
 predictions <- prediction(predictors)
+# predictions <- combine(predictions) # combines predictions with additional
+# columns found in data
 head(predictions)
 ```
 
 # All Together Now
 
-Bring it home
+Bringing it all back home
 
 ```{r together}
-sample_ids <- questions %>%
-  select(-question, -response, -label) 
-if(any(names(data)%in% "result_id")) {
-  sample_ids %>% select(-result_id)
-}
-sample_ids <- sample_ids %>% unique()
 
-indexes <- right_join(sample_ids, indexes,
+sample_info <- data %>% 
+  select(names(sample), names(location)) %>%
+  unique()
+
+indexes <- right_join(sample_info, indexes,
   by = c("sample_id" = "sample_id")
 )
 
-predictions <- right_join(sample_ids, predictions,
+predictions <- right_join(sample_info, predictions,
   by = c("location_id" = "location_id")
 )
 
@@ -488,7 +520,7 @@ assessments
 Confidence of assessment
 
 ```{r}
-confidence_function <- function(data) {
+confidence_function <- function(data, aggregates = "sample_id") {
   message("Calculating confidence...")
   if (!any(names(data) %in% "n_sample")) {
     data$n_sample <- 1
@@ -541,10 +573,10 @@ confidence_function <- function(data) {
   data$high[data$eqr > 0.95] <- 100
   data$high[data$eqr <= 0.056] <- 0
 
-  data <- data %>% select(1, high, good, moderate, poor, bad)
+  data <- data %>% select(all_of(aggregates), high, good, moderate, poor, bad)
 
   data <- pivot_longer(data,
-    cols = (-1),
+    cols = (-aggregates),
     names_to = "question",
     values_to = "response"
   )
@@ -629,7 +661,7 @@ model <- tibble(
   confidence_function = list(confidence_function),
   indices = list(indexes[indexes$sample_id == indexes$sample_id[1], ]),
   assessment_table = list(assessment_table),
-  questions = list(questions[questions$sample_id == questions$sample_id[1], ]),
+  questions = list(questions[1, ]),
   predictors = list(predictors[1, ])
 )
 
@@ -647,5 +679,5 @@ usethis::use_data(model_dataframe, overwrite = TRUE)
 
 # all_data <- all_data  %>% dplyr::filter(parameter == "River Macrophytes")
 
-launch_app(new_model_dataframe = new_model_dataframe, data = all_data)
+launch_app(new_model_dataframe = new_model_dataframe, data = demo_data)
 ```
