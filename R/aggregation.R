@@ -7,7 +7,8 @@ aggregation <- function(data = NULL, groups = NULL){
     group_by_at(vars(question, !!groups)) %>%
     summarise(question = unique(question),
               response = mean(response, na.rm = TRUE),
-              n_sample = n(), .groups = "drop")
+              n_sample = n(), .groups = "drop") %>%
+    drop_na()
 
   return(aggregation)
 }

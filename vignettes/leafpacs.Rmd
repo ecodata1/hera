@@ -58,32 +58,32 @@ Example:
 ```{r data}
 data <- function() {
 # Web
-# all_data <- get_data(location_id = c(92751, 100))
-# all_data <- filter(all_data , question == "percentagecoverband")
+# demo_data <- get_data(location_id = c(92751, 100))
+# demo_data <- filter(demo_data , question == "percentagecoverband")
+# demo_data$year <- lubridate::year(demo_data$date_taken)
 
 # Bulk Web
-# all_data <- get_bulk_data()
-# all_data$label <- NA
-# latlon <- rict::osg_parse(all_data$grid_reference, coord_system = "WGS84")
-# all_data$latitude <- latlon$lat
-# all_data$longitude <- latlon$lon
-
+data <- get_bulk_data()
+data$label <- NA
+latlon <- rict::osg_parse(data$grid_reference, coord_system = "WGS84")
+data$latitude <- latlon$lat
+data$longitude <- latlon$lon
+data$year <- lubridate::year(data$date_taken)
 # Sepa
 
-attach(hera::demo_data)
-demo_data <- demo_data
-demo_data$label <- demo_data$taxon
-demo_data$dist_from_source <- 32
-demo_data$alkalinity <- demo_data$mean_alkalinity
-demo_data$slope <- 2
-demo_data$source_altitude <- 280
-demo_data$parameter <- NA
-demo_data$parameter[demo_data$analysis_name == "MAC_R_TST"] <- "River Macrophytes"
-demo_data$parameter[demo_data$analysis_name == "DIAT_R_TST"] <- "River Diatoms"
-demo_data$question <- as.character(demo_data$question)
-demo_data$question[demo_data$question == "Taxon Cover Value"] <- "percentagecoverband"
-demo_data$sample_id <- as.character(demo_data$sample_id)
-data <- demo_data
+# attach(hera::demo_data)
+# demo_data <- demo_data
+# demo_data$label <- demo_data$taxon
+# demo_data$dist_from_source <- 32
+# demo_data$alkalinity <- demo_data$mean_alkalinity
+# demo_data$slope <- 2
+# demo_data$source_altitude <- 280
+# demo_data$parameter <- NA
+# demo_data$parameter[demo_data$analysis_name == "MAC_R_TST"] <- "River Macrophytes"
+# demo_data$parameter[demo_data$analysis_name == "DIAT_R_TST"] <- "River Diatoms"
+# demo_data$question <- as.character(demo_data$question)
+# demo_data$question[demo_data$question == "Taxon Cover Value"] <- "percentagecoverband"
+# demo_data$sample_id <- as.character(demo_data$sample_id)
 return(data)
 
 }
@@ -292,19 +292,21 @@ predictions <- prediction(predictors)
 head(predictions)
 ```
 
+
+```{r together, echo=FALSE}
+
 # All Together Now
-
-Bringing it all back home
-
-```{r together}
-
 sample_info <- data %>% 
   select(names(sample), names(location)) %>%
   unique()
 
+if(!is.null(indexes)) {
 indexes <- right_join(sample_info, indexes,
   by = c("sample_id" = "sample_id")
 )
+} else {
+  indexes <- data
+}
 
 predictions <- right_join(sample_info, predictions,
   by = c("location_id" = "location_id")
@@ -519,7 +521,7 @@ assessments
 
 Confidence of assessment
 
-```{r}
+```{r confidence}
 confidence_function <- function(data, aggregates = "sample_id") {
   message("Calculating confidence...")
   if (!any(names(data) %in% "n_sample")) {
@@ -576,7 +578,7 @@ confidence_function <- function(data, aggregates = "sample_id") {
   data <- data %>% select(all_of(aggregates), high, good, moderate, poor, bad)
 
   data <- pivot_longer(data,
-    cols = (-aggregates),
+    cols = (-all_of(aggregates)),
     names_to = "question",
     values_to = "response"
   )
@@ -587,56 +589,6 @@ confidence_function <- function(data, aggregates = "sample_id") {
 
 confidences <- confidence_function(data = assessments)
 confidences
-```
-
-# Bring It All Back Home
-
-```{r}
-
-# assessments <- bind_rows(assessments, confidences)
-# 
-# assessments <- right_join(sample_ids, assessments,
-#   by = c("sample_id" = "sample_id")
-# )
-# 
-# data <- bind_rows(data, assessments)
-# data$date_taken <- as.Date(data$date_taken, "%Y-%m-%d")
-# data$year <- lubridate::year(data$date_taken)
-```
-
-## Aggregation 
-
-```{r}
-
-# aggregates <- hera:::aggregation(
-#   data[data$question =="eqr", ],
-#   aggregation_variables <- c("water_body_id", "year", "parameter")
-# )
-# 
-# confidences <- hera:::confidences(data = aggregates, confidence_function)
-# water_body_ids <- sample_ids(-sample_id, )
-# confidences <- inner_join(aggregates, confidences, by = "water_body_id")
-# 
-# 
-# 
-# aggregates <- pivot_wider(aggregates,
-#   names_from = question,
-#   values_from = response
-# )
-# 
-# aggregates <- aggregates %>%
-#   select(
-#     water_body_id,
-#     year,
-#     eqr,
-#     high,
-#     good,
-#     moderate,
-#     poor,
-#     bad,
-#     level
-#   ) %>%
-#   drop_na()
 ```
 
 ## Checklist
@@ -662,7 +614,8 @@ model <- tibble(
   indices = list(indexes[indexes$sample_id == indexes$sample_id[1], ]),
   assessment_table = list(assessment_table),
   questions = list(questions[1, ]),
-  predictors = list(predictors[1, ])
+  predictors = list(predictors[1, ]),
+  predictions = list(predictions[predictions$sample_id == predictions$sample_id[1], ])
 )
 
 model_dataframe <- model_dataframe[model_dataframe$analysis_name != standard$parameter, ]
@@ -678,6 +631,27 @@ usethis::use_data(model_dataframe, overwrite = TRUE)
 ```{r launch_app, echo=FALSE}
 
 # all_data <- all_data  %>% dplyr::filter(parameter == "River Macrophytes")
+# demo_data <- hera::demo_data
+# demo_data$year <- lubridate::year(demo_data$date_taken)
+# demo_data$analysis_name <- NULL
+# demo_data$units <- NULL
+# demo_data$quality_element <- NULL
+# demo_data$taxon <- NULL
+# demo_data$result_id <- NULL
+# demo_data$standard <- NULL
+# demo_data$taxon_id <- NULL
+# demo_data$season <- NULL
 
-launch_app(new_model_dataframe = new_model_dataframe, data = demo_data)
+data <- get_bulk_data()
+data$label <- NA
+latlon <- rict::osg_parse(data$grid_reference, coord_system = "WGS84")
+data$latitude <- latlon$lat
+data$longitude <- latlon$lon
+data$year <- lubridate::year(data$date_taken)
+
+launch_app(new_model_dataframe = model_dataframe, data = data)
+
+
+
+
 ```

@@ -27,6 +27,7 @@ prediction <- function(data = NULL, model_dataframe = NULL, combine = TRUE) {
     if (is.null(model$prediction_function[[1]])) {
       return(NULL)
     }
+
     data <- data %>% dplyr::filter(parameter == model$analysis_name)
     if (any(names(model$predictors[[1]]) %in% "question")) {
       warning("Warning: question column shouldn't be required for prediction")
@@ -40,6 +41,7 @@ prediction <- function(data = NULL, model_dataframe = NULL, combine = TRUE) {
     prediction$parameter <- model$analysis_name
     prediction$response <- as.character(prediction$response) # predictions can be character or numbers
     if (nrow(prediction) > 0) {
+
       prediction <- combine(prediction, data)
 
     } else {

@@ -165,6 +165,7 @@ server <- function(input, output) {
     if (!is.null(data)) {
 
       indices <- indices(data, model_dataframe = new_model_dataframe)
+      indices <- bind_rows(indices, data)
       # indices <- bind_rows(data, indices)
       # %>%
       #   select(sample_number, indices) %>%
@@ -233,15 +234,18 @@ server <- function(input, output) {
       output$predictions <- renderUI(list(
         h3("Predictions"), DT::renderDataTable({
           predictions <- hera::prediction(data, model_dataframe = new_model_dataframe)
+          predictions %>% select(location_id, sample_id, date_taken, parameter, question, response)
         })
       ))
       assessments <- classification(data, model_dataframe = new_model_dataframe)
+      filter_assessments <- assessments %>% select(-date_taken) %>%
+         pivot_wider(names_from = question, values_from = response)
       output$compliance <- renderUI(list(
         h3("Compliance"), DT::renderDataTable({
 
-          if(nrow(assessments) == 0) {return(NULL)}
-          filter_assessments <- assessments %>% select(location_id, sample_id, eqr,
-                                                       class, level, high,
+          if(nrow(filter_assessments) == 0) {return(NULL)}
+          filter_assessments <- filter_assessments %>% select(location_id, parameter, sample_id, eqr,
+                                                       class, status, level, high,
                                                        good, moderate, poor,
                                                        bad) %>%
             unique()
@@ -267,18 +271,20 @@ server <- function(input, output) {
           chart
         }),
         h3("Indices"), DT::renderDataTable({
-          indices
+          indices %>% select(location_id, sample_id, date_taken, parameter, question, response)
         })
       ))
 
       output$aggregation <- renderUI(list(
         h3("Aggregates"), DT::renderDataTable({
-          aggregates <- hera:::aggregation(data,
-                          aggregation_variables <- c("water_body_id", "year"))
+
+          aggregates <- hera:::aggregation(assessments,
+                          aggregation_variables <- c("parameter","water_body_id", "year"))
+
           aggregates <- pivot_wider(aggregates,
                                     names_from = question,
                                     values_from = response)
-          aggregates <- select(water_body_id, year, eqr,
+          aggregates <- select(aggregates, parameter, water_body_id, year, eqr,
                                high, good, moderate, poor, bad, level) %>%
             drop_na()
         })

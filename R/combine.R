@@ -9,7 +9,8 @@ combine <- function(output, data) {
              grid_reference,
              latitude,
              longitude,
-             names(model$predictors[[1]])
+             names(model$predictors[[1]]),
+             names(data)[!names(data) %in% names(c(model$questions[[1]],model$predictions[[1]])) ]
             )
     sample_ids <- sample_ids %>% unique()
     output <- right_join(output, sample_ids, by = "sample_id")
@@ -21,18 +22,22 @@ combine <- function(output, data) {
              grid_reference,
              latitude,
              longitude,
-             names(model$predictors[[1]])
+             names(model$predictors[[1]]),
+             names(data)[!names(data) %in% names(c(model$questions[[1]],model$predictions[[1]])) ]
             )
     location_ids <- location_ids %>% unique()
     output <- inner_join(output, location_ids, by = "location_id")
     if(any(names(data) %in% "sample_id")) {
-      sample_ids <- data %>%
+      sample_ids <- data %>% filter(parameter == unique(output$parameter)) %>%
         select(location_id,
                sample_id,
-               date_taken
+               date_taken,
+               names(data)[!names(data) %in% names(c(model$questions[[1]],model$predictions[[1]])) ]
             )
       sample_ids <- sample_ids %>% unique()
-      output <- right_join(output, sample_ids, by = "location_id")
+      output <- inner_join(sample_ids,
+                           output, by = c("location_id",
+                           names(data)[!names(data) %in% names(c(model$questions[[1]],model$predictions[[1]])) ]))
     }
 
     return(output)

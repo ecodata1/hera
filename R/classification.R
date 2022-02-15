@@ -22,7 +22,7 @@ classification <- function(data = NULL, model_dataframe = NULL) {
   if (is.null(model_dataframe)) {
     model_dataframe <- hera::model_dataframe
   }
-  browser()
+
   indices <- hera::indices(data = data, model_dataframe =  model_dataframe)
   predictions <- hera::prediction(data = data, model_dataframe =  model_dataframe)
   data <- bind_rows(data, indices, predictions)
@@ -31,29 +31,32 @@ classification <- function(data = NULL, model_dataframe = NULL) {
     if (is.null(model$assessment_function[[1]])) {
       return(NULL)
     }
-    browser()
+
     data <- data %>% dplyr::filter(parameter == model$analysis_name)
     data <- data %>% dplyr::filter(question %in% c(model$indices[[1]]$question) |
                                      question %in% c('ref_rmni',
                                                      'ref_taxa',
                                                      'ref_algae',
                                                      'ref_nfg'))
+    browser()
     assessment_table <- model$assessment_table[[1]]
     assessments <- model$assessment_function[[1]](data, assessment_table)
     # Add confidence in assessment
-
+    assessments$parameter <- model$analysis_name
     data <- data %>%
-      select(location_id, location_description, sample_id, date_taken) %>%
-      distinct()
+      select(location_id, location_description, sample_id, date_taken,
+             c(names(data)[!names(data) %in% names(c(model$questions[[1]],model$predictions[[1]])) ])) %>%
+      unique()
     assessments <- inner_join(data, assessments, by = "sample_id")
 
 
     confidences <- confidences(assessments,
                                confidence_function = model$confidence_function[[1]])
+    confidences <- inner_join(data, confidences, by = c("sample_id","location_id", "location_description"))
     assessments <- bind_rows(assessments, confidences)
 
-    assessments <- assessments %>% select(-date_taken, -parameter) %>%
-      pivot_wider(names_from = question, values_from = response)
+    # assessments <- assessments %>% select(-date_taken, -parameter) %>%
+    #   pivot_wider(names_from = question, values_from = response)
     return(assessments)
   })
 
