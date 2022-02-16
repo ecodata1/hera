@@ -74,8 +74,6 @@ data <- data %>% filter(question == "Taxon abundance")
 questions <- data
 ```
 
-
-
 ## Index
 
 Trophic Diatom Index

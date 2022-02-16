@@ -51,24 +51,26 @@ standard_format$standard %>%
 
 ## Data
 
-If available, add a dataframe containing all the data variables including the questions, predictors, and aggregations required to complete the assessment process.
+If available, add a dataframe containing all the data variables including the
+questions, predictors, and aggregations required to complete the assessment
+process.
 
 Example:
 
 ```{r data}
-data <- function() {
+
 # Web
 # demo_data <- get_data(location_id = c(92751, 100))
 # demo_data <- filter(demo_data , question == "percentagecoverband")
 # demo_data$year <- lubridate::year(demo_data$date_taken)
 
 # Bulk Web
-data <- get_bulk_data()
-data$label <- NA
-latlon <- rict::osg_parse(data$grid_reference, coord_system = "WGS84")
-data$latitude <- latlon$lat
-data$longitude <- latlon$lon
-data$year <- lubridate::year(data$date_taken)
+all_data <- get_bulk_data()
+all_data$label <- NA
+latlon <- rict::osg_parse(all_data$grid_reference, coord_system = "WGS84")
+all_data$latitude <- latlon$lat
+all_data$longitude <- latlon$lon
+all_data$year <- lubridate::year(all_data$date_taken)
 # Sepa
 
 # attach(hera::demo_data)
@@ -84,21 +86,18 @@ data$year <- lubridate::year(data$date_taken)
 # demo_data$question <- as.character(demo_data$question)
 # demo_data$question[demo_data$question == "Taxon Cover Value"] <- "percentagecoverband"
 # demo_data$sample_id <- as.character(demo_data$sample_id)
-return(data)
 
-}
 
-data <- data()
-data <- data %>% filter(parameter == "River Macrophytes") 
+data <- all_data %>% filter(parameter == "River Macrophytes") 
 head(data)
 ```
 
-## Location details
+## Locate
 
 Metadata required about the location
 
 ```{r}
-# A list of questions and responses collected through observation
+# A list of metadata for location of sampling
 location <- data %>% select(
   location_id, # optional (recommended)
   location_description, 
@@ -108,7 +107,7 @@ location <- location %>% unique()
 head(location)
 ```
 
-## Sample Details
+## Sample
 
 Metadata required to assess each sample. (Excluding direct observations)
 
@@ -126,12 +125,12 @@ head(sample)
 
 ## Observations
 
-The survey method used should conform to CEN 14184 : 2003 Water quality
--- Guidance standard for the surveying of aquatic macrophytes in running
-waters.
+The survey method used should conform to CEN 14184 : 2003 Water quality --
+Guidance standard for the surveying of aquatic macrophytes in running waters.
+  
+A list of question and example responses that are collected one or more times
+per sample.
 
-
-A list of question and example responses that are collected one or more times per sample.
 ```{r}
 # A list of questions and responses collected through observation
 questions <- data %>% select(
@@ -145,7 +144,8 @@ questions
 
 ## Metrics
 
-Create metrics from observed data. Metrics are statistical summaries of the observed data or indices derived from the observed data. 
+Create metrics from observed data. Metrics are statistical summaries of the
+observed data or indices derived from the observed data.
 
 ```{r indices}
 indices_function <- function(data) {
@@ -312,7 +312,7 @@ predictions <- right_join(sample_info, predictions,
   by = c("location_id" = "location_id")
 )
 
-data <- bind_rows(questions, predictions, indexes)
+combined_data <- bind_rows(questions, predictions, indexes)
 ```
 
 ### Assessment
@@ -321,7 +321,8 @@ We now have observed and expected values, let's assess them!
 
 ## Categories
 
-A table of categories to assess your observed against expected (or predicted) values.
+A table of categories to assess your observed against expected (or predicted)
+values.
 
 ```{r assessment_table}
 
@@ -513,7 +514,7 @@ assessment_function <- function(data, assessment_table = NULL) {
 
   return(assessments)
 }
-assessments <- assessment_function(data, assessment_table)
+assessments <- assessment_function(combined_data, assessment_table)
 assessments
 ```
 
@@ -606,6 +607,9 @@ model_dataframe <- hera::model_dataframe
 
 model <- tibble(
   analysis_name = standard$parameter,
+  standard = list(standard),
+  location = list(location[1, ]),
+  sample = list(sample[1, ]),
   validation_function = NA,
   indices_function = list(indices_function),
   prediction_function = list(prediction),
@@ -615,7 +619,7 @@ model <- tibble(
   assessment_table = list(assessment_table),
   questions = list(questions[1, ]),
   predictors = list(predictors[1, ]),
-  predictions = list(predictions[predictions$sample_id == predictions$sample_id[1], ])
+  predictions = list(predictions[predictions$location_id == predictions$location_id[1], ])
 )
 
 model_dataframe <- model_dataframe[model_dataframe$analysis_name != standard$parameter, ]
@@ -623,6 +627,7 @@ model_dataframe <- model_dataframe[model_dataframe$analysis_name != standard$par
 model_dataframe <- bind_rows(model_dataframe, model)
 new_model_dataframe <- model_dataframe
 new_model_dataframe 
+
 usethis::use_data(model_dataframe, overwrite = TRUE)
 ```
 
@@ -642,14 +647,14 @@ usethis::use_data(model_dataframe, overwrite = TRUE)
 # demo_data$taxon_id <- NULL
 # demo_data$season <- NULL
 
-data <- get_bulk_data()
-data$label <- NA
-latlon <- rict::osg_parse(data$grid_reference, coord_system = "WGS84")
-data$latitude <- latlon$lat
-data$longitude <- latlon$lon
-data$year <- lubridate::year(data$date_taken)
+# data <- get_bulk_data()
+# data$label <- NA
+# latlon <- rict::osg_parse(data$grid_reference, coord_system = "WGS84")
+# data$latitude <- latlon$lat
+# data$longitude <- latlon$lon
+# data$year <- lubridate::year(data$date_taken)
 
-launch_app(new_model_dataframe = model_dataframe, data = data)
+launch_app(new_model_dataframe = model_dataframe, data = all_data)
 
 
 

@@ -38,7 +38,6 @@ classification <- function(data = NULL, model_dataframe = NULL) {
                                                      'ref_taxa',
                                                      'ref_algae',
                                                      'ref_nfg'))
-    browser()
     assessment_table <- model$assessment_table[[1]]
     assessments <- model$assessment_function[[1]](data, assessment_table)
     # Add confidence in assessment

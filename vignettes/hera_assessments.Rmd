@@ -1,0 +1,33 @@
+---
+title: "Assessments Guide"
+date: "`r Sys.Date()`"
+pkgdown:
+  as_is: yes
+output: 
+  rmarkdown::html_vignette:
+    toc: yes
+vignette: >
+  %\VignetteIndexEntry{Development Guide}
+  %\VignetteEncoding{UTF-8}  
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(hera)
+library(tidyverse)
+```
+
+## Overview
+
+List of current assessments available in `hera` package:
+
+```{r list, echo=FALSE}
+
+data <- bind_rows(model_dataframe$standard)
+data <- data %>% select(parameter, status )
+knitr::kable(data)
+```
+

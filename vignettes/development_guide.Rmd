@@ -5,7 +5,6 @@ pkgdown:
   as_is: yes
 output: 
   rmarkdown::html_vignette:
-    number_sections: yes
     toc: yes
 vignette: >
   %\VignetteIndexEntry{Development Guide}
@@ -17,17 +16,108 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(hera)
+library(tidyverse)
 ```
-
-# Work In Progress!...
 
 ## Quick Start
 
-To add a new metric to `hera` package:
+To add a new assessment, install `hera` package.
+ 
+```
+install.packages("devtools")
+devtools::install_github("aquaMetrics/hera", dependencies = TRUE)
+library(hera)
+```
 
-- Firstly define any new variables in the supporting file `inst/ext/column-names.csv`.
-- Then update the `data/model_dataframe` to add the function for indcies, predictions and classification
+1. Open a new File > New File > R Markdown
+2. Select 'From Template'
+3. Search for 'Assessment Template' and open
+4. Change the 'Assessment Template' title to match your assessment name
+5. Save the document
+
+Congratulations! You now have a new assessment template ready to populate. 
+
+Complete the following sections.
+
+## Details
+
+The first piece of information to add is details on what your assessment is called and its status. This table shows the options to to choose from and which fields are required. 
+
+```{r details, echo=FALSE}
+details <- tibble(
+  Columns = c("standard_short", "parameter","status", "standard_long", "standard_reference"),
+  Required = c(TRUE, TRUE,TRUE, FALSE, FALSE),
+  Details = c("Short name for standard < 26 characters",
+              "My parameter",
+              "Required - either: \'development\',\'on-hold\', \'consultation\','deprecated\' or 'deployed\'",
+              "Optional - Long name for standard",
+              "Link to peer-review paper"
+             )
+)
+knitr::kable(details)
+```
+
+#### Example
+
+The code below creates a tibble/dataframe called 'standard' containing metadata
+about the LEAFPACS parameter. This tibble will be later saved into the 'hera'
+package for future reference. 
+
+Code:
+```{r details_example}
+standard <- tibble(
+  standard_short = "LEAFPACS",
+  quality_element = "Ecology",
+  parameter = "River Macrophytes",
+  standard_long = "UKTAG River Assessment Method Macrophytes and Phytobenthos",
+  standard_reference = "http://wfduk.org",
+  aggregation = "waterbody",
+  status = "testing"
+)
+```
+
+Check and Format
+
+The data is formatted using the `hera_format` function to neatly present within
+the documentation for this assessment.The `hera_format` function will also check 
+the data for errors or omissions.
+
+```{r details_format}
+standard_format <- hera:::hera_format(standard = standard) # format table
+standard_format$standard %>%
+  knitr::kable()
+```
+
+Access pre-existing metadata from within `hera` package. All metadata is saved
+in the `model_dataframe` dataframe.
+```{r details_preexisting}
+model_dataframe$standard[[1]]
+```
 
 
-## Models
+## Data
 
+## Locate
+
+## Sample
+
+## Observe
+
+## Metrics
+
+## Predictors
+
+## Predict
+
+## Assessment
+
+## Assess
+
+## Confidence
+
+## Checklist
+
+## Update
+
+## Launch
