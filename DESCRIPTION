@@ -26,8 +26,6 @@ Imports:
     lubridate,
     darleq3,
     rict,
-    fcs2,
-    leafpacs,
     eadata,
     testthat
 Suggests: 
