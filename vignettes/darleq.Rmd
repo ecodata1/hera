@@ -1,9 +1,16 @@
 ---
 title: "DARLEQ"
-output: rmarkdown::html_vignette
+pkgdown:
+  as_is: yes
+output: 
+  rmarkdown::html_vignette:
+    toc: yes
 editor_options: 
   chunk_output_type: console
-runtime: shiny
+vignette: >
+  %\VignetteIndexEntry{DARLEQ}
+  %\VignetteEncoding{UTF-8}  
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r, include = FALSE}
@@ -26,7 +33,7 @@ library(rlang)
 
 standard <- tibble(
   standard_short = "River Diatoms", # Short name for standard < 26 characters
-  quality_element = "Ecology", # Quality element  < 26 characters
+  quality_element = "River Diatoms", # Quality element  < 26 characters
   parameter = "River Diatoms", # My parameter
   standard_long = "River Diatoms (phytobenthos)", # Optional - Long name for standard
   standard_reference = NA,
@@ -43,9 +50,11 @@ standard_format$standard %>%
 ## Data
 
 ```{r data}
- all_data <- get_data(location_id = c(92751, 100))
+all_data <- get_data(location_id = c(92751, 100))
+all_data$year <- lubridate::year(all_data$date_taken)
+data <- all_data
 #  all_data <- all_data %>% filter(parameter == "River Diatoms")
- # all_data <- filter(all_data , question == "percentagecoverband")
+# all_data <- filter(all_data , question == "percentagecoverband")
 
 
 # attach(demo_data)
@@ -58,23 +67,57 @@ standard_format$standard %>%
 # demo_data$parameter[demo_data$analysis_name == "MAC_R_TST"] <- "River Macrophytes"
 # demo_data$parameter[demo_data$analysis_name == "DIAT_R_TST"] <- "River Diatoms"
 # demo_data$sample_id <- as.character(demo_data$sample_id)
-# 
+#
 # all_data <- demo_data
 # data <- demo_data %>%  filter(parameter == "River Diatoms")
 # data <- data %>% filter(question == "Taxon abundance")
-
 ```
 
-## Questions
+## Locate
+
+Metadata required about the location
+
+```{r locate}
+# A list of metadata for location of sampling
+location <- data %>% select(
+  location_id,
+  location_description,
+  grid_reference
+)
+location <- location %>% unique()
+head(location)
+```
+
+## Sample
+
+Metadata required to assess each sample. (Excluding direct observations)
+
+```{r sample}
+# A list of questions and responses collected through observation
+sample <- data %>% select(
+  parameter,
+  sample_id,
+  date_taken
+)
+sample <- sample %>% unique()
+head(sample)
+```
+
+## Observe
 
 ```{r}
+questions <- data %>% filter(parameter == "River Diatoms")
+questions <- questions %>% select(
+  question,
+  response,
+  label # optional (usually for taxonomic/species name)
+  )
 
-data <- all_data %>%  filter(parameter == "River Diatoms")
-data <- data %>% filter(question == "Taxon abundance")
-questions <- data
+questions <- questions %>% filter(question == "Taxon abundance")
+questions
 ```
 
-## Index
+## Metrics
 
 Trophic Diatom Index
 
@@ -87,7 +130,10 @@ indices_function <- function(data) {
   if (all(is.na(data$label))) {
     return(NULL)
   }
-
+  require(dplyr)
+  require(tidyr)
+  require(magrittr)
+  require(tibble)
   data <- data %>% dplyr::filter(parameter == "River Diatoms")
   # Combine mean alkalinity with other site headers
   header <- data %>%
@@ -156,7 +202,7 @@ indices_function <- function(data) {
   diatom_data <- arrange(diatom_data, .data$sample_id)
   # darleq3 requires row.names equal SAMPLE_NUMBER. Must convert
   # to be data.frame first (row.names deprecated on tibble).
-  diatom_data <- data.frame(diatom_data, check.names = F)
+  diatom_data <- data.frame(diatom_data, check.names = FALSE)
   row.names(diatom_data) <- diatom_data$sample_id
   diatom_data <- select(diatom_data, -.data$sample_id, -.data$date_taken)
 
@@ -180,24 +226,25 @@ indices_function <- function(data) {
       names_to = "question",
       values_to = "response"
     )
- 
+
   output$sample_id <- output$SampleID
   output <- output %>% select(sample_id, question, response)
   output$response <- as.character(output$response)
-  
+
   output <- output %>% filter(question %in% c(
-          "Total_count",      
-          "Percent_in_TDI4",
-          "N_TDI4",             
-          "N2_TDI4",            
-          "Max_TDI4",              
-          "TDI4", 
-          "Motile",                
-          "OrganicTolerant",    
-          "Planktic",           
-          "Saline",             
-          "Comments"))      
-  
+    "Total_count",
+    "Percent_in_TDI4",
+    "N_TDI4",
+    "N2_TDI4",
+    "Max_TDI4",
+    "TDI4",
+    "Motile",
+    "OrganicTolerant",
+    "Planktic",
+    "Saline",
+    "Comments"
+  ))
+
   return(output)
 }
 indexes <- indices_function(data)
@@ -207,17 +254,9 @@ indexes
 ## Predictors
 
 ```{r predictors}
-predictors <- select(
-  data,
-  location_id,
-  sample_id,
-  question,
-  response,
-  label,
-  date_taken,
-  alkalinity
-
-  # ...
+predictors <- data %>% select(
+  alkalinity,
+  location_id
 )
 knitr::kable(head(predictors))
 ```
@@ -225,7 +264,11 @@ knitr::kable(head(predictors))
 ## Predict
 
 ```{r prediction}
-prediction <- function(data) {
+prediction_function <- function(data) {
+  require(dplyr)
+  require(tidyr)
+  require(magrittr)
+  require(tibble)
   data$response <- as.numeric(data$response)
   # Generates prediction based on predictors...
   if (any(names(data) %in% "alkalinity")) {
@@ -271,7 +314,7 @@ prediction <- function(data) {
   # Filter for taxon abundance only
   diatom_taxon_abundance <- data %>%
     filter(.data$question == "taxon abundance" |
-           .data$question == "Taxon abundance")
+      .data$question == "Taxon abundance")
 
   # Join to S_TAXON_DARES table using Taxon name.
   diatom_taxonname <- diatom_taxon_abundance %>%
@@ -286,7 +329,7 @@ prediction <- function(data) {
   # Sum response if duplicate taxon names entered within a single sample
   diatom_tidied <- diatom_taxonname %>%
     group_by(.data$sample_id, .data$TaxonId, .data$label, .data$date_taken) %>%
-    summarise(response = sum(.data$response, na.rm = T), .groups = "drop")
+    summarise(response = sum(.data$response, na.rm = TRUE), .groups = "drop")
   # Arrange to keep in same order as 'taxon_names' data.frame
   diatom_tidied <- diatom_tidied %>%
     ungroup() %>%
@@ -304,7 +347,7 @@ prediction <- function(data) {
   diatom_data <- arrange(diatom_data, .data$sample_id)
   # darleq3 requires row.names equal SAMPLE_NUMBER. Must convert
   # to be data.frame first (row.names deprecated on tibble).
-  diatom_data <- data.frame(diatom_data, check.names = F)
+  diatom_data <- data.frame(diatom_data, check.names = FALSE)
   row.names(diatom_data) <- diatom_data$sample_id
   diatom_data <- select(diatom_data, -.data$sample_id, -.data$date_taken)
 
@@ -324,66 +367,106 @@ prediction <- function(data) {
   output <- darleq3::calc_EQR(output, header, truncate_EQR = TRUE, verbose = TRUE)
   output <- tibble(
     "location_id" = output$EQR$SiteID,
-    "question" = "TDI4",
+    "question" = "eTDI4",
     "response" = output$EQR$eTDI4
   )
   return(output)
 }
 
 
-prediction$response <- as.character(prediction$response)
-predictions <- prediction(data = predictors)
+data$response <- as.character(data$response)
+predictions <- prediction_function(data = data)
 predictions
 ```
 
-## Assessment table
+
+```{r together, echo=FALSE}
+
+# All Together Now
+sample_info <- data %>%
+  select(names(sample), names(location)) %>%
+  unique()
+
+if (!is.null(indexes)) {
+  indexes <- right_join(sample_info, indexes,
+    by = c("sample_id" = "sample_id")
+  )
+} else {
+  indexes <- data
+}
+
+predictions <- right_join(sample_info, predictions,
+  by = c("location_id" = "location_id")
+)
+predictions$response <- as.character(predictions$response)
+
+combined_data <- bind_rows(questions, predictions, indexes)
+```
+
+## Assessment
+
 ```{r assessment_table}
 
 assessment_table <- tibble(
-  assesssment = c(
-    "high",
-    "good",
-    "moderate",
-    "poor",
-    "bad"
-  ),
-  value = c(
-    0.80,
-    0.60,
-    0.40,
-    0.20,
-    0
-  )
-  # ...
-  # "red" = 0.33
-  # "amber" = 0.5
-  # "green" = 0.66
-
-  # "pass" = 0.5
-  # "fail" = 0.0
+  assesssment = c("high", "good", "moderate", "poor", "bad"),
+  value = c(0.80, 0.60, 0.40, 0.20, 0),
+  level = c(1:5)
 )
 
 assessment_table
+
 ```
 
 ## Assess
 
 ```{r assessment}
-assessment <- function(predictions, data, assessment_table) {
+assessment_function <- function(data, assessment_table) {
+  if (nrow(data %>% filter(question == "TDI4")) == 0) {
+    return(NULL)
+  }
+  require(dplyr)
+  require(tidyr)
+  require(magrittr)
+  require(tibble)
 
-  # Compares observation against prediction...
-  # usually: eqr <- prediction / data$response
 
-  # eqr <- 1 - predictions / data$response
-  #
-  # # Final EQR cut! ------------------------------------------------------------
-  # class <- cut(eqr,
-  #            breaks = c(1, assessment_table$value),
-  #            labels = assessment_table$asesssment)
-  # return(class)
-  return(NULL)
+  # Transform data -----------------------------------------------------------
+  data <- data %>%
+    select(.data$sample_id, .data$question, .data$response) %>%
+    filter(.data$question %in% c("eTDI4", "TDI4"))
+  data$response <- as.numeric(data$response)
+
+  data <- data %>%
+    distinct() %>%
+    group_by(.data$sample_id) %>%
+    pivot_wider(names_from = .data$question, values_from = .data$response) %>%
+    ungroup()
+  data[is.na(data)] <- 0
+
+  data$eqr <- data$TDI4 / data$eTDI4
+  data$eqr[data$eqr > 1] <- 1
+
+  class <- cut(data$eqr, 
+    breaks = c(1, assessment_table$value),
+    labels = rev(assessment_table$assesssment),
+    include.lowest = TRUE
+  )
+
+  assessments <- data.frame(
+    sample_id = data$sample_id,
+    class = as.character(class),
+    eqr = as.character(data$eqr),
+    status = "classified",
+    level = "1"
+  )
+
+  assessments <- pivot_longer(assessments, -sample_id,
+    names_to = "question", values_to = "response"
+  )
+
+  return(assessments)
 }
-assessments <- assessment(data)
+assessments <- assessment_function(combined_data, assessment_table)
 assessments
 ```
 
@@ -391,24 +474,88 @@ assessments
 ## Confidence
 
 ```{r}
+confidence_function <- function(data, aggregates = "sample_id") {
+  message("Calculating confidence...")
+  if (!any(names(data) %in% "n_sample")) {
+    data$n_sample <- 1
+  }
+  data <- data %>% filter(question == "eqr")
+  data <- pivot_wider(data, names_from = "question", values_from = "response")
+  data$eqr <- as.numeric(data$eqr)
 
-```
+  # Add confidence columns ---------------------------------------------------
+  data <- data %>% mutate(
+    se = NA,
+    trsfd_mean = NA,
+    trsfd_error = NA,
+    norm_dist_1 = NA,
+    norm_dist_2 = NA,
+    norm_dist_3 = NA,
+    norm_dist_4 = NA,
+    bad = NA,
+    poor = NA,
+    moderate = NA,
+    good = NA,
+    high = NA
+  )
+  # SE value ------------------------------------------------------------------
+  data$se <- (0.04 + -2.98 * data$eqr + 2.96 * data$eqr^0.95) / sqrt(data$n_sample)
+  data$trsfd_mean <- log(data$eqr / (1 - data$eqr))
+  data$trsfd_error <- (data$se) / (data$eqr * (1 - data$eqr))
+  data$norm_dist_1 <- pnorm((-1.386 - data$trsfd_mean) / (data$trsfd_error))
+  data$norm_dist_2 <- pnorm((-0.405 - data$trsfd_mean) / (data$trsfd_error))
+  data$norm_dist_3 <- pnorm((0.405 - data$trsfd_mean) / (data$trsfd_error))
+  data$norm_dist_4 <- pnorm((1.386 - data$trsfd_mean) / (data$trsfd_error))
 
+  data$bad <- round((100 * data$norm_dist_1), 1)
+  data$bad[data$eqr > 0.95] <- 0
+  data$bad[data$eqr <= 0.056] <- 88.1
 
+  data$poor <- round((100 * (data$norm_dist_2 - data$norm_dist_1)), 1)
+  data$poor[data$eqr > 0.95] <- 0
+  data$poor[data$eqr <= 0.056] <- 9.6
 
-## Aggregation
+  data$moderate <- round((100 * (data$norm_dist_3 - data$norm_dist_2)), 1)
+  data$moderate[data$eqr > 0.95] <- 0
+  data$moderate[data$eqr <= 0.056] <- 2
 
-```{r aggrgation}
-aggrgation <- function(assessment) {
+  data$good <- round((100 * (data$norm_dist_4 - data$norm_dist_3)), 1)
+  data$good[data$eqr > 0.95] <- 0
+  data$good[data$eqr <= 0.056] <- 0.4
 
-  # Aggregates assessments across waterbody or some other level...
-  # e.g. aggregate <- assesment %>% group_by(waterbody) %>% summarise(min_assessment = min(assessment))
-  aggregate <- NA
-  return(aggregate)
+  data$high <- round((100 * (1 - data$norm_dist_4)), 1)
+  data$high[data$eqr > 0.95] <- 100
+  data$high[data$eqr <= 0.056] <- 0
+
+  data <- data %>% select(all_of(aggregates), high, good, moderate, poor, bad)
+
+  data <- pivot_longer(data,
+    cols = (-all_of(aggregates)),
+    names_to = "question",
+    values_to = "response"
+  )
+  data$response <- as.character(data$response)
+  return(data)
 }
-aggrgation(assessment)
+
+
+confidences <- confidence_function(data = assessments)
+confidences
 
 ```
+
+## Aggregate
+
+Default aggregation used for routine assessment
+
+```{r}
+
+aggregate_function <- function(data) {
+  return(data)
+}
+agrregation <- aggregate_function(data = assessments)
+```
+
 
 ## Checklist
 
@@ -422,31 +569,36 @@ knitr::kable(check_list$standard_check)
 ```{r}
 
 model_dataframe <- hera::model_dataframe
+
 model <- tibble(
   analysis_name = standard$parameter,
+  standard = list(standard),
+  location = list(location[1, ]),
+  sample = list(sample[1, ]),
   validation_function = NA,
   indices_function = list(indices_function),
-  prediction_function = list(prediction),
-  classification_function = list(assessment),
+  prediction_function = list(prediction_function),
+  assessment_function = list(assessment_function),
+  confidence_function = list(confidence_function),
   indices = list(indexes[indexes$sample_id == indexes$sample_id[1], ]),
   assessment_table = list(assessment_table),
-  questions = list(questions[data$sample_id == questions$sample_id[1], ]),
-  predictors = list(predictors[1, ])
+  questions = list(questions[1, ]),
+  predictors = list(predictors[1, ]),
+  predictions = list(predictions[predictions$location_id == predictions$location_id[1], ])
 )
 
 model_dataframe <- model_dataframe[model_dataframe$analysis_name != standard$parameter, ]
 
 model_dataframe <- bind_rows(model_dataframe, model)
 new_model_dataframe <- model_dataframe
-new_model_dataframe
 usethis::use_data(model_dataframe, overwrite = TRUE)
 ```
 
 ## Launch app
 
-```{r launch_app, echo=FALSE}
+```{r launch_app, echo=TRUE, eval=FALSE}
 
-# data <- all_data  %>% dplyr::filter(parameter == "River Diatoms")
-
+# No need to edit this code
 launch_app(new_model_dataframe = new_model_dataframe, data = all_data)
+
 ```

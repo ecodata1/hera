@@ -68,7 +68,7 @@ darleq_prediction <- function(data) {
   # Sum response if duplicate taxon names entered within a single sample
   diatom_tidied <- diatom_taxonname %>%
     group_by(.data$sample_id, .data$TaxonId, .data$taxon, .data$date_taken) %>%
-    summarise(response = sum(.data$response, na.rm = T))
+    summarise(response = sum(.data$response, na.rm = TRUE))
   # Arrange to keep in same order as 'taxon_names' data.frame
   diatom_tidied <- diatom_tidied %>%
     ungroup() %>%
@@ -86,7 +86,7 @@ darleq_prediction <- function(data) {
   diatom_data <- arrange(diatom_data, .data$sample_id)
   # darleq3 requires row.names equal SAMPLE_NUMBER. Must convert
   # to be data.frame first (row.names deprecated on tibble).
-  diatom_data <- data.frame(diatom_data, check.names = F)
+  diatom_data <- data.frame(diatom_data, check.names = FALSE)
   row.names(diatom_data) <- diatom_data$sample_id
   diatom_data <- select(diatom_data, -.data$sample_id, -.data$date_taken)
 

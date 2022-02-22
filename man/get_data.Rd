@@ -23,6 +23,6 @@ Import data from web services (currently EA only) and convert into standard
 format for `hera` regulatory assessment tool.
 }
 \examples{
-data <- get_data(location_id = 92751)
-class <- leafpacs::leafpacs(data)
+data <- get_data(location_id = 100)
+class <- assessment(data)
 }

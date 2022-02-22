@@ -1,9 +1,16 @@
 ---
-title: "Assessment Template"
-output: rmarkdown::html_vignette
+title: "Combined aquatic plants"
+pkgdown:
+  as_is: yes
+output: 
+  rmarkdown::html_vignette:
+    toc: yes
 editor_options: 
   chunk_output_type: console
-runtime: shiny
+vignette: >
+  %\VignetteIndexEntry{Combined aquatic plants}
+  %\VignetteEncoding{UTF-8}  
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r, include = FALSE}
@@ -29,10 +36,10 @@ This document has been created following the generic assessment guidance.
 ```{r setup}
 
 standard <- tibble(
-  standard_short = NA, 
+  standard_short = NA,
   quality_element = NA,
-  parameter = "Test Assessment", 
-  standard_long = NA, 
+  parameter = "Combined aquatic plants",
+  standard_long = NA,
   standard_reference = NA,
   aggregation = NA,
   status = NA
@@ -47,25 +54,9 @@ standard_format$standard %>%
 ## Data
 
 ```{r data}
-data <- tibble(
-  parameter = NA,
-  question = NA,
-  response = NA,
-  label = NA,
-  sample_id = NA,
-  location_id = NA,
-  location_description = NA,
-  grid_reference = NA,
-  water_body_id = NA,
-  year = NA,
-  latitude = 0,
-  longitude = 0,
-  date_taken = NA,
-  units = NA, 
-  min = NA, 
-  max = NA
-)
-data
+all_data <- get_data(location_id = c(92751, 100))
+all_data$year <- lubridate::year(all_data$date_taken)
+data <- all_data
 ```
 
 ## Locate
@@ -76,7 +67,7 @@ Metadata required about the location
 # A list of metadata for location of sampling
 location <- data %>% select(
   location_id, # optional (recommended)
-  location_description, 
+  location_description,
   grid_reference
 )
 location <- location %>% unique()
@@ -117,15 +108,19 @@ If applicable...
 ```{r indices}
 
 indices_function <- function(data) {
-  # Some calculated metric e.g. total responses in sample etc:
-  
-  data %>%
-    group_by(sample_id) %>% 
-    summarise(question = "n_count",
-              repsonse = n(),
-              sample_id = unique(sample_id)
-              )
-  
+  require(dplyr)
+  require(tidyr)
+  require(magrittr)
+  require(tibble)
+  # Some calculated index e.g. summary of sample responses:
+  # index = sum(data$response, na.rm = TRUE)
+  index <- NA
+
+  data <- tibble(
+    response = NA,
+    question = NA,
+    sample_id = NA
+  )
   return(data)
 }
 indexes <- indices_function(data)
@@ -136,12 +131,12 @@ indexes
 
 ```{r predictors}
 predictors <- tibble(
-   PREDICTOR_1 = NA,
-   PREDICTOR_2 = NA,
-   location_id = NA
+  PREDICTOR_1 = NA,
+  PREDICTOR_2 = NA,
+  location_id = NA
   # ...
 )
-knitr::kable(predictors) 
+knitr::kable(predictors)
 ```
 
 ## Predict
@@ -165,14 +160,14 @@ predictions
 ```{r together, echo=FALSE}
 
 # All Together Now
-sample_info <- data %>% 
+sample_info <- data %>%
   select(names(sample), names(location)) %>%
   unique()
 
-if(!is.null(indexes)) {
-indexes <- right_join(sample_info, indexes,
-  by = c("sample_id" = "sample_id")
-)
+if (!is.null(indexes)) {
+  indexes <- right_join(sample_info, indexes,
+    by = c("sample_id" = "sample_id")
+  )
 } else {
   indexes <- data
 }
@@ -191,16 +186,20 @@ combined_data <- bind_rows(questions, predictions, indexes)
 ```{r assessment_table}
 
 assessment_table <- tibble(
-  asesssment = c( "high", 
-                  "good", 
-                  "moderate",
-                  "poor",
-                  "bad"),
-  value = c(0.80,
-            0.60,
-            0.40,
-            0.20,
-            0)
+  asesssment = c(
+    "high",
+    "good",
+    "moderate",
+    "poor",
+    "bad"
+  ),
+  value = c(
+    0.80,
+    0.60,
+    0.40,
+    0.20,
+    0
+  )
   # ...
   # "red" = 0.33
   # "amber" = 0.5
@@ -217,11 +216,14 @@ assessment_table
 
 ```{r assessment}
 assessment_function <- function(data, assessment_table) {
-
-  if (nrow(data %>%  filter(question == "MY_METRIC")) == 0) {
+  if (nrow(data %>% filter(question == "MY_METRIC")) == 0) {
     return(NULL)
   }
 
+  require(dplyr)
+  require(tidyr)
+  require(magrittr)
+  require(tibble)
   # Transform data -----------------------------------------------------------
   data <- data %>%
     select(.data$sample_id, .data$question, .data$response) %>%
@@ -233,10 +235,10 @@ assessment_function <- function(data, assessment_table) {
     group_by(.data$sample_id) %>%
     pivot_wider(names_from = .data$question, values_from = .data$response) %>%
     ungroup()
-    data[is.na(data)] <- 0
-  
-  data$eqr <- data$MY_METRIC / data$MY_PREDICTION 
-  
+  data[is.na(data)] <- 0
+
+  data$eqr <- data$MY_METRIC / data$MY_PREDICTION
+
   class <- cut(data$eqr,
     breaks = c(1, assessment_table$value),
     labels = assessment_table$assesssment
@@ -249,16 +251,15 @@ assessment_function <- function(data, assessment_table) {
     status = data$status
   )
 
- assessments <- pivot_longer(assessments, -sample_id,
+  assessments <- pivot_longer(assessments, -sample_id,
     names_to = "question", values_to = "response"
   )
-    
+
   return(assessments)
 }
 assessments <- assessment_function(combined_data, assessment_table)
 assessments
 ```
-
 
 ## Confidence
 
@@ -267,18 +268,24 @@ Confidence of assessment.
 ```{r}
 
 confidence_function <- function(data, aggregates = "sample_id") {
-
   confidence <- tibble(
     aggregates = NA,
     question = NA,
     response = NA
   )
-  
-  names(confidence)[1] <- aggregates[1]
-  
-}
 
+  names(confidence)[1] <- aggregates[1]
+}
 ```
+
+## Aggregation
+
+```{r}
+aggregation_function <- function(data) {
+  return(NULL)
+}
+```
+
 
 ## Checklist
 
@@ -313,7 +320,7 @@ model_dataframe <- model_dataframe[model_dataframe$analysis_name != standard$par
 
 model_dataframe <- bind_rows(model_dataframe, model)
 new_model_dataframe <- model_dataframe
-new_model_dataframe 
+new_model_dataframe
 usethis::use_data(model_dataframe, overwrite = TRUE)
 ```
 
@@ -321,8 +328,7 @@ usethis::use_data(model_dataframe, overwrite = TRUE)
 
 Below is an interactive application displaying the results of your assessment.
 
-```{r launch_app, echo=FALSE}
+```{r launch_app, echo=TRUE, eval=FALSE}
 # No need to edit this code
-launch_app(new_model_dataframe = model_dataframe, data = data)
-
+launch_app(new_model_dataframe = model_dataframe, data = all_data)
 ```

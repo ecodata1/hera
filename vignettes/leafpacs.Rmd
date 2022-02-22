@@ -1,11 +1,16 @@
 ---
-title: "LEAPACS Assessment"
-output: rmarkdown::html_vignette
+title: "LEAPACS"
+pkgdown:
+  as_is: yes
+output: 
+  rmarkdown::html_vignette:
+    toc: yes
 editor_options: 
   chunk_output_type: console
-  markdown: 
-    wrap: 80
-runtime: shiny
+vignette: >
+  %\VignetteIndexEntry{LEAPACS}
+  %\VignetteEncoding{UTF-8}  
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r, include = FALSE}
@@ -15,9 +20,11 @@ knitr::opts_chunk$set(
   echo = F
 )
 library(hera)
-library(tidyverse)
-library(testthat)
-library(rlang)
+library(purrr)
+library(dplyr)
+library(tidyr)
+library(magrittr)
+
 ```
 
 ## Details
@@ -65,16 +72,16 @@ Example:
 # demo_data$year <- lubridate::year(demo_data$date_taken)
 
 # Bulk Web
-all_data <- get_bulk_data()
-all_data$label <- NA
-latlon <- rict::osg_parse(all_data$grid_reference, coord_system = "WGS84")
-all_data$latitude <- latlon$lat
-all_data$longitude <- latlon$lon
-all_data$year <- lubridate::year(all_data$date_taken)
+# all_data <- get_bulk_data()
+# all_data$label <- NA
+# latlon <- rict::osg_parse(all_data$grid_reference, coord_system = "WGS84")
+# all_data$latitude <- latlon$lat
+# all_data$longitude <- latlon$lon
+# all_data$year <- lubridate::year(all_data$date_taken)
 # Sepa
 
-# attach(hera::demo_data)
-# demo_data <- demo_data
+attach(hera::demo_data)
+ all_data <- demo_data
 # demo_data$label <- demo_data$taxon
 # demo_data$dist_from_source <- 32
 # demo_data$alkalinity <- demo_data$mean_alkalinity
@@ -88,7 +95,8 @@ all_data$year <- lubridate::year(all_data$date_taken)
 # demo_data$sample_id <- as.character(demo_data$sample_id)
 
 
-data <- all_data %>% filter(parameter == "River Macrophytes") 
+data <- all_data 
+# %>% filter(parameter == "River Macrophytes")
 head(data)
 ```
 
@@ -99,8 +107,8 @@ Metadata required about the location
 ```{r}
 # A list of metadata for location of sampling
 location <- data %>% select(
-  location_id, # optional (recommended)
-  location_description, 
+  location_id,
+  location_description,
   grid_reference
 )
 location <- location %>% unique()
@@ -115,7 +123,7 @@ Metadata required to assess each sample. (Excluding direct observations)
 # A list of questions and responses collected through observation
 sample <- data %>% select(
   parameter,
-  sample_id, # optional (recommended)
+  sample_id,
   date_taken
 )
 sample <- sample %>% unique()
@@ -123,7 +131,7 @@ head(sample)
 ```
 
 
-## Observations
+## Observe
 
 The survey method used should conform to CEN 14184 : 2003 Water quality --
 Guidance standard for the surveying of aquatic macrophytes in running waters.
@@ -152,7 +160,10 @@ indices_function <- function(data) {
   # Some calculated index e.g. summary of sample responses:
   # index = sum(data$response, na.rm = TRUE)
   message("Calculating indices...")
-
+  require(dplyr)
+  require(tidyr)
+  require(magrittr)
+  require(tibble)
   if (!is.null(nrow(data$question[data$question == "rmni"]))) {
     return(NULL)
   }
@@ -176,7 +187,7 @@ indices_function <- function(data) {
   names(data) <- tolower(names(data))
 
   # Calculate scores -------------------------------------------------------
-  data <- group_by(data, .data$sample_id)
+  data <- group_by(data, sample_id)
   data$response <- as.numeric(data$response)
 
   # Calculate algae
@@ -192,23 +203,23 @@ indices_function <- function(data) {
   data$cover[data$response == 10] <- 87.5
 
   algae <- data %>%
-    group_by(.data$cover) %>%
+    group_by(cover) %>%
     summarise(
-      n = n_distinct(.data$label[.data$algal.taxon == "Y"])
+      n = n_distinct(label[algal.taxon == "Y"])
     )
   algae_cover <- sum(algae$cover * algae$n, na.rm = TRUE)
 
   # Calculate indices
   data <- data %>% summarise(
-    rmni = sum(.data$rmni * .data$response, na.rm = TRUE) /
-      sum(.data$response[!is.na(.data$rmni)]),
-    rn_a_taxa = n_distinct(.data$label[.data$aquatic.taxon == "Y"]),
-    n_rfg = n_distinct(.data$plant.fn.gp[.data$plant.fn.gp != 0 &
-      !is.na(.data$plant.fn.gp)]),
+    rmni = sum(rmni * response, na.rm = TRUE) /
+      sum(response[!is.na(rmni)]),
+    rn_a_taxa = n_distinct(label[aquatic.taxon == "Y"]),
+    n_rfg = n_distinct(plant.fn.gp[plant.fn.gp != 0 &
+      !is.na(plant.fn.gp)]),
     rfa_pc = algae_cover
   )
 
-  data <- pivot_longer(data, -.data$sample_id,
+  data <- pivot_longer(data, -sample_id,
     names_to = "question",
     values_to = "response"
   )
@@ -243,17 +254,20 @@ knitr::kable(head(predictors))
 Create predicted or expected responses to questions. 
 
 ```{r prediction}
-prediction <- function(predictors, reference_algae = 0.05) {
+prediction_function <- function(predictors, reference_algae = 0.05) {
   message("Calculating predictions...")
-
+  require(dplyr)
+  require(tidyr)
+  require(magrittr)
+  require(tibble)
   # Predict reference RMNI
   prediction <-
     transmute(predictors,
       ref_rmni =
-        (5.239 + (1.384 * log10(.data$alkalinity + 1)) +
-          (-0.68 * log10(.data$slope + 1)) +
-          (0.711 * log10(.data$dist_from_source + 1)) +
-          (-1.074 * log10(.data$source_altitude + 1))
+        (5.239 + (1.384 * log10(alkalinity + 1)) +
+          (-0.68 * log10(slope + 1)) +
+          (0.711 * log10(dist_from_source + 1)) +
+          (-1.074 * log10(source_altitude + 1))
         )
     )
 
@@ -274,10 +288,10 @@ prediction <- function(predictors, reference_algae = 0.05) {
     distinct() %>%
     pivot_longer(
       cols = c(
-        .data$ref_taxa,
-        .data$ref_algae,
-        .data$ref_nfg,
-        .data$ref_rmni
+        ref_taxa,
+        ref_algae,
+        ref_nfg,
+        ref_rmni
       ),
       names_to = "question",
       values_to = "response"
@@ -286,7 +300,7 @@ prediction <- function(predictors, reference_algae = 0.05) {
   prediction$response <- as.character(prediction$response)
   return(prediction)
 }
-predictions <- prediction(predictors)
+predictions <- prediction_function(predictors)
 # predictions <- combine(predictions) # combines predictions with additional
 # columns found in data
 head(predictions)
@@ -296,14 +310,14 @@ head(predictions)
 ```{r together, echo=FALSE}
 
 # All Together Now
-sample_info <- data %>% 
+sample_info <- data %>%
   select(names(sample), names(location)) %>%
   unique()
 
-if(!is.null(indexes)) {
-indexes <- right_join(sample_info, indexes,
-  by = c("sample_id" = "sample_id")
-)
+if (!is.null(indexes)) {
+  indexes <- right_join(sample_info, indexes,
+    by = c("sample_id" = "sample_id")
+  )
 } else {
   indexes <- data
 }
@@ -315,11 +329,9 @@ predictions <- right_join(sample_info, predictions,
 combined_data <- bind_rows(questions, predictions, indexes)
 ```
 
-### Assessment
+## Assessment
 
 We now have observed and expected values, let's assess them!
-
-## Categories
 
 A table of categories to assess your observed against expected (or predicted)
 values.
@@ -335,22 +347,25 @@ assessment_table <- tibble(
 assessment_table
 ```
 
-## Assessing
+## Assess
 
 A function to compare observed against expected.
 
 ```{r Assessing}
 assessment_function <- function(data, assessment_table = NULL) {
   message("Calculating Assessment")
-
-  if (length(data$question[data$question == "rmni"]) == 0) {
+  require(dplyr)
+  require(tidyr)
+  require(magrittr)
+  require(tibble)
+  if (nrow(data %>% filter(question == "rmni")) == 0) {
     return(NULL)
   }
 
   # Transform data -----------------------------------------------------------
   data <- data %>%
-    select(.data$sample_id, .data$question, .data$response) %>%
-    filter(.data$question %in% c(
+    select(sample_id, question, response) %>%
+    filter(question %in% c(
       "rmni",
       "rn_a_taxa",
       "n_rfg",
@@ -364,8 +379,8 @@ assessment_function <- function(data, assessment_table = NULL) {
 
   data <- data %>%
     distinct() %>%
-    group_by(.data$sample_id) %>%
-    pivot_wider(names_from = .data$question, values_from = .data$response) %>%
+    group_by(sample_id) %>%
+    pivot_wider(names_from = question, values_from = response) %>%
     ungroup()
   data[is.na(data)] <- 0
 
@@ -377,19 +392,19 @@ assessment_function <- function(data, assessment_table = NULL) {
 
   # Calculate EQRs ------------------------------------------------------------
   # RMNI EQR
-  data <- data %>% mutate(rmni_eqr = (.data$rmni - 10) / (.data$ref_rmni - 10))
+  data <- data %>% mutate(rmni_eqr = (rmni - 10) / (ref_rmni - 10))
 
   # NTAXA EQR
   data <- data %>%
-    mutate(ntaxa_eqr = (.data$rn_a_taxa / .data$ref_taxa)) %>%
-    mutate(rmni_eqr_adj = .data$rmni_eqr)
+    mutate(ntaxa_eqr = (rn_a_taxa / ref_taxa)) %>%
+    mutate(rmni_eqr_adj = rmni_eqr)
 
   # NFG EQR
-  data <- data %>% mutate(nfg_eqr = (.data$n_rfg / .data$ref_nfg))
+  data <- data %>% mutate(nfg_eqr = (n_rfg / ref_nfg))
 
   # Algal EQR
   data <- data %>%
-    mutate(alg_eqr = (.data$rfa_pc - 100) / (.data$ref_algae - 100))
+    mutate(alg_eqr = (rfa_pc - 100) / (ref_algae - 100))
 
   # Adjust RMNI EQR------------------------------------------------
   data$rmni_eqr_adj[data$rmni_eqr >= 0.85] <-
@@ -612,7 +627,7 @@ model <- tibble(
   sample = list(sample[1, ]),
   validation_function = NA,
   indices_function = list(indices_function),
-  prediction_function = list(prediction),
+  prediction_function = list(prediction_function),
   assessment_function = list(assessment_function),
   confidence_function = list(confidence_function),
   indices = list(indexes[indexes$sample_id == indexes$sample_id[1], ]),
@@ -626,37 +641,14 @@ model_dataframe <- model_dataframe[model_dataframe$analysis_name != standard$par
 
 model_dataframe <- bind_rows(model_dataframe, model)
 new_model_dataframe <- model_dataframe
-new_model_dataframe 
+new_model_dataframe
 
 usethis::use_data(model_dataframe, overwrite = TRUE)
 ```
 
 ## Launch app
 
-```{r launch_app, echo=FALSE}
-
-# all_data <- all_data  %>% dplyr::filter(parameter == "River Macrophytes")
-# demo_data <- hera::demo_data
-# demo_data$year <- lubridate::year(demo_data$date_taken)
-# demo_data$analysis_name <- NULL
-# demo_data$units <- NULL
-# demo_data$quality_element <- NULL
-# demo_data$taxon <- NULL
-# demo_data$result_id <- NULL
-# demo_data$standard <- NULL
-# demo_data$taxon_id <- NULL
-# demo_data$season <- NULL
-
-# data <- get_bulk_data()
-# data$label <- NA
-# latlon <- rict::osg_parse(data$grid_reference, coord_system = "WGS84")
-# data$latitude <- latlon$lat
-# data$longitude <- latlon$lon
-# data$year <- lubridate::year(data$date_taken)
-
+```{r launch_app, echo=TRUE, eval=FALSE}
+# No need to edit this code
 launch_app(new_model_dataframe = model_dataframe, data = all_data)
-
-
-
-
 ```

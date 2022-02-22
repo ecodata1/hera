@@ -28,13 +28,13 @@ indices <- function(data, model_dataframe = NULL) {
     if (is.null(model$indices_function[[1]])) {
       return(NULL)
     }
-    data <- data %>% dplyr::filter(parameter == model$analysis_name)
+    data <- data %>% dplyr::filter(.data$parameter == model$analysis_name)
     if(any(unique(data$question) %in% model$indices[[1]]$question)) {
       message(paste("You provided indices for ", model$analysis_name,
                     "in data, therefore indices not calculated"))
       return(NULL)
     }
-    data <- data %>% dplyr::filter(question %in% unique(model$questions[[1]]$question))
+    data <- data %>% dplyr::filter(.data$question %in% unique(model$questions[[1]]$question))
     if(nrow(data) == 0) {
       return(NULL)
     }

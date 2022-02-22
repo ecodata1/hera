@@ -51,7 +51,7 @@ WORK IN PROGRESS - Drafting
 
 WARNING: Blue sky thinking ahead
 
-Keywords: collection, modelling, prediction, classification, forecast, scenario
+Keywords: collection, modelling, prediction, classification, forecast, assessment, scenario
 
 > **TL:DR - To get a flavour of running multiple classification tools using a shared**
 > **interface and data structures - check out the [hera demo website GUI](https://ecodata.shinyapps.io/heraapp/)**
@@ -194,10 +194,10 @@ data[5, ]
 Using the  `indices()` function, we calculate observed indices scores if required for each sample. 
 
 ```{r, echo=TRUE, warning=F, message=F}
-indices(demo_data) %>%
-  select(sample_number, indices) %>%
-  unnest(indices) %>% 
-  group_by(quality_elements) %>%
+data %>% 
+  filter(question == "Taxon abundance") %>% 
+  indices() %>%
+  select(sample_id, question, response) %>%
   slice_sample(n = 4) 
 
 ```
@@ -210,10 +210,8 @@ We then predict reference scores for each sample:
 
 ```{r, echo=TRUE, warning=F, message=F}
 prediction(demo_data[1:2200, ]) %>%
-  group_by(quality_elements) %>%
   slice_sample(n = 4) %>%
-  select(sample_number, prediction) %>%
-  unnest(prediction)
+  select(sample_id, question, response)
 
 ```
 
@@ -224,19 +222,14 @@ more information.
 ### Compliance
 
 Based on the predicted and observed indices - we check the compliance of each sample using
-`classification()`. The 'compliance' stage includes any type of test or assessment of our data. This could be WFD classification, compliance check, bathing water or discharge assessment. Really any type of grading or assessment against some type of expected value. 
+`assessment()`. The 'compliance' stage includes any type of test or assessment of our data. This could be WFD classification, compliance check, bathing water or discharge assessment. Really any type of grading or assessment against some type of expected value. 
 
 ```{r, echo=TRUE, warning=F}
 
-classification(demo_data) %>% 
- group_by(quality_elements) %>% 
- slice_sample(n = 4) %>% 
- select(sample_number, index, assessment, value)
+assessment(demo_data) %>% 
+ slice_sample(n = 4) 
 
 ```
-
-Note, classification results for inverts are missing - this has not be
-implemented yet.
 
 ### Aggegation
 
@@ -405,11 +398,10 @@ demo_data %>% select(question, response)
 ```
   
 In theory, this is all that is required. However for ease for interacting with
-existing datasets and *ad hoc* data, a third column `taxon` is useful due to the
-historic way taxon data is usually stored.
+existing datasets and *ad hoc* data, a third column `label` is useful due to the historic way taxon data is usually stored.
 
 ```{r}
-demo_data %>% select(question, response, taxon) %>% 
+demo_data %>% select(question, response, label) %>% 
   slice_sample(n = 5)
 
 ```
@@ -423,11 +415,9 @@ does make data analysis straightforward and this repeated data can be easily
 compressed if size becomes an issue. For instance, nested JSON data or
 dataframes in R.
 
-
 ```{r}
-demo_data %>%  select(`mean_alkalinity`, `grid_reference`, `season`)
+demo_data %>%  select(`mean_alkalinity`, `grid_reference`, `slope`)
 ```
-
 
 ### Indices, predictions, classification, reports
 
@@ -446,7 +436,7 @@ For instance, here is a prototype function to pull data Environment Agency's
 data.gov.uk web service and convert to the required `hera` input format.
 
 ```{r, echo=TRUE}
-environment_agency_data <- hera:::ead(site_id = 43378)
+environment_agency_data <- hera:::get_data(location_id = c(43378, 92751))
 tibble(environment_agency_data)
 ```
 
@@ -456,8 +446,8 @@ We can then run this EA data through `hera`:
 
 predictions <- hera::prediction(environment_agency_data)
 
-tidyr::unnest(predictions, cols = c(prediction)) %>%
-  select(date_taken, index, predicted_response) %>%
+predictions %>%
+  select(date_taken, question, response) %>%
   unique()
 
 ```
@@ -476,8 +466,7 @@ Following data tables are shared through `hera`...
 
 ```{r echo=TRUE, warning=F}
 
-hera:::create_model_dataframe() %>% 
-  select(standard, quality_element, classification_function)
+hera::model_dataframe
 
 
 ```
@@ -517,7 +506,7 @@ or internal support from the agency commissioning the work.
   
 A workshop for lead data experts / R coders from each agency delivers
 institutional knowledge on how internally developed tools will fit with the
-shared design philosophy as well as seeting expectations for colloaboration with
+shared design philosophy as well as setting expectations for collaboration with
 external researchers.
 
 ## Sharing

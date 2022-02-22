@@ -56,20 +56,21 @@ Classify some demo data for a number of different assessment parameters:
 ```{r example, warning=F, message=F}
 library(hera)
 data <- hera(hera::demo_data)
-data[1:5, c("sample_number", "quality_elements", "assessment", "value")]
+data[1:5, c("sample_id", "parameter", "question", "response")]
 
 ```
 
-Alternatively, breakdown each step in assessment chain:
+Alternatively, breakdown each step in assessment:
 
 ```{r steps, example, warning=F, message=F}
 library(hera)
 validated <- validation(hera::demo_data) # Return validate data - placeholder function
 indices <- indices(validated) # Calculate indices used for assessment (if required)
-indices[1:5, ]
-predictions <- prediction(indices) # Predict the expected 
-predictions[1:5, ]
-assessments <- classification(predictions) # Assess the observed data against the expected/predicted 
+indices[1:5, c("sample_id", "parameter", "question", "response")]
+predictions <- prediction(validated) # Predict the expected 
+predictions[1:5, c("sample_id", "parameter", "question", "response")]
+assessments <- assessment(hera::demo_data) # Assess the observed data against the expected/predicted 
+assessments[1:5, c("sample_id", "parameter", "question", "response")]
 
 ```
 

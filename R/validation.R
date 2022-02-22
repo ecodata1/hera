@@ -11,9 +11,10 @@
 #' validations <- validation(demo_data)
 #' @importFrom rlang .data
 #' @importFrom tibble tibble
-#' @importFrom dplyr group_by inner_join mutate
+#' @importFrom dplyr group_by inner_join mutate select
 #' @importFrom tidyr unnest nest
 #' @importFrom magrittr `%>%`
+#' @importFrom lubridate year
 #' @importFrom purrr map
 #' @export
 validation <- function(data = NULL) {
@@ -28,7 +29,23 @@ validation <- function(data = NULL) {
     data$location_id <- as.character(data$location_id)
   }
 
+  if(any(names(data) %in% "grid_reference") & any(!names(data) %in% "latitude")) {
+    latlon <- rict::osg_parse(data$grid_reference, coord_system = "WGS84")
+    data$latitude <- latlon$lat
+    data$longitude <- latlon$lon
+  }
 
+  data$year <- year(data$date_taken)
+
+  if(any(names(data) %in% "result_id")) {
+    data <- data %>% select(-.data$result_id)
+  }
+  if(any(names(data) %in% "analysis_name")) {
+    data <- data %>% select(-.data$analysis_name)
+  }
+  if(any(names(data) %in% "units")) {
+    data <- data %>% select(-.data$units)
+  }
 
   return(data)
 }

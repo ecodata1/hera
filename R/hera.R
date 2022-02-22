@@ -1,14 +1,14 @@
 #' Hera
 #'
-#' Validate, Predict and Classify.
+#' Validate, Predict and Assess
 #' @details
-#' \code{classification()} classification
+#' \code{assessment()} assessment
 #'
-#' @param data Dataframe of variables in WFD inter-change format
+#' @param data Dataframe of variables in `hera` inter-change format
 #'
-#' @return Dataframe of classifications
+#' @return Dataframe of assessments
 #' @examples
-#' classifications <- hera(demo_data)
+#' assessments <- hera(demo_data)
 #' @importFrom rlang .data
 #' @importFrom tibble tibble
 #' @importFrom dplyr group_by inner_join mutate
@@ -17,10 +17,6 @@
 #' @importFrom purrr map
 #' @export
 hera <- function(data = NULL) {
-  validations <- validation(data)
-  indices <- indices(validations)
-  predictions <- prediction(indices)
-  classifications <- classification(predictions)
-
-  return(classifications)
+  assessments <- assessment(data)
+  return(assessments)
 }

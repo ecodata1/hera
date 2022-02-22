@@ -19,5 +19,5 @@ hera_app <- function() {
   if (appDir == "") {
     stop("Could not find example directory. Try re-installing `rict`.", call. = FALSE)
   }
-  runApp(appDir, display.mode = "normal", launch.browser = T)
+  runApp(appDir, display.mode = "normal", launch.browser = TRUE)
 }

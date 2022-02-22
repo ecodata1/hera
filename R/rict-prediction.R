@@ -41,12 +41,12 @@ rict_prediction <- function(data) {
       check <- TRUE
     } else {
       data <- select(data,
-                      -river.width..m.,
-                      -mean.depth..cm.,
-                      -x..boulders.cobbles,
-                      -x..pebbles.gravel,
-                      -x..sand,
-                      -x..silt.clay)
+                      -.data$river.width..m.,
+                      -.data$mean.depth..cm.,
+                      -.data$x..boulders.cobbles,
+                      -.data$x..pebbles.gravel,
+                      -.data$x..sand,
+                      -.data$x..silt.clay)
 
     }
      }
@@ -147,7 +147,7 @@ rict_prediction <- function(data) {
       .data$season,
       .data$s_discharge_cat,
       .data$water_body_id,
-      .name_repair = T
+      .name_repair = TRUE
     )
     # Suppress warning because of missing values
     summarise_data <- suppressWarnings(dplyr::summarise_all(

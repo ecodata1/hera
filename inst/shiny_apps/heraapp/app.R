@@ -154,7 +154,7 @@ server <- function(input, output) {
     } else if (is.null(inFile)) {
       return(NULL)
     } else {
-      data <- read.csv(inFile$datapath, check.names = F)
+      data <- read.csv(inFile$datapath, check.names = FALSE)
     }
   })
 
@@ -237,13 +237,15 @@ server <- function(input, output) {
           predictions %>% select(location_id, sample_id, date_taken, parameter, question, response)
         })
       ))
-      assessments <- classification(data, model_dataframe = new_model_dataframe)
+      assessments <- assessment(data, model_dataframe = new_model_dataframe)
+
       filter_assessments <- assessments %>% select(-date_taken) %>%
          pivot_wider(names_from = question, values_from = response)
       output$compliance <- renderUI(list(
         h3("Compliance"), DT::renderDataTable({
 
           if(nrow(filter_assessments) == 0) {return(NULL)}
+          filter_assessments <- filter_assessments %>% filter(!is.na(status))
           filter_assessments <- filter_assessments %>% select(location_id, parameter, sample_id, eqr,
                                                        class, status, level, high,
                                                        good, moderate, poor,
@@ -277,16 +279,15 @@ server <- function(input, output) {
 
       output$aggregation <- renderUI(list(
         h3("Aggregates"), DT::renderDataTable({
-
+          browser()
           aggregates <- hera:::aggregation(assessments,
                           aggregation_variables <- c("parameter","water_body_id", "year"))
 
           aggregates <- pivot_wider(aggregates,
                                     names_from = question,
                                     values_from = response)
-          aggregates <- select(aggregates, parameter, water_body_id, year, eqr,
-                               high, good, moderate, poor, bad, level) %>%
-            drop_na()
+          aggregates <- select(aggregates, parameter, water_body_id, year, level, eqr,
+                               high, good, moderate, poor, bad, level)
         })
       ))
 

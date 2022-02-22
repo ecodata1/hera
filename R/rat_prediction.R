@@ -7,7 +7,7 @@
 
 rat_prediction <- function(data) {
  # data <- whpt::whpt_predict(data)
- data <- select(data, index, predicted_response)
+ data <- select(data, .data$index, .data$predicted_response)
 
  return(data)
 }

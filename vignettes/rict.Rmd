@@ -1,9 +1,16 @@
 ---
-title: "Assessment Template"
-output: rmarkdown::html_vignette
+title: "RICT"
+pkgdown:
+  as_is: yes
+output: 
+  rmarkdown::html_vignette:
+    toc: yes
 editor_options: 
   chunk_output_type: console
-runtime: shiny
+vignette: >
+  %\VignetteIndexEntry{RICT}
+  %\VignetteEncoding{UTF-8}  
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r, include = FALSE}
@@ -29,13 +36,13 @@ This document has been created following the generic assessment guidance.
 ```{r setup}
 
 standard <- tibble(
-  standard_short = NA, 
+  standard_short = "RICT ASPT", 
   quality_element = NA,
-  parameter = "Test Assessment", 
+  parameter = c("River Invertebrates"), 
   standard_long = NA, 
   standard_reference = NA,
   aggregation = NA,
-  status = NA
+  status = "testing"
 )
 
 standard_format <- hera:::hera_format(standard = standard) # format assessment data
@@ -47,25 +54,10 @@ standard_format$standard %>%
 ## Data
 
 ```{r data}
-data <- tibble(
-  parameter = NA,
-  question = NA,
-  response = NA,
-  label = NA,
-  sample_id = NA,
-  location_id = NA,
-  location_description = NA,
-  grid_reference = NA,
-  water_body_id = NA,
-  year = NA,
-  latitude = 0,
-  longitude = 0,
-  date_taken = NA,
-  units = NA, 
-  min = NA, 
-  max = NA
-)
-data
+
+data <- get_data(location_id = c(92751, 100))
+data$year <- lubridate::year(data$date_taken)
+
 ```
 
 ## Locate
@@ -101,14 +93,15 @@ head(sample)
 ## Observe
 
 ```{r}
-questions <- data %>% select(
+questions <- data %>% filter(parameter == "River Invertebrates")
+questions <- questions %>% filter(question == "Taxon abundance")
+questions <- questions %>% select(
   question,
   response,
   label # optional (usually for taxonomic/species name)
 )
 questions
 ```
-
 
 ## Metrics
 
@@ -117,15 +110,19 @@ If applicable...
 ```{r indices}
 
 indices_function <- function(data) {
-  # Some calculated metric e.g. total responses in sample etc:
-  
-  data %>%
-    group_by(sample_id) %>% 
-    summarise(question = "n_count",
-              repsonse = n(),
-              sample_id = unique(sample_id)
-              )
-  
+  # Some calculated metric e.g. summary of sample responses: 
+  # index = sum(data$response, na.rm = TRUE)
+  require(dplyr)
+  require(tidyr)
+  require(magrittr)
+  require(tibble)
+  index <- NA
+
+  data <- tibble(
+    response = NA,
+    question = NA,
+    sample_id = NA
+  )
   return(data)
 }
 indexes <- indices_function(data)
@@ -136,8 +133,10 @@ indexes
 
 ```{r predictors}
 predictors <- tibble(
-   PREDICTOR_1 = NA,
-   PREDICTOR_2 = NA,
+   dist_from_source = NA,
+   date_taken = NA,
+   source_altitude = NA,
+   alkalinity = NA,
    location_id = NA
   # ...
 )
@@ -148,7 +147,10 @@ knitr::kable(predictors)
 
 ```{r prediction}
 prediction_function <- function(predictors) {
-
+  require(dplyr)
+  require(tidyr)
+  require(magrittr)
+  require(tibble)
   # Generates prediction based on predictors...
   prediction <- tibble(
     question = NA,
@@ -221,7 +223,10 @@ assessment_function <- function(data, assessment_table) {
   if (nrow(data %>%  filter(question == "MY_METRIC")) == 0) {
     return(NULL)
   }
-
+  require(dplyr)
+  require(tidyr)
+  require(magrittr)
+  require(tibble)
   # Transform data -----------------------------------------------------------
   data <- data %>%
     select(.data$sample_id, .data$question, .data$response) %>%
@@ -255,7 +260,7 @@ assessment_function <- function(data, assessment_table) {
     
   return(assessments)
 }
-assessments <- assessment_function(combined_data, assessment_table)
+assessments <- assessment_function(data = combined_data, assessment_table)
 assessments
 ```
 
@@ -321,7 +326,8 @@ usethis::use_data(model_dataframe, overwrite = TRUE)
 
 Below is an interactive application displaying the results of your assessment.
 
-```{r launch_app, echo=FALSE}
+```{r launch_app, echo=TRUE, eval=FALSE}
+
 # No need to edit this code
 launch_app(new_model_dataframe = model_dataframe, data = data)
 

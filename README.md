@@ -51,55 +51,50 @@ Classify some demo data for a number of different assessment parameters:
 ``` r
 library(hera)
 data <- hera(hera::demo_data)
-data[1:5, c("sample_number", "quality_elements", "assessment", "value")]
+data[1:5, c("sample_id", "parameter", "question", "response")]
 #> # A tibble: 5 × 4
-#> # Groups:   sample_number, quality_elements [4]
-#>   sample_number quality_elements    assessment   value              
-#>           <int> <chr>               <chr>        <chr>              
-#> 1       3201863 River Invertebrates ""           ""                 
-#> 2       3201863 River Diatoms       "EQR_TDI4"   "0.676305776770612"
-#> 3       3201863 River Diatoms       "Class_TDI4" "Good"             
-#> 4       3294945 River Invertebrates ""           ""                 
-#> 5       3294945 River Diatoms       "EQR_TDI4"   "0.9829053877896"
+#>   sample_id parameter         question response         
+#>   <chr>     <chr>             <chr>    <chr>            
+#> 1 1840203   River Macrophytes class    poor             
+#> 2 1840203   River Macrophytes eqr      0.635381220416031
+#> 3 1840203   River Macrophytes status   classified       
+#> 4 1840203   River Macrophytes level    4                
+#> 5 3256506   River Macrophytes class    bad
 ```
 
-Alternatively, breakdown each step in assessment chain:
+Alternatively, breakdown each step in assessment:
 
 ``` r
 library(hera)
 validated <- validation(hera::demo_data) # Return validate data - placeholder function
 indices <- indices(validated) # Calculate indices used for assessment (if required)
-indices[1:5, ]
-#> # A tibble: 5 × 24
-#> # Groups:   sample_number, quality_elements [1]
-#>   sample_number quality_elements  location_id location_descrip… easting northing
-#>           <int> <chr>                   <int> <fct>               <dbl>    <dbl>
-#> 1       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796
-#> 2       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796
-#> 3       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796
-#> 4       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796
-#> 5       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796
-#> # … with 18 more variables: latitude <dbl>, longitude <dbl>, date_taken <dttm>,
-#> #   sample_id <int>, analysis_name <fct>, question <fct>, response <fct>,
-#> #   units <fct>, taxon <fct>, mean_alkalinity <dbl>, result_id <chr>,
-#> #   taxon_id <int>, grid_reference <chr>, standard <chr>,
-#> #   quality_element <chr>, season <chr>, water_body_id <dbl>, indices <list>
-predictions <- prediction(indices) # Predict the expected 
-predictions[1:5, ]
-#> # A tibble: 5 × 25
-#> # Groups:   sample_number, quality_elements [1]
-#>   sample_number quality_elements  location_id location_descrip… easting northing
-#>           <int> <chr>                   <int> <fct>               <dbl>    <dbl>
-#> 1       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796
-#> 2       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796
-#> 3       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796
-#> 4       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796
-#> 5       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796
-#> # … with 19 more variables: latitude <dbl>, longitude <dbl>, date_taken <dttm>,
-#> #   sample_id <int>, analysis_name <fct>, question <fct>, response <fct>,
-#> #   units <fct>, taxon <fct>, mean_alkalinity <dbl>, result_id <chr>,
-#> #   taxon_id <int>, grid_reference <chr>, standard <chr>,
-#> #   quality_element <chr>, season <chr>, water_body_id <dbl>, indices <list>,
-#> #   prediction <list>
-assessments <- classification(predictions) # Assess the observed data against the expected/predicted 
+indices[1:5, c("sample_id", "parameter", "question", "response")]
+#> # A tibble: 5 × 4
+#>   sample_id parameter         question  response        
+#>   <chr>     <chr>             <chr>     <chr>           
+#> 1 1840203   River Macrophytes rmni      7.07013957800168
+#> 2 1840203   River Macrophytes rn_a_taxa 6               
+#> 3 1840203   River Macrophytes n_rfg     4               
+#> 4 1840203   River Macrophytes rfa_pc    0               
+#> 5 3256506   River Macrophytes rmni      6.22099043940684
+predictions <- prediction(validated) # Predict the expected 
+predictions[1:5, c("sample_id", "parameter", "question", "response")]
+#> # A tibble: 5 × 4
+#>   sample_id parameter         question  response        
+#>   <chr>     <chr>             <chr>     <chr>           
+#> 1 3256506   River Macrophytes ref_taxa  8.18193000184553
+#> 2 3256506   River Macrophytes ref_algae 0.05            
+#> 3 3256506   River Macrophytes ref_nfg   5.26620315804775
+#> 4 3256506   River Macrophytes ref_rmni  5.96735638218237
+#> 5 758729    River Macrophytes ref_taxa  8.18193000184553
+assessments <- assessment(hera::demo_data) # Assess the observed data against the expected/predicted 
+assessments[1:5, c("sample_id", "parameter", "question", "response")]
+#> # A tibble: 5 × 4
+#>   sample_id parameter         question response         
+#>   <chr>     <chr>             <chr>    <chr>            
+#> 1 1840203   River Macrophytes class    poor             
+#> 2 1840203   River Macrophytes eqr      0.635381220416031
+#> 3 1840203   River Macrophytes status   classified       
+#> 4 1840203   River Macrophytes level    4                
+#> 5 3256506   River Macrophytes class    bad
 ```

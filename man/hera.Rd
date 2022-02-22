@@ -7,17 +7,17 @@
 hera(data = NULL)
 }
 \arguments{
-\item{data}{Dataframe of variables in WFD inter-change format}
+\item{data}{Dataframe of variables in `hera` inter-change format}
 }
 \value{
-Dataframe of classifications
+Dataframe of assessments
 }
 \description{
-Validate, Predict and Classify.
+Validate, Predict and Assess
 }
 \details{
-\code{classification()} classification
+\code{assessment()} assessment
 }
 \examples{
-classifications <- hera(demo_data)
+assessments <- hera(demo_data)
 }

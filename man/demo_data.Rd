@@ -5,29 +5,33 @@
 \alias{demo_data}
 \title{Example dataset of WFD data interchange format}
 \format{
-A data frame with 8477 rows and 40 variables:
+A data frame with 8477 rows and 24 variables:
 \describe{
+  \item{location_id}{Location ID}
+  \item{location_description}{Location description}
+  \item{easting}{Easting}
+  \item{northing}{northing}
+  \item{latitude}{Latitude}
+  \item{longitude}{longitude}
+  \item{sample_id}{sample ID}
+  \item{date_taken}{Date taken}
   \item{analysis_name}{Name of analysis}
-  \item{date_taken}{}
-  \item{easting}{}
-  \item{grid_reference}{}
-  \item{latitude}{}
-  \item{location_description}{}
-  \item{location_id}{}
-  \item{longitude}{}
-  \item{mean_alkalinity}{}
-  \item{northing}{}
-  \item{quality_element}{}
-  \item{question}{}
-  \item{response}{}
-  \item{result_id}{}
-  \item{sample_id}{}
-  \item{season}{}
-  \item{standard}{}
-  \item{taxon}{}
-  \item{taxon_id}{}
-  \item{units}{}
-  \item{water_body_id}{}
+  \item{question}{question}
+  \item{response}{response}
+  \item{location_id}{Location ID}
+  \item{units}{units}
+  \item{mean_alkalinity}{mean alkalinity}
+  \item{result_id}{result ID}
+  \item{grid_reference}{Grid Reference}
+  \item{standard}{standard}
+  \item{quality_element}{quality element}
+  \item{water_body_id}{water body id}
+  \item{label}{label}
+  \item{dist_from_source}{distance from source}
+  \item{alkalinity}{alkalinity}
+  \item{slope}{slope}
+  \item{source_altitude}{source altitude}
+  \item{parameter}{parameter}
 }
 }
 \source{

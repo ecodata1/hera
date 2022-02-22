@@ -79,7 +79,7 @@ darleq_indices <- function(data) {
   diatom_data <- arrange(diatom_data, .data$sample_id)
   # darleq3 requires row.names equal SAMPLE_NUMBER. Must convert
   # to be data.frame first (row.names deprecated on tibble).
-  diatom_data <- data.frame(diatom_data, check.names = F)
+  diatom_data <- data.frame(diatom_data, check.names = FALSE)
   row.names(diatom_data) <- diatom_data$sample_id
   diatom_data <- select(diatom_data, -.data$sample_id, -.data$date_taken)
 

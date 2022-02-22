@@ -11,15 +11,15 @@
 #' @return Data frame
 #' @export
 #' @importFrom rlang .data
-#' @importFrom dplyr rename select
+#' @importFrom dplyr rename select contains
 #' @importFrom tidyr pivot_wider
 #' @importFrom eadata get_observations get_taxa get_site_info
 #' @importFrom tibble tibble
 #' @importFrom magrittr `%>%`
 #' @importFrom purrr map
 #' @examples
-#' data <- get_data(location_id = 92751)
-#' class <- leafpacs::leafpacs(data)
+#' data <- get_data(location_id = 100)
+#' class <- assessment(data)
 get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to = NULL) {
   message("Downloading data from data.gov.uk web services...")
   location_id <- paste0("http://environment.data.gov.uk/ecology/site/bio/", location_id)
@@ -49,8 +49,8 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
 
   site_info <- get_site_info(site_id = site)
   site_info_wide <- tidyr::pivot_wider(site_info,
-    names_from = properties.property_label,
-    values_from = properties.value
+    names_from = .data$properties.property_label,
+    values_from = .data$properties.value
   )
 
   site_info_wide$location_description <-  site_info_wide$label
@@ -68,7 +68,7 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
   })
   data$sample_id <- unlist(sample_id)
 
-  data$grid_reference <- hera:::en_to_os(dplyr::select(data, easting, northing))
+  data$grid_reference <- en_to_os(select(data, .data$easting, .data$northing))
   data$grid_reference <- paste0(
     substr(data$grid_reference, 1, 2),
     " ",
@@ -86,26 +86,27 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
   data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpMetricsObservation"] <- "River Macrophytes"
   data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpTaxaObservation"] <- "River Macrophytes"
 
+
   data <- data %>% dplyr::rename(
-    "question" = label.y,
-    "response" = simple_result,
-    "date_taken" = date,
-    "location_id" = site_id,
-    "latitude" = lat,
-    "longitude" = long,
-    "sand" = Sand,
-    "water_body_id" = `WFD Waterbody ID`,
-    "water_body_type" = `Waterbody Type`,
-    "water_body" = `Water Body`,
-    "river_width" = Width,
-    "mean_depth" = Depth,
-    "boulders_cobbles" = `Boulders/Cobbles`,
-    "pebbles_gravel" = `Pebbles/Gravel`,
-    "silt_clay" = `Silt/Clay`,
-    "result_id" = obs_id,
-    "dist_from_source" = `Distance from Source`,
-    "source_altitude" = `Source Altitude`,
-    "label" = pref_label
+    "question" = .data$label.y,
+    "response" = .data$simple_result,
+    "date_taken" = .data$date,
+    "location_id" = .data$site_id,
+    "latitude" = .data$lat,
+    "longitude" = .data$long,
+    "sand" = .data$Sand,
+    "water_body_id" = .data$`WFD Waterbody ID`,
+    "water_body_type" = .data$`Waterbody Type`,
+    "water_body" = .data$`Water Body`,
+    "river_width" = .data$Width,
+    "mean_depth" = .data$Depth,
+    "boulders_cobbles" = .data$`Boulders/Cobbles`,
+    "pebbles_gravel" = .data$`Pebbles/Gravel`,
+    "silt_clay" = .data$`Silt/Clay`,
+    "result_id" = .data$obs_id,
+    "dist_from_source" = .data$`Distance from Source`,
+    "source_altitude" = .data$`Source Altitude`,
+    "label" = .data$pref_label
   )
 
 
@@ -142,7 +143,6 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
     "pebbles_gravel",
     "sand",
     "silt_clay",
-    "result_id",
     "northing",
     "easting",
     "dist_from_source",

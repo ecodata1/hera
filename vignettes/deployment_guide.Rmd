@@ -5,10 +5,9 @@ pkgdown:
   as_is: yes
 output: 
   rmarkdown::html_vignette:
-    number_sections: yes
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{Development Guide}
+  %\VignetteIndexEntry{Deployment Guide}
   %\VignetteEncoding{UTF-8}  
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
