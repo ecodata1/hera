@@ -550,28 +550,97 @@ collaboration.
 ### FCS2 tool 
 
 Demo input data format (truncated) and full list of column names
-```{r}
- test <- head(fcs2::demo_data)
-test <-  test[1:4, 1:6]
-test$... <- "..."
-test
- names(fcs2::demo_data)
+```
+ DataHeldBy SiteCode Alternative.site.code Repeat.check SiteName
+1         EA   525052                    NA            N    13809
+2         EA   507441                    NA            Y    13810
+3         EA   525051                    NA            N    34611
+4         EA   122881                    NA            Y     5435
+  Site.description ...
+1            13809 ...
+2            13810 ...
+3            34611 ...
+4             5435 ...
+ [1] #DataHeldBy#                 #SiteCode#                  
+ [3] #Alternative.site.code#      #Repeat.check#              
+ [5] #SiteName#                   #Site.description#          
+ [7] #Easting#                    #Northing#                  
+ [9] #NGR#                        #SurveyDate#                
+[11] #WBId#                       #WBName#                    
+[13] #NumberOfRuns#               #SurveyArea#                
+[15] #WetWidth#                   #Slope#                     
+[17] #BarrierType#                #ImpassableBarriers#        
+[19] #Sense.check.passed.#        #CatchmentAreaUpstream#     
+[21] #CatchmentDrainageDirection# #GeologyClass#              
+[23] #Altitude#                   #DistanceFromSource#        
+[25] #DistanceToSea#              #AnnualMeanFlow#            
+[27] #AlkalinityValue#            #TotalPValue#               
+[29] #DOCValue#                   #SuspendedSolidsValue#      
+[31] #IOH.hydrometric.area#       #HydrometricAreaNo#         
+[33] #LandUse.AgriculturalAreas#  #LandUse.ConiferousForests# 
+[35] #LandUse.Wetlands#           #Substrate.Small#           
+[37] #Substrate.Large#            #Substrate.Bedrock#         
+[39] #Salmon_fry.Run1Total#       #Salmon_fry.Run2Total#      
+[41] #Salmon_fry.Run3Total#       #Salmon_fry.Run4Total#      
+[43] #Salmon_parr.Run1Total#      #Salmon_parr.Run2Total#     
+[45] #Salmon_parr.Run3Total#      #Salmon_parr.Run4Total#     
+[47] #Trout_fry.Run1Total#        #Trout_fry.Run2Total#       
+[49] #Trout_fry.Run3Total#        #Trout_fry.Run4Total#       
+[51] #Trout_parr.Run1Total#       #Trout_parr.Run2Total#      
+[53] #Trout_parr.Run3Total#       #Trout_parr.Run4Total# 
 ```
 
 Ouput
 
-```{r, include=FALSE}
-results <- calcClassScot(data = fcs2::demo_data)
 ```
-
-```{r}
-test <- results[1:4, 1:6]
-test$... <- "..."
-test
-names(results)
+WBName ...
+1         EA 03/09/2015   525052    13809 10675                          ...
+2         EA 04/09/2015   507441    13810 10675 White Esk (u/s Rae Burn) ...
+3         EA 03/09/2015   525051    34611 10676                          ...
+4         EA 01/09/2015   122881     5435 10676            Garwald Water ...
+ [1] #DataHeldBy#                                 
+ [2] #SurveyDate#                                 
+ [3] #SiteCode#                                   
+ [4] #SiteName#                                   
+ [5] #WBId#                                       
+ [6] #WBName#                                     
+ [7] #All species WB EQR Bad %#                   
+ [8] #All species WB EQR Poor %#                  
+ [9] #All species WB EQR Moderate %#              
+[10] #All species WB EQR Good %#                  
+[11] #All species WB EQR High %#                  
+[12] #All species WB EQR mean#                    
+[13] #All species survey EQR Bad %#               
+[14] #All species survey EQR Poor %#              
+[15] #All species survey EQR Moderate %#          
+[16] #All species survey EQR Good %#              
+[17] #All species survey EQR High %#              
+[18] #All species survey EQR mean#                
+[19] #Salmon_fry WB EQR mean#                     
+[20] #Salmon_fry survey EQR mean#                 
+[21] #Salmon_fry observed total catch#            
+[22] #Salmon_fry probability present#             
+[23] #Salmon_fry expected total catch if present# 
+[24] #Salmon_fry expected total catch#            
+[25] #Salmon_parr WB EQR mean#                    
+[26] #Salmon_parr survey EQR mean#                
+[27] #Salmon_parr observed total catch#           
+[28] #Salmon_parr probability present#            
+[29] #Salmon_parr expected total catch if present#
+[30] #Salmon_parr expected total catch#           
+[31] #Trout_fry WB EQR mean#                      
+[32] #Trout_fry survey EQR mean#                  
+[33] #Trout_fry observed total catch#             
+[34] #Trout_fry probability present#              
+[35] #Trout_fry expected total catch if present#  
+[36] #Trout_fry expected total catch#             
+[37] #Trout_parr WB EQR mean#                     
+[38] #Trout_parr survey EQR mean#                 
+[39] #Trout_parr observed total catch#            
+[40] #Trout_parr probability present#             
+[41] #Trout_parr expected total catch if present# 
+[42] #Trout_parr expected total catch#      
 ```
-
-
 ### Darleq tool
 
 Input data for DARLEQ3 tool is a list of dataframes. Here's an example of input

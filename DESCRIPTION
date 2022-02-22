@@ -40,9 +40,7 @@ Suggests:
 Remotes:
     nsj3/darleq3,
     aquaMetrics/rict,
-    aquaMetrics/fcs2,
-    aquaMetrics/eadata,
-    aquaMetrics/leafpacs
+    aquaMetrics/eadata
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Depends: 
