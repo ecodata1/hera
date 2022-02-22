@@ -28,7 +28,6 @@ library(dplyr)
 library(purrr)
 library(hera)
 library(darleq3)
-library(fcs2)
 library(rict)
 set.seed(42)
 
