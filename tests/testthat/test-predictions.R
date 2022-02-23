@@ -5,7 +5,7 @@ test_that("metrics works", {
     dplyr::slice_sample(n = 4)
 })
 
-test_that("metrics works", {
+test_that("assessment works", {
   assessment(demo_data) %>%
     select(sample_id, response, question) %>%
     dplyr::slice_sample(n = 4)
