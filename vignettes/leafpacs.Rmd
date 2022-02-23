@@ -178,7 +178,7 @@ indices_function <- function(data) {
   # Join data to taxa macrophyte scores ------------------------------------
   macrophyte_scores <- utils::read.csv(system.file("extdat",
     "macrophyte-taxa.csv",
-    package = "leafpacs"
+    package = "hera"
   ))
 
   data$label[data$label == "Cladophora"] <-

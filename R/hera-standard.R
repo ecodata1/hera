@@ -1,24 +1,3 @@
-PKGENVIR <- new.env(parent=emptyenv())
-
-#' @export
-launch_app <- function(new_model_dataframe = NULL, data = NULL){
-
-  if(!is.null(data)) {
-  data <- hera::validation(data)
-  } else {
-    data <- demo_data
-  }
-  PKGENVIR$data <- data
-  if(!is.null(new_model_dataframe)) {
-  PKGENVIR$new_model_dataframe <- new_model_dataframe
-  }
-
-
-  shiny::shinyAppDir(appDir = system.file("shiny_apps/heraapp",
-                                          package = "hera"))
-}
-
-
 #' @importFrom tidyr pivot_longer everything
 hera_format <- function(standard = NULL) {
 
@@ -35,11 +14,9 @@ hera_format <- function(standard = NULL) {
   return(data)
 }
 
-#' @param standard dataframe
 #' @importFrom testthat test_that expect_equal
 #' @importFrom tidyr pivot_longer everything
 #' @importFrom tibble tibble
-#' @return
 hera_test <- function(standard = NULL) {
   # Check standard info --------------------------------------------------------
   standard <- pivot_longer(standard,

@@ -10,12 +10,11 @@
 #'   \item{northing}{northing}
 #'   \item{latitude}{Latitude}
 #'   \item{longitude}{longitude}
-#'   \item{sample_id}{sample ID}
 #'   \item{date_taken}{Date taken}
+#'   \item{sample_id}{sample ID}
 #'   \item{analysis_name}{Name of analysis}
 #'   \item{question}{question}
 #'   \item{response}{response}
-#'   \item{location_id}{Location ID}
 #'   \item{units}{units}
 #'   \item{mean_alkalinity}{mean alkalinity}
 #'   \item{result_id}{result ID}
