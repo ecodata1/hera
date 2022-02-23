@@ -50,10 +50,28 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/combined-aquatic-plants.html">Combined aquatic plants</a>
+    </li>
+    <li>
+      <a href="../articles/darleq.html">DARLEQ</a>
+    </li>
+    <li>
+      <a href="../articles/deployment_guide.html">Deployment Guide</a>
+    </li>
+    <li>
       <a href="../articles/development_guide.html">Development Guide</a>
     </li>
     <li>
+      <a href="../articles/hera_assessments.html">Assessments Guide</a>
+    </li>
+    <li>
       <a href="../articles/hera_specifications.html">Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods</a>
+    </li>
+    <li>
+      <a href="../articles/leafpacs.html">LEAPACS</a>
+    </li>
+    <li>
+      <a href="../articles/rict.html">RICT</a>
     </li>
   </ul>
 </li>
@@ -73,7 +91,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Development Guide</h1>
             
-            <h4 data-toc-skip class="date">2022-02-02</h4>
+            <h4 data-toc-skip class="date">2022-02-23</h4>
       
       
       <div class="hidden name"><code>development_guide.Rmd</code></div>
@@ -83,24 +101,196 @@
     
     
 <div class="section level2">
-<h2 id="work-in-progress">
-<span class="header-section-number">1</span> Work In Progress!…<a class="anchor" aria-label="anchor" href="#work-in-progress"></a>
+<h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
-<div class="section level3">
-<h3 id="quick-start">
-<span class="header-section-number">1.1</span> Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
-</h3>
-<p>To add a new metric to <code>hera</code> package:</p>
-<ul>
-<li>Firstly define any new variables in the supporting file <code>inst/ext/column-names.csv</code>.</li>
-<li>Then update the <code>data/model_dataframe</code> to add the function for indcies, predictions and classification</li>
-</ul>
+<p>To add a new assessment, install <code>hera</code> package.</p>
+<pre><code><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"aquaMetrics/hera"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">hera</span><span class="op">)</span></code></pre>
+<ol style="list-style-type: decimal">
+<li>Open a new File &gt; New File &gt; R Markdown</li>
+<li>Select ‘From Template’</li>
+<li>Search for ‘Assessment Template’ and open</li>
+<li>Change the ‘Assessment Template’ title to match your assessment name</li>
+<li>Save the document</li>
+</ol>
+<p>Congratulations! You now have a new assessment template ready to populate.</p>
+<p>Complete the following sections.</p>
 </div>
-<div class="section level3">
-<h3 id="models">
-<span class="header-section-number">1.2</span> Models<a class="anchor" aria-label="anchor" href="#models"></a>
-</h3>
+<div class="section level2">
+<h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a>
+</h2>
+<p>The first piece of information to add is details on what your assessment is called and its status. This table shows the options to to choose from and which fields are required.</p>
+<table class="table">
+<colgroup>
+<col width="16%">
+<col width="7%">
+<col width="75%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Columns</th>
+<th align="left">Required</th>
+<th align="left">Details</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">standard_short</td>
+<td align="left">TRUE</td>
+<td align="left">Short name for standard &lt; 26 characters</td>
+</tr>
+<tr class="even">
+<td align="left">parameter</td>
+<td align="left">TRUE</td>
+<td align="left">My parameter</td>
+</tr>
+<tr class="odd">
+<td align="left">status</td>
+<td align="left">TRUE</td>
+<td align="left">Required - either: ‘development’,‘on-hold’, ‘consultation’,‘deprecated’ or ‘deployed’</td>
+</tr>
+<tr class="even">
+<td align="left">standard_long</td>
+<td align="left">FALSE</td>
+<td align="left">Optional - Long name for standard</td>
+</tr>
+<tr class="odd">
+<td align="left">standard_reference</td>
+<td align="left">FALSE</td>
+<td align="left">Link to peer-review paper</td>
+</tr>
+</tbody>
+</table>
+<div class="section level4">
+<h4 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h4>
+<p>The code below creates a tibble/dataframe called ‘standard’ containing metadata about the LEAFPACS parameter. This tibble will be later saved into the ‘hera’ package for future reference.</p>
+<p>Code:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">standard</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>
+  standard_short <span class="op">=</span> <span class="st">"LEAFPACS"</span>,
+  quality_element <span class="op">=</span> <span class="st">"Ecology"</span>,
+  parameter <span class="op">=</span> <span class="st">"River Macrophytes"</span>,
+  standard_long <span class="op">=</span> <span class="st">"UKTAG River Assessment Method Macrophytes and Phytobenthos"</span>,
+  standard_reference <span class="op">=</span> <span class="st">"http://wfduk.org"</span>,
+  aggregation <span class="op">=</span> <span class="st">"waterbody"</span>,
+  status <span class="op">=</span> <span class="st">"testing"</span>
+<span class="op">)</span></code></pre></div>
+<p>Check and Format</p>
+<p>The data is formatted using the <code>hera_format</code> function to neatly present within the documentation for this assessment.The <code>hera_format</code> function will also check the data for errors or omissions.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">standard_format</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">:::</span><span class="fu">hera_format</span><span class="op">(</span>standard <span class="op">=</span> <span class="va">standard</span><span class="op">)</span> <span class="co"># format table</span>
+<span class="va">standard_format</span><span class="op">$</span><span class="va">standard</span> <span class="op">%&gt;%</span>
+  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="21%">
+<col width="67%">
+<col width="10%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">attribute</th>
+<th align="left">value</th>
+<th align="left">optional</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">standard_short</td>
+<td align="left">LEAFPACS</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">quality_element</td>
+<td align="left">Ecology</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="odd">
+<td align="left">parameter</td>
+<td align="left">River Macrophytes</td>
+<td align="left">TRUE</td>
+</tr>
+<tr class="even">
+<td align="left">standard_long</td>
+<td align="left">UKTAG River Assessment Method Macrophytes and Phytobenthos</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">standard_reference</td>
+<td align="left"><a href="http://wfduk.org" class="external-link uri">http://wfduk.org</a></td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="even">
+<td align="left">aggregation</td>
+<td align="left">waterbody</td>
+<td align="left">FALSE</td>
+</tr>
+<tr class="odd">
+<td align="left">status</td>
+<td align="left">testing</td>
+<td align="left">FALSE</td>
+</tr>
+</tbody>
+</table>
+<p>Access pre-existing metadata from within <code>hera</code> package. All metadata is saved in the <code>model_dataframe</code> dataframe.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model_dataframe</span><span class="op">$</span><span class="va">standard</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></code></pre></div>
+<pre><code><span class="co">## <span style="color: #949494;"># A tibble: 1 × 7</span></span>
+<span class="co">##   standard_short quality_element parameter        standard_long standard_refere…</span>
+<span class="co">##   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>           </span>
+<span class="co">## <span style="color: #BCBCBC;">1</span> <span style="color: #BB0000;">NA</span>             <span style="color: #BB0000;">NA</span>              Combined aquati… <span style="color: #BB0000;">NA</span>            <span style="color: #BB0000;">NA</span>              </span>
+<span class="co">## <span style="color: #949494;"># … with 2 more variables: aggregation &lt;lgl&gt;, status &lt;lgl&gt;</span></span></code></pre>
 </div>
+</div>
+<div class="section level2">
+<h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
+</h2>
+</div>
+<div class="section level2">
+<h2 id="locate">Locate<a class="anchor" aria-label="anchor" href="#locate"></a>
+</h2>
+</div>
+<div class="section level2">
+<h2 id="sample">Sample<a class="anchor" aria-label="anchor" href="#sample"></a>
+</h2>
+</div>
+<div class="section level2">
+<h2 id="observe">Observe<a class="anchor" aria-label="anchor" href="#observe"></a>
+</h2>
+</div>
+<div class="section level2">
+<h2 id="metrics">Metrics<a class="anchor" aria-label="anchor" href="#metrics"></a>
+</h2>
+</div>
+<div class="section level2">
+<h2 id="predictors">Predictors<a class="anchor" aria-label="anchor" href="#predictors"></a>
+</h2>
+</div>
+<div class="section level2">
+<h2 id="predict">Predict<a class="anchor" aria-label="anchor" href="#predict"></a>
+</h2>
+</div>
+<div class="section level2">
+<h2 id="assessment">Assessment<a class="anchor" aria-label="anchor" href="#assessment"></a>
+</h2>
+</div>
+<div class="section level2">
+<h2 id="assess">Assess<a class="anchor" aria-label="anchor" href="#assess"></a>
+</h2>
+</div>
+<div class="section level2">
+<h2 id="confidence">Confidence<a class="anchor" aria-label="anchor" href="#confidence"></a>
+</h2>
+</div>
+<div class="section level2">
+<h2 id="checklist">Checklist<a class="anchor" aria-label="anchor" href="#checklist"></a>
+</h2>
+</div>
+<div class="section level2">
+<h2 id="update">Update<a class="anchor" aria-label="anchor" href="#update"></a>
+</h2>
+</div>
+<div class="section level2">
+<h2 id="launch">Launch<a class="anchor" aria-label="anchor" href="#launch"></a>
+</h2>
 </div>
   </div>
 

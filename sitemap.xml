@@ -4,7 +4,19 @@
     <loc>/404.html</loc>
   </url>
   <url>
+    <loc>/articles/combined-aquatic-plants.html</loc>
+  </url>
+  <url>
+    <loc>/articles/darleq.html</loc>
+  </url>
+  <url>
+    <loc>/articles/deployment_guide.html</loc>
+  </url>
+  <url>
     <loc>/articles/development_guide.html</loc>
+  </url>
+  <url>
+    <loc>/articles/hera_assessments.html</loc>
   </url>
   <url>
     <loc>/articles/hera_specifications.html</loc>
@@ -13,19 +25,31 @@
     <loc>/articles/index.html</loc>
   </url>
   <url>
+    <loc>/articles/leafpacs.html</loc>
+  </url>
+  <url>
+    <loc>/articles/rict.html</loc>
+  </url>
+  <url>
     <loc>/authors.html</loc>
   </url>
   <url>
     <loc>/index.html</loc>
   </url>
   <url>
-    <loc>/reference/classification.html</loc>
+    <loc>/reference/assessment.html</loc>
   </url>
   <url>
     <loc>/reference/create_model_dataframe.html</loc>
   </url>
   <url>
     <loc>/reference/demo_data.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_bulk_data.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_data.html</loc>
   </url>
   <url>
     <loc>/reference/hera.html</loc>
@@ -38,6 +62,9 @@
   </url>
   <url>
     <loc>/reference/indices.html</loc>
+  </url>
+  <url>
+    <loc>/reference/launch_app.html</loc>
   </url>
   <url>
     <loc>/reference/model_dataframe.html</loc>

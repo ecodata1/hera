@@ -32,10 +32,28 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
+      <a href="../articles/combined-aquatic-plants.html">Combined aquatic plants</a>
+    </li>
+    <li>
+      <a href="../articles/darleq.html">DARLEQ</a>
+    </li>
+    <li>
+      <a href="../articles/deployment_guide.html">Deployment Guide</a>
+    </li>
+    <li>
       <a href="../articles/development_guide.html">Development Guide</a>
     </li>
     <li>
+      <a href="../articles/hera_assessments.html">Assessments Guide</a>
+    </li>
+    <li>
       <a href="../articles/hera_specifications.html">Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods</a>
+    </li>
+    <li>
+      <a href="../articles/leafpacs.html">LEAPACS</a>
+    </li>
+    <li>
+      <a href="../articles/rict.html">RICT</a>
     </li>
   </ul></li>
       </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
@@ -57,13 +75,17 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">prediction</span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">prediction</span><span class="op">(</span>data <span class="op">=</span> <span class="cn">NULL</span>, model_dataframe <span class="op">=</span> <span class="cn">NULL</span>, combine <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>data</dt>
 <dd><p>Dataframe of variables in WFD inter-change format</p></dd>
+<dt>model_dataframe</dt>
+<dd><p>Dataframe of model_dataframe see `model_dataframe`</p></dd>
+<dt>combine</dt>
+<dd><p>Specify if predictions should be combined within location/sample attributes</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -78,254 +100,8 @@
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu">prediction</span><span class="op">(</span><span class="va">demo_data</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Hello from hera, ...work in progress!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Unknown or uninitialised column: `river.width..m.`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>NAs introduced by coercion</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Hello from hera, ...work in progress!</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating predictions...</span>
 </code></pre></div>
     </div>
   </div>

@@ -54,10 +54,28 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="articles/combined-aquatic-plants.html">Combined aquatic plants</a>
+    </li>
+    <li>
+      <a href="articles/darleq.html">DARLEQ</a>
+    </li>
+    <li>
+      <a href="articles/deployment_guide.html">Deployment Guide</a>
+    </li>
+    <li>
       <a href="articles/development_guide.html">Development Guide</a>
     </li>
     <li>
+      <a href="articles/hera_assessments.html">Assessments Guide</a>
+    </li>
+    <li>
       <a href="articles/hera_specifications.html">Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods</a>
+    </li>
+    <li>
+      <a href="articles/leafpacs.html">LEAPACS</a>
+    </li>
+    <li>
+      <a href="articles/rict.html">RICT</a>
     </li>
   </ul>
 </li>
@@ -103,54 +121,49 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">hera</span><span class="op">)</span>
 <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hera.html">hera</a></span><span class="op">(</span><span class="fu">hera</span><span class="fu">::</span><span class="va"><a href="reference/demo_data.html">demo_data</a></span><span class="op">)</span>
-<span class="va">data</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample_number"</span>, <span class="st">"quality_elements"</span>, <span class="st">"assessment"</span>, <span class="st">"value"</span><span class="op">)</span><span class="op">]</span>
+<span class="va">data</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample_id"</span>, <span class="st">"parameter"</span>, <span class="st">"question"</span>, <span class="st">"response"</span><span class="op">)</span><span class="op">]</span>
 <span class="co">#&gt; # A tibble: 5 × 4</span>
-<span class="co">#&gt; # Groups:   sample_number, quality_elements [4]</span>
-<span class="co">#&gt;   sample_number quality_elements    assessment   value              </span>
-<span class="co">#&gt;           &lt;int&gt; &lt;chr&gt;               &lt;chr&gt;        &lt;chr&gt;              </span>
-<span class="co">#&gt; 1       3201863 River Invertebrates ""           ""                 </span>
-<span class="co">#&gt; 2       3201863 River Diatoms       "EQR_TDI4"   "0.676305776770612"</span>
-<span class="co">#&gt; 3       3201863 River Diatoms       "Class_TDI4" "Good"             </span>
-<span class="co">#&gt; 4       3294945 River Invertebrates ""           ""                 </span>
-<span class="co">#&gt; 5       3294945 River Diatoms       "EQR_TDI4"   "0.9829053877896"</span></code></pre></div>
-<p>Alternatively, breakdown each step in assessment chain:</p>
+<span class="co">#&gt;   sample_id parameter         question response         </span>
+<span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt;            </span>
+<span class="co">#&gt; 1 1840203   River Macrophytes class    poor             </span>
+<span class="co">#&gt; 2 1840203   River Macrophytes eqr      0.635381220416031</span>
+<span class="co">#&gt; 3 1840203   River Macrophytes status   classified       </span>
+<span class="co">#&gt; 4 1840203   River Macrophytes level    4                </span>
+<span class="co">#&gt; 5 3256506   River Macrophytes class    bad</span></code></pre></div>
+<p>Alternatively, breakdown each step in assessment:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">hera</span><span class="op">)</span>
 <span class="va">validated</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/validation.html">validation</a></span><span class="op">(</span><span class="fu">hera</span><span class="fu">::</span><span class="va"><a href="reference/demo_data.html">demo_data</a></span><span class="op">)</span> <span class="co"># Return validate data - placeholder function</span>
 <span class="va">indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/indices.html">indices</a></span><span class="op">(</span><span class="va">validated</span><span class="op">)</span> <span class="co"># Calculate indices used for assessment (if required)</span>
-<span class="va">indices</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span>
-<span class="co">#&gt; # A tibble: 5 × 24</span>
-<span class="co">#&gt; # Groups:   sample_number, quality_elements [1]</span>
-<span class="co">#&gt;   sample_number quality_elements  location_id location_descrip… easting northing</span>
-<span class="co">#&gt;           &lt;int&gt; &lt;chr&gt;                   &lt;int&gt; &lt;fct&gt;               &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796</span>
-<span class="co">#&gt; 2       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796</span>
-<span class="co">#&gt; 3       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796</span>
-<span class="co">#&gt; 4       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796</span>
-<span class="co">#&gt; 5       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796</span>
-<span class="co">#&gt; # … with 18 more variables: latitude &lt;dbl&gt;, longitude &lt;dbl&gt;, date_taken &lt;dttm&gt;,</span>
-<span class="co">#&gt; #   sample_id &lt;int&gt;, analysis_name &lt;fct&gt;, question &lt;fct&gt;, response &lt;fct&gt;,</span>
-<span class="co">#&gt; #   units &lt;fct&gt;, taxon &lt;fct&gt;, mean_alkalinity &lt;dbl&gt;, result_id &lt;chr&gt;,</span>
-<span class="co">#&gt; #   taxon_id &lt;int&gt;, grid_reference &lt;chr&gt;, standard &lt;chr&gt;,</span>
-<span class="co">#&gt; #   quality_element &lt;chr&gt;, season &lt;chr&gt;, water_body_id &lt;dbl&gt;, indices &lt;list&gt;</span>
-<span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/prediction.html">prediction</a></span><span class="op">(</span><span class="va">indices</span><span class="op">)</span> <span class="co"># Predict the expected </span>
-<span class="va">predictions</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="op">]</span>
-<span class="co">#&gt; # A tibble: 5 × 25</span>
-<span class="co">#&gt; # Groups:   sample_number, quality_elements [1]</span>
-<span class="co">#&gt;   sample_number quality_elements  location_id location_descrip… easting northing</span>
-<span class="co">#&gt;           &lt;int&gt; &lt;chr&gt;                   &lt;int&gt; &lt;fct&gt;               &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796</span>
-<span class="co">#&gt; 2       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796</span>
-<span class="co">#&gt; 3       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796</span>
-<span class="co">#&gt; 4       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796</span>
-<span class="co">#&gt; 5       3201863 River Invertebra…        8175 River Eden @ Kem…  341452   715796</span>
-<span class="co">#&gt; # … with 19 more variables: latitude &lt;dbl&gt;, longitude &lt;dbl&gt;, date_taken &lt;dttm&gt;,</span>
-<span class="co">#&gt; #   sample_id &lt;int&gt;, analysis_name &lt;fct&gt;, question &lt;fct&gt;, response &lt;fct&gt;,</span>
-<span class="co">#&gt; #   units &lt;fct&gt;, taxon &lt;fct&gt;, mean_alkalinity &lt;dbl&gt;, result_id &lt;chr&gt;,</span>
-<span class="co">#&gt; #   taxon_id &lt;int&gt;, grid_reference &lt;chr&gt;, standard &lt;chr&gt;,</span>
-<span class="co">#&gt; #   quality_element &lt;chr&gt;, season &lt;chr&gt;, water_body_id &lt;dbl&gt;, indices &lt;list&gt;,</span>
-<span class="co">#&gt; #   prediction &lt;list&gt;</span>
-<span class="va">assessments</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/classification.html">classification</a></span><span class="op">(</span><span class="va">predictions</span><span class="op">)</span> <span class="co"># Assess the observed data against the expected/predicted </span></code></pre></div>
+<span class="va">indices</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample_id"</span>, <span class="st">"parameter"</span>, <span class="st">"question"</span>, <span class="st">"response"</span><span class="op">)</span><span class="op">]</span>
+<span class="co">#&gt; # A tibble: 5 × 4</span>
+<span class="co">#&gt;   sample_id parameter         question  response        </span>
+<span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;             &lt;chr&gt;     &lt;chr&gt;           </span>
+<span class="co">#&gt; 1 1840203   River Macrophytes rmni      7.07013957800168</span>
+<span class="co">#&gt; 2 1840203   River Macrophytes rn_a_taxa 6               </span>
+<span class="co">#&gt; 3 1840203   River Macrophytes n_rfg     4               </span>
+<span class="co">#&gt; 4 1840203   River Macrophytes rfa_pc    0               </span>
+<span class="co">#&gt; 5 3256506   River Macrophytes rmni      6.22099043940684</span>
+<span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/prediction.html">prediction</a></span><span class="op">(</span><span class="va">validated</span><span class="op">)</span> <span class="co"># Predict the expected </span>
+<span class="va">predictions</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample_id"</span>, <span class="st">"parameter"</span>, <span class="st">"question"</span>, <span class="st">"response"</span><span class="op">)</span><span class="op">]</span>
+<span class="co">#&gt; # A tibble: 5 × 4</span>
+<span class="co">#&gt;   sample_id parameter         question  response        </span>
+<span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;             &lt;chr&gt;     &lt;chr&gt;           </span>
+<span class="co">#&gt; 1 3256506   River Macrophytes ref_taxa  8.18193000184553</span>
+<span class="co">#&gt; 2 3256506   River Macrophytes ref_algae 0.05            </span>
+<span class="co">#&gt; 3 3256506   River Macrophytes ref_nfg   5.26620315804775</span>
+<span class="co">#&gt; 4 3256506   River Macrophytes ref_rmni  5.96735638218237</span>
+<span class="co">#&gt; 5 758729    River Macrophytes ref_taxa  8.18193000184553</span>
+<span class="va">assessments</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/assessment.html">assessment</a></span><span class="op">(</span><span class="fu">hera</span><span class="fu">::</span><span class="va"><a href="reference/demo_data.html">demo_data</a></span><span class="op">)</span> <span class="co"># Assess the observed data against the expected/predicted </span>
+<span class="va">assessments</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample_id"</span>, <span class="st">"parameter"</span>, <span class="st">"question"</span>, <span class="st">"response"</span><span class="op">)</span><span class="op">]</span>
+<span class="co">#&gt; # A tibble: 5 × 4</span>
+<span class="co">#&gt;   sample_id parameter         question response         </span>
+<span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt;            </span>
+<span class="co">#&gt; 1 1840203   River Macrophytes class    poor             </span>
+<span class="co">#&gt; 2 1840203   River Macrophytes eqr      0.635381220416031</span>
+<span class="co">#&gt; 3 1840203   River Macrophytes status   classified       </span>
+<span class="co">#&gt; 4 1840203   River Macrophytes level    4                </span>
+<span class="co">#&gt; 5 3256506   River Macrophytes class    bad</span></code></pre></div>
 </div>
 </div>
   </div>

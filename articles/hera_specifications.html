@@ -50,10 +50,28 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="../articles/combined-aquatic-plants.html">Combined aquatic plants</a>
+    </li>
+    <li>
+      <a href="../articles/darleq.html">DARLEQ</a>
+    </li>
+    <li>
+      <a href="../articles/deployment_guide.html">Deployment Guide</a>
+    </li>
+    <li>
       <a href="../articles/development_guide.html">Development Guide</a>
     </li>
     <li>
+      <a href="../articles/hera_assessments.html">Assessments Guide</a>
+    </li>
+    <li>
       <a href="../articles/hera_specifications.html">Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods</a>
+    </li>
+    <li>
+      <a href="../articles/leafpacs.html">LEAPACS</a>
+    </li>
+    <li>
+      <a href="../articles/rict.html">RICT</a>
     </li>
   </ul>
 </li>
@@ -73,7 +91,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods</h1>
             
-            <h4 data-toc-skip class="date">2022-02-02</h4>
+            <h4 data-toc-skip class="date">2022-02-23</h4>
       
       
       <div class="hidden name"><code>hera_specifications.Rmd</code></div>
@@ -91,7 +109,7 @@ outline: 0 ;
 <p>WORK IN PROGRESS - Drafting</p>
 <p><img src="images/heraverse_logo_2.png" style="width:50.0%"></p>
 <p>WARNING: Blue sky thinking ahead</p>
-<p>Keywords: collection, modelling, prediction, classification, forecast, scenario</p>
+<p>Keywords: collection, modelling, prediction, classification, forecast, assessment, scenario</p>
 <blockquote>
 <p><strong>TL:DR - To get a flavour of running multiple classification tools using a shared</strong> <strong>interface and data structures - check out the <a href="https://ecodata.shinyapps.io/heraapp/" class="external-link">hera demo website GUI</a></strong></p>
 </blockquote>
@@ -183,39 +201,33 @@ outline: 0 ;
 <span id="cb1-5"><a href="#cb1-5"></a>demo_data &lt;-<span class="st"> </span>hera<span class="op">::</span>demo_data</span>
 <span id="cb1-6"><a href="#cb1-6"></a>data &lt;-<span class="st"> </span><span class="kw">validation</span>(demo_data) </span>
 <span id="cb1-7"><a href="#cb1-7"></a>data[<span class="dv">5</span>, ]</span>
-<span id="cb1-8"><a href="#cb1-8"></a><span class="co"># A tibble: 1 × 23</span></span>
-<span id="cb1-9"><a href="#cb1-9"></a><span class="co"># Groups:   sample_number, quality_elements [1]</span></span>
-<span id="cb1-10"><a href="#cb1-10"></a>  sample_number quality_elements   location_id location_descri… easting northing</span>
-<span id="cb1-11"><a href="#cb1-11"></a>          <span class="op">&lt;</span>int<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">                    </span><span class="er">&lt;</span>int<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>fct<span class="op">&gt;</span><span class="st">              </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span><span class="st">    </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span></span>
-<span id="cb1-12"><a href="#cb1-12"></a><span class="dv">1</span>       <span class="dv">3201863</span> River Invertebrat…        <span class="dv">8175</span> River Eden <span class="op">@</span><span class="st"> </span>Ke…  <span class="dv">341452</span>   <span class="dv">715796</span></span>
-<span id="cb1-13"><a href="#cb1-13"></a><span class="co"># … with 17 more variables: latitude &lt;dbl&gt;, longitude &lt;dbl&gt;, date_taken &lt;dttm&gt;,</span></span>
-<span id="cb1-14"><a href="#cb1-14"></a><span class="co">#   sample_id &lt;int&gt;, analysis_name &lt;fct&gt;, question &lt;fct&gt;, response &lt;fct&gt;,</span></span>
-<span id="cb1-15"><a href="#cb1-15"></a><span class="co">#   units &lt;fct&gt;, taxon &lt;fct&gt;, mean_alkalinity &lt;dbl&gt;, result_id &lt;chr&gt;,</span></span>
-<span id="cb1-16"><a href="#cb1-16"></a><span class="co">#   taxon_id &lt;int&gt;, grid_reference &lt;chr&gt;, standard &lt;chr&gt;,</span></span>
-<span id="cb1-17"><a href="#cb1-17"></a><span class="co">#   quality_element &lt;chr&gt;, season &lt;chr&gt;, water_body_id &lt;dbl&gt;</span></span></code></pre></div>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="co"># A tibble: 1 × 22</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a>  location_id location_description           easting northing latitude longitude</span>
+<span id="cb1-10"><a href="#cb1-10"></a>  <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">       </span><span class="er">&lt;</span>fct<span class="op">&gt;</span><span class="st">                            </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span><span class="st">    </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span><span class="st">    </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span><span class="st">     </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="dv">1</span> <span class="dv">8175</span>        River Eden <span class="op">@</span><span class="st"> </span>Kemback Gauging …  <span class="dv">341452</span>   <span class="dv">715796</span>     <span class="fl">58.0</span>      <span class="fl">130.</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="co"># … with 16 more variables: date_taken &lt;dttm&gt;, sample_id &lt;chr&gt;, question &lt;chr&gt;,</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="co">#   response &lt;fct&gt;, mean_alkalinity &lt;dbl&gt;, grid_reference &lt;chr&gt;,</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a><span class="co">#   standard &lt;chr&gt;, quality_element &lt;chr&gt;, water_body_id &lt;dbl&gt;, label &lt;fct&gt;,</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a><span class="co">#   dist_from_source &lt;dbl&gt;, alkalinity &lt;dbl&gt;, slope &lt;dbl&gt;,</span></span>
+<span id="cb1-16"><a href="#cb1-16"></a><span class="co">#   source_altitude &lt;dbl&gt;, parameter &lt;chr&gt;, year &lt;dbl&gt;</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="indices">
 <span class="header-section-number">4.2.2</span> Indices<a class="anchor" aria-label="anchor" href="#indices"></a>
 </h4>
 <p>Using the <code><a href="../reference/indices.html">indices()</a></code> function, we calculate observed indices scores if required for each sample.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">indices</span>(demo_data) <span class="op">%&gt;%</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a><span class="st">  </span><span class="kw">select</span>(sample_number, indices) <span class="op">%&gt;%</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a><span class="st">  </span><span class="kw">unnest</span>(indices) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb2-4"><a href="#cb2-4"></a><span class="st">  </span><span class="kw">group_by</span>(quality_elements) <span class="op">%&gt;%</span></span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>data <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="st">  </span><span class="kw">filter</span>(question <span class="op">==</span><span class="st"> "Taxon abundance"</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="st">  </span><span class="kw">indices</span>() <span class="op">%&gt;%</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="st">  </span><span class="kw">select</span>(sample_id, question, response) <span class="op">%&gt;%</span></span>
 <span id="cb2-5"><a href="#cb2-5"></a><span class="st">  </span><span class="kw">slice_sample</span>(<span class="dt">n =</span> <span class="dv">4</span>) </span>
-<span id="cb2-6"><a href="#cb2-6"></a><span class="co"># A tibble: 8 × 4</span></span>
-<span id="cb2-7"><a href="#cb2-7"></a><span class="co"># Groups:   quality_elements [2]</span></span>
-<span id="cb2-8"><a href="#cb2-8"></a>  quality_elements    sample_number value            index  </span>
-<span id="cb2-9"><a href="#cb2-9"></a>  <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">                       </span><span class="er">&lt;</span>int<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">            </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">  </span></span>
-<span id="cb2-10"><a href="#cb2-10"></a><span class="dv">1</span> River Diatoms             <span class="dv">1419451</span> <span class="dv">0</span>                Saline </span>
-<span id="cb2-11"><a href="#cb2-11"></a><span class="dv">2</span> River Diatoms              <span class="dv">648750</span> <span class="fl">13.61</span>            N2 TDI4</span>
-<span id="cb2-12"><a href="#cb2-12"></a><span class="dv">3</span> River Diatoms              <span class="dv">746461</span> <span class="fl">5.99</span>             Saline </span>
-<span id="cb2-13"><a href="#cb2-13"></a><span class="dv">4</span> River Diatoms             <span class="dv">2141643</span> <span class="fl">69.3970226714013</span> TDI4   </span>
-<span id="cb2-14"><a href="#cb2-14"></a><span class="dv">5</span> River Invertebrates       <span class="dv">2632159</span> Not calculated   <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">   </span></span>
-<span id="cb2-15"><a href="#cb2-15"></a><span class="dv">6</span> River Invertebrates       <span class="dv">2252490</span> Not calculated   <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">   </span></span>
-<span id="cb2-16"><a href="#cb2-16"></a><span class="dv">7</span> River Invertebrates       <span class="dv">2252490</span> Not calculated   <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">   </span></span>
-<span id="cb2-17"><a href="#cb2-17"></a><span class="dv">8</span> River Invertebrates       <span class="dv">2959448</span> Not calculated   <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">   </span></span></code></pre></div>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="co"># A tibble: 4 × 3</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>  sample_id question        response</span>
+<span id="cb2-8"><a href="#cb2-8"></a>  <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">     </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">           </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">   </span></span>
+<span id="cb2-9"><a href="#cb2-9"></a><span class="dv">1</span> <span class="dv">1800006</span>   Max_TDI4        <span class="fl">10.33</span>   </span>
+<span id="cb2-10"><a href="#cb2-10"></a><span class="dv">2</span> <span class="dv">1912578</span>   Saline          <span class="fl">4.82</span>    </span>
+<span id="cb2-11"><a href="#cb2-11"></a><span class="dv">3</span> <span class="dv">2031713</span>   OrganicTolerant <span class="fl">49.94</span>   </span>
+<span id="cb2-12"><a href="#cb2-12"></a><span class="dv">4</span> <span class="dv">919681</span>    N_TDI4          <span class="dv">23</span>      </span></code></pre></div>
 <p>Note, the invert indices are not calculated, they have been pre-calculated and are in the demo_data from the start.</p>
 </div>
 <div class="section level4">
@@ -224,47 +236,37 @@ outline: 0 ;
 </h4>
 <p>We then predict reference scores for each sample:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">prediction</span>(demo_data[<span class="dv">1</span><span class="op">:</span><span class="dv">2200</span>, ]) <span class="op">%&gt;%</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="st">  </span><span class="kw">group_by</span>(quality_elements) <span class="op">%&gt;%</span></span>
-<span id="cb3-3"><a href="#cb3-3"></a><span class="st">  </span><span class="kw">slice_sample</span>(<span class="dt">n =</span> <span class="dv">4</span>) <span class="op">%&gt;%</span></span>
-<span id="cb3-4"><a href="#cb3-4"></a><span class="st">  </span><span class="kw">select</span>(sample_number, prediction) <span class="op">%&gt;%</span></span>
-<span id="cb3-5"><a href="#cb3-5"></a><span class="st">  </span><span class="kw">unnest</span>(prediction)</span>
-<span id="cb3-6"><a href="#cb3-6"></a><span class="co"># A tibble: 8 × 4</span></span>
-<span id="cb3-7"><a href="#cb3-7"></a><span class="co"># Groups:   quality_elements [2]</span></span>
-<span id="cb3-8"><a href="#cb3-8"></a>  quality_elements    sample_number index      predicted_response</span>
-<span id="cb3-9"><a href="#cb3-9"></a>  <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">                       </span><span class="er">&lt;</span>int<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">                   </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span></span>
-<span id="cb3-10"><a href="#cb3-10"></a><span class="dv">1</span> River Diatoms             <span class="dv">1564589</span> TDI4                    <span class="fl">45.4</span> </span>
-<span id="cb3-11"><a href="#cb3-11"></a><span class="dv">2</span> River Diatoms             <span class="dv">1672942</span> TDI4                    <span class="fl">45.4</span> </span>
-<span id="cb3-12"><a href="#cb3-12"></a><span class="dv">3</span> River Diatoms             <span class="dv">2959448</span> TDI4                    <span class="fl">45.4</span> </span>
-<span id="cb3-13"><a href="#cb3-13"></a><span class="dv">4</span> River Diatoms             <span class="dv">1672942</span> TDI4                    <span class="fl">45.4</span> </span>
-<span id="cb3-14"><a href="#cb3-14"></a><span class="dv">5</span> River Invertebrates       <span class="dv">3201863</span> WHPT ASPT                <span class="fl">6.85</span></span>
-<span id="cb3-15"><a href="#cb3-15"></a><span class="dv">6</span> River Invertebrates       <span class="dv">3201863</span> WHPT NTAXA              <span class="fl">24.5</span> </span>
-<span id="cb3-16"><a href="#cb3-16"></a><span class="dv">7</span> River Invertebrates       <span class="dv">3201863</span> WHPT ASPT                <span class="fl">6.85</span></span>
-<span id="cb3-17"><a href="#cb3-17"></a><span class="dv">8</span> River Invertebrates       <span class="dv">3201863</span> WHPT NTAXA              <span class="fl">24.5</span> </span></code></pre></div>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="st">  </span><span class="kw">slice_sample</span>(<span class="dt">n =</span> <span class="dv">4</span>) <span class="op">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="st">  </span><span class="kw">select</span>(sample_id, question, response)</span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="co"># A tibble: 4 × 3</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>  sample_id question response        </span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">     </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">    </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">           </span></span>
+<span id="cb3-7"><a href="#cb3-7"></a><span class="dv">1</span> <span class="dv">1672942</span>   eTDI4    <span class="fl">45.3614293687833</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="dv">2</span> <span class="dv">1672942</span>   eTDI4    <span class="fl">45.3614293687833</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a><span class="dv">3</span> <span class="dv">2141643</span>   eTDI4    <span class="fl">45.3614293687833</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="dv">4</span> <span class="dv">919681</span>    eTDI4    <span class="fl">45.3614293687833</span></span></code></pre></div>
 <p>See documentation <a href="https://ecodata1.github.io/hera/reference/prediction.html" class="external-link"><code>prediction()</code></a> for more information.</p>
 </div>
 <div class="section level4">
 <h4 id="compliance">
 <span class="header-section-number">4.2.4</span> Compliance<a class="anchor" aria-label="anchor" href="#compliance"></a>
 </h4>
-<p>Based on the predicted and observed indices - we check the compliance of each sample using <code><a href="../reference/classification.html">classification()</a></code>. The ‘compliance’ stage includes any type of test or assessment of our data. This could be WFD classification, compliance check, bathing water or discharge assessment. Really any type of grading or assessment against some type of expected value.</p>
+<p>Based on the predicted and observed indices - we check the compliance of each sample using <code><a href="../reference/assessment.html">assessment()</a></code>. The ‘compliance’ stage includes any type of test or assessment of our data. This could be WFD classification, compliance check, bathing water or discharge assessment. Really any type of grading or assessment against some type of expected value.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a></span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="kw">classification</span>(demo_data) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="st"> </span><span class="kw">group_by</span>(quality_elements) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="st"> </span><span class="kw">slice_sample</span>(<span class="dt">n =</span> <span class="dv">4</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="st"> </span><span class="kw">select</span>(sample_number, index, assessment, value)</span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="co"># A tibble: 8 × 5</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="co"># Groups:   quality_elements [2]</span></span>
-<span id="cb4-8"><a href="#cb4-8"></a>  quality_elements    sample_number index  assessment   value              </span>
-<span id="cb4-9"><a href="#cb4-9"></a>  <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">                       </span><span class="er">&lt;</span>int<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">  </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">        </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">              </span></span>
-<span id="cb4-10"><a href="#cb4-10"></a><span class="dv">1</span> River Diatoms             <span class="dv">1419451</span> <span class="st">"TDI4"</span> <span class="st">"EQR_TDI4"</span>   <span class="st">"0.379607552282085"</span></span>
-<span id="cb4-11"><a href="#cb4-11"></a><span class="dv">2</span> River Diatoms             <span class="dv">1101214</span> <span class="st">"TDI4"</span> <span class="st">"Class_TDI4"</span> <span class="st">"Moderate"</span>         </span>
-<span id="cb4-12"><a href="#cb4-12"></a><span class="dv">3</span> River Diatoms              <span class="dv">919681</span> <span class="st">"TDI4"</span> <span class="st">"Class_TDI4"</span> <span class="st">"Moderate"</span>         </span>
-<span id="cb4-13"><a href="#cb4-13"></a><span class="dv">4</span> River Diatoms             <span class="dv">2252490</span> <span class="st">"TDI4"</span> <span class="st">"Class_TDI4"</span> <span class="st">"Moderate"</span>         </span>
-<span id="cb4-14"><a href="#cb4-14"></a><span class="dv">5</span> River Invertebrates       <span class="dv">1250462</span> <span class="st">""</span>     <span class="st">""</span>           <span class="st">""</span>                 </span>
-<span id="cb4-15"><a href="#cb4-15"></a><span class="dv">6</span> River Invertebrates        <span class="dv">481101</span> <span class="st">""</span>     <span class="st">""</span>           <span class="st">""</span>                 </span>
-<span id="cb4-16"><a href="#cb4-16"></a><span class="dv">7</span> River Invertebrates       <span class="dv">1582198</span> <span class="st">""</span>     <span class="st">""</span>           <span class="st">""</span>                 </span>
-<span id="cb4-17"><a href="#cb4-17"></a><span class="dv">8</span> River Invertebrates        <span class="dv">338458</span> <span class="st">""</span>     <span class="st">""</span>           <span class="st">""</span>                 </span></code></pre></div>
-<p>Note, classification results for inverts are missing - this has not be implemented yet.</p>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="kw">assessment</span>(demo_data) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb4-3"><a href="#cb4-3"></a><span class="st"> </span><span class="kw">slice_sample</span>(<span class="dt">n =</span> <span class="dv">4</span>) </span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co"># A tibble: 4 × 20</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>  location_id location_descripti… sample_id date_taken          easting northing</span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">       </span><span class="er">&lt;</span>fct<span class="op">&gt;</span><span class="st">               </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">     </span><span class="er">&lt;</span>dttm<span class="op">&gt;</span><span class="st">                </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span><span class="st">    </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span></span>
+<span id="cb4-7"><a href="#cb4-7"></a><span class="dv">1</span> <span class="dv">8175</span>        River Eden <span class="op">@</span><span class="st"> </span>Kemba… <span class="dv">2252490</span>   <span class="dv">2013-04-24</span> <span class="dv">10</span><span class="op">:</span><span class="dv">10</span><span class="op">:</span><span class="dv">00</span>  <span class="dv">341452</span>   <span class="dv">715796</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a><span class="dv">2</span> <span class="dv">8175</span>        River Eden <span class="op">@</span><span class="st"> </span>Kemba… <span class="dv">2031713</span>   <span class="dv">2012-04-23</span> <span class="dv">10</span><span class="op">:</span><span class="dv">12</span><span class="op">:</span><span class="dv">00</span>  <span class="dv">341452</span>   <span class="dv">715796</span></span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="dv">3</span> <span class="dv">8175</span>        River Eden <span class="op">@</span><span class="st"> </span>Kemba… <span class="dv">2489784</span>   <span class="dv">2014-05-20</span> <span class="dv">08</span><span class="op">:</span><span class="dv">10</span><span class="op">:</span><span class="dv">00</span>  <span class="dv">341452</span>   <span class="dv">715796</span></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="dv">4</span> <span class="dv">8175</span>        River Eden <span class="op">@</span><span class="st"> </span>Kemba… <span class="dv">1800006</span>   <span class="dv">2011-05-04</span> <span class="dv">13</span><span class="op">:</span><span class="dv">45</span><span class="op">:</span><span class="dv">00</span>  <span class="dv">341452</span>   <span class="dv">715796</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="co"># … with 14 more variables: latitude &lt;dbl&gt;, longitude &lt;dbl&gt;,</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="co">#   mean_alkalinity &lt;dbl&gt;, standard &lt;chr&gt;, quality_element &lt;chr&gt;,</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="co">#   water_body_id &lt;dbl&gt;, dist_from_source &lt;dbl&gt;, alkalinity &lt;dbl&gt;, slope &lt;dbl&gt;,</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a><span class="co">#   source_altitude &lt;dbl&gt;, year &lt;dbl&gt;, question &lt;chr&gt;, response &lt;chr&gt;,</span></span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="co">#   parameter &lt;chr&gt;</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="aggegation">
@@ -340,12 +342,12 @@ outline: 0 ;
 <pre><code># A tibble: 5 × 4
 # Groups:   quality_element [5]
   location_description             date_taken          sample_id quality_element
-  &lt;fct&gt;                            &lt;dttm&gt;                  &lt;int&gt; &lt;chr&gt;          
-1 River Eden @ Kemback Gauging St… 2017-07-20 12:15:00   3256506 Algal_RQB      
-2 River Eden @ Kemback Gauging St… 2013-10-09 13:29:00   2355899 Alien Species  
-3 River Eden @ Kemback Gauging St… 2017-05-17 15:00:00   3201863 Comment        
-4 River Eden @ Kemback Gauging St… 2013-10-09 13:29:00   2355899 Diatom Summary 
-5 River Eden @ Kemback Gauging St… 2014-05-20 08:10:00   2489784 Diatom Survey …</code></pre>
+  &lt;fct&gt;                            &lt;dttm&gt;              &lt;chr&gt;     &lt;chr&gt;          
+1 River Eden @ Kemback Gauging St… 2017-07-20 12:15:00 3256506   Algal_RQB      
+2 River Eden @ Kemback Gauging St… 2016-05-24 11:00:00 2959448   Alien Species  
+3 River Eden @ Kemback Gauging St… 2017-05-17 15:00:00 3201863   Comment        
+4 River Eden @ Kemback Gauging St… 2007-04-16 12:20:00 648750    Diatom Summary 
+5 River Eden @ Kemback Gauging St… 2013-04-24 10:10:00 2252490   Diatom Survey …</code></pre>
 </div>
 <div class="section level4">
 <h4 id="book-keeping-variables">
@@ -354,12 +356,12 @@ outline: 0 ;
 <p>First of all, we have ‘book-keeping’ variables. These allow us to reference data associated with particular samples, locations or WFD methods. And allow results to be aggregate at different levels.</p>
 <pre><code># A tibble: 5 × 4
   location_id sample_id date_taken          quality_element        
-        &lt;int&gt;     &lt;int&gt; &lt;dttm&gt;              &lt;chr&gt;                  
-1        8175   3256506 2017-07-20 12:15:00 Macrophyte Reach Survey
-2        8175   3256506 2017-07-20 12:15:00 Macrophyte Reach Survey
-3        8175   3256506 2017-07-20 12:15:00 Macrophyte Reach Survey
-4        8175   3256506 2017-07-20 12:15:00 Macrophyte Reach Survey
-5        8175   3256506 2017-07-20 12:15:00 Macrophyte Reach Survey</code></pre>
+        &lt;int&gt; &lt;chr&gt;     &lt;dttm&gt;              &lt;chr&gt;                  
+1        8175 3256506   2017-07-20 12:15:00 Macrophyte Reach Survey
+2        8175 3256506   2017-07-20 12:15:00 Macrophyte Reach Survey
+3        8175 3256506   2017-07-20 12:15:00 Macrophyte Reach Survey
+4        8175 3256506   2017-07-20 12:15:00 Macrophyte Reach Survey
+5        8175 3256506   2017-07-20 12:15:00 Macrophyte Reach Survey</code></pre>
 <p>All data passed into hera must have these four variables. For <em>ad hoc</em> reporting, consultancies and students etc who don’t routinely record unique sample ids, a sample_id is generate if <code>date_taken</code> and <code>location_id</code> are provided.</p>
 <p>These three variables are the minimal required, but in practice <code>water_body_id</code> maybe required for aggregation or simply <code>location_description</code> or <code>NGR</code> etc to help reference sites more easily. There is no restriction to the number of extra columns and these extra columns will be appended to outputs.</p>
 </div>
@@ -369,9 +371,9 @@ outline: 0 ;
 </h4>
 <p>An observation consists of three variables <code>question</code>, <code>response</code>. The <code>question</code> variable identifies what is being determined such as <code>alkalinity</code> or <code>depth</code> etc. And the <code>response</code> is the value observed or recorded for that question.</p>
 <p>Below is an example of diatom records, invert data and river flow in a shared input format.</p>
-<pre><code># A tibble: 8,477 × 2
+<pre><code># A tibble: 7,106 × 2
    question        response      
-   &lt;fct&gt;           &lt;fct&gt;         
+   &lt;chr&gt;           &lt;fct&gt;         
  1 Site altitude   7             
  2 Source altitude 210           
  3 nems alkalinity 118.8889      
@@ -382,36 +384,36 @@ outline: 0 ;
  8 Site NGR        NO 41452 15796
  9 Easting         341452        
 10 Northing        715796        
-# … with 8,467 more rows</code></pre>
-<p>In theory, this is all that is required. However for ease for interacting with existing datasets and <em>ad hoc</em> data, a third column <code>taxon</code> is useful due to the historic way taxon data is usually stored.</p>
+# … with 7,096 more rows</code></pre>
+<p>In theory, this is all that is required. However for ease for interacting with existing datasets and <em>ad hoc</em> data, a third column <code>label</code> is useful due to the historic way taxon data is usually stored.</p>
 <pre><code># A tibble: 5 × 3
-  question        response taxon                  
-  &lt;fct&gt;           &lt;fct&gt;    &lt;fct&gt;                  
-1 Planktonic      No       Navicula claytonii     
-2 Taxon abundance 6        Simuliidae             
-3 Taxon abundance 300      Simuliidae             
-4 Taxon abundance 5        Elmidae                
-5 Planktonic      No       Achnanthidium subatomus</code></pre>
+  question               response                label                  
+  &lt;chr&gt;                  &lt;fct&gt;                   &lt;fct&gt;                  
+1 Taxon name             Gammarus pulex          Gammarus pulex         
+2 % Bed stability stable 5                       &lt;NA&gt;                   
+3 Taxon abundance        30                      Oligochaeta            
+4 Taxon name             Potamophylax latipennis Potamophylax latipennis
+5 % Boulders/Cobbles     50                      &lt;NA&gt;                   </code></pre>
 </div>
 <div class="section level4">
 <h4 id="predictors">
 <span class="header-section-number">4.3.5</span> Predictors<a class="anchor" aria-label="anchor" href="#predictors"></a>
 </h4>
 <p>Predictive variables such as <code>temperature</code>, <code>altitude</code>, <code>slope</code> are added as additional columns. There is a trade-off here as predictor variables are added for each row in the dataset, increasing the size of the dataset. However this does make data analysis straightforward and this repeated data can be easily compressed if size becomes an issue. For instance, nested JSON data or dataframes in R.</p>
-<pre><code># A tibble: 8,477 × 3
-   mean_alkalinity grid_reference season
-             &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt; 
- 1              75 NO 41452 15796 SUM   
- 2              75 NO 41452 15796 SUM   
- 3              75 NO 41452 15796 SUM   
- 4              75 NO 41452 15796 SUM   
- 5              75 NO 41452 15796 SUM   
- 6              75 NO 41452 15796 SUM   
- 7              75 NO 41452 15796 SUM   
- 8              75 NO 41452 15796 SUM   
- 9              75 NO 41452 15796 SUM   
-10              75 NO 41452 15796 SUM   
-# … with 8,467 more rows</code></pre>
+<pre><code># A tibble: 7,106 × 3
+   mean_alkalinity grid_reference slope
+             &lt;dbl&gt; &lt;chr&gt;          &lt;dbl&gt;
+ 1              75 NO 41452 15796     2
+ 2              75 NO 41452 15796     2
+ 3              75 NO 41452 15796     2
+ 4              75 NO 41452 15796     2
+ 5              75 NO 41452 15796     2
+ 6              75 NO 41452 15796     2
+ 7              75 NO 41452 15796     2
+ 8              75 NO 41452 15796     2
+ 9              75 NO 41452 15796     2
+10              75 NO 41452 15796     2
+# … with 7,096 more rows</code></pre>
 </div>
 <div class="section level4">
 <h4 id="indices-predictions-classification-reports">
@@ -427,47 +429,48 @@ outline: 0 ;
 <p>For students and consultancies requiring <em>ad hoc</em> usage, templates and documentation for preparing data will be provided.</p>
 <p>For Agencies, data queries can be written to prepare outputs in the correct format.</p>
 <p>For instance, here is a prototype function to pull data Environment Agency’s data.gov.uk web service and convert to the required <code>hera</code> input format.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>environment_agency_data &lt;-<span class="st"> </span>hera<span class="op">:::</span><span class="kw">ead</span>(<span class="dt">site_id =</span> <span class="dv">43378</span>)</span>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>environment_agency_data &lt;-<span class="st"> </span>hera<span class="op">:::</span><span class="kw">get_data</span>(<span class="dt">location_id =</span> <span class="kw">c</span>(<span class="dv">43378</span>, <span class="dv">92751</span>))</span>
 <span id="cb15-2"><a href="#cb15-2"></a><span class="kw">tibble</span>(environment_agency_data)</span>
-<span id="cb15-3"><a href="#cb15-3"></a><span class="co"># A tibble: 549 × 22</span></span>
-<span id="cb15-4"><a href="#cb15-4"></a>   location_id      location_descri… sample_id date_taken season quality_element</span>
-<span id="cb15-5"><a href="#cb15-5"></a>   <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">            </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">            </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">     </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">      </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">  </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">          </span></span>
-<span id="cb15-6"><a href="#cb15-6"></a><span class="st"> </span><span class="dv">1</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
-<span id="cb15-7"><a href="#cb15-7"></a> <span class="dv">2</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
-<span id="cb15-8"><a href="#cb15-8"></a> <span class="dv">3</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
-<span id="cb15-9"><a href="#cb15-9"></a> <span class="dv">4</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
-<span id="cb15-10"><a href="#cb15-10"></a> <span class="dv">5</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
-<span id="cb15-11"><a href="#cb15-11"></a> <span class="dv">6</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
-<span id="cb15-12"><a href="#cb15-12"></a> <span class="dv">7</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
-<span id="cb15-13"><a href="#cb15-13"></a> <span class="dv">8</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
-<span id="cb15-14"><a href="#cb15-14"></a> <span class="dv">9</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
-<span id="cb15-15"><a href="#cb15-15"></a><span class="dv">10</span> http<span class="op">:</span><span class="er">//</span>environm… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">717525</span>    <span class="dv">2015-06-22</span> <span class="dv">2</span>      River Inverteb…</span>
-<span id="cb15-16"><a href="#cb15-16"></a><span class="co"># … with 539 more rows, and 16 more variables: question &lt;chr&gt;, response &lt;chr&gt;,</span></span>
-<span id="cb15-17"><a href="#cb15-17"></a><span class="co">#   taxon &lt;chr&gt;, latitude &lt;dbl&gt;, longitude &lt;dbl&gt;, grid_reference &lt;chr&gt;,</span></span>
-<span id="cb15-18"><a href="#cb15-18"></a><span class="co">#   alkalinity &lt;chr&gt;, river.width..m. &lt;chr&gt;, mean.depth..cm. &lt;chr&gt;,</span></span>
-<span id="cb15-19"><a href="#cb15-19"></a><span class="co">#   x..boulders.cobbles &lt;chr&gt;, x..pebbles.gravel &lt;chr&gt;, x..sand &lt;chr&gt;,</span></span>
-<span id="cb15-20"><a href="#cb15-20"></a><span class="co">#   x..silt.clay &lt;chr&gt;, result_id &lt;chr&gt;, northing &lt;int&gt;, easting &lt;int&gt;</span></span></code></pre></div>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="co"># A tibble: 2,495 × 27</span></span>
+<span id="cb15-4"><a href="#cb15-4"></a>   location_id   location_descri… sample_id date_taken season parameter question</span>
+<span id="cb15-5"><a href="#cb15-5"></a>   <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">         </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">            </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">     </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">       </span><span class="er">&lt;</span>int<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">     </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">   </span></span>
+<span id="cb15-6"><a href="#cb15-6"></a><span class="st"> </span><span class="dv">1</span> http<span class="op">:</span><span class="er">//</span>envir… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">    </span></span>
+<span id="cb15-7"><a href="#cb15-7"></a><span class="st"> </span><span class="dv">2</span> http<span class="op">:</span><span class="er">//</span>envir… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">    </span></span>
+<span id="cb15-8"><a href="#cb15-8"></a><span class="st"> </span><span class="dv">3</span> http<span class="op">:</span><span class="er">//</span>envir… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">    </span></span>
+<span id="cb15-9"><a href="#cb15-9"></a><span class="st"> </span><span class="dv">4</span> http<span class="op">:</span><span class="er">//</span>envir… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">    </span></span>
+<span id="cb15-10"><a href="#cb15-10"></a><span class="st"> </span><span class="dv">5</span> http<span class="op">:</span><span class="er">//</span>envir… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">    </span></span>
+<span id="cb15-11"><a href="#cb15-11"></a><span class="st"> </span><span class="dv">6</span> http<span class="op">:</span><span class="er">//</span>envir… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">    </span></span>
+<span id="cb15-12"><a href="#cb15-12"></a><span class="st"> </span><span class="dv">7</span> http<span class="op">:</span><span class="er">//</span>envir… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">    </span></span>
+<span id="cb15-13"><a href="#cb15-13"></a><span class="st"> </span><span class="dv">8</span> http<span class="op">:</span><span class="er">//</span>envir… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">    </span></span>
+<span id="cb15-14"><a href="#cb15-14"></a><span class="st"> </span><span class="dv">9</span> http<span class="op">:</span><span class="er">//</span>envir… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">    </span></span>
+<span id="cb15-15"><a href="#cb15-15"></a><span class="dv">10</span> http<span class="op">:</span><span class="er">//</span>envir… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">    </span></span>
+<span id="cb15-16"><a href="#cb15-16"></a><span class="co"># … with 2,485 more rows, and 20 more variables: response &lt;chr&gt;, label &lt;chr&gt;,</span></span>
+<span id="cb15-17"><a href="#cb15-17"></a><span class="co">#   latitude &lt;dbl&gt;, longitude &lt;dbl&gt;, grid_reference &lt;chr&gt;, alkalinity &lt;dbl&gt;,</span></span>
+<span id="cb15-18"><a href="#cb15-18"></a><span class="co">#   river_width &lt;int&gt;, mean_depth &lt;int&gt;, boulders_cobbles &lt;int&gt;,</span></span>
+<span id="cb15-19"><a href="#cb15-19"></a><span class="co">#   pebbles_gravel &lt;int&gt;, sand &lt;int&gt;, silt_clay &lt;int&gt;, northing &lt;int&gt;,</span></span>
+<span id="cb15-20"><a href="#cb15-20"></a><span class="co">#   easting &lt;int&gt;, dist_from_source &lt;dbl&gt;, source_altitude &lt;int&gt;, slope &lt;dbl&gt;,</span></span>
+<span id="cb15-21"><a href="#cb15-21"></a><span class="co">#   water_body_id &lt;chr&gt;, water_body_type &lt;chr&gt;, water_body &lt;chr&gt;</span></span></code></pre></div>
 <p>We can then run this EA data through <code>hera</code>:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a></span>
 <span id="cb16-2"><a href="#cb16-2"></a>predictions &lt;-<span class="st"> </span>hera<span class="op">::</span><span class="kw">prediction</span>(environment_agency_data)</span>
 <span id="cb16-3"><a href="#cb16-3"></a></span>
-<span id="cb16-4"><a href="#cb16-4"></a>tidyr<span class="op">::</span><span class="kw">unnest</span>(predictions, <span class="dt">cols =</span> <span class="kw">c</span>(prediction)) <span class="op">%&gt;%</span></span>
-<span id="cb16-5"><a href="#cb16-5"></a><span class="st">  </span><span class="kw">select</span>(date_taken, index, predicted_response) <span class="op">%&gt;%</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a>predictions <span class="op">%&gt;%</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a><span class="st">  </span><span class="kw">select</span>(date_taken, question, response) <span class="op">%&gt;%</span></span>
 <span id="cb16-6"><a href="#cb16-6"></a><span class="st">  </span><span class="kw">unique</span>()</span>
-<span id="cb16-7"><a href="#cb16-7"></a><span class="co"># A tibble: 10 × 5</span></span>
-<span id="cb16-8"><a href="#cb16-8"></a><span class="co"># Groups:   sample_number, quality_elements [5]</span></span>
-<span id="cb16-9"><a href="#cb16-9"></a>   sample_number quality_elements    date_taken index      predicted_response</span>
-<span id="cb16-10"><a href="#cb16-10"></a>   <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">         </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">               </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">      </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">                   </span><span class="er">&lt;</span>dbl<span class="op">&gt;</span></span>
-<span id="cb16-11"><a href="#cb16-11"></a><span class="st"> </span><span class="dv">1</span> <span class="dv">717525</span>        River Invertebrates <span class="dv">2015-06-22</span> WHPT ASPT                <span class="fl">5.79</span></span>
-<span id="cb16-12"><a href="#cb16-12"></a> <span class="dv">2</span> <span class="dv">717525</span>        River Invertebrates <span class="dv">2015-06-22</span> WHPT NTAXA              <span class="fl">30.1</span> </span>
-<span id="cb16-13"><a href="#cb16-13"></a> <span class="dv">3</span> <span class="dv">700368</span>        River Invertebrates <span class="dv">2014-12-24</span> WHPT ASPT                <span class="fl">5.79</span></span>
-<span id="cb16-14"><a href="#cb16-14"></a> <span class="dv">4</span> <span class="dv">700368</span>        River Invertebrates <span class="dv">2014-12-24</span> WHPT NTAXA              <span class="fl">30.1</span> </span>
-<span id="cb16-15"><a href="#cb16-15"></a> <span class="dv">5</span> <span class="dv">688865</span>        River Invertebrates <span class="dv">2014-06-13</span> WHPT ASPT                <span class="fl">5.79</span></span>
-<span id="cb16-16"><a href="#cb16-16"></a> <span class="dv">6</span> <span class="dv">688865</span>        River Invertebrates <span class="dv">2014-06-13</span> WHPT NTAXA              <span class="fl">30.1</span> </span>
-<span id="cb16-17"><a href="#cb16-17"></a> <span class="dv">7</span> <span class="dv">678494</span>        River Invertebrates <span class="dv">2014-02-05</span> WHPT ASPT                <span class="fl">5.79</span></span>
-<span id="cb16-18"><a href="#cb16-18"></a> <span class="dv">8</span> <span class="dv">678494</span>        River Invertebrates <span class="dv">2014-02-05</span> WHPT NTAXA              <span class="fl">30.1</span> </span>
-<span id="cb16-19"><a href="#cb16-19"></a> <span class="dv">9</span> <span class="dv">661523</span>        River Invertebrates <span class="dv">2013-11-05</span> WHPT ASPT                <span class="fl">5.79</span></span>
-<span id="cb16-20"><a href="#cb16-20"></a><span class="dv">10</span> <span class="dv">661523</span>        River Invertebrates <span class="dv">2013-11-05</span> WHPT NTAXA              <span class="fl">30.1</span> </span></code></pre></div>
+<span id="cb16-7"><a href="#cb16-7"></a><span class="co"># A tibble: 25 × 3</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a>   date_taken question  response        </span>
+<span id="cb16-9"><a href="#cb16-9"></a>   <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">      </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">     </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">           </span></span>
+<span id="cb16-10"><a href="#cb16-10"></a><span class="st"> </span><span class="dv">1</span> <span class="dv">2011-02-10</span> eTDI4     <span class="fl">66.0874704812802</span></span>
+<span id="cb16-11"><a href="#cb16-11"></a> <span class="dv">2</span> <span class="dv">2015-09-08</span> ref_taxa  <span class="fl">8.81930387078011</span></span>
+<span id="cb16-12"><a href="#cb16-12"></a> <span class="dv">3</span> <span class="dv">2015-09-08</span> ref_algae <span class="fl">0.05</span>            </span>
+<span id="cb16-13"><a href="#cb16-13"></a> <span class="dv">4</span> <span class="dv">2015-09-08</span> ref_nfg   <span class="fl">5.62767305048888</span></span>
+<span id="cb16-14"><a href="#cb16-14"></a> <span class="dv">5</span> <span class="dv">2015-09-08</span> ref_rmni  <span class="fl">7.1237923684044</span> </span>
+<span id="cb16-15"><a href="#cb16-15"></a> <span class="dv">6</span> <span class="dv">2010-06-17</span> ref_taxa  <span class="fl">8.81930387078011</span></span>
+<span id="cb16-16"><a href="#cb16-16"></a> <span class="dv">7</span> <span class="dv">2010-06-17</span> ref_algae <span class="fl">0.05</span>            </span>
+<span id="cb16-17"><a href="#cb16-17"></a> <span class="dv">8</span> <span class="dv">2010-06-17</span> ref_nfg   <span class="fl">5.62767305048888</span></span>
+<span id="cb16-18"><a href="#cb16-18"></a> <span class="dv">9</span> <span class="dv">2010-06-17</span> ref_rmni  <span class="fl">7.1237923684044</span> </span>
+<span id="cb16-19"><a href="#cb16-19"></a><span class="dv">10</span> <span class="dv">2008-07-30</span> ref_taxa  <span class="fl">8.81930387078011</span></span>
+<span id="cb16-20"><a href="#cb16-20"></a><span class="co"># … with 15 more rows</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="shared-data-tables">
@@ -486,14 +489,18 @@ outline: 0 ;
 <span class="header-section-number">4.5.1</span> Models and Environmental Standards names<a class="anchor" aria-label="anchor" href="#models-and-environmental-standards-names"></a>
 </h4>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a></span>
-<span id="cb17-2"><a href="#cb17-2"></a>hera<span class="op">:::</span><span class="kw">create_model_dataframe</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb17-3"><a href="#cb17-3"></a><span class="st">  </span><span class="kw">select</span>(standard, quality_element, classification_function)</span>
-<span id="cb17-4"><a href="#cb17-4"></a><span class="co"># A tibble: 3 × 3</span></span>
-<span id="cb17-5"><a href="#cb17-5"></a>  standard                                   quality_element    classification_…</span>
-<span id="cb17-6"><a href="#cb17-6"></a>  <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">                                      </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">              </span><span class="er">&lt;</span>list<span class="op">&gt;</span><span class="st">          </span></span>
-<span id="cb17-7"><a href="#cb17-7"></a><span class="dv">1</span> River Phytobenthos                         River Diatoms      <span class="op">&lt;</span>fn<span class="op">&gt;</span><span class="st">            </span></span>
-<span id="cb17-8"><a href="#cb17-8"></a><span class="dv">2</span> Lake Phytobenthos                          Lake Diatoms       <span class="op">&lt;</span>fn<span class="op">&gt;</span><span class="st">            </span></span>
-<span id="cb17-9"><a href="#cb17-9"></a><span class="dv">3</span> Rivers <span class="kw">Invertebrates</span> (General Degradation) River Invertebrat… <span class="op">&lt;</span>fn<span class="op">&gt;</span><span class="st">            </span></span></code></pre></div>
+<span id="cb17-2"><a href="#cb17-2"></a>hera<span class="op">::</span>model_dataframe</span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="co"># A tibble: 4 × 14</span></span>
+<span id="cb17-4"><a href="#cb17-4"></a>  analysis_name     standard location sample   validation_func… indices_function</span>
+<span id="cb17-5"><a href="#cb17-5"></a>  <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">             </span><span class="er">&lt;</span>list<span class="op">&gt;</span><span class="st">   </span><span class="er">&lt;</span>list<span class="op">&gt;</span><span class="st">   </span><span class="er">&lt;</span>list<span class="op">&gt;</span><span class="st">   </span><span class="er">&lt;</span>lgl<span class="op">&gt;</span><span class="st">            </span><span class="er">&lt;</span>list<span class="op">&gt;</span><span class="st">          </span></span>
+<span id="cb17-6"><a href="#cb17-6"></a><span class="dv">1</span> Combined aquatic… <span class="op">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="ot">NA</span>               <span class="op">&lt;</span>fn<span class="op">&gt;</span><span class="st">            </span></span>
+<span id="cb17-7"><a href="#cb17-7"></a><span class="dv">2</span> River Invertebra… <span class="op">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="ot">NA</span>               <span class="op">&lt;</span>fn<span class="op">&gt;</span><span class="st">            </span></span>
+<span id="cb17-8"><a href="#cb17-8"></a><span class="dv">3</span> River Diatoms     <span class="op">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="ot">NA</span>               <span class="op">&lt;</span>fn<span class="op">&gt;</span><span class="st">            </span></span>
+<span id="cb17-9"><a href="#cb17-9"></a><span class="dv">4</span> River Macrophytes <span class="op">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="ot">NA</span>               <span class="op">&lt;</span>fn<span class="op">&gt;</span><span class="st">            </span></span>
+<span id="cb17-10"><a href="#cb17-10"></a><span class="co"># … with 8 more variables: prediction_function &lt;list&gt;,</span></span>
+<span id="cb17-11"><a href="#cb17-11"></a><span class="co">#   assessment_function &lt;list&gt;, confidence_function &lt;list&gt;, indices &lt;list&gt;,</span></span>
+<span id="cb17-12"><a href="#cb17-12"></a><span class="co">#   assessment_table &lt;list&gt;, questions &lt;list&gt;, predictors &lt;list&gt;,</span></span>
+<span id="cb17-13"><a href="#cb17-13"></a><span class="co">#   predictions &lt;list&gt;</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">
@@ -512,7 +519,7 @@ outline: 0 ;
 <span class="header-section-number">5</span> How we Teach This<a class="anchor" aria-label="anchor" href="#how-we-teach-this"></a>
 </h2>
 <p>As new regulatory developments and updates requirements are identified, the lead contacts from the agencies and method developers are ‘on-boarded’ to demonstrate the design principles and collaborative framework of packages. Where skill development is required further training can be provided, or additional external or internal support from the agency commissioning the work.</p>
-<p>A workshop for lead data experts / R coders from each agency delivers institutional knowledge on how internally developed tools will fit with the shared design philosophy as well as seeting expectations for colloaboration with external researchers.</p>
+<p>A workshop for lead data experts / R coders from each agency delivers institutional knowledge on how internally developed tools will fit with the shared design philosophy as well as setting expectations for collaboration with external researchers.</p>
 <div class="section level3">
 <h3 id="sharing">
 <span class="header-section-number">5.1</span> Sharing<a class="anchor" aria-label="anchor" href="#sharing"></a>
@@ -559,7 +566,7 @@ outline: 0 ;
 <span class="header-section-number">8.1.1</span> FCS2 tool<a class="anchor" aria-label="anchor" href="#fcs2-tool"></a>
 </h4>
 <p>Demo input data format (truncated) and full list of column names</p>
-<pre><code>  DataHeldBy SiteCode Alternative.site.code Repeat.check SiteName
+<pre><code> DataHeldBy SiteCode Alternative.site.code Repeat.check SiteName
 1         EA   525052                    NA            N    13809
 2         EA   507441                    NA            Y    13810
 3         EA   525051                    NA            N    34611
@@ -569,81 +576,81 @@ outline: 0 ;
 2            13810 ...
 3            34611 ...
 4             5435 ...
- [1] "DataHeldBy"                 "SiteCode"                  
- [3] "Alternative.site.code"      "Repeat.check"              
- [5] "SiteName"                   "Site.description"          
- [7] "Easting"                    "Northing"                  
- [9] "NGR"                        "SurveyDate"                
-[11] "WBId"                       "WBName"                    
-[13] "NumberOfRuns"               "SurveyArea"                
-[15] "WetWidth"                   "Slope"                     
-[17] "BarrierType"                "ImpassableBarriers"        
-[19] "Sense.check.passed."        "CatchmentAreaUpstream"     
-[21] "CatchmentDrainageDirection" "GeologyClass"              
-[23] "Altitude"                   "DistanceFromSource"        
-[25] "DistanceToSea"              "AnnualMeanFlow"            
-[27] "AlkalinityValue"            "TotalPValue"               
-[29] "DOCValue"                   "SuspendedSolidsValue"      
-[31] "IOH.hydrometric.area"       "HydrometricAreaNo"         
-[33] "LandUse.AgriculturalAreas"  "LandUse.ConiferousForests" 
-[35] "LandUse.Wetlands"           "Substrate.Small"           
-[37] "Substrate.Large"            "Substrate.Bedrock"         
-[39] "Salmon_fry.Run1Total"       "Salmon_fry.Run2Total"      
-[41] "Salmon_fry.Run3Total"       "Salmon_fry.Run4Total"      
-[43] "Salmon_parr.Run1Total"      "Salmon_parr.Run2Total"     
-[45] "Salmon_parr.Run3Total"      "Salmon_parr.Run4Total"     
-[47] "Trout_fry.Run1Total"        "Trout_fry.Run2Total"       
-[49] "Trout_fry.Run3Total"        "Trout_fry.Run4Total"       
-[51] "Trout_parr.Run1Total"       "Trout_parr.Run2Total"      
-[53] "Trout_parr.Run3Total"       "Trout_parr.Run4Total"      </code></pre>
+ [1] #DataHeldBy#                 #SiteCode#                  
+ [3] #Alternative.site.code#      #Repeat.check#              
+ [5] #SiteName#                   #Site.description#          
+ [7] #Easting#                    #Northing#                  
+ [9] #NGR#                        #SurveyDate#                
+[11] #WBId#                       #WBName#                    
+[13] #NumberOfRuns#               #SurveyArea#                
+[15] #WetWidth#                   #Slope#                     
+[17] #BarrierType#                #ImpassableBarriers#        
+[19] #Sense.check.passed.#        #CatchmentAreaUpstream#     
+[21] #CatchmentDrainageDirection# #GeologyClass#              
+[23] #Altitude#                   #DistanceFromSource#        
+[25] #DistanceToSea#              #AnnualMeanFlow#            
+[27] #AlkalinityValue#            #TotalPValue#               
+[29] #DOCValue#                   #SuspendedSolidsValue#      
+[31] #IOH.hydrometric.area#       #HydrometricAreaNo#         
+[33] #LandUse.AgriculturalAreas#  #LandUse.ConiferousForests# 
+[35] #LandUse.Wetlands#           #Substrate.Small#           
+[37] #Substrate.Large#            #Substrate.Bedrock#         
+[39] #Salmon_fry.Run1Total#       #Salmon_fry.Run2Total#      
+[41] #Salmon_fry.Run3Total#       #Salmon_fry.Run4Total#      
+[43] #Salmon_parr.Run1Total#      #Salmon_parr.Run2Total#     
+[45] #Salmon_parr.Run3Total#      #Salmon_parr.Run4Total#     
+[47] #Trout_fry.Run1Total#        #Trout_fry.Run2Total#       
+[49] #Trout_fry.Run3Total#        #Trout_fry.Run4Total#       
+[51] #Trout_parr.Run1Total#       #Trout_parr.Run2Total#      
+[53] #Trout_parr.Run3Total#       #Trout_parr.Run4Total# </code></pre>
 <p>Ouput</p>
-<pre><code>  DataHeldBy SurveyDate SiteCode SiteName  WBId                   WBName ...
+<pre><code>WBName ...
 1         EA 03/09/2015   525052    13809 10675                          ...
 2         EA 04/09/2015   507441    13810 10675 White Esk (u/s Rae Burn) ...
 3         EA 03/09/2015   525051    34611 10676                          ...
 4         EA 01/09/2015   122881     5435 10676            Garwald Water ...
- [1] "DataHeldBy"                                 
- [2] "SurveyDate"                                 
- [3] "SiteCode"                                   
- [4] "SiteName"                                   
- [5] "WBId"                                       
- [6] "WBName"                                     
- [7] "All species WB EQR Bad %"                   
- [8] "All species WB EQR Poor %"                  
- [9] "All species WB EQR Moderate %"              
-[10] "All species WB EQR Good %"                  
-[11] "All species WB EQR High %"                  
-[12] "All species WB EQR mean"                    
-[13] "All species survey EQR Bad %"               
-[14] "All species survey EQR Poor %"              
-[15] "All species survey EQR Moderate %"          
-[16] "All species survey EQR Good %"              
-[17] "All species survey EQR High %"              
-[18] "All species survey EQR mean"                
-[19] "Salmon_fry WB EQR mean"                     
-[20] "Salmon_fry survey EQR mean"                 
-[21] "Salmon_fry observed total catch"            
-[22] "Salmon_fry probability present"             
-[23] "Salmon_fry expected total catch if present" 
-[24] "Salmon_fry expected total catch"            
-[25] "Salmon_parr WB EQR mean"                    
-[26] "Salmon_parr survey EQR mean"                
-[27] "Salmon_parr observed total catch"           
-[28] "Salmon_parr probability present"            
-[29] "Salmon_parr expected total catch if present"
-[30] "Salmon_parr expected total catch"           
-[31] "Trout_fry WB EQR mean"                      
-[32] "Trout_fry survey EQR mean"                  
-[33] "Trout_fry observed total catch"             
-[34] "Trout_fry probability present"              
-[35] "Trout_fry expected total catch if present"  
-[36] "Trout_fry expected total catch"             
-[37] "Trout_parr WB EQR mean"                     
-[38] "Trout_parr survey EQR mean"                 
-[39] "Trout_parr observed total catch"            
-[40] "Trout_parr probability present"             
-[41] "Trout_parr expected total catch if present" 
-[42] "Trout_parr expected total catch"            </code></pre>
+ [1] #DataHeldBy#                                 
+ [2] #SurveyDate#                                 
+ [3] #SiteCode#                                   
+ [4] #SiteName#                                   
+ [5] #WBId#                                       
+ [6] #WBName#                                     
+ [7] #All species WB EQR Bad %#                   
+ [8] #All species WB EQR Poor %#                  
+ [9] #All species WB EQR Moderate %#              
+[10] #All species WB EQR Good %#                  
+[11] #All species WB EQR High %#                  
+[12] #All species WB EQR mean#                    
+[13] #All species survey EQR Bad %#               
+[14] #All species survey EQR Poor %#              
+[15] #All species survey EQR Moderate %#          
+[16] #All species survey EQR Good %#              
+[17] #All species survey EQR High %#              
+[18] #All species survey EQR mean#                
+[19] #Salmon_fry WB EQR mean#                     
+[20] #Salmon_fry survey EQR mean#                 
+[21] #Salmon_fry observed total catch#            
+[22] #Salmon_fry probability present#             
+[23] #Salmon_fry expected total catch if present# 
+[24] #Salmon_fry expected total catch#            
+[25] #Salmon_parr WB EQR mean#                    
+[26] #Salmon_parr survey EQR mean#                
+[27] #Salmon_parr observed total catch#           
+[28] #Salmon_parr probability present#            
+[29] #Salmon_parr expected total catch if present#
+[30] #Salmon_parr expected total catch#           
+[31] #Trout_fry WB EQR mean#                      
+[32] #Trout_fry survey EQR mean#                  
+[33] #Trout_fry observed total catch#             
+[34] #Trout_fry probability present#              
+[35] #Trout_fry expected total catch if present#  
+[36] #Trout_fry expected total catch#             
+[37] #Trout_parr WB EQR mean#                     
+[38] #Trout_parr survey EQR mean#                 
+[39] #Trout_parr observed total catch#            
+[40] #Trout_parr probability present#             
+[41] #Trout_parr expected total catch if present# 
+[42] #Trout_parr expected total catch#      </code></pre>
 </div>
 <div class="section level4">
 <h4 id="darleq-tool">
