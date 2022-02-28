@@ -1,5 +1,5 @@
 ---
-title: "Deployment Guide"
+title: "Deploy Guide"
 date: "`r Sys.Date()`"
 pkgdown:
   as_is: yes
@@ -7,7 +7,7 @@ output:
   rmarkdown::html_vignette:
     toc: yes
 vignette: >
-  %\VignetteIndexEntry{Deployment Guide}
+  %\VignetteIndexEntry{Deploy}
   %\VignetteEncoding{UTF-8}  
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -38,7 +38,7 @@ library(hera)
 
 Congratulations! You now have a new deployment template ready to populate. 
 
-Complete the following sections.
+Next, complete the following sections to get your assessment fully operational!
 
 ## Action
 

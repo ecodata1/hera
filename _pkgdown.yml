@@ -1,0 +1,17 @@
+template:
+  bootstrap: 5
+navbar:
+ components:
+   articles:
+    text: Docs
+    menu:
+    - text: Request for comment - Shared Design Principles
+      href: articles/hera_specifications.html
+    - text: -------
+    - text: Assessment Manual
+      href: articles/hera_assessments.html
+    - text: -------
+    - text: Development Guide
+      href: articles/development_guide.html
+    - text: Deploy Guide
+      href: articles/deployment_guide.html

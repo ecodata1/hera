@@ -13,7 +13,8 @@ knitr::opts_chunk$set(
 )
 ```
 
-# hera <img src='https://raw.githubusercontent.com/ecodata1/hera/main/man/figures/heraverse_logo_2.png' align="right" height="300" />
+# hera
+<img src='https://raw.githubusercontent.com/ecodata1/hera/main/man/figures/heraverse_logo_2.png' align="right" width="300" />
 
 <!-- badges: start -->
 [![Codecov test coverage](https://codecov.io/gh/ecodata1/hera/branch/master/graph/badge.svg)](https://codecov.io/gh/ecodata1/hera?branch=master)
@@ -62,16 +63,32 @@ data[1:5, c("sample_id", "parameter", "question", "response")]
 
 Alternatively, breakdown each step in assessment:
 
-```{r steps, example, warning=F, message=F}
-library(hera)
-validated <- validation(hera::demo_data) # Return validate data - placeholder function
-indices <- indices(validated) # Calculate indices used for assessment (if required)
-indices[1:5, c("sample_id", "parameter", "question", "response")]
-predictions <- prediction(validated) # Predict the expected 
-predictions[1:5, c("sample_id", "parameter", "question", "response")]
-assessments <- assessment(hera::demo_data) # Assess the observed data against the expected/predicted 
-assessments[1:5, c("sample_id", "parameter", "question", "response")]
+### Validate
 
+```{r steps, validation, warning=F, message=F}
+library(hera)
+validated <- validation(hera::demo_data) # Return validated data
+head(validated)
 ```
 
+### Metrics
 
+```{r steps, indices, warning=F, message=F}
+indices <- indices(validated) # Calculate indices used for assessment (if required)
+indices[1:5, c("sample_id", "parameter", "question", "response")]
+```
+
+### Predict
+
+```{r predictions, warning=F, message=F}
+
+predictions <- prediction(validated) # Predict the expected 
+predictions[1:5, c("sample_id", "parameter", "question", "response")]
+```
+
+### Assess
+
+```{r assessments, warning=F, message=F}
+assessments <- assessment(hera::demo_data) # Assess the observed data against the expected/predicted 
+assessments[1:5, c("sample_id", "parameter", "question", "response")]
+```

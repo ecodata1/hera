@@ -19,7 +19,7 @@ library(testthat)
 
 ## Welcome
 
-This document has been created following the generic assessment guidance.
+This document has been created following the generic [assessment guidance](https://ecodata1.github.io/hera/articles/development_guide.html).
 
 
 ## Details
@@ -119,7 +119,7 @@ If applicable...
 indices_function <- function(data) {
   # Some calculated metric e.g. total responses in sample etc:
   
-  data %>%
+  data <- data %>%
     group_by(sample_id) %>% 
     summarise(question = "n_count",
               repsonse = n(),
@@ -321,7 +321,7 @@ usethis::use_data(model_dataframe, overwrite = TRUE)
 
 Below is an interactive application displaying the results of your assessment.
 
-```{r launch_app, echo=FALSE}
+```{r launch_app, echo=FALSE, eval=FALSE}
 # No need to edit this code
 launch_app(new_model_dataframe = model_dataframe, data = data)
 

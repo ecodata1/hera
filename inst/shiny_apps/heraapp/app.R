@@ -202,7 +202,8 @@ server <- function(input, output) {
         addTiles() %>%
         addMarkers(~longitude, ~latitude,
                    popup = ~ htmlEscape(location_id),
-                   clusterOptions = markerClusterOptions(lng=~longitude,lat=~latitude))
+                   clusterOptions = markerClusterOptions(lng=~longitude,
+                                                         lat=~latitude))
 
       output$map <- renderLeaflet(map)
       output$map_first <- renderLeaflet(map)
@@ -279,7 +280,6 @@ server <- function(input, output) {
 
       output$aggregation <- renderUI(list(
         h3("Aggregates"), DT::renderDataTable({
-          browser()
           aggregates <- hera:::aggregation(assessments,
                           aggregation_variables <- c("parameter","water_body_id", "year"))
 

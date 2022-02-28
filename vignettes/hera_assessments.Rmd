@@ -1,13 +1,9 @@
 ---
-title: "Assessments Guide"
+title: "Assessments Manual"
 date: "`r Sys.Date()`"
-pkgdown:
-  as_is: yes
-output: 
-  rmarkdown::html_vignette:
-    toc: yes
+output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Assessments Guide}
+  %\VignetteIndexEntry{Assessments Manual}
   %\VignetteEncoding{UTF-8}  
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -18,6 +14,7 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 library(hera)
 library(tidyverse)
+library(kableExtra)
 ```
 
 ## Overview
@@ -27,7 +24,10 @@ List of current assessments available in `hera` package:
 ```{r list, echo=FALSE}
 
 data <- bind_rows(model_dataframe$standard)
-data <- data %>% select(parameter, status )
-knitr::kable(data)
+dt_url <- paste0(gsub(" ", "-", tolower(trimws(data$standard_short))), ".html")
+data <- data %>% select(standard_long, status)
+data %>% 
+  mutate(link = cell_spec(standard_long, "html", link = dt_url)) %>%
+  kable("html", escape = FALSE) %>%
+  kable_styling(bootstrap_options = c("hover", "condensed")) 
 ```
-

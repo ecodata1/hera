@@ -106,9 +106,9 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
     "result_id" = .data$obs_id,
     "dist_from_source" = .data$`Distance from Source`,
     "source_altitude" = .data$`Source Altitude`,
-    "label" = .data$pref_label
+    "label" = .data$pref_label,
+    "units" = .data$property_id
   )
-
 
   data$question[grep("-percentageCoverBand", data$result_id)] <- "PercentageCoverBand"
   data$question[data$question == "WHPT_ASPT"] <- "WHPT ASPT Abund"
@@ -122,7 +122,8 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
       ifelse((data$Month >= 9) & (data$Month <= 11), "3", "4")
     )
   )
-
+  data$full_result_id <- NULL
+  data$result.result_id <- NULL
   data <- data %>% dplyr::select(contains(c(
     "location_id",
     "location_description",
@@ -133,6 +134,8 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
     "question",
     "response",
     "label",
+    "result_id",
+    "units",
     "latitude",
     "longitude",
     "grid_reference",

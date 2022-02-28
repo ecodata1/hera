@@ -1,7 +1,9 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# hera <img src='https://raw.githubusercontent.com/ecodata1/hera/main/man/figures/heraverse_logo_2.png' align="right" height="300" />
+# hera
+
+<img src='https://raw.githubusercontent.com/ecodata1/hera/main/man/figures/heraverse_logo_2.png' align="right" width="300" />
 
 <!-- badges: start -->
 
@@ -64,9 +66,31 @@ data[1:5, c("sample_id", "parameter", "question", "response")]
 
 Alternatively, breakdown each step in assessment:
 
+### Validate
+
 ``` r
 library(hera)
-validated <- validation(hera::demo_data) # Return validate data - placeholder function
+validated <- validation(hera::demo_data) # Return validated data
+head(validated)
+#> # A tibble: 6 × 22
+#>   location_id location_description           easting northing latitude longitude
+#>   <chr>       <fct>                            <dbl>    <dbl>    <dbl>     <dbl>
+#> 1 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95
+#> 2 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95
+#> 3 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95
+#> 4 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95
+#> 5 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95
+#> 6 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95
+#> # … with 16 more variables: date_taken <dttm>, sample_id <chr>, question <chr>,
+#> #   response <fct>, mean_alkalinity <dbl>, grid_reference <chr>,
+#> #   standard <chr>, quality_element <chr>, water_body_id <dbl>, label <fct>,
+#> #   dist_from_source <dbl>, alkalinity <dbl>, slope <dbl>,
+#> #   source_altitude <dbl>, parameter <chr>, year <dbl>
+```
+
+### Metrics
+
+``` r
 indices <- indices(validated) # Calculate indices used for assessment (if required)
 indices[1:5, c("sample_id", "parameter", "question", "response")]
 #> # A tibble: 5 × 4
@@ -77,6 +101,11 @@ indices[1:5, c("sample_id", "parameter", "question", "response")]
 #> 3 1840203   River Macrophytes n_rfg     4               
 #> 4 1840203   River Macrophytes rfa_pc    0               
 #> 5 3256506   River Macrophytes rmni      6.22099043940684
+```
+
+### Predict
+
+``` r
 predictions <- prediction(validated) # Predict the expected 
 predictions[1:5, c("sample_id", "parameter", "question", "response")]
 #> # A tibble: 5 × 4
@@ -87,6 +116,11 @@ predictions[1:5, c("sample_id", "parameter", "question", "response")]
 #> 3 3256506   River Macrophytes ref_nfg   5.26620315804775
 #> 4 3256506   River Macrophytes ref_rmni  5.96735638218237
 #> 5 758729    River Macrophytes ref_taxa  8.18193000184553
+```
+
+### Assess
+
+``` r
 assessments <- assessment(hera::demo_data) # Assess the observed data against the expected/predicted 
 assessments[1:5, c("sample_id", "parameter", "question", "response")]
 #> # A tibble: 5 × 4

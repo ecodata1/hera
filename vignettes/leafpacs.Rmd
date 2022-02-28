@@ -41,7 +41,7 @@ used in the first river basin planning cycle in the UK.
 ```{r setup}
 
 standard <- tibble(
-  standard_short = "LEAFPACS",
+  standard_short = "leafpacs",
   quality_element = "Ecology",
   parameter = "River Macrophytes",
   standard_long = "UKTAG River Assessment Method Macrophytes and Phytobenthos",
@@ -80,8 +80,8 @@ Example:
 # all_data$year <- lubridate::year(all_data$date_taken)
 # Sepa
 
-attach(hera::demo_data)
- all_data <- demo_data
+
+ all_data <- hera::demo_data
 # demo_data$label <- demo_data$taxon
 # demo_data$dist_from_source <- 32
 # demo_data$alkalinity <- demo_data$mean_alkalinity
@@ -622,6 +622,7 @@ model_dataframe <- hera::model_dataframe
 
 model <- tibble(
   analysis_name = standard$parameter,
+  assessment = standard$standard_long,
   standard = list(standard),
   location = list(location[1, ]),
   sample = list(sample[1, ]),
@@ -637,7 +638,7 @@ model <- tibble(
   predictions = list(predictions[predictions$location_id == predictions$location_id[1], ])
 )
 
-model_dataframe <- model_dataframe[model_dataframe$analysis_name != standard$parameter, ]
+model_dataframe <- model_dataframe[model_dataframe$assessment != standard$standard_long, ]
 
 model_dataframe <- bind_rows(model_dataframe, model)
 new_model_dataframe <- model_dataframe

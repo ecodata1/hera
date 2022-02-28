@@ -30,9 +30,16 @@ validation <- function(data = NULL) {
   }
 
   if(any(names(data) %in% "grid_reference") & any(!names(data) %in% "latitude")) {
+    if(any(is.na(data$grid_reference))) {
+      stop("You provided a grid_reference column with missing values
+           - all rows must have values")
+    } else {
+    data$grid_reference <- trimws(data$grid_reference)
+    data$grid_reference <- gsub(" ", "", data$grid_reference)
     latlon <- rict::osg_parse(data$grid_reference, coord_system = "WGS84")
     data$latitude <- latlon$lat
     data$longitude <- latlon$lon
+    }
   }
 
   data$year <- year(data$date_taken)

@@ -1,16 +1,9 @@
 ---
-title: "Combined aquatic plants"
-pkgdown:
-  as_is: yes
-output: 
-  rmarkdown::html_vignette:
-    toc: yes
+title: "Assessment Template"
+output: rmarkdown::html_vignette
 editor_options: 
   chunk_output_type: console
-vignette: >
-  %\VignetteIndexEntry{Combined aquatic plants}
-  %\VignetteEncoding{UTF-8}  
-  %\VignetteEngine{knitr::rmarkdown}
+runtime: shiny
 ---
 
 ```{r, include = FALSE}
@@ -26,8 +19,7 @@ library(testthat)
 
 ## Welcome
 
-This document has been created following the generic assessment guidance.
-
+This document has been created following the generic [assessment guidance](https://ecodata1.github.io/hera/articles/development_guide.html).
 
 ## Details
 
@@ -36,13 +28,13 @@ This document has been created following the generic assessment guidance.
 ```{r setup}
 
 standard <- tibble(
-  standard_short = "Combined aquatic plants",
-  quality_element = NA,
-  parameter = "Combined aquatic plants",
-  standard_long = "Combined aquatic plants",
+  standard_short = "fim",
+  quality_element = "River Invertebrates",
+  parameter = "River Invertebrates",
+  standard_long = "Freshwater Invertebrate Model",
   standard_reference = NA,
   aggregation = NA,
-  status = "Development"
+  status = "testing"
 )
 
 standard_format <- hera:::hera_format(standard = standard) # format assessment data
@@ -54,9 +46,35 @@ standard_format$standard %>%
 ## Data
 
 ```{r data}
-all_data <- get_data(location_id = c(92751, 100))
-all_data$year <- lubridate::year(all_data$date_taken)
-data <- all_data
+data <- tibble(
+  parameter = "River Invertebrates",
+  question = "Taxon abundance",
+  response = "12",
+  label = "Baetidae",
+  sample_id = "1234",
+  location_id = "8175",
+  location_description = "Eden at Kemback",
+  grid_reference = "NO2342323434",
+  water_body_id = "3100",
+  year = "2022",
+  date_taken = "2022-02-12",
+  units = NA,
+  min = NA,
+  max = NA,
+  d_f_source = 13,
+  Altitude = 24,
+  NGR = "NJ 53085 46834",
+  logaltbar = 2.29 ,
+  log_area = 2.44,
+  disch_cat = 5,
+  slope = 1.72,
+  chalk = 0,
+  clay = 0,
+  hardrock = 0.946,
+  limestone = 0.0435,
+  peat = 0.0691
+)
+data
 ```
 
 ## Locate
@@ -108,19 +126,21 @@ If applicable...
 ```{r indices}
 
 indices_function <- function(data) {
-  require(dplyr)
-  require(tidyr)
-  require(magrittr)
-  require(tibble)
-  # Some calculated index e.g. summary of sample responses:
-  # index = sum(data$response, na.rm = TRUE)
-  index <- NA
-
-  data <- tibble(
-    response = NA,
-    question = NA,
-    sample_id = NA
-  )
+  # Some calculated metric e.g. total responses in sample etc:
+  library(macroinvertebrateMetrics)
+  data <- data %>%
+    transmute(
+      SAMPLE_ID = sample_id,
+      RESULT = response,
+      TAXON = label
+    ) %>%
+    macroinvertebrateMetrics::calcWhpt()
+  data <- data %>%
+    transmute(
+      sample_id = SAMPLE_ID,
+      question = DETERMINAND,
+      response = as.character(RESULT)
+    )
   return(data)
 }
 indexes <- indices_function(data)
@@ -130,12 +150,25 @@ indexes
 ## Predictors
 
 ```{r predictors}
-predictors <- tibble(
-  PREDICTOR_1 = NA,
-  PREDICTOR_2 = NA,
-  location_id = NA
-  # ...
+
+predictors <- whpt::demo_data %>% select(
+  d_f_source,
+  Altitude,
+  NGR,
+  logaltbar,
+  log_area,
+  disch_cat,
+  slope,
+  chalk,
+  clay,
+  hardrock,
+  limestone,
+  peat,
+  date_taken,
+  question,
+  sample_id
 )
+
 knitr::kable(predictors)
 ```
 
@@ -143,14 +176,16 @@ knitr::kable(predictors)
 
 ```{r prediction}
 prediction_function <- function(predictors) {
-
+  library(whpt)
   # Generates prediction based on predictors...
-  prediction <- tibble(
-    question = NA,
-    response = NA,
-    location_id = NA
+  prediction <- whpt::whpt_predict(predictors)
+  prediction <- ungroup(prediction)
+  prediction <- prediction %>%  transmute(
+    sample_id = as.character(sample_id),
+    location_id = data$location_id,
+    response = as.character(predicted_response),
+    question = index
   )
-
   return(prediction)
 }
 predictions <- prediction_function(predictors)
@@ -220,10 +255,6 @@ assessment_function <- function(data, assessment_table) {
     return(NULL)
   }
 
-  require(dplyr)
-  require(tidyr)
-  require(magrittr)
-  require(tibble)
   # Transform data -----------------------------------------------------------
   data <- data %>%
     select(.data$sample_id, .data$question, .data$response) %>%
@@ -261,6 +292,7 @@ assessments <- assessment_function(combined_data, assessment_table)
 assessments
 ```
 
+
 ## Confidence
 
 Confidence of assessment. 
@@ -277,15 +309,6 @@ confidence_function <- function(data, aggregates = "sample_id") {
   names(confidence)[1] <- aggregates[1]
 }
 ```
-
-## Aggregation
-
-```{r}
-aggregation_function <- function(data) {
-  return(NULL)
-}
-```
-
 
 ## Checklist
 
@@ -329,7 +352,7 @@ usethis::use_data(model_dataframe, overwrite = TRUE)
 
 Below is an interactive application displaying the results of your assessment.
 
-```{r launch_app, echo=TRUE, eval=FALSE}
+```{r launch_app, echo=FALSE, eval=FALSE}
 # No need to edit this code
-launch_app(new_model_dataframe = model_dataframe, data = all_data)
+launch_app(new_model_dataframe = model_dataframe, data = whpt::demo_data)
 ```

@@ -24,16 +24,24 @@ prediction <- function(data = NULL, model_dataframe = NULL, combine = TRUE) {
     model_dataframe <- hera::model_dataframe
   }
   data <- validation(data)
-  predictions <- purrr::map_df(split(model_dataframe, 1:nrow(model_dataframe)), function(model) {
+  predictions <- purrr::map_df(split(model_dataframe,
+                                     1:nrow(model_dataframe)), function(model) {
 
     if (is.null(model$prediction_function[[1]])) {
       return(NULL)
     }
 
     data <- data %>% dplyr::filter(.data$parameter == model$analysis_name)
+
+    if(!all(names(model$predictors[[1]]) %in% names(data))) {
+      message("You provided data without predictor variables for ", model$assessment, " analysis")
+      return(NULL)
+    }
+
     if (any(names(model$predictors[[1]]) %in% "question")) {
       warning("Warning: question column shouldn't be required for prediction")
-      data <- data %>% dplyr::filter(.data$question %in% unique(model$predictors[[1]]$question))
+      data <- data %>%
+        dplyr::filter(.data$question %in% unique(model$predictors[[1]]$question))
     }
 
     if (nrow(data) == 0) {

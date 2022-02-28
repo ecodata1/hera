@@ -4,10 +4,12 @@
 \alias{indices}
 \title{Calculate Observed Indices}
 \usage{
-indices(data, model_dataframe = NULL)
+indices(data, name = NULL, model_dataframe = NULL)
 }
 \arguments{
 \item{data}{Dataframe of variables in WFD inter-change format}
+
+\item{name}{Name of the assessment to be used}
 
 \item{model_dataframe}{Dataframe of model_dataframe see `model_dataframe`}
 }
