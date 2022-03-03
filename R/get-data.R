@@ -18,8 +18,10 @@
 #' @importFrom magrittr `%>%`
 #' @importFrom purrr map
 #' @examples
+#' \dontrun{
 #' data <- get_data(location_id = 100)
 #' class <- assessment(data)
+#' }
 get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to = NULL) {
   message("Downloading data from data.gov.uk web services...")
   location_id <- paste0("http://environment.data.gov.uk/ecology/site/bio/", location_id)
@@ -110,7 +112,8 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
     "units" = .data$property_id
   )
 
-  data$question[grep("-percentageCoverBand", data$result_id)] <- "PercentageCoverBand"
+  data$question[grep("-percentageCoverBand", data$result_id)] <-
+    "PercentageCoverBand"
   data$question[data$question == "WHPT_ASPT"] <- "WHPT ASPT Abund"
   data$question[data$question == "WPHT_N_TAXA"] <- "WHPT NTAXA Abund"
   data$question <- tolower(data$question)

@@ -29,7 +29,8 @@ Imports:
     darleq3,
     rict,
     eadata,
-    testthat
+    testthat,
+    macroinvertebrateMetrics
 Suggests: 
     knitr,
     rmarkdown,
@@ -40,7 +41,8 @@ Suggests:
 Remotes:
     nsj3/darleq3,
     aquaMetrics/rict,
-    aquaMetrics/eadata
+    aquaMetrics/eadata,
+    aquaMetrics/macroinvertebratesMetrics
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Depends: 

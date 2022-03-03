@@ -1,9 +1,10 @@
 ---
-title: "Assessment Template"
+title: "fim"
 output: rmarkdown::html_vignette
-editor_options: 
-  chunk_output_type: console
-runtime: shiny
+vignette: >
+  %\VignetteIndexEntry{fim}
+  %\VignetteEncoding{UTF-8}  
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r, include = FALSE}

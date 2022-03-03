@@ -23,6 +23,8 @@ Import data from web services (currently EA only) and convert into standard
 format for `hera` regulatory assessment tool.
 }
 \examples{
+\dontrun{
 data <- get_data(location_id = 100)
 class <- assessment(data)
+}
 }
