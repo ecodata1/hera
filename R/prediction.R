@@ -5,8 +5,9 @@
 #' \code{prediction()} predicts model indices.
 #'
 #' @param data Dataframe of variables in WFD inter-change format
+#' @param name Name of assessment to predict. Default is all possible
+#'   assessments.
 #' @param model_dataframe Dataframe of model_dataframe see `model_dataframe`
-#' @param combine Specify if predictions should be combined within location/sample attributes
 #' @return Dataframe of predictions
 #' @examples
 #' predictions <- prediction(demo_data)
@@ -17,12 +18,15 @@
 #' @importFrom magrittr `%>%`
 #' @importFrom purrr map
 #' @export
-prediction <- function(data = NULL, model_dataframe = NULL, combine = TRUE) {
+prediction <- function(data = NULL, name = NULL, model_dataframe = NULL) {
 
   message("Hello from hera, ...work in progress!")
   if (is.null(model_dataframe)) {
     model_dataframe <- hera::model_dataframe
   }
+
+  model_dataframe <- filter_assessment(model = model_dataframe, name = name)
+
   data <- validation(data)
   predictions <- purrr::map_df(split(model_dataframe,
                                      1:nrow(model_dataframe)), function(model) {

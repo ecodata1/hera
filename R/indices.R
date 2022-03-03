@@ -24,12 +24,7 @@ indices <- function(data, name = NULL, model_dataframe = NULL) {
     model_dataframe <- hera::model_dataframe
   }
 
-  if (!is.null(name)) {
-    model_dataframe <- model_dataframe %>%  filter(.data$assessment %in% name)
-    if(nrow(model_dataframe) < 1) {
-      return(NULL)
-    }
-  }
+  model_dataframe <- filter_assessment(model = model_dataframe, name = name)
 
   indices <- purrr::map_df(split(model_dataframe, 1:nrow(model_dataframe)),
                            function(model) {

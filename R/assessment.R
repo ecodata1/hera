@@ -6,6 +6,7 @@
 #'
 #' @param data Dataframe of variables in hera inter-change format
 #' @param model_dataframe Dataframe of model_dataframe see `model_dataframe`
+#' @param name Name of the assessment to be used
 #'
 #' @return Dataframe of assessments
 #' @examples
@@ -16,12 +17,14 @@
 #' @importFrom magrittr `%>%`
 #' @importFrom purrr map
 #' @export
-assessment <- function(data = NULL, model_dataframe = NULL) {
+assessment <- function(data = NULL, name = NULL, model_dataframe = NULL) {
   message("Hello from hera, ...work in progress!")
 
   if (is.null(model_dataframe)) {
     model_dataframe <- hera::model_dataframe
   }
+
+  model_dataframe <- filter_assessment(model = model_dataframe, name = name)
 
   data <- validation(data)
   indices <- hera::indices(data = data, model_dataframe = model_dataframe)
