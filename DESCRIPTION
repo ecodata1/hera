@@ -31,7 +31,8 @@ Imports:
     eadata,
     testthat,
     macroinvertebrateMetrics,
-    whpt
+    whpt,
+    kableExtra
 Suggests: 
     knitr,
     rmarkdown,
