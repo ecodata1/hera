@@ -6,7 +6,7 @@ hera_format <- function(standard = NULL) {
     names_to = "attribute",
     cols = (everything())
   )
-  standard$optional <- c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE)
+  standard$optional <- c(TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE)
 
   # Return list of Data frames
   data <- list(standard)

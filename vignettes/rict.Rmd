@@ -42,13 +42,23 @@ standard <- tibble(
   standard_long = "rict", 
   standard_reference = NA,
   aggregation = NA,
-  status = "testing"
+  status = "development"
 )
 
 standard_format <- hera:::hera_format(standard = standard) # format assessment data
 standard_format$standard %>%
   filter(attribute != "standard_reference") %>%
   knitr::kable()
+```
+
+## Data Sources
+
+List of data sources (to test against). Can be more than source such as demo data stored within package, web services or shared online file.
+
+```{r}
+sources <- tibble(
+  data_sources = c("ea")
+)
 ```
 
 ## Data
@@ -105,24 +115,21 @@ questions
 
 ## Metrics
 
-If applicable...
+Calculate WHPT metric (currently only metric used in rict classification).
 
 ```{r indices}
-
 indices_function <- function(data) {
-  # Some calculated metric e.g. summary of sample responses: 
-  # index = sum(data$response, na.rm = TRUE)
-  require(dplyr)
-  require(tidyr)
-  require(magrittr)
-  require(tibble)
-  index <- NA
+ # Only calculate metric if required
+    if (!is.null(
+      nrow(data$question[data$question == "WHPT_ASPT"]))) {
+    return(NULL)
+    }
 
-  data <- tibble(
-    response = NA,
-    question = NA,
-    sample_id = NA
-  )
+  metric <- 
+    model_dataframe$indices_function[
+      model_dataframe$assessment == "Freshwater Invertebrate Model"]
+ 
+  data <- metric[[1]](data)
   return(data)
 }
 indexes <- indices_function(data)
@@ -146,21 +153,265 @@ knitr::kable(predictors)
 ## Predict
 
 ```{r prediction}
-prediction_function <- function(predictors) {
-  require(dplyr)
-  require(tidyr)
-  require(magrittr)
-  require(tibble)
-  # Generates prediction based on predictors...
-  prediction <- tibble(
-    question = NA,
-    response = NA,
-    location_id = NA
-  )
+prediction_function <- function(data) {
+  
+  bias <- 6.21
+  analysis <- "whpt ntaxa abund"
 
-  return(prediction)
+  names(data) <- tolower(names(data))
+  data <- data[!is.na(data$river_width), ]
+  # Remove any duplicate chemistry samples
+  # otherwise pivot will not work later
+  # if (is.null(data$result_id)) {
+  #   names(data) <- toupper(names(data))
+  #   data <- sepaTools:::uniqueResultIdentifer(data)
+  #   names(data) <- tolower(names(data))
+  # }
+
+  data <- data[!duplicated(data$result_id), ]
+
+  # Add year  columns
+  data$year <- format.Date(data$date_taken, "%Y")
+  data$year <- as.integer(data$year)
+  check <- FALSE
+  predict_data <- map(unique(data$location_id), function(location) {
+
+    data <- data[data$location_id == location, ]
+
+     if(!is.null(data$river_width)) {
+    if (any(!is.na(data$river_width))) {
+      data$river_width <- as.numeric(data$river_width)
+      data$mean_depth <- as.numeric(data$mean_depth)
+      data$boulders_cobbles <- as.numeric(data$boulders_cobbles)
+      data$pebbles_gravel <- as.numeric(data$pebbles_gravel)
+      data$silt_clay <- as.numeric(data$silt_clay)
+      data$sand <- as.numeric(data$sand)
+      check <- TRUE
+    } else {
+      data <- select(data,
+                      -.data$river_width,
+                      -.data$mean_depth,
+                      -.data$boulders_cobbles,
+                      -.data$pebbles_gravel,
+                      -.data$sand,
+                      -.data$silt_clay)
+
+    }
+     }
+    # NGR columns
+    data <- tidyr::separate(data,
+      .data$grid_reference,
+      into = c(
+        "NGR",
+        "NGR_EASTING",
+        "NGR_NORTHING"
+      ),
+      sep = " "
+    )
+
+
+    # needs refactoring - but if no Alk results returned then add blanks/NAs
+    data$alkalinity <- 75
+    data$sample_count <- NA
+    data$samples_used <- NA
+    data$min_date <- NA
+    data$max_date <- NA
+
+    # Only predict for data which has RICT predictors?
+    # data <- purrr::map_df(split(data, data$sample_id), function(sample) {
+    #   if (any(sample$question %in% analysis)) {
+    #     return(sample)
+    #   } else {
+    #     return(NULL)
+    #   }
+    # })
+    # 
+    # if (nrow(data) == 0) {
+    #   return(NULL)
+    # }
+
+    data$response <- as.numeric(as.character(data$response))
+    data <- pivot_wider(data, names_from = .data$question, values_from = .data$response)
+    # Join to template
+    rict_template <- function() {
+      template <- data.frame(
+        "LOCATION" = character(),
+        "Waterbody" = character(),
+        "YEAR" = integer(),
+        "NGR" = character(),
+        "EASTING" = character(),
+        "NORTHING" = character(),
+        "S_ALTITUDE" = numeric(),
+        "S_SLOPE" = numeric(),
+        "S_DISCHARGE_CAT" = numeric(),
+        "S_DIST_FROM_SOURCE" = numeric(),
+        "River Width (m)" = numeric(),
+        "Mean Depth (cm)" = numeric(),
+        "Alkalinity" = numeric(),
+        "% Boulders/Cobbles" = numeric(),
+        "% Pebbles/Gravel" = numeric(),
+        "% Sand" = numeric(),
+        "% Silt/Clay" = numeric(),
+        "Spr_Season_ID" = numeric(),
+        "Spr_TL2_WHPT_NTaxa (AbW,DistFam)" = numeric(),
+        "Spr_TL2_WHPT_ASPT (AbW,DistFam)" = numeric(),
+        "Sum_Season_ID" = numeric(),
+        "Sum_TL2_WHPT_NTaxa (AbW,DistFam)" = numeric(),
+        "Sum_TL2_WHPT_ASPT (AbW,DistFam)" = numeric(),
+        "Aut_Season_ID" = numeric(),
+        "Aut_TL2_WHPT_NTaxa (AbW,DistFam)" = numeric(),
+        "Aut_TL2_WHPT_ASPT (AbW,DistFam)" = numeric(),
+        check.names = check
+      )
+    }
+    template_nems <- rict_template()
+    names(template_nems) <- tolower(names(template_nems))
+    data$easting <- as.factor(data$easting)
+    data$northing <- as.factor(data$northing)
+    names(data) <- tolower(names(data))
+    data <- dplyr::bind_rows(template_nems, data)
+
+    # For each Ecology sample (survey_inv/F_BMWP_SUM) summarise
+    data$location <- paste0(data$location_id, ": ", data$location_description)
+    data$water_body_id <- 3100
+    names(data) <- tolower(names(data))
+    data <- data.frame(data, check.names = TRUE)
+    names(data) <- tolower(names(data))
+
+    data$date_taken <- as.Date(data$date_taken)
+    if (is.null(data$season)) {
+      data$season <- 1
+    }
+    summarise_data <- dplyr::group_by(
+      data,
+      .data$location,
+      .data$ngr,
+      .data$ngr_easting,
+      .data$ngr_northing,
+      .data$sample_id,
+      .data$season,
+      .data$s_discharge_cat,
+      .data$water_body_id,
+      .name_repair = TRUE
+    )
+    # Suppress warning because of missing values
+    summarise_data <- suppressWarnings(dplyr::summarise_all(
+      summarise_data,
+      ~ mean(.x, na.rm = TRUE)
+    ))
+
+
+
+    # Select
+    rict_data <- dplyr::select(summarise_data,
+      "SITE" = .data$location,
+      "Waterbody" = .data$water_body_id,
+      "Year" = .data$year,
+      "NGR" = .data$ngr,
+      "Easting" = .data$ngr_easting,
+      "Northing" = .data$ngr_northing,
+      "Altitude" = .data$s_altitude,
+      "Slope" = .data$s_slope,
+      "Discharge" = .data$s_discharge_cat,
+      "Dist_from_Source" = .data$s_dist_from_source,
+      "Mean_Width" = .data$river_width,
+      "Mean_depth" = .data$mean_depth,
+      "Alkalinity" = .data$alkalinity,
+      "Total_samples" = .data$sample_count,
+      "Samples_used" = .data$samples_used,
+      "Alk_start" = .data$min_date,
+      "Alk_end" = .data$max_date,
+      Boulder_Cobbles = .data$boulders_cobbles,
+      Pebbles_Gravel = .data$pebbles_gravel,
+      Sand = .data$sand,
+      Silt_Clay = .data$silt_clay,
+      "Spr_Season_ID" = .data$season,
+      "Spr_TL2_WHPT_NTaxa (AbW,DistFam)" = "whpt.ntaxa.abund",
+      "Spr_TL2_WHPT_ASPT (AbW,DistFam)" = "whpt.aspt.abund",
+      "Sum_Season_ID" = .data$season,
+      "Sum_TL2_WHPT_NTaxa (AbW,DistFam)" = "whpt.ntaxa.abund",
+      "Sum_TL2_WHPT_ASPT (AbW,DistFam)" = "whpt.aspt.abund",
+      "Aut_Season_ID" = .data$season,
+      "Aut_TL2_WHPT_NTaxa (AbW,DistFam)" = "whpt.ntaxa.abund",
+      "Aut_TL2_WHPT_ASPT (AbW,DistFam)" = "whpt.aspt.abund",
+      .data$sample_id,
+      season = "season"
+    )
+
+    # Remove season not used.uniqueSampleIdentifer
+    rict_data[
+      rict_data$season == "AUT",
+      grep("Sum_|Spr_", names(rict_data), perl = TRUE),
+    ] <- NA
+    rict_data[
+      rict_data$season == "SUM",
+      grep("Aut_|Spr_", names(rict_data), perl = TRUE),
+    ] <- NA
+    rict_data[
+      rict_data$season == "SPR",
+      grep("Sum_|Aut_", names(rict_data), perl = TRUE),
+    ] <- NA
+
+    # Add season id when required
+    rict_data$Spr_Season_ID[!is.na(rict_data$Spr_Season_ID)] <- 1
+    rict_data$Sum_Season_ID[!is.na(rict_data$Sum_Season_ID)] <- 2
+    rict_data$Aut_Season_ID[!is.na(rict_data$Aut_Season_ID)] <- 3
+    # Bias where required
+    rict_data$SPR_NTAXA_BIAS <- bias
+    rict_data$SUM_NTAXA_BIAS <- bias
+    rict_data$AUT_NTAXA_BIAS <- bias
+
+    rict_data$VELOCITY <- NA
+    rict_data$HARDNESS <- NA
+    rict_data$CALCIUM <- NA
+    rict_data$CONDUCTIVITY <- NA
+    # Replace NANs
+    is.nan.data.frame <- function(x) {
+      do.call(cbind, lapply(x, is.nan))
+    }
+    rict_data[is.nan(rict_data)] <- NA
+    # Discharge must be numeric to pass validation
+    rict_data$Discharge <- as.numeric(rict_data$Discharge)
+    rict_data <- data.frame(rict_data, check.names = FALSE)
+
+
+    rict_data$Altitude <- 34
+    rict_data$Slope <- 3
+    rict_data$Discharge <- 4
+    rict_data$Dist_from_Source <- 15
+    rict_data <- rict_data[rict_data$sample_id != '1582198',]
+    rict_data <- rict_data[rict_data$sample_id != '1017980',]
+    if (nrow(rict_data) == 0) {
+      return(NULL)
+    }
+    rict_prediction <- rict::rict_validate(rict_data, stop_if_all_fail = FALSE)
+    if (nrow(rict_prediction$data) == 0) {
+      return(NULL)
+    }
+
+    rict_prediction <- rict::rict_predict(rict_data)
+    rict_aspt <- tibble(
+      "location_id" = rict_prediction$SITE,
+      "index" = c(
+        "WHPT ASPT"
+      ),
+      "predicted_response" = c(
+        rict_prediction$TL2_WHPT_ASPT_AbW_DistFam_spr
+      )
+    )
+    rict_ntaxa <- tibble(
+      "location_id" = rict_prediction$SITE,
+      "index" = "WHPT NTAXA",
+      "predicted_response" = rict_prediction$TL2_WHPT_NTAXA_AbW_DistFam_spr
+    )
+    rict_prediction <- bind_rows(rict_aspt, rict_ntaxa)
+  })
+  rict_prediction <- bind_rows(predict_data)
+  rict_prediction <- unique(rict_prediction)
+
+  return(rict_prediction)
 }
-predictions <- prediction_function(predictors)
+predictions <- prediction_function(data)
 predictions
 ```
 
@@ -182,9 +433,12 @@ indexes <- right_join(sample_info, indexes,
 predictions <- right_join(sample_info, predictions,
   by = c("location_id" = "location_id")
 )
-predictions$response <- as.character(predictions$response)
+
+# predictions$response <- as.character(predictions$response)
 
 combined_data <- bind_rows(questions, predictions, indexes)
+
+
 ```
 
 

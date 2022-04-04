@@ -47,7 +47,7 @@ indices <- function(data, name = NULL, model_dataframe = NULL) {
     index$parameter <- model$analysis_name
     index$response <- as.character(index$response) # indices can be character or numbers
     if(nrow(index) > 0) {
-       index <- combine(index, data)
+       index <- combine(index, data, name = model$assessment)
 
     } else {
       return(NULL)

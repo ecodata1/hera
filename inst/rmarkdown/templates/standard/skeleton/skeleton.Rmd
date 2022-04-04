@@ -3,7 +3,10 @@ title: "Assessment Template"
 output: rmarkdown::html_vignette
 editor_options: 
   chunk_output_type: console
-runtime: shiny
+vignette: >
+  %\VignetteIndexEntry{Assessment Template}
+  %\VignetteEncoding{UTF-8}  
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r, include = FALSE}
@@ -43,6 +46,17 @@ standard_format$standard %>%
   filter(attribute != "standard_reference") %>%
   knitr::kable()
 ```
+
+## Data Sources
+
+List of data sources. Can be demo data stored within package, web services or shared online file.
+
+```{r}
+sources <- tibble(
+  data_sources = c(NA)
+)
+```
+
 
 ## Data
 
@@ -191,7 +205,7 @@ combined_data <- bind_rows(questions, predictions, indexes)
 ```{r assessment_table}
 
 assessment_table <- tibble(
-  asesssment = c( "high", 
+  assessment = c( "high", 
                   "good", 
                   "moderate",
                   "poor",
@@ -225,7 +239,8 @@ assessment_function <- function(data, assessment_table) {
   # Transform data -----------------------------------------------------------
   data <- data %>%
     select(.data$sample_id, .data$question, .data$response) %>%
-    filter(.data$question %in% c("MY_PREDICTION"))
+    filter(.data$question %in% c("MY_PREDICTION",
+                                 "MY_METRIC"))
   data$response <- as.numeric(data$response)
 
   data <- data %>%
@@ -294,6 +309,7 @@ knitr::kable(check_list$standard_check)
 model_dataframe <- hera::model_dataframe
 model <- tibble(
   analysis_name = standard$parameter,
+  assessment = standard$standard_long,
   standard = list(standard),
   location = list(location[1, ]),
   sample = list(sample[1, ]),
@@ -309,7 +325,7 @@ model <- tibble(
   predictions = list(predictions[predictions$location_id == predictions$location_id[1], ])
 )
 
-model_dataframe <- model_dataframe[model_dataframe$analysis_name != standard$parameter, ]
+model_dataframe <- model_dataframe[model_dataframe$assessment != standard$standard_long, ]
 
 model_dataframe <- bind_rows(model_dataframe, model)
 new_model_dataframe <- model_dataframe

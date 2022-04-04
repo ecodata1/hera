@@ -42,7 +42,7 @@ standard <- tibble(
   standard_long = "Combined aquatic plants",
   standard_reference = NA,
   aggregation = NA,
-  status = "Development"
+  status = "development"
 )
 
 standard_format <- hera:::hera_format(standard = standard) # format assessment data

@@ -1,8 +1,10 @@
 ---
-title: "fim"
+title: "Bankside Consistency"
 output: rmarkdown::html_vignette
+editor_options: 
+  chunk_output_type: console
 vignette: >
-  %\VignetteIndexEntry{fim}
+  %\VignetteIndexEntry{Bankside Consistency}
   %\VignetteEncoding{UTF-8}  
   %\VignetteEngine{knitr::rmarkdown}
 ---
@@ -22,6 +24,8 @@ library(testthat)
 
 This document has been created following the generic [assessment guidance](https://ecodata1.github.io/hera/articles/development_guide.html).
 
+This is the Rapid Assessment Technique (RAT) for rsults from bankside invertebrates analysis to check consistency with Water Body Status.
+
 ## Details
 
 <!-- Create a new regulatory assessment by changing the CAPITLIZE info below: -->
@@ -29,13 +33,13 @@ This document has been created following the generic [assessment guidance](https
 ```{r setup}
 
 standard <- tibble(
-  standard_short = "fim",
+  standard_short = "Bankside Consistency", 
   quality_element = "River Invertebrates",
-  parameter = "River Invertebrates",
-  standard_long = "Freshwater Invertebrate Model",
+  parameter = "River Invertebrates", 
+  standard_long = "Rapid Assessment of Bankside Consistency with Water Body Status", 
   standard_reference = NA,
   aggregation = NA,
-  status = "testing"
+  status = "development"
 )
 
 standard_format <- hera:::hera_format(standard = standard) # format assessment data
@@ -119,7 +123,6 @@ questions <- data %>% select(
 questions
 ```
 
-
 ## Metrics
 
 If applicable...
@@ -127,26 +130,17 @@ If applicable...
 ```{r indices}
 
 indices_function <- function(data) {
-  # Some calculated metric e.g. total responses in sample etc:
-  library(macroinvertebrateMetrics)
   # Only calculate metric if required
     if (!is.null(
       nrow(data$question[data$question == "WHPT_ASPT"]))) {
     return(NULL)
-  }
-  data <- data %>%
-    transmute(
-      SAMPLE_ID = sample_id,
-      RESULT = response,
-      TAXON = label
-    ) %>%
-    macroinvertebrateMetrics::calcWhpt()
-  data <- data %>%
-    transmute(
-      sample_id = SAMPLE_ID,
-      question = DETERMINAND,
-      response = as.character(RESULT)
-    )
+    }
+
+  metric <- 
+    model_dataframe$indices_function[
+      model_dataframe$assessment == "Freshwater Invertebrate Model"]
+ 
+  data <- metric[[1]](data)
   return(data)
 }
 indexes <- indices_function(data)
@@ -156,44 +150,27 @@ indexes
 ## Predictors
 
 ```{r predictors}
-
-predictors <- whpt::demo_data %>% select(
-  d_f_source,
-  Altitude,
-  NGR,
-  logaltbar,
-  log_area,
-  disch_cat,
-  slope,
-  chalk,
-  clay,
-  hardrock,
-  limestone,
-  peat,
-  date_taken,
-  question,
-  sample_id
+predictors <- tibble(
+   PREDICTOR_1 = NA,
+   PREDICTOR_2 = NA,
+   location_id = NA
+  # ...
 )
-predictors$sample_id[1:2] <- 1234
-predictors$location_id[1:2] <- 8715
-predictors$location_id[3:4] <- 1
-knitr::kable(predictors)
+knitr::kable(predictors) 
 ```
 
 ## Predict
 
 ```{r prediction}
 prediction_function <- function(predictors) {
-  library(whpt)
+
   # Generates prediction based on predictors...
-  prediction <- whpt::whpt_predict(predictors)
-  prediction <- ungroup(prediction)
-  prediction <- prediction %>%  transmute(
-    sample_id = as.character(sample_id),
-    location_id = data$location_id,
-    response = as.character(predicted_response),
-    question = index
+  prediction <- tibble(
+    question = NA,
+    response = NA,
+    location_id = NA
   )
+
   return(prediction)
 }
 predictions <- prediction_function(predictors)
@@ -203,46 +180,42 @@ predictions
 ```{r together, echo=FALSE}
 
 # All Together Now
-# Combine observations, metrics & predictions
-sample_info <- data %>%
+sample_info <- data %>% 
   select(names(sample), names(location)) %>%
   unique()
 
-if (!is.null(indexes)) {
-  indexes <- right_join(sample_info, indexes,
-    by = c("sample_id" = "sample_id")
-  )
+if(!is.null(indexes)) {
+indexes <- right_join(sample_info, indexes,
+  by = c("sample_id" = "sample_id")
+)
 } else {
   indexes <- data
 }
 
-predictions <- inner_join(sample_info, predictions,
-  by = c("location_id","sample_id")
+predictions <- right_join(sample_info, predictions,
+  by = c("location_id" = "location_id")
 )
 predictions$response <- as.character(predictions$response)
 
-combined_data <- bind_rows(questions, predictions, indexes)
+combined_data <- bind_rows(data, predictions, indexes)
 ```
+
 
 ## Assessment
 
 ```{r assessment_table}
 
 assessment_table <- tibble(
-  assessment = c(
-    "high",
-    "good",
-    "moderate",
-    "poor",
-    "bad"
-  ),
-  value = c(
-    0.80,
-    0.60,
-    0.40,
-    0.20,
-    0
-  )
+  assessment = c( "high", 
+                  "good", 
+                  "moderate",
+                  "poor",
+                  "bad"),
+  value = c(0.80,
+            0.60,
+            0.40,
+            0.20,
+            0)
   # ...
   # "red" = 0.33
   # "amber" = 0.5
@@ -259,14 +232,16 @@ assessment_table
 
 ```{r assessment}
 assessment_function <- function(data, assessment_table) {
-  if (nrow(data %>% filter(question == "MY_METRIC")) == 0) {
+
+  if (nrow(data %>%  filter(question == "MY_METRIC")) == 0) {
     return(NULL)
   }
 
   # Transform data -----------------------------------------------------------
   data <- data %>%
     select(.data$sample_id, .data$question, .data$response) %>%
-    filter(.data$question %in% c("Reference ASPT", "WHPT_ASPT"))
+    filter(.data$question %in% c("MY_PREDICTION",
+                                 "MY_METRIC"))
   data$response <- as.numeric(data$response)
 
   data <- data %>%
@@ -274,25 +249,26 @@ assessment_function <- function(data, assessment_table) {
     group_by(.data$sample_id) %>%
     pivot_wider(names_from = .data$question, values_from = .data$response) %>%
     ungroup()
-  data[is.na(data)] <- 0
-
-  data$eqr <- data$WHPT_ASPT / data$`Reference ASPT`
-
+    data[is.na(data)] <- 0
+  
+  data$eqr <- data$MY_METRIC / data$MY_PREDICTION 
+  
   class <- cut(data$eqr,
     breaks = c(1, assessment_table$value),
-    labels = assessment_table$assessment
+    labels = assessment_table$assesssment
   )
 
   assessments <- data.frame(
     sample_id = data$sample_id,
-    class = as.character(class),
-    eqr = as.character(data$eqr)
+    class = class,
+    eqr = data$eqr,
+    status = data$status
   )
 
-  assessments <- pivot_longer(assessments, -sample_id,
+ assessments <- pivot_longer(assessments, -sample_id,
     names_to = "question", values_to = "response"
   )
-
+    
   return(assessments)
 }
 assessments <- assessment_function(combined_data, assessment_table)
@@ -307,14 +283,17 @@ Confidence of assessment.
 ```{r}
 
 confidence_function <- function(data, aggregates = "sample_id") {
+
   confidence <- tibble(
     aggregates = NA,
     question = NA,
     response = NA
   )
-
+  
   names(confidence)[1] <- aggregates[1]
+  
 }
+
 ```
 
 ## Checklist
@@ -351,7 +330,7 @@ model_dataframe <- model_dataframe[model_dataframe$assessment != standard$standa
 
 model_dataframe <- bind_rows(model_dataframe, model)
 new_model_dataframe <- model_dataframe
-new_model_dataframe
+new_model_dataframe 
 usethis::use_data(model_dataframe, overwrite = TRUE)
 ```
 
@@ -361,5 +340,6 @@ Below is an interactive application displaying the results of your assessment.
 
 ```{r launch_app, echo=FALSE, eval=FALSE}
 # No need to edit this code
-launch_app(new_model_dataframe = model_dataframe, data = whpt::demo_data)
+launch_app(new_model_dataframe = model_dataframe, data = data)
+
 ```

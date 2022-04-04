@@ -6,7 +6,8 @@
 #' @format A data frame with 1 rows and 5 variables:
 #' \describe{
 #'   \item{analysis_name}{Name of WFD analysis}
-#'   \item{standard}{Standard}
+#'   \item{assessment}{assessment}
+#'   \item{standard}{standard}
 #'   \item{location}{Meta data collected for Location}
 #'   \item{sample}{Meta data collected for sample}
 #'   \item{validation_function}{Function to validate data}

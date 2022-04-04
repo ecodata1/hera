@@ -441,8 +441,7 @@ tibble(environment_agency_data)
 
 We can then run this EA data through `hera`:
 
-```{r, echo=TRUE, warning=F, message=F}
-
+```
 predictions <- hera::prediction(environment_agency_data)
 
 predictions %>%

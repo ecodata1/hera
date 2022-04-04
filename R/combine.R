@@ -1,7 +1,13 @@
+#' Combine output with all columns from data relevant to assessment name
+#' Either by sample_id or location_id (depending how output is calculated)
 #' @importFrom dplyr inner_join right_join select filter
 #' @importFrom rlang .data
-combine <- function(output, data) {
-  model <- hera::model_dataframe %>% filter(.data$analysis_name == unique(output$parameter))
+combine <- function(output, data, name = NULL) {
+  if(!is.null(name)){
+  model <- hera::model_dataframe %>% filter(.data$assessment == name)
+  } else {
+  model <- hera::model_dataframe
+  }
   if (any(names(output) %in% "sample_id") && any(names(data) %in% "sample_id")) {
     sample_ids <- data %>%
       select(
