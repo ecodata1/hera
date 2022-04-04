@@ -73,7 +73,7 @@
   <main id="main"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods</h1>
             
-            <h4 data-toc-skip class="date">2022-03-04</h4>
+            <h4 data-toc-skip class="date">2022-04-04</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ecodata1/hera/blob/HEAD/vignettes/hera_specifications.Rmd" class="external-link"><code>vignettes/hera_specifications.Rmd</code></a></small>
       <div class="d-none name"><code>hera_specifications.Rmd</code></div>
@@ -433,26 +433,11 @@ outline: 0 ;
 <span id="cb15-21"><a href="#cb15-21"></a><span class="co">#   source_altitude &lt;int&gt;, slope &lt;dbl&gt;, water_body_id &lt;chr&gt;,</span></span>
 <span id="cb15-22"><a href="#cb15-22"></a><span class="co">#   water_body_type &lt;chr&gt;, water_body &lt;chr&gt;</span></span></code></pre></div>
 <p>We can then run this EA data through <code>hera</code>:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a></span>
-<span id="cb16-2"><a href="#cb16-2"></a>predictions &lt;-<span class="st"> </span>hera<span class="op">::</span><span class="kw">prediction</span>(environment_agency_data)</span>
-<span id="cb16-3"><a href="#cb16-3"></a></span>
-<span id="cb16-4"><a href="#cb16-4"></a>predictions <span class="op">%&gt;%</span></span>
-<span id="cb16-5"><a href="#cb16-5"></a><span class="st">  </span><span class="kw">select</span>(date_taken, question, response) <span class="op">%&gt;%</span></span>
-<span id="cb16-6"><a href="#cb16-6"></a><span class="st">  </span><span class="kw">unique</span>()</span>
-<span id="cb16-7"><a href="#cb16-7"></a><span class="co"># A tibble: 25 × 3</span></span>
-<span id="cb16-8"><a href="#cb16-8"></a>   date_taken question  response        </span>
-<span id="cb16-9"><a href="#cb16-9"></a>   <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">      </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">     </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">           </span></span>
-<span id="cb16-10"><a href="#cb16-10"></a><span class="st"> </span><span class="dv">1</span> <span class="dv">2015-09-08</span> ref_taxa  <span class="fl">8.81930387078011</span></span>
-<span id="cb16-11"><a href="#cb16-11"></a> <span class="dv">2</span> <span class="dv">2015-09-08</span> ref_algae <span class="fl">0.05</span>            </span>
-<span id="cb16-12"><a href="#cb16-12"></a> <span class="dv">3</span> <span class="dv">2015-09-08</span> ref_nfg   <span class="fl">5.62767305048888</span></span>
-<span id="cb16-13"><a href="#cb16-13"></a> <span class="dv">4</span> <span class="dv">2015-09-08</span> ref_rmni  <span class="fl">7.1237923684044</span> </span>
-<span id="cb16-14"><a href="#cb16-14"></a> <span class="dv">5</span> <span class="dv">2010-06-17</span> ref_taxa  <span class="fl">8.81930387078011</span></span>
-<span id="cb16-15"><a href="#cb16-15"></a> <span class="dv">6</span> <span class="dv">2010-06-17</span> ref_algae <span class="fl">0.05</span>            </span>
-<span id="cb16-16"><a href="#cb16-16"></a> <span class="dv">7</span> <span class="dv">2010-06-17</span> ref_nfg   <span class="fl">5.62767305048888</span></span>
-<span id="cb16-17"><a href="#cb16-17"></a> <span class="dv">8</span> <span class="dv">2010-06-17</span> ref_rmni  <span class="fl">7.1237923684044</span> </span>
-<span id="cb16-18"><a href="#cb16-18"></a> <span class="dv">9</span> <span class="dv">2008-07-30</span> ref_taxa  <span class="fl">8.81930387078011</span></span>
-<span id="cb16-19"><a href="#cb16-19"></a><span class="dv">10</span> <span class="dv">2008-07-30</span> ref_algae <span class="fl">0.05</span>            </span>
-<span id="cb16-20"><a href="#cb16-20"></a><span class="co"># … with 15 more rows</span></span></code></pre></div>
+<pre><code><span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">::</span><span class="fu"><a href="../reference/prediction.html">prediction</a></span><span class="op">(</span><span class="va">environment_agency_data</span><span class="op">)</span>
+
+<span class="va">predictions</span> <span class="op">%&gt;%</span>
+  <span class="fu">select</span><span class="op">(</span><span class="va">date_taken</span>, <span class="va">question</span>, <span class="va">response</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="shared-data-tables">
@@ -472,18 +457,19 @@ outline: 0 ;
 </h4>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a></span>
 <span id="cb17-2"><a href="#cb17-2"></a>hera<span class="op">::</span>model_dataframe</span>
-<span id="cb17-3"><a href="#cb17-3"></a><span class="co"># A tibble: 5 × 15</span></span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="co"># A tibble: 6 × 15</span></span>
 <span id="cb17-4"><a href="#cb17-4"></a>  analysis_name           assessment standard location sample   validation_func…</span>
 <span id="cb17-5"><a href="#cb17-5"></a>  <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">                   </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">      </span><span class="er">&lt;</span>list<span class="op">&gt;</span><span class="st">   </span><span class="er">&lt;</span>list<span class="op">&gt;</span><span class="st">   </span><span class="er">&lt;</span>list<span class="op">&gt;</span><span class="st">   </span><span class="er">&lt;</span>lgl<span class="op">&gt;</span><span class="st">           </span></span>
-<span id="cb17-6"><a href="#cb17-6"></a><span class="dv">1</span> River Invertebrates     rict       <span class="op">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="ot">NA</span>              </span>
-<span id="cb17-7"><a href="#cb17-7"></a><span class="dv">2</span> River Macrophytes       UKTAG Riv… <span class="op">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="ot">NA</span>              </span>
-<span id="cb17-8"><a href="#cb17-8"></a><span class="dv">3</span> Combined aquatic plants Combined … <span class="op">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="ot">NA</span>              </span>
-<span id="cb17-9"><a href="#cb17-9"></a><span class="dv">4</span> River Diatoms           River Dia… <span class="op">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="ot">NA</span>              </span>
-<span id="cb17-10"><a href="#cb17-10"></a><span class="dv">5</span> River Invertebrates     Freshwate… <span class="op">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="ot">NA</span>              </span>
-<span id="cb17-11"><a href="#cb17-11"></a><span class="co"># … with 9 more variables: indices_function &lt;list&gt;, prediction_function &lt;list&gt;,</span></span>
-<span id="cb17-12"><a href="#cb17-12"></a><span class="co">#   assessment_function &lt;list&gt;, confidence_function &lt;list&gt;, indices &lt;list&gt;,</span></span>
-<span id="cb17-13"><a href="#cb17-13"></a><span class="co">#   assessment_table &lt;list&gt;, questions &lt;list&gt;, predictors &lt;list&gt;,</span></span>
-<span id="cb17-14"><a href="#cb17-14"></a><span class="co">#   predictions &lt;list&gt;</span></span></code></pre></div>
+<span id="cb17-6"><a href="#cb17-6"></a><span class="dv">1</span> River Macrophytes       UKTAG Riv… <span class="op">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="ot">NA</span>              </span>
+<span id="cb17-7"><a href="#cb17-7"></a><span class="dv">2</span> Combined aquatic plants Combined … <span class="op">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="ot">NA</span>              </span>
+<span id="cb17-8"><a href="#cb17-8"></a><span class="dv">3</span> River Diatoms           River Dia… <span class="op">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="ot">NA</span>              </span>
+<span id="cb17-9"><a href="#cb17-9"></a><span class="dv">4</span> River Invertebrates     Freshwate… <span class="op">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="ot">NA</span>              </span>
+<span id="cb17-10"><a href="#cb17-10"></a><span class="dv">5</span> River Invertebrates     Rapid Ass… <span class="op">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="ot">NA</span>              </span>
+<span id="cb17-11"><a href="#cb17-11"></a><span class="dv">6</span> River Invertebrates     rict       <span class="op">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>tibble<span class="op">&gt;</span><span class="st"> </span><span class="ot">NA</span>              </span>
+<span id="cb17-12"><a href="#cb17-12"></a><span class="co"># … with 9 more variables: indices_function &lt;list&gt;, prediction_function &lt;list&gt;,</span></span>
+<span id="cb17-13"><a href="#cb17-13"></a><span class="co">#   assessment_function &lt;list&gt;, confidence_function &lt;list&gt;, indices &lt;list&gt;,</span></span>
+<span id="cb17-14"><a href="#cb17-14"></a><span class="co">#   assessment_table &lt;list&gt;, questions &lt;list&gt;, predictors &lt;list&gt;,</span></span>
+<span id="cb17-15"><a href="#cb17-15"></a><span class="co">#   predictions &lt;list&gt;</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3">

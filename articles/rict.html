@@ -114,7 +114,7 @@
 <tr class="even">
 <td align="left">standard_long</td>
 <td align="left">rict</td>
-<td align="left">FALSE</td>
+<td align="left">TRUE</td>
 </tr>
 <tr class="odd">
 <td align="left">aggregation</td>
@@ -123,11 +123,16 @@
 </tr>
 <tr class="even">
 <td align="left">status</td>
-<td align="left">testing</td>
+<td align="left">development</td>
 <td align="left">FALSE</td>
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section level2">
+<h2 id="data-sources">Data Sources<a class="anchor" aria-label="anchor" href="#data-sources"></a>
+</h2>
+<p>List of data sources (to test against). Can be more than source such as demo data stored within package, web services or shared online file.</p>
 </div>
 <div class="section level2">
 <h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
@@ -167,23 +172,22 @@
 <div class="section level2">
 <h2 id="metrics">Metrics<a class="anchor" aria-label="anchor" href="#metrics"></a>
 </h2>
-<p>If applicable…</p>
-<pre><code><span class="co">#&gt; Loading required package: magrittr</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; Attaching package: 'magrittr'</span>
-<span class="co">#&gt; The following objects are masked from 'package:testthat':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     equals, is_less_than, not</span>
-<span class="co">#&gt; The following object is masked from 'package:purrr':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     set_names</span>
-<span class="co">#&gt; The following object is masked from 'package:tidyr':</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;     extract</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 3</span></span>
-<span class="co">#&gt;   response question sample_id</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span></code></pre>
+<p>Calculate WHPT metric (currently only metric used in rict classification).</p>
+<pre><code><span class="co">#&gt; Warning in mask$eval_all_mutate(quo): NAs introduced by coercion</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 69 × 3</span></span>
+<span class="co">#&gt;    sample_id question   response</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 11125     WHPT_SCORE 17.3    </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 320838    WHPT_SCORE 150.3   </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 331662    WHPT_SCORE 151.8   </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 331673    WHPT_SCORE 118.1   </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 331674    WHPT_SCORE 106.2   </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 345636    WHPT_SCORE 154.3   </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 345859    WHPT_SCORE 131     </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 377128    WHPT_SCORE 163.9   </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 388111    WHPT_SCORE 130.3   </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 390329    WHPT_SCORE 171.8   </span>
+<span class="co">#&gt; <span style="color: #949494;"># … with 59 more rows</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="predictors">Predictors<a class="anchor" aria-label="anchor" href="#predictors"></a>
@@ -208,10 +212,18 @@
 <div class="section level2">
 <h2 id="predict">Predict<a class="anchor" aria-label="anchor" href="#predict"></a>
 </h2>
-<pre><code><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 3</span></span>
-<span class="co">#&gt;   question response location_id</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span></span></code></pre>
+<pre><code><span class="co">#&gt; Warning in .f(.x[[i]], ...): NAs introduced by coercion</span>
+<span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span>
+<span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span>
+<span class="co">#&gt; Success, all validation checks passed!</span>
+<span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span>
+<span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span>
+<span class="co">#&gt; Success, all validation checks passed!</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 3</span></span>
+<span class="co">#&gt;   location_id                                             index predicted_respo…</span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> http://environment.data.gov.uk/ecology/site/bio/100: D… WHPT…             4.64</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> http://environment.data.gov.uk/ecology/site/bio/100: D… WHPT…            25.0</span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="assessment">Assessment<a class="anchor" aria-label="anchor" href="#assessment"></a>
@@ -240,8 +252,8 @@
 </h2>
 <pre><code><span class="co">#&gt; Warning in standard$required[1:6] &lt;- c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, :</span>
 <span class="co">#&gt; number of items to replace is not a multiple of replacement length</span>
-<span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🎉</span>
-<span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🥳</span></code></pre>
+<span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 😸</span>
+<span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🎉</span></code></pre>
 <table class="table">
 <thead><tr class="header">
 <th align="left">check</th>
@@ -266,14 +278,15 @@
 <div class="section level2">
 <h2 id="update">Update<a class="anchor" aria-label="anchor" href="#update"></a>
 </h2>
-<pre><code><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 15</span></span>
+<pre><code><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 15</span></span>
 <span class="co">#&gt;   analysis_name           assessment standard location sample   validation_func…</span>
 <span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>           </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span> River Macrophytes       UKTAG Riv… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Combined aquatic plants Combined … &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">3</span> River Diatoms           River Dia… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">4</span> River Invertebrates     Freshwate… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> River Invertebrates     rict       &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> River Invertebrates     Rapid Ass… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">6</span> River Invertebrates     rict       &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
 <span class="co">#&gt; <span style="color: #949494;"># … with 9 more variables: indices_function &lt;list&gt;, prediction_function &lt;list&gt;,</span></span>
 <span class="co">#&gt; <span style="color: #949494;">#   assessment_function &lt;list&gt;, confidence_function &lt;list&gt;, indices &lt;list&gt;,</span></span>
 <span class="co">#&gt; <span style="color: #949494;">#   assessment_table &lt;list&gt;, questions &lt;list&gt;, predictors &lt;list&gt;,</span></span>

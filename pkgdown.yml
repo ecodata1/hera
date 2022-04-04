@@ -2,6 +2,7 @@ pandoc: 2.7.3
 pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
+  bankside-consistency: bankside-consistency.html
   combined-aquatic-plants: combined-aquatic-plants.html
   darleq: darleq.html
   deployment_guide: deployment_guide.html
@@ -11,7 +12,7 @@ articles:
   hera_specifications: hera_specifications.html
   leafpacs: leafpacs.html
   rict: rict.html
-last_built: 2022-03-04T09:56Z
+last_built: 2022-04-04T15:18Z
 urls:
   reference: https://ecodata1.github.io/hera/reference
   article: https://ecodata1.github.io/hera/articles
