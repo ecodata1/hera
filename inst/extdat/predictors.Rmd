@@ -1,0 +1,148 @@
+---
+title: "Predictors"
+output: rmarkdown::html_vignette
+editor_options: 
+  chunk_output_type: console
+vignette: >
+  %\VignetteIndexEntry{Predictors}
+  %\VignetteEncoding{UTF-8}  
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = F
+)
+library(hera)
+library(tidyverse)
+library(testthat)
+```
+
+## Welcome
+
+This helps to create predictor variables for regulatory assessment.
+
+## Data Sources
+
+Survey data
+
+```{r}
+survey_inv <- read_csv("inst/extdat/survey-inv.csv")
+survey_inv <- survey_inv %>% filter(Determinand %in%
+  c(
+    "River Width (m)",
+    "Mean Depth (cm)",
+    "% Boulders/Cobbles",
+    "% Pebbles/Gravel",
+    "% Sand",
+    "% Silt/Clay"
+  ))
+
+survey_inv <- survey_inv %>% mutate(Result = as.numeric(sub("<", "", Result)))
+summary <- survey_inv %>%
+  group_by(Determinand, `Location Code`) %>%
+  summarise(
+    mean_result = mean(Result, na.rm = TRUE)
+  )
+
+summary <- summary %>%
+  pivot_wider(
+    names_from = Determinand,
+    values_from = mean_result
+  )
+
+predictors <- summary %>% rename(
+  location_id = `Location Code`,
+  boulders_cobbles = `% Boulders/Cobbles`,
+  pebbles_gravel = `% Pebbles/Gravel`,
+  silt_clay = `% Silt/Clay`,
+  sand = `% Sand`,
+  river_width = `River Width (m)`,
+  mean_depth = `Mean Depth (cm)`
+)
+```
+
+GIS and discharge data
+
+```{r}
+sampling_points <- read_csv("inst/extdat/sampling-points.csv")
+
+sampling_points <- sampling_points %>% mutate(`S Ecology Alt Site` = ifelse(is.na(`S Ecology Alt Site`), Name, `S Ecology Alt Site`))
+
+sampling_points <- sampling_points %>% mutate(`S Ecology Alt Site` = ifelse(`S Ecology Alt Site` == 0, Name, `S Ecology Alt Site`))
+
+sampling_points <- sampling_points %>%
+  filter(complete.cases(sampling_points))
+
+sampling_points <- sampling_points %>%
+  rename(
+    location_id = "Name",
+    grid_reference = "S Grid Reference",
+    altitude = "S Altitude",
+    slope = "S Slope",
+    discharge_category = "S Discharge Cat",
+    dist_from_source = "S Dist From Source",
+    chemistry_site = "S Ecology Alt Site"
+  )
+```
+
+Join survey and map based predictors
+
+```{r}
+predictors <- full_join(sampling_points,
+  predictors,
+  by = c("location_id" = "location_id")
+)
+
+predictors <- predictors %>%
+  mutate(total = silt_clay +
+    sand +
+    boulders_cobbles +
+    pebbles_gravel)
+```
+
+Alkalinity
+
+```{r}
+alkalinity <- read_csv("inst/extdat/alkalinity.csv")
+
+alk_summary <- alkalinity %>%
+  group_by(`Location Code`) %>%
+  summarise(
+    alkalinity = mean(Result, na.rm = TRUE),
+    alk_samples = n()
+  )
+
+alk_summary <- alk_summary %>%
+  mutate(alkalinity = ifelse(alkalinity < 0, 0, alkalinity))
+
+alk_summary <- alk_summary %>%
+  rename(location_id = "Location Code")
+```
+
+Join alkalinity
+
+```{r}
+predictors <- predictors %>%
+  mutate(chemistry_site = ifelse(is.na(chemistry_site),
+                                 location_id,
+                                 chemistry_site))
+
+predictors <- full_join(predictors,
+  alk_summary,
+  by = c("chemistry_site" = "location_id")
+)
+
+predictors <- predictors %>%
+  filter(!is.na(location_id))
+
+```
+
+Save
+
+```{r}
+write.csv(predictors, file = "predictors.csv", row.names = FALSE)
+```
+

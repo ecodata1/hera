@@ -144,8 +144,17 @@ predictors <- tibble(
    date_taken = NA,
    source_altitude = NA,
    alkalinity = NA,
-   location_id = NA
-  # ...
+   location_id = NA,
+   grid_reference = NA,
+   altitude = NA,
+   slope = NA,
+   discharge_category = NA,
+   boulders_cobbles = NA,
+   pebbles_gravel = NA,
+   sand = NA,
+   silt_clay = NA,
+   mean_depth = NA,
+   river_width = NA
 )
 knitr::kable(predictors) 
 ```

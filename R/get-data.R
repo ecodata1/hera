@@ -88,7 +88,6 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
   data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpMetricsObservation"] <- "River Macrophytes"
   data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpTaxaObservation"] <- "River Macrophytes"
 
-
   data <- data %>% dplyr::rename(
     "question" = .data$label.y,
     "response" = .data$simple_result,
@@ -152,7 +151,7 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
     "northing",
     "easting",
     "dist_from_source",
-    "source_altitude",
+    "altitude",
     "Slope",
     "grid_reference",
     "water_body_id",
