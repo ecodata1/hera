@@ -73,7 +73,7 @@
   <main id="main"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods</h1>
             
-            <h4 data-toc-skip class="date">2022-04-04</h4>
+            <h4 data-toc-skip class="date">2022-04-07</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ecodata1/hera/blob/HEAD/vignettes/hera_specifications.Rmd" class="external-link"><code>vignettes/hera_specifications.Rmd</code></a></small>
       <div class="d-none name"><code>hera_specifications.Rmd</code></div>
@@ -412,7 +412,7 @@ outline: 0 ;
 <p>For instance, here is a prototype function to pull data Environment Agency’s data.gov.uk web service and convert to the required <code>hera</code> input format.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>environment_agency_data &lt;-<span class="st"> </span>hera<span class="op">:::</span><span class="kw">get_data</span>(<span class="dt">location_id =</span> <span class="kw">c</span>(<span class="dv">43378</span>, <span class="dv">92751</span>))</span>
 <span id="cb15-2"><a href="#cb15-2"></a><span class="kw">tibble</span>(environment_agency_data)</span>
-<span id="cb15-3"><a href="#cb15-3"></a><span class="co"># A tibble: 2,495 × 29</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="co"># A tibble: 2,495 × 30</span></span>
 <span id="cb15-4"><a href="#cb15-4"></a>   location_id   location_descri… sample_id date_taken season parameter question</span>
 <span id="cb15-5"><a href="#cb15-5"></a>   <span class="op">&lt;</span>chr<span class="op">&gt;</span><span class="st">         </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">            </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">     </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">       </span><span class="er">&lt;</span>int<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">     </span><span class="er">&lt;</span>chr<span class="op">&gt;</span><span class="st">   </span></span>
 <span id="cb15-6"><a href="#cb15-6"></a><span class="st"> </span><span class="dv">1</span> http<span class="op">:</span><span class="er">//</span>envir… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">    </span></span>
@@ -425,12 +425,12 @@ outline: 0 ;
 <span id="cb15-13"><a href="#cb15-13"></a><span class="st"> </span><span class="dv">8</span> http<span class="op">:</span><span class="er">//</span>envir… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">    </span></span>
 <span id="cb15-14"><a href="#cb15-14"></a><span class="st"> </span><span class="dv">9</span> http<span class="op">:</span><span class="er">//</span>envir… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">    </span></span>
 <span id="cb15-15"><a href="#cb15-15"></a><span class="dv">10</span> http<span class="op">:</span><span class="er">//</span>envir… TEST <span class="op">-</span><span class="st"> </span><span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="op">&lt;</span><span class="ot">NA</span><span class="op">&gt;</span><span class="st">    </span></span>
-<span id="cb15-16"><a href="#cb15-16"></a><span class="co"># … with 2,485 more rows, and 22 more variables: response &lt;chr&gt;, label &lt;chr&gt;,</span></span>
+<span id="cb15-16"><a href="#cb15-16"></a><span class="co"># … with 2,485 more rows, and 23 more variables: response &lt;chr&gt;, label &lt;chr&gt;,</span></span>
 <span id="cb15-17"><a href="#cb15-17"></a><span class="co">#   result_id &lt;chr&gt;, units &lt;chr&gt;, latitude &lt;dbl&gt;, longitude &lt;dbl&gt;,</span></span>
 <span id="cb15-18"><a href="#cb15-18"></a><span class="co">#   grid_reference &lt;chr&gt;, alkalinity &lt;dbl&gt;, river_width &lt;int&gt;,</span></span>
 <span id="cb15-19"><a href="#cb15-19"></a><span class="co">#   mean_depth &lt;int&gt;, boulders_cobbles &lt;int&gt;, pebbles_gravel &lt;int&gt;, sand &lt;int&gt;,</span></span>
 <span id="cb15-20"><a href="#cb15-20"></a><span class="co">#   silt_clay &lt;int&gt;, northing &lt;int&gt;, easting &lt;int&gt;, dist_from_source &lt;dbl&gt;,</span></span>
-<span id="cb15-21"><a href="#cb15-21"></a><span class="co">#   source_altitude &lt;int&gt;, slope &lt;dbl&gt;, water_body_id &lt;chr&gt;,</span></span>
+<span id="cb15-21"><a href="#cb15-21"></a><span class="co">#   altitude &lt;int&gt;, source_altitude &lt;int&gt;, slope &lt;dbl&gt;, water_body_id &lt;chr&gt;,</span></span>
 <span id="cb15-22"><a href="#cb15-22"></a><span class="co">#   water_body_type &lt;chr&gt;, water_body &lt;chr&gt;</span></span></code></pre></div>
 <p>We can then run this EA data through <code>hera</code>:</p>
 <pre><code><span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">::</span><span class="fu"><a href="../reference/prediction.html">prediction</a></span><span class="op">(</span><span class="va">environment_agency_data</span><span class="op">)</span>
