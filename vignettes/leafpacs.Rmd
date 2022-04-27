@@ -618,7 +618,7 @@ knitr::kable(check_list$standard_check)
 
 ```{r}
 
-model_dataframe <- hera::model_dataframe
+catalogue <- hera::catalogue
 
 model <- tibble(
   analysis_name = standard$parameter,
@@ -638,18 +638,18 @@ model <- tibble(
   predictions = list(predictions[predictions$location_id == predictions$location_id[1], ])
 )
 
-model_dataframe <- model_dataframe[model_dataframe$assessment != standard$standard_long, ]
+catalogue <- catalogue[catalogue$assessment != standard$standard_long, ]
 
-model_dataframe <- bind_rows(model_dataframe, model)
-new_model_dataframe <- model_dataframe
-new_model_dataframe
+catalogue <- bind_rows(catalogue, model)
+new_catalogue <- catalogue
+new_catalogue
 
-usethis::use_data(model_dataframe, overwrite = TRUE)
+usethis::use_data(catalogue, overwrite = TRUE)
 ```
 
 ## Launch app
 
 ```{r launch_app, echo=TRUE, eval=FALSE}
 # No need to edit this code
-launch_app(new_model_dataframe = model_dataframe, data = all_data)
+launch_app(new_catalogue = catalogue, data = all_data)
 ```

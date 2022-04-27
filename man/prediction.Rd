@@ -4,7 +4,7 @@
 \alias{prediction}
 \title{Predict hera models}
 \usage{
-prediction(data = NULL, name = NULL, model_dataframe = NULL)
+prediction(data = NULL, name = NULL, catalogue = NULL)
 }
 \arguments{
 \item{data}{Dataframe of variables in WFD inter-change format}
@@ -12,7 +12,7 @@ prediction(data = NULL, name = NULL, model_dataframe = NULL)
 \item{name}{Name of assessment to predict. Default is all possible
 assessments.}
 
-\item{model_dataframe}{Dataframe of model_dataframe see `model_dataframe`}
+\item{catalogue}{Dataframe of catalogue see `catalogue`}
 }
 \value{
 Dataframe of predictions
