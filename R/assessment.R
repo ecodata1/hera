@@ -5,7 +5,7 @@
 #' \code{assessment()} assessment
 #'
 #' @param data Dataframe of variables in hera inter-change format
-#' @param model_dataframe Dataframe of model_dataframe see `model_dataframe`
+#' @param catalogue Dataframe of model_dataframe see `catalogue`
 #' @param name Name of the assessment to be used
 #'
 #' @return Dataframe of assessments
@@ -17,22 +17,22 @@
 #' @importFrom magrittr `%>%`
 #' @importFrom purrr map
 #' @export
-assessment <- function(data = NULL, name = NULL, model_dataframe = NULL) {
+assessment <- function(data = NULL, name = NULL, catalogue = NULL) {
   message("Hello from hera, ...work in progress!")
 
-  if (is.null(model_dataframe)) {
-    model_dataframe <- hera::model_dataframe
+  if (is.null(catalogue)) {
+    catalogue <- hera::catalogue
   }
 
-  model_dataframe <- filter_assessment(model = model_dataframe, name = name)
+  catalogue <- filter_assessment(model = catalogue, name = name)
 
   data <- validation(data)
-  indices <- hera::indices(data = data, model_dataframe = model_dataframe)
-  predictions <- hera::prediction(data = data, model_dataframe = model_dataframe)
+  indices <- hera::indices(data = data, catalogue = catalogue)
+  predictions <- hera::prediction(data = data, catalogue = catalogue)
   data <- bind_rows(data, indices, predictions)
 
   assessments <- purrr::map_df(
-    split(model_dataframe, 1:nrow(model_dataframe)),
+    split(catalogue, 1:nrow(catalogue)),
     function(model) {
       if (is.null(model$assessment_function[[1]])) {
         return(NULL)

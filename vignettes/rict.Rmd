@@ -126,8 +126,8 @@ indices_function <- function(data) {
     }
 
   metric <- 
-    model_dataframe$indices_function[
-      model_dataframe$assessment == "Freshwater Invertebrate Model"]
+    catalogue$indices_function[
+      catalogue$assessment == "Freshwater Invertebrate Model"]
  
   data <- metric[[1]](data)
   return(data)
@@ -559,7 +559,7 @@ knitr::kable(check_list$standard_check)
 
 ```{r hera_update}
 # No need to edit this code
-model_dataframe <- hera::model_dataframe
+catalogue <- hera::catalogue
 model <- tibble(
   analysis_name = standard$parameter,
   assessment = standard$standard_long,
@@ -578,12 +578,12 @@ model <- tibble(
   predictions = list(predictions[predictions$location_id == predictions$location_id[1], ])
 )
 
-model_dataframe <- model_dataframe[model_dataframe$assessment != standard$standard_long, ]
+catalogue <- catalogue[catalogue$assessment != standard$standard_long, ]
 
-model_dataframe <- bind_rows(model_dataframe, model)
-new_model_dataframe <- model_dataframe
-new_model_dataframe 
-usethis::use_data(model_dataframe, overwrite = TRUE)
+catalogue <- bind_rows(catalogue, model)
+new_catalogue <- catalogue
+new_catalogue 
+usethis::use_data(catalogue, overwrite = TRUE)
 ```
 
 ## Launch app
@@ -593,6 +593,6 @@ Below is an interactive application displaying the results of your assessment.
 ```{r launch_app, echo=TRUE, eval=FALSE}
 
 # No need to edit this code
-launch_app(new_model_dataframe = model_dataframe, data = data)
+launch_app(new_catalogue = catalogue, data = data)
 
 ```

@@ -4,14 +4,14 @@
 \alias{assessment}
 \title{Assessment}
 \usage{
-assessment(data = NULL, name = NULL, model_dataframe = NULL)
+assessment(data = NULL, name = NULL, catalogue = NULL)
 }
 \arguments{
 \item{data}{Dataframe of variables in hera inter-change format}
 
 \item{name}{Name of the assessment to be used}
 
-\item{model_dataframe}{Dataframe of model_dataframe see `model_dataframe`}
+\item{catalogue}{Dataframe of model_dataframe see `catalogue`}
 }
 \value{
 Dataframe of assessments

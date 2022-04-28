@@ -9,3 +9,6 @@ Meta
 /doc/
 /Meta/
 inst/extdat/predictor_raw_data
+hera.Rcheck/
+hera*.tar.gz
+hera*.tgz

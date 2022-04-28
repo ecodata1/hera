@@ -6,7 +6,7 @@
 #'
 #' @param data Dataframe of variables in WFD inter-change format
 #' @param name Name of the assessment to be used
-#' @param model_dataframe Dataframe of model_dataframe see `model_dataframe`
+#' @param catalogue Dataframe of catalogue see `catalogue`
 #'
 #' @return Dataframe of predictions
 #' @examples
@@ -17,16 +17,16 @@
 #' @importFrom magrittr `%>%`
 #' @importFrom purrr map
 #' @export
-indices <- function(data, name = NULL, model_dataframe = NULL) {
+indices <- function(data, name = NULL, catalogue = NULL) {
   message("Hello from hera, ...work in progress!")
 
-  if (is.null(model_dataframe)) {
-    model_dataframe <- hera::model_dataframe
+  if (is.null(catalogue)) {
+    catalogue <- hera::catalogue
   }
 
-  model_dataframe <- filter_assessment(model = model_dataframe, name = name)
+  catalogue <- filter_assessment(model = catalogue, name = name)
 
-  indices <- purrr::map_df(split(model_dataframe, 1:nrow(model_dataframe)),
+  indices <- purrr::map_df(split(catalogue, 1:nrow(catalogue)),
                            function(model) {
 
     if (is.null(model$indices_function[[1]])) {

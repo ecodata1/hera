@@ -6,8 +6,8 @@ confidences <- function(data, confidence_function = NULL,
                           "location_id",
                           "location_description"
                         )) {
-  confidences <- purrr::map_df(split(hera::model_dataframe,
-                                     1:nrow(hera::model_dataframe)),
+  confidences <- purrr::map_df(split(hera::catalogue,
+                                     1:nrow(hera::catalogue)),
                                function(model) {
     if (is.null(data)) {
       return(NULL)
