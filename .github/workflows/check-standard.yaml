@@ -63,6 +63,12 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt install libgdal-dev libproj-dev libgeos-dev libudunits2-dev
 
+      - name: Install dependencies
+        if: runner.os == 'macOS'
+        run: |
+          install.packages("rgdal", type = "binary")
+        shell: Rscript {0}
+
       - uses: r-lib/actions/setup-r-dependencies@v1
         with:
           extra-packages: rcmdcheck
