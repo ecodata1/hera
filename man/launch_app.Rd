@@ -4,10 +4,10 @@
 \alias{launch_app}
 \title{Launch hera app}
 \usage{
-launch_app(new_model_dataframe = NULL, data = NULL)
+launch_app(new_catalogue = NULL, data = NULL)
 }
 \arguments{
-\item{new_model_dataframe}{Dataframe of model_dataframe see `model_dataframe`}
+\item{new_catalogue}{Dataframe of catalogue see `catalogue`}
 
 \item{data}{Dataframe of variables in WFD inter-change format}
 }
@@ -15,7 +15,7 @@ launch_app(new_model_dataframe = NULL, data = NULL)
 Shiny app
 }
 \description{
-Launches hera shiny app with optional data and `model_dataframe`.
+Launches hera shiny app with optional data and `catalogue`.
 }
 \examples{
 \dontrun{

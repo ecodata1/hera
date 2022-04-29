@@ -5,11 +5,11 @@
 #'
 #' @examples
 #' \dontrun{
-#' model_dataframe <- hera:::create_model_dataframe()
-#' usethis::use_data(model_dataframe, overwrite = TRUE)
+#' catalogue <- hera:::create_catalogue()
+#' usethis::use_data(catalogue, overwrite = TRUE)
 #' }
 #' @importFrom tibble tibble
-create_model_dataframe <- function() {
+create_catalogue <- function() {
   tibble(
     "standard" = c(
       "River Phytobenthos",

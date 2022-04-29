@@ -102,7 +102,7 @@ ui <- tagList(
 server <- function(input, output) {
 
   data <- hera:::PKGENVIR$data
-  new_model_dataframe <- hera:::PKGENVIR$new_model_dataframe
+  new_cataloguee <- hera:::PKGENVIR$new_catalogue
 
   reactiveA <- reactive({
 
@@ -164,7 +164,7 @@ server <- function(input, output) {
 
     if (!is.null(data)) {
 
-      indices <- indices(data, model_dataframe = new_model_dataframe)
+      indices <- indices(data, catalogue = catalogue)
       indices <- bind_rows(indices, data)
       # indices <- bind_rows(data, indices)
       # %>%
@@ -234,11 +234,11 @@ server <- function(input, output) {
 
       output$predictions <- renderUI(list(
         h3("Predictions"), DT::renderDataTable({
-          predictions <- hera::prediction(data, model_dataframe = new_model_dataframe)
+          predictions <- hera::prediction(data, catalogue = new_catalogue)
           predictions %>% select(location_id, sample_id, date_taken, parameter, question, response)
         })
       ))
-      assessments <- assessment(data, model_dataframe = new_model_dataframe)
+      assessments <- assessment(data, catalogue = new_catalogue)
 
       filter_assessments <- assessments %>% select(-date_taken) %>%
          pivot_wider(names_from = question, values_from = response)

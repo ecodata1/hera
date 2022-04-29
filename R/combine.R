@@ -8,9 +8,9 @@
 #' @importFrom rlang .data
 combine <- function(output, data, name = NULL) {
   if(!is.null(name)){
-  model <- hera::model_dataframe %>% filter(.data$assessment == name)
+  model <- hera::catalogue %>% filter(.data$assessment == name)
   } else {
-  model <- hera::model_dataframe
+  model <- hera::catalogue
   }
   if (any(names(output) %in% "sample_id") && any(names(data) %in% "sample_id")) {
     sample_ids <- data %>%

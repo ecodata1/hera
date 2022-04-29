@@ -8,11 +8,11 @@ output:
     number_sections: yes
     toc: yes
 vignette: >
+  %\VignetteEncoding{UTF-8}  
   %\VignetteIndexEntry{Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods}
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}  
 editor_options: 
-  chunk_output_type: console 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -464,7 +464,7 @@ Following data tables are shared through `hera`...
 
 ```{r echo=TRUE, warning=F}
 
-hera::model_dataframe
+hera::catalogue
 
 
 ```

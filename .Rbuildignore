@@ -8,3 +8,6 @@
 ^\.github$
 ^doc$
 ^Meta$
+^hera\.Rcheck$
+^hera.*\.tar\.gz$
+^hera.*\.tgz$

@@ -7,7 +7,7 @@
 #' @param data Dataframe of variables in WFD inter-change format
 #' @param name Name of assessment to predict. Default is all possible
 #'   assessments.
-#' @param model_dataframe Dataframe of model_dataframe see `model_dataframe`
+#' @param catalogue Dataframe of catalogue see `catalogue`
 #' @return Dataframe of predictions
 #' @examples
 #' predictions <- prediction(demo_data)
@@ -18,18 +18,18 @@
 #' @importFrom magrittr `%>%`
 #' @importFrom purrr map
 #' @export
-prediction <- function(data = NULL, name = NULL, model_dataframe = NULL) {
+prediction <- function(data = NULL, name = NULL, catalogue = NULL) {
 
   message("Hello from hera, ...work in progress!")
-  if (is.null(model_dataframe)) {
-    model_dataframe <- hera::model_dataframe
+  if (is.null(catalogue)) {
+    catalogue <- hera::catalogue
   }
 
-  model_dataframe <- filter_assessment(model = model_dataframe, name = name)
+  catalogue <- filter_assessment(model = catalogue, name = name)
 
   data <- validation(data)
-  predictions <- purrr::map_df(split(model_dataframe,
-                                     1:nrow(model_dataframe)), function(model) {
+  predictions <- purrr::map_df(split(catalogue,
+                                     1:nrow(catalogue)), function(model) {
 
     if (is.null(model$prediction_function[[1]])) {
       return(NULL)

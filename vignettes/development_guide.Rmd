@@ -90,9 +90,9 @@ standard_format$standard %>%
 ```
 
 Access pre-existing metadata from within `hera` package. All metadata is saved
-in the `model_dataframe` dataframe.
+in the `catalogue` dataframe.
 ```{r details_preexisting}
-model_dataframe$standard[[1]]
+catalogue$standard[[1]]
 ```
 
 

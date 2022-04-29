@@ -6,10 +6,10 @@ prepapre_input <- function(data) {
     group_by(.data$sample_number, .data$analysis_repname) %>%
     nest()
 
-  model_dataframe <- create_model_dataframe()
+  catalogue <- create_catalogue()
   # Join predictions dataframe to data
   by_sample_number <- inner_join(by_sample_number,
-    model_dataframe[, c("analysis_repname", "indices_function")],
+    catalogue[, c("analysis_repname", "indices_function")],
     by = c("analysis_repname" = "analysis_repname")
   )
 }
