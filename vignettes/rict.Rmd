@@ -142,7 +142,6 @@ indexes
 predictors <- tibble(
    dist_from_source = NA,
    date_taken = NA,
-   source_altitude = NA,
    alkalinity = NA,
    location_id = NA,
    grid_reference = NA,
@@ -163,7 +162,7 @@ knitr::kable(predictors)
 
 ```{r prediction}
 prediction_function <- function(data) {
-  
+
   bias <- 6.21
   analysis <- "whpt ntaxa abund"
 
@@ -176,15 +175,14 @@ prediction_function <- function(data) {
   #   data <- sepaTools:::uniqueResultIdentifer(data)
   #   names(data) <- tolower(names(data))
   # }
-
-  data <- data[!duplicated(data$result_id), ]
+  # data <- data[!duplicated(data$result_id), ]
 
   # Add year  columns
   data$year <- format.Date(data$date_taken, "%Y")
   data$year <- as.integer(data$year)
   check <- FALSE
-  predict_data <- map(unique(data$location_id), function(location) {
-
+  predict_data <- purrr::map(unique(data$location_id), function(location) {
+ 
     data <- data[data$location_id == location, ]
 
      if(!is.null(data$river_width)) {
@@ -208,6 +206,7 @@ prediction_function <- function(data) {
     }
      }
     # NGR columns
+
     data <- tidyr::separate(data,
       .data$grid_reference,
       into = c(
@@ -217,10 +216,8 @@ prediction_function <- function(data) {
       ),
       sep = " "
     )
-
-
     # needs refactoring - but if no Alk results returned then add blanks/NAs
-    data$alkalinity <- 75
+   # data$alkalinity <- 75
     data$sample_count <- NA
     data$samples_used <- NA
     data$min_date <- NA
@@ -273,15 +270,16 @@ prediction_function <- function(data) {
         check.names = check
       )
     }
+
     template_nems <- rict_template()
     names(template_nems) <- tolower(names(template_nems))
-    data$easting <- as.factor(data$easting)
-    data$northing <- as.factor(data$northing)
+     data$easting <- as.factor(data$NGR_EASTING)
+     data$northing <- as.factor(data$NGR_EASTING)
     names(data) <- tolower(names(data))
     data <- dplyr::bind_rows(template_nems, data)
 
     # For each Ecology sample (survey_inv/F_BMWP_SUM) summarise
-    data$location <- paste0(data$location_id, ": ", data$location_description)
+    # data$location <- paste0(data$location_id, ": ", data$location_description)
     data$water_body_id <- 3100
     names(data) <- tolower(names(data))
     data <- data.frame(data, check.names = TRUE)
@@ -291,15 +289,16 @@ prediction_function <- function(data) {
     if (is.null(data$season)) {
       data$season <- 1
     }
+  
     summarise_data <- dplyr::group_by(
       data,
-      .data$location,
+      .data$location_id,
       .data$ngr,
       .data$ngr_easting,
       .data$ngr_northing,
       .data$sample_id,
       .data$season,
-      .data$s_discharge_cat,
+      .data$discharge_category,
       .data$water_body_id,
       .name_repair = TRUE
     )
@@ -308,21 +307,19 @@ prediction_function <- function(data) {
       summarise_data,
       ~ mean(.x, na.rm = TRUE)
     ))
-
-
-
+  
     # Select
     rict_data <- dplyr::select(summarise_data,
-      "SITE" = .data$location,
+      "SITE" = .data$location_id,
       "Waterbody" = .data$water_body_id,
       "Year" = .data$year,
       "NGR" = .data$ngr,
       "Easting" = .data$ngr_easting,
       "Northing" = .data$ngr_northing,
-      "Altitude" = .data$s_altitude,
-      "Slope" = .data$s_slope,
-      "Discharge" = .data$s_discharge_cat,
-      "Dist_from_Source" = .data$s_dist_from_source,
+      "Altitude" = .data$altitude,
+      "Slope" = .data$slope,
+      "Discharge" = .data$discharge_category,
+      "Dist_from_Source" = .data$dist_from_source,
       "Mean_Width" = .data$river_width,
       "Mean_depth" = .data$mean_depth,
       "Alkalinity" = .data$alkalinity,
@@ -384,15 +381,16 @@ prediction_function <- function(data) {
     rict_data <- data.frame(rict_data, check.names = FALSE)
 
 
-    rict_data$Altitude <- 34
-    rict_data$Slope <- 3
-    rict_data$Discharge <- 4
-    rict_data$Dist_from_Source <- 15
+    # rict_data$Altitude <- 34
+    # rict_data$Slope <- 3
+    # rict_data$Discharge <- 4
+    # rict_data$Dist_from_Source <- 15
     rict_data <- rict_data[rict_data$sample_id != '1582198',]
     rict_data <- rict_data[rict_data$sample_id != '1017980',]
     if (nrow(rict_data) == 0) {
       return(NULL)
     }
+
     rict_prediction <- rict::rict_validate(rict_data, stop_if_all_fail = FALSE)
     if (nrow(rict_prediction$data) == 0) {
       return(NULL)
@@ -401,17 +399,14 @@ prediction_function <- function(data) {
     rict_prediction <- rict::rict_predict(rict_data)
     rict_aspt <- tibble(
       "location_id" = rict_prediction$SITE,
-      "index" = c(
-        "WHPT ASPT"
-      ),
-      "predicted_response" = c(
-        rict_prediction$TL2_WHPT_ASPT_AbW_DistFam_spr
+      "question" = "REFERENCE WHPT ASPT",
+      "response" =  as.character(rict_prediction$TL2_WHPT_ASPT_AbW_DistFam_spr
       )
     )
     rict_ntaxa <- tibble(
       "location_id" = rict_prediction$SITE,
-      "index" = "WHPT NTAXA",
-      "predicted_response" = rict_prediction$TL2_WHPT_NTAXA_AbW_DistFam_spr
+      "question" = "REFERENCE WHPT NTAXA",
+      "response" = as.character(rict_prediction$TL2_WHPT_NTAXA_AbW_DistFam_spr)
     )
     rict_prediction <- bind_rows(rict_aspt, rict_ntaxa)
   })

@@ -35,8 +35,9 @@ validation <- function(data = NULL) {
            - all rows must have values")
     } else {
     data$grid_reference <- trimws(data$grid_reference)
-    data$grid_reference <- gsub(" ", "", data$grid_reference)
-    latlon <- rict::osg_parse(data$grid_reference, coord_system = "WGS84")
+    # data$grid_reference <- gsub(" ", "", data$grid_reference)
+    latlon <- rict::osg_parse(gsub(" ", "", data$grid_reference),
+                              coord_system = "WGS84")
     data$latitude <- latlon$lat
     data$longitude <- latlon$lon
     }

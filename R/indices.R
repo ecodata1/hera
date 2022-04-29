@@ -47,7 +47,16 @@ indices <- function(data, name = NULL, model_dataframe = NULL) {
     index$parameter <- model$analysis_name
     index$response <- as.character(index$response) # indices can be character or numbers
     if(nrow(index) > 0) {
-       index <- combine(index, data, name = model$assessment)
+
+      data <- data %>% select(-question,
+                              -response,
+                              -label,
+                              -result_id,
+                              -parameter,
+                              -analysis_name)
+      data <- unique(data)
+      index <- inner_join(index, data, by = "sample_id")
+      # index <- combine(index, data, name = model$assessment)
 
     } else {
       return(NULL)

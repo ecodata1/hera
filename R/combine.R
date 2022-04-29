@@ -1,5 +1,9 @@
 #' Combine output with all columns from data relevant to assessment name
 #' Either by sample_id or location_id (depending how output is calculated)
+#' @param output The output from prediction or other hera function
+#' @param data The input data to prediction or other hera function
+#' @param name Specify a named assessment to combine i.e. filter `data` and
+#'   `output` for specific assessment
 #' @importFrom dplyr inner_join right_join select filter
 #' @importFrom rlang .data
 combine <- function(output, data, name = NULL) {

@@ -29,7 +29,7 @@ This helps to create predictor variables for regulatory assessment.
 Survey data
 
 ```{r}
-survey_inv <- read_csv("inst/extdat/survey-inv.csv")
+survey_inv <- read_csv("inst/extdat/predictor_raw_data/survey-inv.csv")
 survey_inv <- survey_inv %>% filter(Determinand %in%
   c(
     "River Width (m)",
@@ -67,7 +67,7 @@ predictors <- summary %>% rename(
 GIS and discharge data
 
 ```{r}
-sampling_points <- read_csv("inst/extdat/sampling-points.csv")
+sampling_points <- read_csv("inst/extdat/predictor_raw_data/sampling-points.csv")
 
 sampling_points <- sampling_points %>% mutate(`S Ecology Alt Site` = ifelse(is.na(`S Ecology Alt Site`), Name, `S Ecology Alt Site`))
 
@@ -106,7 +106,7 @@ predictors <- predictors %>%
 Alkalinity
 
 ```{r}
-alkalinity <- read_csv("inst/extdat/alkalinity.csv")
+alkalinity <- read_csv("inst/extdat/predictor_raw_data/alkalinity.csv")
 
 alk_summary <- alkalinity %>%
   group_by(`Location Code`) %>%

@@ -59,9 +59,7 @@ prediction <- function(data = NULL, name = NULL, model_dataframe = NULL) {
     prediction$location_id <- as.character(prediction$location_id) # if location NA can be logical class
 
     if (nrow(prediction) > 0) {
-
-      prediction <- combine(prediction, data)
-
+      prediction <- combine(output = prediction, data = data, name = name)
     } else {
       return(NULL)
     }

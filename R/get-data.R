@@ -108,7 +108,8 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
     "dist_from_source" = .data$`Distance from Source`,
     "source_altitude" = .data$`Source Altitude`,
     "label" = .data$pref_label,
-    "units" = .data$property_id
+    "units" = .data$property_id,
+    "discharge_category" = .data$Discharge
   )
 
   data$question[grep("-percentageCoverBand", data$result_id)] <-
@@ -154,6 +155,7 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
     "altitude",
     "Slope",
     "grid_reference",
+    "discharge_category",
     "water_body_id",
     "water_body_type",
     "water_body"
