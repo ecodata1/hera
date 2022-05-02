@@ -19,7 +19,7 @@
 #' @export
 assessment <- function(data = NULL, name = NULL, catalogue = NULL) {
   message("Hello from hera, ...work in progress!")
-
+  data <- validation(data)
   if (is.null(catalogue)) {
     catalogue <- hera::catalogue
   }
@@ -45,7 +45,6 @@ assessment <- function(data = NULL, name = NULL, catalogue = NULL) {
       assessments <- model$assessment_function[[1]](data, assessment_table)
       # Add confidence in assessment
       assessments$parameter <- model$analysis_name
-
       data <- data %>%
         select(
           .data$location_id,

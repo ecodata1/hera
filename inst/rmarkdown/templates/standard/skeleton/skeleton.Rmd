@@ -155,7 +155,11 @@ predictors <- tibble(
    location_id = NA
   # ...
 )
+
+predictors <- pivot_longer(predictors, cols = names(predictors), names_to = "question", values_to = "response")
+
 knitr::kable(predictors) 
+
 ```
 
 ## Predict

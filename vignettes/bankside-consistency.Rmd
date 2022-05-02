@@ -16,8 +16,10 @@ knitr::opts_chunk$set(
   echo = F
 )
 library(hera)
-library(tidyverse)
-library(testthat)
+library(dplyr)
+library(purrr)
+library(tidyr)
+
 ```
 
 ## Welcome
@@ -151,8 +153,6 @@ indexes
 
 ```{r predictors}
 predictors <- tibble(
-   PREDICTOR_1 = NA,
-   PREDICTOR_2 = NA,
    location_id = NA
   # ...
 )

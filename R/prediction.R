@@ -19,7 +19,7 @@
 #' @importFrom purrr map
 #' @export
 prediction <- function(data = NULL, name = NULL, catalogue = NULL) {
-
+  data <- validation(data)
   message("Hello from hera, ...work in progress!")
   if (is.null(catalogue)) {
     catalogue <- hera::catalogue

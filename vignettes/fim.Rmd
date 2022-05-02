@@ -14,8 +14,10 @@ knitr::opts_chunk$set(
   echo = F
 )
 library(hera)
-library(tidyverse)
-library(testthat)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(magrittr)
 ```
 
 ## Welcome
@@ -177,6 +179,7 @@ predictors <- whpt::demo_data %>% select(
 predictors$sample_id[1:2] <- 1234
 predictors$location_id[1:2] <- 8715
 predictors$location_id[3:4] <- 1
+predictors$location_id <- as.character(predictors$location_id)
 knitr::kable(predictors)
 ```
 

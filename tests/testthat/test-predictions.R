@@ -22,7 +22,16 @@ test_that("predictions works", {
   expect_equal(nrow(data), 4)
 })
 
+test_that("Run a single prediction works", {
+  data <- prediction(demo_data,
+                     name = "River Diatoms (phytobenthos)") %>%
+    select(sample_id, response, question) %>%
+    dplyr::slice_sample(n = 4)
+  expect_equal(nrow(data), 4)
+})
+
 test_that("select prediction works", {
+  skip('needs work')
   demo_data <- hera::demo_data
   demo_data$parameter[demo_data$analysis_name %in%
     c(

@@ -181,8 +181,6 @@ data and list of warnings/fails.
 ```{r, echo=TRUE, warning=F, message=F}
 # install.packages("devtools")
 # devtools::install_github("ecodata1/hera")
-library(hera)
-library(tidyverse)
 demo_data <- hera::demo_data
 data <- validation(demo_data) 
 data[5, ]

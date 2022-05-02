@@ -13,66 +13,148 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(hera)
-library(tidyverse)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(magrittr)
 library(kableExtra)
+library(visNetwork)
 ```
-
-<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-      <img src="images/fcs2_logo.png" class="d-block w-100" alt="fcs2 logo">
-    </div>
-    <div class="carousel-item">
-      <img src="images/hera_logo.png" class="d-block w-100" alt="hera logo">
-    </div>
-    <div class="carousel-item">
-      <img src="images/darleq3_logo.png" class="d-block w-100" alt="darleq3 logo">
-    </div>
-  </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Previous</span>
-  </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="visually-hidden">Next</span>
-  </button>
-</div>
-
 
 ## Questions
 
 ```{r questions, echo=FALSE}
 
-questions <- catalogue$questions %>% bind_rows() %>% unique()
-  kable(questions[, 1:3], format = "html", escape = FALSE) %>% 
-      kable_styling(bootstrap_options = c("hover", "condensed")) 
-
+questions <- catalogue$questions %>%
+  bind_rows() %>%
+  unique()
+kable(questions[, 1:3], format = "html", escape = FALSE) %>%
+  kable_styling(bootstrap_options = c("hover", "condensed"))
 ```
 
 ## Assessments
 
-Regulatory assessments:
+```{r assessment-carousel, echo=FALSE}
+
+data <- bind_rows(catalogue$standard)
+dt_url <- paste0(gsub(" ", "-", tolower(trimws(data$standard_short))), ".html")
+
+slickR::slickR(
+  list.files("images", full.names = TRUE, pattern = "png"),
+  objLinks = dt_url[1:4],
+  height = 200,
+  width = "95%"
+)
+```
+
+  
 
 ```{r assessments, echo=FALSE}
 
 data <- bind_rows(catalogue$standard)
 dt_url <- paste0(gsub(" ", "-", tolower(trimws(data$standard_short))), ".html")
 data <- data %>% select(standard_long, status)
-data %>% 
+data %>%
   mutate(link = cell_spec(standard_long, "html", link = dt_url)) %>%
   kable(format = "html", escape = FALSE) %>%
-  kable_styling(bootstrap_options = c("hover", "condensed")) 
+  kable_styling(bootstrap_options = c("hover", "condensed"))
 ```
 
 ## Reports
 
-```{r reports, echo=FALSE}
+```{r reports, echo=FALSE, warning=FALSE}
 
-reports <- catalogue$reports %>% bind_rows() %>% unique()
-  kable(reports, format = "html", escape = FALSE) %>% 
-      kable_styling(bootstrap_options = c("hover", "condensed")) 
-
+reports <- catalogue$reports %>%
+  bind_rows() %>%
+  unique()
+kable(reports, format = "html", escape = FALSE) %>%
+  kable_styling(bootstrap_options = c("hover", "condensed"))
 ```
 
+## Dependencies
 
+```{r dependencies, echo=FALSE}
+nodes <- catalogue %>%
+  select(assessment) %>%
+  rename("id" = assessment) %>%
+  mutate(
+    "label" = id,
+    group = "Assessment",
+    "level" = 2
+  )
+
+nodes <- catalogue$questions %>%
+  bind_rows() %>%
+  select(question) %>%
+  unique() %>%
+  na.omit() %>%
+  rename("id" = question) %>%
+  mutate(
+    "label" = id,
+    group = "Question",
+    "level" = 1
+  ) %>%
+  bind_rows(nodes)
+
+
+ predictors <- unnest(select(catalogue, predictors, assessment),
+                 c(predictors, assessment)) %>%
+   bind_rows() %>% 
+   mutate(across(names(.), as.character)) %>% 
+   pivot_longer(cols = -assessment, 
+                names_to = "question") %>% 
+   filter(!is.na(value)) %>% 
+   select(question, assessment) 
+ 
+   nodes <- predictors %>% 
+    select(question) %>% 
+      unique() %>%
+   na.omit() %>%
+   rename("id" = question) %>%
+   mutate(
+     "label" = id,
+   group = "Question",
+     "level" = 1
+   ) %>%
+   bind_rows(nodes)
+
+
+questions <- catalogue$questions %>%
+  bind_rows() %>%
+  select(question) %>%
+  na.omit()
+
+questions <- predictors %>%
+     select(question) %>% 
+  bind_rows(questions)
+
+assessments <- catalogue %>% 
+  select(assessment) %>% 
+  filter(assessment != "rict")
+
+assessments <- predictors %>%
+     select(assessment) %>% 
+  bind_rows(assessments)
+
+edges <- data.frame(
+  "from" = unlist(questions$question),
+  "to" = unlist(assessments$assessment)
+)
+
+visNetwork(nodes, edges, width = "100%") %>%
+  visEdges(arrows = "to") %>%
+  visNodes(
+    shadow = list(enabled = TRUE, size = 10)
+  ) %>%
+  visGroups(groupname = "Question", color = "lightgreen") %>%
+  visGroups(groupname = "Assessment", color = "lightblue") %>%
+  visLegend() %>%
+  visOptions(highlightNearest = list(enabled = T, degree = 2, hover = T)) %>%
+  visHierarchicalLayout(direction = "UD", levelSeparation = 200) %>%
+  visOptions(highlightNearest = list(enabled = T, hover = T), 
+             nodesIdSelection = T) %>% 
+  visLayout(randomSeed = 12)   # to have always the same network
+  
+
+
+```
