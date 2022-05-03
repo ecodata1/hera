@@ -3,12 +3,15 @@ on:
     branches:
       - main
       - master
+  pull_request:
+      - main
+      - master
 
 name: pkgdown
 
 jobs:
   pkgdown:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -32,10 +35,23 @@ jobs:
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
-      - name: Install package
-        run: R CMD INSTALL .
+      - name: Install system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get -y install libharfbuzz-dev libfribidi-dev
+          while read -r cmd
+          do
+            eval sudo $cmd
+          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
+
+      - name: "[Custom block] [Linux] Install spatial libraries"
+        if: runner.os == 'Linux'
+        run: sudo apt install libgdal-dev libproj-dev libgeos-dev libudunits2-dev
+
+      - uses: r-lib/actions/setup-r-dependencies@v1
 
       - name: Deploy package
+        if: ${{ github.event_name == 'push' }}
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
