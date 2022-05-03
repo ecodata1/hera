@@ -59,6 +59,24 @@ st_write(data, shp)
 
 # update?
 
+# metric, prediction, assessment, report??
+
+metric(data)
+prediction(data)
+assessment(data)
+report(data)
+
+  # skeleton.Rmd -> questions, metric, prediction, assessment, report
+  # # Get list of fields from restapi?
+  # # Basis for questions?
+  # # https://map.sepa.org.uk/arcgis/rest/services
+  # questions.Rmd -> dataset?
+  # metric.Rmd -> whpt, tdi, rmni
+  # prediction.Rmd -> darleq, leafpacs, rict
+  # assessment.Rmd -> rict_eqr, leafpacs_eqr
+  # report.Rmd  -> wfd_parameter, consistency_check, investigation?
+
+
 
 
 
