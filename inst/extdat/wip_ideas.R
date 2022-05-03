@@ -1,7 +1,10 @@
 # Work In Progress ideas for API
 
 library(sepaTools)
-library(tidyverse)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(magrittr)
 library(ranger)
 
 # data

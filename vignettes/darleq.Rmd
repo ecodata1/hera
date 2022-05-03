@@ -14,7 +14,10 @@ knitr::opts_chunk$set(
   echo = F
 )
 library(hera)
-library(tidyverse)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(magrittr)
 library(testthat)
 library(rlang)
 ```
@@ -552,6 +555,15 @@ aggregate_function <- function(data) {
 agrregation <- aggregate_function(data = assessments)
 ```
 
+## Report
+
+List of reports where this assessment is used
+
+```{r}
+
+
+
+```
 
 ## Checklist
 

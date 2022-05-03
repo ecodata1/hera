@@ -31,15 +31,17 @@ Imports:
     eadata,
     testthat,
     macroinvertebrateMetrics,
-    whpt,
-    kableExtra
+    whpt
 Suggests: 
     knitr,
     rmarkdown,
     covr,
     Matrix,
-    tidyverse,
-    devtools
+    devtools,
+    kableExtra,
+    slickR,
+    visNetwork,
+    readr
 Remotes:
     nsj3/darleq3,
     aquaMetrics/rict,

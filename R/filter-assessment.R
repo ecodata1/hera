@@ -1,5 +1,4 @@
 filter_assessment <- function(model = NULL, name = NULL) {
-
   if (!is.null(name)) {
     model <- model %>%  filter(.data$assessment %in% name)
     if(nrow(model) < 1) {

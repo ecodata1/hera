@@ -20,7 +20,10 @@ knitr::opts_chunk$set(
   echo = F
 )
 library(hera)
-library(tidyverse)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(magrittr)
 library(testthat)
 ```
 

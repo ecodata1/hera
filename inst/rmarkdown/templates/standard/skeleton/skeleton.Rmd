@@ -16,7 +16,10 @@ knitr::opts_chunk$set(
   echo = F
 )
 library(hera)
-library(tidyverse)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(magrittr)
 library(testthat)
 ```
 
@@ -155,7 +158,11 @@ predictors <- tibble(
    location_id = NA
   # ...
 )
+
+predictors <- pivot_longer(predictors, cols = names(predictors), names_to = "question", values_to = "response")
+
 knitr::kable(predictors) 
+
 ```
 
 ## Predict

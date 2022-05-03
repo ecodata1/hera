@@ -8,7 +8,10 @@
 
 library(hera)
 library(shiny)
-library(tidyverse)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(magrittr)
 library(leaflet)
 library(htmltools)
 library(dplyr)

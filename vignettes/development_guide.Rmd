@@ -17,7 +17,9 @@ editor_options:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(hera)
-library(tidyverse)
+library(dplyr)
+library(purrr)
+library(tidyr)
 ```
 
 ## Quick Start

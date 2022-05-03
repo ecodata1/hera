@@ -281,7 +281,7 @@ prediction_function <- function(predictors, reference_algae = 0.05) {
   prediction$ref_algae <- reference_algae
 
   # Sample ID
-  prediction$location_id <- predictors$location_id
+  prediction$location_id <- as.character(predictors$location_id)
 
   # Transform to standard format --------------------------------------------
   prediction <- prediction %>%
