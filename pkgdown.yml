@@ -1,5 +1,5 @@
-pandoc: 2.7.3
-pkgdown: 2.0.2
+pandoc: 2.14.2
+pkgdown: 2.0.3
 pkgdown_sha: ~
 articles:
   bankside-consistency: bankside-consistency.html
@@ -8,11 +8,12 @@ articles:
   deployment_guide: deployment_guide.html
   development_guide: development_guide.html
   fim: fim.html
+  fish-farm-assessment: fish-farm-assessment.html
   hera_assessments: hera_assessments.html
   hera_specifications: hera_specifications.html
   leafpacs: leafpacs.html
   rict: rict.html
-last_built: 2022-04-07T14:53Z
+last_built: 2022-05-03T15:28Z
 urls:
   reference: https://ecodata1.github.io/hera/reference
   article: https://ecodata1.github.io/hera/articles

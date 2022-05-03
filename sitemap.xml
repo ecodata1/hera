@@ -22,6 +22,9 @@
     <loc>https://ecodata1.github.io/hera/articles/fim.html</loc>
   </url>
   <url>
+    <loc>https://ecodata1.github.io/hera/articles/fish-farm-assessment.html</loc>
+  </url>
+  <url>
     <loc>https://ecodata1.github.io/hera/articles/hera_assessments.html</loc>
   </url>
   <url>
@@ -46,10 +49,13 @@
     <loc>https://ecodata1.github.io/hera/reference/assessment.html</loc>
   </url>
   <url>
+    <loc>https://ecodata1.github.io/hera/reference/catalogue.html</loc>
+  </url>
+  <url>
     <loc>https://ecodata1.github.io/hera/reference/combine.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/hera/reference/create_model_dataframe.html</loc>
+    <loc>https://ecodata1.github.io/hera/reference/create_catalogue.html</loc>
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/reference/demo_data.html</loc>
@@ -74,9 +80,6 @@
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/reference/launch_app.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/reference/model_dataframe.html</loc>
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/reference/prediction.html</loc>

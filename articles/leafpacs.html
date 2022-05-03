@@ -43,7 +43,7 @@
   <div class="dropdown-menu" aria-labelledby="dropdown-docs">
     <a class="dropdown-item" href="../articles/hera_specifications.html">Request for comment - Shared Design Principles</a>
     <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="../articles/hera_assessments.html">Assessment Manual</a>
+    <a class="dropdown-item" href="../articles/hera_assessments.html">Regulatory Catalogue</a>
     <div class="dropdown-divider"></div>
     <a class="dropdown-item" href="../articles/development_guide.html">Development Guide</a>
     <a class="dropdown-item" href="../articles/deployment_guide.html">Deploy Guide</a>
@@ -136,13 +136,13 @@
 <p>Example:</p>
 <pre><code><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 24</span></span>
 <span class="co">#&gt;   location_id location_description           easting northing latitude longitude</span>
-<span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        <span style="text-decoration: underline;">8</span>175 River Eden @ Kemback Gauging …  <span style="text-decoration: underline;">341</span>452   <span style="text-decoration: underline;">715</span>796     56.3     -<span style="color: #BB0000;">2.95</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>        <span style="text-decoration: underline;">8</span>175 River Eden @ Kemback Gauging …  <span style="text-decoration: underline;">341</span>452   <span style="text-decoration: underline;">715</span>796     56.3     -<span style="color: #BB0000;">2.95</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>        <span style="text-decoration: underline;">8</span>175 River Eden @ Kemback Gauging …  <span style="text-decoration: underline;">341</span>452   <span style="text-decoration: underline;">715</span>796     56.3     -<span style="color: #BB0000;">2.95</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>        <span style="text-decoration: underline;">8</span>175 River Eden @ Kemback Gauging …  <span style="text-decoration: underline;">341</span>452   <span style="text-decoration: underline;">715</span>796     56.3     -<span style="color: #BB0000;">2.95</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span>        <span style="text-decoration: underline;">8</span>175 River Eden @ Kemback Gauging …  <span style="text-decoration: underline;">341</span>452   <span style="text-decoration: underline;">715</span>796     56.3     -<span style="color: #BB0000;">2.95</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">6</span>        <span style="text-decoration: underline;">8</span>175 River Eden @ Kemback Gauging …  <span style="text-decoration: underline;">341</span>452   <span style="text-decoration: underline;">715</span>796     56.3     -<span style="color: #BB0000;">2.95</span></span>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 8175        River Eden @ Kemback Gauging …  <span style="text-decoration: underline;">341</span>452   <span style="text-decoration: underline;">715</span>796     56.3     -<span style="color: #BB0000;">2.95</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 8175        River Eden @ Kemback Gauging …  <span style="text-decoration: underline;">341</span>452   <span style="text-decoration: underline;">715</span>796     56.3     -<span style="color: #BB0000;">2.95</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 8175        River Eden @ Kemback Gauging …  <span style="text-decoration: underline;">341</span>452   <span style="text-decoration: underline;">715</span>796     56.3     -<span style="color: #BB0000;">2.95</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 8175        River Eden @ Kemback Gauging …  <span style="text-decoration: underline;">341</span>452   <span style="text-decoration: underline;">715</span>796     56.3     -<span style="color: #BB0000;">2.95</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 8175        River Eden @ Kemback Gauging …  <span style="text-decoration: underline;">341</span>452   <span style="text-decoration: underline;">715</span>796     56.3     -<span style="color: #BB0000;">2.95</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 8175        River Eden @ Kemback Gauging …  <span style="text-decoration: underline;">341</span>452   <span style="text-decoration: underline;">715</span>796     56.3     -<span style="color: #BB0000;">2.95</span></span>
 <span class="co">#&gt; <span style="color: #949494;"># … with 18 more variables: date_taken &lt;dttm&gt;, sample_id &lt;chr&gt;,</span></span>
 <span class="co">#&gt; <span style="color: #949494;">#   analysis_name &lt;fct&gt;, question &lt;chr&gt;, response &lt;fct&gt;, units &lt;fct&gt;,</span></span>
 <span class="co">#&gt; <span style="color: #949494;">#   mean_alkalinity &lt;dbl&gt;, result_id &lt;chr&gt;, grid_reference &lt;chr&gt;,</span></span>
@@ -156,8 +156,8 @@
 <p>Metadata required about the location</p>
 <pre><code><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 3</span></span>
 <span class="co">#&gt;   location_id location_description                 grid_reference</span>
-<span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        <span style="text-decoration: underline;">8</span>175 River Eden @ Kemback Gauging Station NO 41452 15796</span></code></pre>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>                                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 8175        River Eden @ Kemback Gauging Station NO 41452 15796</span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="sample">Sample<a class="anchor" aria-label="anchor" href="#sample"></a>
@@ -219,14 +219,14 @@
 <th align="right">alkalinity</th>
 <th align="right">source_altitude</th>
 <th align="right">slope</th>
-<th align="right">location_id</th>
+<th align="left">location_id</th>
 </tr></thead>
 <tbody><tr class="odd">
 <td align="right">32</td>
 <td align="right">75</td>
 <td align="right">280</td>
 <td align="right">2</td>
-<td align="right">8175</td>
+<td align="left">8175</td>
 </tr></tbody>
 </table>
 </div>
@@ -237,11 +237,11 @@
 <pre><code><span class="co">#&gt; Calculating predictions...</span>
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 3</span></span>
 <span class="co">#&gt;   location_id question  response        </span>
-<span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        <span style="text-decoration: underline;">8</span>175 ref_taxa  8.18193000184553</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span>        <span style="text-decoration: underline;">8</span>175 ref_algae 0.05            </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span>        <span style="text-decoration: underline;">8</span>175 ref_nfg   5.26620315804775</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span>        <span style="text-decoration: underline;">8</span>175 ref_rmni  5.96735638218237</span></code></pre>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 8175        ref_taxa  8.18193000184553</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 8175        ref_algae 0.05            </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 8175        ref_nfg   5.26620315804775</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 8175        ref_rmni  5.96735638218237</span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="assessment">Assessment<a class="anchor" aria-label="anchor" href="#assessment"></a>
@@ -302,8 +302,8 @@
 </h2>
 <pre><code><span class="co">#&gt; Warning in standard$required[1:6] &lt;- c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, :</span>
 <span class="co">#&gt; number of items to replace is not a multiple of replacement length</span>
-<span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 😀</span>
-<span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🥳</span></code></pre>
+<span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🥇</span>
+<span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 😸</span></code></pre>
 <table class="table">
 <thead><tr class="header">
 <th align="left">check</th>
@@ -328,21 +328,22 @@
 <div class="section level2">
 <h2 id="update-hera">Update hera<a class="anchor" aria-label="anchor" href="#update-hera"></a>
 </h2>
-<pre><code><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 15</span></span>
+<pre><code><span class="co">#&gt; <span style="color: #949494;"># A tibble: 7 × 15</span></span>
 <span class="co">#&gt;   analysis_name           assessment standard location sample   validation_func…</span>
 <span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>           </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Combined aquatic plants Combined … &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">2</span> River Diatoms           River Dia… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">3</span> River Invertebrates     Freshwate… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> River Invertebrates     Rapid Ass… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> River Invertebrates     rict       &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">6</span> River Macrophytes       UKTAG Riv… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Benthic Invertebrates,… Fish Farm… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> River Invertebrates     Rapid Ass… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">6</span> River Invertebrates     rict       &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">7</span> River Macrophytes       UKTAG Riv… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
 <span class="co">#&gt; <span style="color: #949494;"># … with 9 more variables: indices_function &lt;list&gt;, prediction_function &lt;list&gt;,</span></span>
 <span class="co">#&gt; <span style="color: #949494;">#   assessment_function &lt;list&gt;, confidence_function &lt;list&gt;, indices &lt;list&gt;,</span></span>
 <span class="co">#&gt; <span style="color: #949494;">#   assessment_table &lt;list&gt;, questions &lt;list&gt;, predictors &lt;list&gt;,</span></span>
 <span class="co">#&gt; <span style="color: #949494;">#   predictions &lt;list&gt;</span></span>
-<span class="co">#&gt; <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/Users/runner/work/hera/hera'</span></span>
-<span class="co">#&gt; <span style="color: #00BB00;">✔</span> Saving <span style="color: #0000BB;">'model_dataframe'</span> to <span style="color: #0000BB;">'data/model_dataframe.rda'</span></span>
+<span class="co">#&gt; <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/home/runner/work/hera/hera'</span></span>
+<span class="co">#&gt; <span style="color: #00BB00;">✔</span> Saving <span style="color: #0000BB;">'catalogue'</span> to <span style="color: #0000BB;">'data/catalogue.rda'</span></span>
 <span class="co">#&gt; <span style="color: #BB0000;">•</span> Document your data (see <span style="color: #0000BB;">'https://r-pkgs.org/data.html'</span>)</span></code></pre>
 </div>
 <div class="section level2">
@@ -350,7 +351,7 @@
 </h2>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># No need to edit this code</span>
-<span class="fu"><a href="../reference/launch_app.html">launch_app</a></span><span class="op">(</span>new_model_dataframe <span class="op">=</span> <span class="va">model_dataframe</span>, data <span class="op">=</span> <span class="va">all_data</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="../reference/launch_app.html">launch_app</a></span><span class="op">(</span>new_catalogue <span class="op">=</span> <span class="va">catalogue</span>, data <span class="op">=</span> <span class="va">all_data</span><span class="op">)</span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
@@ -365,7 +366,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
     </footer>
