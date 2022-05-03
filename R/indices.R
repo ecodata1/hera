@@ -49,10 +49,10 @@ indices <- function(data, name = NULL, catalogue = NULL) {
       index$response <- as.character(index$response)
       if (nrow(index) > 0) {
         data <- data %>% select(
-          -question,
-          -response,
-          -label,
-          -parameter
+          -.data$question,
+          -.data$response,
+          -.data$label,
+          -.data$parameter
         )
         data <- unique(data)
         index <- inner_join(index, data, by = "sample_id")
