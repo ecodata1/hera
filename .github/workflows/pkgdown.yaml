@@ -18,6 +18,13 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
+      - name: Install binary dependencies
+        run: |
+          install.packages("rgdal", type = "binary")
+          remotes::install_deps(dependencies = TRUE)
+          install.packages("pkgdown", type = "binary")
+        shell: Rscript {0}
+
       - name: Query dependencies
         run: |
           install.packages('remotes')
@@ -31,13 +38,6 @@ jobs:
           path: ${{ env.R_LIBS_USER }}
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
-
-      - name: Install dependencies
-        run: |
-          install.packages("rgdal", type = "binary")
-          remotes::install_deps(dependencies = TRUE)
-          install.packages("pkgdown", type = "binary")
-        shell: Rscript {0}
 
       - name: Install package
         run: R CMD INSTALL .
