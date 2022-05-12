@@ -1,0 +1,49 @@
+group,label,level,color,shape,from,to
+data_source,LIMS,1,blue,database,LIMS,date_taken
+data_source,Data warehouse,1,blue,database,Data warehouse,TDI
+question,date_taken,2,green,box,LIMS,Taxon abundance
+question,TDI,2,darkgreen,box,Taxon abundance,Trophic Diatom Index
+question,Taxon abundance,2,green,box,LIMS,Alkalinity
+question,Alkalinity,2,green,box,DARLEQ prediction,TDI prediction
+question,TDI prediction,2,darkgreen,box,TDI prediction,Data warehouse
+question,location_id,2,green,box,LIMS,location_id
+question,water_body_id,2,green,box,water_body_id,RBMP
+question,sample_id,2,green,box,Data warehouse,water_body_id
+question,Sample EQR,2,green,box,Alkalinity,DARLEQ prediction
+question,WFD EQR,2,green,box,Data warehouse,TDI prediction
+question,Sample Status,2,green,box,TDI,Data warehouse
+question,WFD Status,2,green,box,Trophic Diatom Index,TDI
+question,monitoring purpose,2,green,box,location_id,DARLEQ prediction
+question,parameter_id,2,green,box,LIMS,sample_id
+question,total taxa,2,green,box,sample_id,Trophic Diatom Index
+question,total count,2,green,box,sample_id,DARLEQ assessment
+question,salinity index,2,green,box,location_id,DARLEQ assessment
+metric,Trophic Diatom Index,3,purple,diamond,TDI prediction,DARLEQ assessment
+prediction,DARLEQ prediction,4,orange,diamond,TDI,DARLEQ assessment
+assessment,DARLEQ assessment,5,darkred,diamond,Sample EQR,RBMP
+report,RBMP,6,red,square,date_taken,RBMP
+,,,,,Sample EQR,Data warehouse
+,,,,,Data warehouse,Sample EQR
+,,,,,DARLEQ assessment,Sample EQR
+,,,,,RBMP,WFD Status
+,,,,,RBMP,WFD EQR
+,,,,,RBMP,Sample Status
+,,,,,WFD Status,Data warehouse
+,,,,,WFD EQR,Data warehouse
+,,,,,Sample Status,Data warehouse
+,,,,,Data warehouse,WFD Status
+,,,,,Data warehouse,WFD EQR
+,,,,,Data warehouse,Sample Status
+,,,,,monitoring purpose,RBMP
+,,,,,Data warehouse,monitoring purpose
+,,,,,parameter_id,RBMP
+,,,,,Data warehouse,parameter_id
+,,,,,total taxa,Data warehouse
+,,,,,total count,Data warehouse
+,,,,,salinity index,Data warehouse
+,,,,,Data warehouse,total taxa
+,,,,,Data warehouse,total count
+,,,,,Data warehouse,salinity index
+,,,,,Trophic Diatom Index,total taxa
+,,,,,Trophic Diatom Index,total count
+,,,,,Trophic Diatom Index,salinity index
