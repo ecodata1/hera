@@ -1,3 +1,49 @@
+
+#' @importFrom dplyr bind_rows
+#' @importFrom tibble tibble
+#' @importFrom usethis use_data
+update_catalogue <- function(standard,
+                             location,
+                             sample,
+                             indices_function,
+                             prediction_function,
+                             assessment_function,
+                             confidence_function,
+                             assessment_table,
+                             indexes,
+                             questions,
+                             predictors,
+                             assessments) {
+catalogue <- hera::catalogue
+
+model <- tibble(
+  analysis_name = standard$parameter,
+  assessment = standard$standard_long,
+  standard = list(standard),
+  location = list(location[1, ]),
+  sample = list(sample[1, ]),
+  validation_function = NA,
+  indices_function = list(indices_function),
+  prediction_function = list(prediction_function),
+  assessment_function = list(assessment_function),
+  confidence_function = list(confidence_function),
+  indices = list(indexes[indexes$sample_id == indexes$sample_id[1], ]),
+  assessment_table = list(assessment_table),
+  questions = list(questions[1, ]),
+  predictors = list(predictors[1, ]),
+  predictions = list(predictions[predictions$location_id == predictions$location_id[1], ]),
+  assessments =  list(assessments[1, ])
+)
+
+catalogue <- catalogue[catalogue$assessment != standard$standard_long, ]
+
+catalogue <- bind_rows(catalogue, model)
+new_catalogue <- catalogue
+new_catalogue
+
+usethis::use_data(catalogue, overwrite = TRUE)
+}
+
 #' @importFrom tidyr pivot_longer everything
 hera_format <- function(standard = NULL) {
 
