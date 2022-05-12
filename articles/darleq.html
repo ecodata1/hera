@@ -70,8 +70,8 @@
 
 
 
-
-<div class="row">
+<script src="darleq_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><link href="darleq_files/vis-9.1.0/vis-network.min.css" rel="stylesheet">
+<script src="darleq_files/vis-9.1.0/vis-network.min.js"></script><script src="darleq_files/visNetwork-binding-2.1.0/visNetwork.js"></script><div class="row">
   <main id="main"><div class="page-header">
       <img src="" class="logo" alt=""><h1>darleq</h1>
             
@@ -129,7 +129,8 @@
 <div class="section level2">
 <h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
 </h2>
-<pre><code><span class="co">#&gt; Downloading data from data.gov.uk web services...</span></code></pre>
+<div id="htmlwidget-2c1955d002c5f7c5b442" style="width:100%;height:432.632880098888px;" class="visNetwork html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2c1955d002c5f7c5b442">{"x":{"nodes":{"group":["data_source","data_source","question","question","question","question","question","question","question","question","question","question","question","question","question","question","question","question","question","metric","prediction","assessment","report"],"label":["LIMS","Data warehouse","date_taken","TDI","Taxon abundance","Alkalinity","TDI prediction","location_id","water_body_id","sample_id","Sample EQR","WFD EQR","Sample Status","WFD Status","monitoring purpose","parameter_id","total taxa","total count","salinity index","Trophic Diatom Index","DARLEQ prediction","DARLEQ assessment","RBMP"],"level":[1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,4,5,6],"color":["blue","blue","green","darkgreen","green","green","darkgreen","green","green","green","green","green","green","green","green","green","green","green","green","purple","orange","darkred","red"],"shape":["database","database","box","box","box","box","box","box","box","box","box","box","box","box","box","box","box","box","box","diamond","diamond","diamond","square"],"id":["LIMS","Data warehouse","date_taken","TDI","Taxon abundance","Alkalinity","TDI prediction","location_id","water_body_id","sample_id","Sample EQR","WFD EQR","Sample Status","WFD Status","monitoring purpose","parameter_id","total taxa","total count","salinity index","Trophic Diatom Index","DARLEQ prediction","DARLEQ assessment","RBMP"]},"edges":{"from":["LIMS","Data warehouse","LIMS","Taxon abundance","LIMS","DARLEQ prediction","TDI prediction","LIMS","water_body_id","Data warehouse","Alkalinity","Data warehouse","TDI","Trophic Diatom Index","location_id","LIMS","sample_id","sample_id","location_id","TDI prediction","TDI","Sample EQR","date_taken","Sample EQR","Data warehouse","DARLEQ assessment","RBMP","RBMP","RBMP","WFD Status","WFD EQR","Sample Status","Data warehouse","Data warehouse","Data warehouse","monitoring purpose","Data warehouse","parameter_id","Data warehouse","total taxa","total count","salinity index","Data warehouse","Data warehouse","Data warehouse","Trophic Diatom Index","Trophic Diatom Index","Trophic Diatom Index"],"to":["date_taken","TDI","Taxon abundance","Trophic Diatom Index","Alkalinity","TDI prediction","Data warehouse","location_id","RBMP","water_body_id","DARLEQ prediction","TDI prediction","Data warehouse","TDI","DARLEQ prediction","sample_id","Trophic Diatom Index","DARLEQ assessment","DARLEQ assessment","DARLEQ assessment","DARLEQ assessment","RBMP","RBMP","Data warehouse","Sample EQR","Sample EQR","WFD Status","WFD EQR","Sample Status","Data warehouse","Data warehouse","Data warehouse","WFD Status","WFD EQR","Sample Status","RBMP","monitoring purpose","RBMP","parameter_id","Data warehouse","Data warehouse","Data warehouse","total taxa","total count","salinity index","total taxa","total count","salinity index"]},"nodesToDataframe":true,"edgesToDataframe":true,"options":{"width":"100%","height":"100%","nodes":{"shape":"dot","size":50,"shadow":{"enabled":true,"size":10}},"manipulation":{"enabled":false},"edges":{"arrows":"to"},"interaction":{"hover":true,"zoomSpeed":1},"layout":{"hierarchical":{"enabled":true,"levelSeparation":150,"direction":"UD"}}},"groups":["data_source","question","metric","prediction","assessment","report"],"width":"100%","height":null,"idselection":{"enabled":true,"style":"width: 150px; height: 26px","useLabels":true,"main":"Select by id"},"byselection":{"enabled":false,"style":"width: 150px; height: 26px","multiple":false,"hideColor":"rgba(200,200,200,0.5)","highlight":false},"main":null,"submain":null,"footer":null,"background":"rgba(0, 0, 0, 0)","legend":{"width":0.2,"useGroups":true,"position":"left","ncol":1,"stepX":100,"stepY":100,"zoom":true},"highlight":{"enabled":true,"hoverNearest":true,"degree":1,"algorithm":"all","hideColor":"rgba(200,200,200,0.5)","labelOnly":true},"collapse":{"enabled":false,"fit":false,"resetHighlight":true,"clusterOptions":null,"keepCoord":true,"labelSuffix":"(cluster)"},"tooltipStay":300,"tooltipStyle":"position: fixed;visibility:hidden;padding: 5px;white-space: nowrap;font-family: verdana;font-size:14px;font-color:#000000;background-color: #f5f4ed;-moz-border-radius: 3px;-webkit-border-radius: 3px;border-radius: 3px;border: 1px solid #808074;box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);"},"evals":[],"jsHooks":[]}</script><pre><code><span class="co">#&gt; Downloading data from data.gov.uk web services...</span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="locate">Locate<a class="anchor" aria-label="anchor" href="#locate"></a>
@@ -159,18 +160,18 @@
 <h2 id="observe">Observe<a class="anchor" aria-label="anchor" href="#observe"></a>
 </h2>
 <pre><code><span class="co">#&gt; <span style="color: #949494;"># A tibble: 37 × 5</span></span>
-<span class="co">#&gt;    question        response label              result_id                   units</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Taxon abundance 8        <span style="color: #BB0000;">NA</span>                 http://environment.data.go… http…</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Taxon abundance 29       Halamphora veneta  http://environment.data.go… http…</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Taxon abundance 2        <span style="color: #BB0000;">NA</span>                 http://environment.data.go… http…</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Taxon abundance 110      Cocconeis euglypta http://environment.data.go… http…</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Taxon abundance 5        Cocconeis lineata  http://environment.data.go… http…</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Taxon abundance 1        <span style="color: #BB0000;">NA</span>                 http://environment.data.go… http…</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Taxon abundance 1        <span style="color: #BB0000;">NA</span>                 http://environment.data.go… http…</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Taxon abundance 4        <span style="color: #BB0000;">NA</span>                 http://environment.data.go… http…</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Taxon abundance 25       <span style="color: #BB0000;">NA</span>                 http://environment.data.go… http…</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Taxon abundance 13       <span style="color: #BB0000;">NA</span>                 http://environment.data.go… http…</span>
+<span class="co">#&gt;    question        response label                     result_id            units</span>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> Taxon abundance 8        Amphora pediculus         http://environment.… http…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> Taxon abundance 29       Halamphora veneta         http://environment.… http…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> Taxon abundance 2        Cocconeis pediculus       http://environment.… http…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> Taxon abundance 110      Cocconeis euglypta        http://environment.… http…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> Taxon abundance 5        Cocconeis lineata         http://environment.… http…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> Taxon abundance 1        Cocconeis pseudothumensis http://environment.… http…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> Taxon abundance 1        Craticula accomoda        http://environment.… http…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> Taxon abundance 4        Gomphonema parvulum       http://environment.… http…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> Taxon abundance 25       Melosira varians          http://environment.… http…</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> Taxon abundance 13       Navicula gregaria         http://environment.… http…</span>
 <span class="co">#&gt; <span style="color: #949494;"># … with 27 more rows</span></span></code></pre>
 </div>
 <div class="section level2">
@@ -181,16 +182,16 @@
 <span class="co">#&gt; <span style="color: #949494;"># A tibble: 11 × 3</span></span>
 <span class="co">#&gt;    sample_id question        response          </span>
 <span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 609895    Total_count     <span style="color: #949494;">"</span>149<span style="color: #949494;">"</span>             </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 609895    Percent_in_TDI4 <span style="color: #949494;">"</span>1.34228187919463<span style="color: #949494;">"</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 609895    N_TDI4          <span style="color: #949494;">"</span>2<span style="color: #949494;">"</span>               </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 609895    N2_TDI4         <span style="color: #949494;">"</span>2<span style="color: #949494;">"</span>               </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 609895    Max_TDI4        <span style="color: #949494;">"</span>0.67<span style="color: #949494;">"</span>            </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 609895    TDI4            <span style="color: #949494;">"</span>55<span style="color: #949494;">"</span>              </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 609895    Motile          <span style="color: #949494;">"</span>1.34<span style="color: #949494;">"</span>            </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 609895    OrganicTolerant <span style="color: #949494;">"</span>0<span style="color: #949494;">"</span>               </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 609895    Total_count     <span style="color: #949494;">"</span>234<span style="color: #949494;">"</span>             </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 609895    Percent_in_TDI4 <span style="color: #949494;">"</span>37.6068376068376<span style="color: #949494;">"</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 609895    N_TDI4          <span style="color: #949494;">"</span>18<span style="color: #949494;">"</span>              </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 609895    N2_TDI4         <span style="color: #949494;">"</span>7.2<span style="color: #949494;">"</span>             </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 609895    Max_TDI4        <span style="color: #949494;">"</span>10.68<span style="color: #949494;">"</span>           </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 609895    TDI4            <span style="color: #949494;">"</span>65.2840909090909<span style="color: #949494;">"</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 609895    Motile          <span style="color: #949494;">"</span>13.68<span style="color: #949494;">"</span>           </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 609895    OrganicTolerant <span style="color: #949494;">"</span>11.97<span style="color: #949494;">"</span>           </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 609895    Planktic        <span style="color: #949494;">"</span>0<span style="color: #949494;">"</span>               </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 609895    Saline          <span style="color: #949494;">"</span>0<span style="color: #949494;">"</span>               </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 609895    Saline          <span style="color: #949494;">"</span>1.71<span style="color: #949494;">"</span>            </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">11</span> 609895    Comments        <span style="color: #949494;">""</span></span></code></pre>
 </div>
 <div class="section level2">
@@ -261,7 +262,7 @@
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 724530    status   classified       </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 724530    level    1                </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 609895    class    high             </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 609895    eqr      0.832230369833555</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 609895    eqr      0.987843693118549</span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 609895    status   classified       </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 609895    level    1                </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 609891    class    bad              </span>
@@ -280,8 +281,8 @@
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 724530    moderate 2       </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 724530    poor     9.6     </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 724530    bad      88.1    </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 609895    high     74.3    </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 609895    good     25.7    </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 609895    high     100     </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 609895    good     0       </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 609895    moderate 0       </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 609895    poor     0       </span>
 <span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 609895    bad      0       </span>
@@ -302,8 +303,8 @@
 </h2>
 <pre><code><span class="co">#&gt; Warning in standard$required[1:6] &lt;- c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, :</span>
 <span class="co">#&gt; number of items to replace is not a multiple of replacement length</span>
-<span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🎉</span>
-<span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 😸</span></code></pre>
+<span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🌈</span>
+<span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🎉</span></code></pre>
 <table class="table">
 <thead><tr class="header">
 <th align="left">check</th>

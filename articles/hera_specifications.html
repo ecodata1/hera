@@ -73,7 +73,7 @@
   <main id="main"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods</h1>
             
-            <h4 data-toc-skip class="date">2022-05-03</h4>
+            <h4 data-toc-skip class="date">2022-05-12</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ecodata1/hera/blob/HEAD/vignettes/hera_specifications.Rmd" class="external-link"><code>vignettes/hera_specifications.Rmd</code></a></small>
       <div class="d-none name"><code>hera_specifications.Rmd</code></div>
@@ -163,11 +163,8 @@ outline: 0 ;
 <ol style="list-style-type: decimal">
 <li>Validation</li>
 <li>Indices/metrics</li>
-<li>Classification</li>
-<li>Aggregation</li>
+<li>Assessment</li>
 <li>Reporting</li>
-<li>Diagnosis</li>
-<li>Scenarios</li>
 </ol>
 <p>The examples below provide a taste of how this RFC could be implemented. <strong>Keep in mind, they are not full, complete or accurate. The data structure, naming and details could all change, they are presented as a rough draft</strong></p>
 <div class="section level4" number="4.2.1">
@@ -220,27 +217,27 @@ outline: 0 ;
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 4 × 3</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  sample_id question response        </span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>     <span class="er">&lt;</span>chr<span class="sc">&gt;</span>    <span class="er">&lt;</span>chr<span class="sc">&gt;</span>           </span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">758729</span>    ref_nfg  <span class="fl">5.26620315804775</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="dv">758729</span>    ref_taxa <span class="fl">8.18193000184553</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> <span class="dv">919681</span>    eTDI4    <span class="fl">45.3614293687833</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="dv">2031713</span>   eTDI4    <span class="fl">45.3614293687833</span></span></code></pre></div>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">1250462</span>   eTDI4    <span class="fl">45.3614293687833</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="dv">2031713</span>   eTDI4    <span class="fl">45.3614293687833</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> <span class="dv">758729</span>    ref_rmni <span class="fl">5.96735638218237</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="dv">758729</span>    ref_nfg  <span class="fl">5.26620315804775</span></span></code></pre></div>
 <p>See documentation <a href="https://ecodata1.github.io/hera/reference/prediction.html"><code>prediction()</code></a> for more information.</p>
 </div>
 <div class="section level4" number="4.2.4">
-<h4 id="compliance">
-<span class="header-section-number">4.2.4</span> Compliance<a class="anchor" aria-label="anchor" href="#compliance"></a>
+<h4 id="assessment">
+<span class="header-section-number">4.2.4</span> Assessment<a class="anchor" aria-label="anchor" href="#assessment"></a>
 </h4>
-<p>Based on the predicted and observed indices - we check the compliance of each sample using <code><a href="../reference/assessment.html">assessment()</a></code>. The ‘compliance’ stage includes any type of test or assessment of our data. This could be WFD classification, compliance check, bathing water or discharge assessment. Really any type of grading or assessment against some type of expected value.</p>
+<p>Based on the predicted and observed indices - we assess each sample using <code><a href="../reference/assessment.html">assessment()</a></code>. The ‘assessment’ stage includes any type of test or categorisation of our data. This could be WFD classification, compliance check, bathing water or discharge assessment. Broadly, any type of grading or assessment against some type of expected value.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">assessment</span>(demo_data) <span class="sc">%&gt;%</span> </span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a> <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">4</span>) </span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 4 × 20</span></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  location_id location_descripti… sample_id date_taken          easting northing</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>       <span class="er">&lt;</span>fct<span class="sc">&gt;</span>               <span class="er">&lt;</span>chr<span class="sc">&gt;</span>     <span class="er">&lt;</span>dttm<span class="sc">&gt;</span>                <span class="er">&lt;</span>dbl<span class="sc">&gt;</span>    <span class="er">&lt;</span>dbl<span class="sc">&gt;</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">8175</span>        River Eden <span class="sc">@</span> Kemba… <span class="dv">2252490</span>   <span class="dv">2013-04-24</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">10</span><span class="sc">:</span><span class="dv">00</span>  <span class="dv">341452</span>   <span class="dv">715796</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="dv">8175</span>        River Eden <span class="sc">@</span> Kemba… <span class="dv">2031713</span>   <span class="dv">2012-04-23</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">12</span><span class="sc">:</span><span class="dv">00</span>  <span class="dv">341452</span>   <span class="dv">715796</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> <span class="dv">8175</span>        River Eden <span class="sc">@</span> Kemba… <span class="dv">2489784</span>   <span class="dv">2014-05-20</span> <span class="dv">08</span><span class="sc">:</span><span class="dv">10</span><span class="sc">:</span><span class="dv">00</span>  <span class="dv">341452</span>   <span class="dv">715796</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="dv">8175</span>        River Eden <span class="sc">@</span> Kemba… <span class="dv">1800006</span>   <span class="dv">2011-05-04</span> <span class="dv">13</span><span class="sc">:</span><span class="dv">45</span><span class="sc">:</span><span class="dv">00</span>  <span class="dv">341452</span>   <span class="dv">715796</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">8175</span>        River Eden <span class="sc">@</span> Kemba… <span class="dv">1672942</span>   <span class="dv">2010-10-07</span> <span class="dv">10</span><span class="sc">:</span><span class="dv">11</span><span class="sc">:</span><span class="dv">00</span>  <span class="dv">341452</span>   <span class="dv">715796</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="dv">8175</span>        River Eden <span class="sc">@</span> Kemba… <span class="dv">1419451</span>   <span class="dv">2009-10-09</span> <span class="dv">11</span><span class="sc">:</span><span class="dv">16</span><span class="sc">:</span><span class="dv">00</span>  <span class="dv">341452</span>   <span class="dv">715796</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> <span class="dv">8175</span>        River Eden <span class="sc">@</span> Kemba… <span class="dv">1912578</span>   <span class="dv">2011-10-07</span> <span class="dv">13</span><span class="sc">:</span><span class="dv">22</span><span class="sc">:</span><span class="dv">00</span>  <span class="dv">341452</span>   <span class="dv">715796</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="dv">8175</span>        River Eden <span class="sc">@</span> Kemba… <span class="dv">3256506</span>   <span class="dv">2017-07-20</span> <span class="dv">12</span><span class="sc">:</span><span class="dv">15</span><span class="sc">:</span><span class="dv">00</span>  <span class="dv">341452</span>   <span class="dv">715796</span></span>
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># … with 14 more variables: latitude &lt;dbl&gt;, longitude &lt;dbl&gt;,</span></span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   mean_alkalinity &lt;dbl&gt;, standard &lt;chr&gt;, quality_element &lt;chr&gt;,</span></span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#   water_body_id &lt;dbl&gt;, dist_from_source &lt;dbl&gt;, alkalinity &lt;dbl&gt;, slope &lt;dbl&gt;,</span></span>
@@ -248,54 +245,61 @@ outline: 0 ;
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#   parameter &lt;chr&gt;</span></span></code></pre></div>
 </div>
 <div class="section level4" number="4.2.5">
-<h4 id="aggegation">
-<span class="header-section-number">4.2.5</span> Aggegation<a class="anchor" aria-label="anchor" href="#aggegation"></a>
-</h4>
-<p>We now aggregate the samples by season, year, multi-year or waterbody as required:</p>
-<pre><code><span class="va">aggregate</span> <span class="op">&lt;-</span> <span class="fu">aggregation</span><span class="op">(</span><span class="va">demo_data</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>,<span class="st">"season"</span>,<span class="st">"waterbody"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">class</span><span class="op">)</span></code></pre>
-<p>We could also aggregate by the WFD hierarchy.</p>
-</div>
-<div class="section level4" number="4.2.6">
 <h4 id="report">
-<span class="header-section-number">4.2.6</span> Report<a class="anchor" aria-label="anchor" href="#report"></a>
+<span class="header-section-number">4.2.5</span> Report<a class="anchor" aria-label="anchor" href="#report"></a>
 </h4>
-<p>We now run a report assessing samples from the same location for consistency. Note, that no report for fish is produced, the necessary adjustment/interpretation parameters have not been created for fish. This demonstrates that it is step by step process. Not all tools/models will have all the features development if not required or if not prioritized:</p>
+<p>A custom report that compiles, groups and presents one or more assessment output can be created. For instance running and presentating a number of WFD assessments, grouping by water body and hierarchy for a River Basin Management Plan:</p>
+<pre><code><span class="co"># TODO!</span>
+<span class="fu">report</span><span class="op">(</span><span class="va">demo_data</span>, <span class="st">'rbmp'</span><span class="op">)</span></code></pre>
+<div class="section level5" number="4.2.5.1">
+<h5 id="diagnosis">
+<span class="header-section-number">4.2.5.1</span> Diagnosis<a class="anchor" aria-label="anchor" href="#diagnosis"></a>
+</h5>
+<p>As well as classification of water quality, additional we need to diagnose potential pressures. We use the <code>report()</code> function to build a custom report to help diagnose potential pressures.</p>
+<pre><code><span class="co"># TODO!</span>
+<span class="fu">rerport</span><span class="op">(</span><span class="va">demo_data</span>, <span class="st">'diagnose_wfd_pressures'</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="fu">select</span><span class="op">(</span><span class="va">sample_id</span>, <span class="va">diagnosis</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre>
+</div>
+<div class="section level5" number="4.2.5.2">
+<h5 id="aggegation">
+<span class="header-section-number">4.2.5.2</span> Aggegation<a class="anchor" aria-label="anchor" href="#aggegation"></a>
+</h5>
+<p>To facilitate general data exploration, an <code>aggregate</code> herlper function can group the outputs by season, year, multi-year or water body as required:</p>
+<pre><code><span class="va">aggregate</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">demo_data</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"year"</span>,<span class="st">"season"</span>,<span class="st">"waterbody"</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">class</span><span class="op">)</span></code></pre>
+</div>
+<div class="section level5" number="4.2.5.3">
+<h5 id="compare">
+<span class="header-section-number">4.2.5.3</span> Compare<a class="anchor" aria-label="anchor" href="#compare"></a>
+</h5>
+<p>A <code>compare</code> helper function allows generic comparison between years, locations or samples to allow general data analysis and comparison.</p>
 <pre><code><span class="co"># TODO!</span>
 <span class="va">compare_report</span> <span class="op">&lt;-</span> <span class="fu">compare</span><span class="op">(</span><span class="va">new_data</span>, <span class="va">old_data</span><span class="op">)</span>
 <span class="va">compare_report</span></code></pre>
-<p>We now run a report assesses two samples assess a discharge (up and downstream):</p>
+<p>Another, example of comparing two samples (perhaps up and downstream):</p>
 <pre><code><span class="co"># TODO!</span>
 <span class="va">compare_report</span> <span class="op">&lt;-</span> <span class="fu">compare</span><span class="op">(</span><span class="va">site_one</span>, <span class="va">site_two</span><span class="op">)</span>
 <span class="va">compare_report</span></code></pre>
 </div>
-<div class="section level4" number="4.2.7">
-<h4 id="diagnosis">
-<span class="header-section-number">4.2.7</span> Diagnosis<a class="anchor" aria-label="anchor" href="#diagnosis"></a>
-</h4>
-<p>As well as classification of water quality, additional we need to diagnose potential pressures. We use the <code>diagnosis()</code> function to report potential pressures.</p>
-<pre><code><span class="co"># TODO!</span>
-<span class="fu">diagnosis</span><span class="op">(</span><span class="va">demo_data</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-<span class="fu">select</span><span class="op">(</span><span class="va">sample_id</span>, <span class="va">diagnosis</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre>
-</div>
-<div class="section level4" number="4.2.8">
-<h4 id="scenarios">
-<span class="header-section-number">4.2.8</span> Scenarios<a class="anchor" aria-label="anchor" href="#scenarios"></a>
-</h4>
+<div class="section level5" number="4.2.5.4">
+<h5 id="scenarios">
+<span class="header-section-number">4.2.5.4</span> Scenarios<a class="anchor" aria-label="anchor" href="#scenarios"></a>
+</h5>
 <p>A number of forecasting or scenario tools could be incorporated for either projecting current trends or assessing the impact of proposed measures.</p>
 <pre><code><span class="co"># TODO!</span>
-<span class="fu">scenario</span><span class="op">(</span><span class="va">demo_data</span>, <span class="va">trends</span><span class="op">)</span> <span class="op">%&gt;%</span>  
+<span class="fu">report</span><span class="op">(</span><span class="va">demo_data</span>, <span class="va">trends</span>, scenario<span class="op">=</span><span class="st">"wfd_forecast"</span><span class="op">)</span> <span class="op">%&gt;%</span>  
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span>
 
-<span class="fu">scenario</span><span class="op">(</span><span class="va">demo_data</span>, <span class="va">measures</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="fu">report</span><span class="op">(</span><span class="va">demo_data</span>, <span class="va">measures</span>, scenario<span class="op">=</span><span class="st">"measure_impact"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></code></pre>
 </div>
-<div class="section level4" number="4.2.9">
+</div>
+<div class="section level4" number="4.2.6">
 <h4 id="the-whole-game">
-<span class="header-section-number">4.2.9</span> The Whole Game<a class="anchor" aria-label="anchor" href="#the-whole-game"></a>
+<span class="header-section-number">4.2.6</span> The Whole Game<a class="anchor" aria-label="anchor" href="#the-whole-game"></a>
 </h4>
-<p>For the most part we don’t expect users to go through each of these steps. But for developers and researchers it is useful to think about classification within this framework of discrete steps. For the majority of end users, agency staff or consultants, they can open the GUI <code><a href="../reference/hera_app.html">hera_app()</a></code> or visit the website directly. However, advanced users can use the <code>hera</code> function to wrap all these steps together for example <code>hera(hera::demo_data)</code>.</p>
+<p>For the most part we don’t expect users to go through each of these steps. But for developers and researchers it is useful to think about classification within this framework of discrete steps. For the majority of end users, agency staff or consultants, they can open the GUI <code>hera_app()</code> or visit the website directly. However, advanced users can use the <code>hera</code> function to wrap all these steps together for example <code>hera(hera::demo_data)</code>.</p>
 <p>Furthermore, agencies can integrate these functions into their systems using web services. Please see the <a href="https://cloud.opencpu.org/ocpu/apps/ecodata1/hera/info" class="external-link">demo web service</a> and <a href="https://www.opencpu.org/api.html" class="external-link">api documentation</a> for using <a href="https://www.opencpu.org/" class="external-link">opencpu</a> hosted packages.</p>
 </div>
 </div>
@@ -408,28 +412,28 @@ outline: 0 ;
 <p>For students and consultancies requiring <em>ad hoc</em> usage, templates and documentation for preparing data will be provided.</p>
 <p>For Agencies, data queries can be written to prepare outputs in the correct format.</p>
 <p>For instance, here is a prototype function to pull data Environment Agency’s data.gov.uk web service and convert to the required <code>hera</code> input format.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>environment_agency_data <span class="ot">&lt;-</span> hera<span class="sc">:::</span><span class="fu">get_data</span>(<span class="at">location_id =</span> <span class="fu">c</span>(<span class="dv">43378</span>, <span class="dv">92751</span>))</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(environment_agency_data)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 2,495 × 31</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>   location_id   location_descri… sample_id date_taken season parameter question</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>   <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>         <span class="er">&lt;</span>chr<span class="sc">&gt;</span>            <span class="er">&lt;</span>chr<span class="sc">&gt;</span>     <span class="er">&lt;</span>chr<span class="sc">&gt;</span>       <span class="er">&lt;</span>int<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span>     <span class="er">&lt;</span>chr<span class="sc">&gt;</span>   </span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co"># … with 2,485 more rows, and 24 more variables: response &lt;chr&gt;, label &lt;chr&gt;,</span></span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="co">#   result_id &lt;chr&gt;, units &lt;chr&gt;, latitude &lt;dbl&gt;, longitude &lt;dbl&gt;,</span></span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co">#   grid_reference &lt;chr&gt;, alkalinity &lt;dbl&gt;, river_width &lt;int&gt;,</span></span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="co">#   mean_depth &lt;int&gt;, boulders_cobbles &lt;int&gt;, pebbles_gravel &lt;int&gt;, sand &lt;int&gt;,</span></span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="co">#   silt_clay &lt;int&gt;, northing &lt;int&gt;, easting &lt;int&gt;, dist_from_source &lt;dbl&gt;,</span></span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   altitude &lt;int&gt;, source_altitude &lt;int&gt;, slope &lt;dbl&gt;,</span></span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a><span class="co">#   discharge_category &lt;int&gt;, water_body_id &lt;chr&gt;, water_body_type &lt;chr&gt;, …</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>environment_agency_data <span class="ot">&lt;-</span> hera<span class="sc">:::</span><span class="fu">get_data</span>(<span class="at">location_id =</span> <span class="fu">c</span>(<span class="dv">43378</span>, <span class="dv">92751</span>))</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(environment_agency_data)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 2,495 × 31</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>   location_id   location_descri… sample_id date_taken season parameter question</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>   <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>         <span class="er">&lt;</span>chr<span class="sc">&gt;</span>            <span class="er">&lt;</span>chr<span class="sc">&gt;</span>     <span class="er">&lt;</span>chr<span class="sc">&gt;</span>       <span class="er">&lt;</span>int<span class="sc">&gt;</span> <span class="er">&lt;</span>chr<span class="sc">&gt;</span>     <span class="er">&lt;</span>chr<span class="sc">&gt;</span>   </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a> <span class="dv">1</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a> <span class="dv">2</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a> <span class="dv">3</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a> <span class="dv">4</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a> <span class="dv">5</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a> <span class="dv">6</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a> <span class="dv">7</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a> <span class="dv">8</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a> <span class="dv">9</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="dv">10</span> http<span class="sc">:</span><span class="er">//</span>envir… TEST <span class="sc">-</span> <span class="dv">43378</span>     <span class="dv">771094</span>    <span class="dv">2019-02-28</span>      <span class="dv">4</span> River In… <span class="sc">&lt;</span><span class="cn">NA</span><span class="sc">&gt;</span>    </span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="co"># … with 2,485 more rows, and 24 more variables: response &lt;chr&gt;, label &lt;chr&gt;,</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co">#   result_id &lt;chr&gt;, units &lt;chr&gt;, latitude &lt;dbl&gt;, longitude &lt;dbl&gt;,</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co">#   grid_reference &lt;chr&gt;, alkalinity &lt;dbl&gt;, river_width &lt;int&gt;,</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co">#   mean_depth &lt;int&gt;, boulders_cobbles &lt;int&gt;, pebbles_gravel &lt;int&gt;, sand &lt;int&gt;,</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="co">#   silt_clay &lt;int&gt;, northing &lt;int&gt;, easting &lt;int&gt;, dist_from_source &lt;dbl&gt;,</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="co">#   altitude &lt;int&gt;, source_altitude &lt;int&gt;, slope &lt;dbl&gt;,</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="co">#   discharge_category &lt;int&gt;, water_body_id &lt;chr&gt;, water_body_type &lt;chr&gt;, …</span></span></code></pre></div>
 <p>We can then run this EA data through <code>hera</code>:</p>
 <pre><code><span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">::</span><span class="fu"><a href="../reference/prediction.html">prediction</a></span><span class="op">(</span><span class="va">environment_agency_data</span><span class="op">)</span>
 
@@ -453,22 +457,22 @@ outline: 0 ;
 <h4 id="models-and-environmental-standards-names">
 <span class="header-section-number">4.5.1</span> Models and Environmental Standards names<a class="anchor" aria-label="anchor" href="#models-and-environmental-standards-names"></a>
 </h4>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>hera<span class="sc">::</span>catalogue</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 7 × 15</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  analysis_name           assessment standard location sample   validation_func…</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>                   <span class="er">&lt;</span>chr<span class="sc">&gt;</span>      <span class="er">&lt;</span>list<span class="sc">&gt;</span>   <span class="er">&lt;</span>list<span class="sc">&gt;</span>   <span class="er">&lt;</span>list<span class="sc">&gt;</span>   <span class="er">&lt;</span>lgl<span class="sc">&gt;</span>           </span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> Combined aquatic plants Combined … <span class="sc">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="cn">NA</span>              </span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> River Diatoms           River Dia… <span class="sc">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="cn">NA</span>              </span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> River Invertebrates     Freshwate… <span class="sc">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="cn">NA</span>              </span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> River Macrophytes       UKTAG Riv… <span class="sc">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="cn">NA</span>              </span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> Benthic Invertebrates,… Fish Farm… <span class="sc">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="cn">NA</span>              </span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span> River Invertebrates     Rapid Ass… <span class="sc">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="cn">NA</span>              </span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="dv">7</span> River Invertebrates     rict       <span class="sc">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="cn">NA</span>              </span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co"># … with 9 more variables: indices_function &lt;list&gt;, prediction_function &lt;list&gt;,</span></span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="co">#   assessment_function &lt;list&gt;, confidence_function &lt;list&gt;, indices &lt;list&gt;,</span></span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="co">#   assessment_table &lt;list&gt;, questions &lt;list&gt;, predictors &lt;list&gt;,</span></span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   predictions &lt;list&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>hera<span class="sc">::</span>catalogue</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 7 × 16</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  analysis_name           assessment standard location sample   validation_func…</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>                   <span class="er">&lt;</span>chr<span class="sc">&gt;</span>      <span class="er">&lt;</span>list<span class="sc">&gt;</span>   <span class="er">&lt;</span>list<span class="sc">&gt;</span>   <span class="er">&lt;</span>list<span class="sc">&gt;</span>   <span class="er">&lt;</span>lgl<span class="sc">&gt;</span>           </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> Combined aquatic plants Combined … <span class="sc">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="cn">NA</span>              </span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> River Invertebrates     Freshwate… <span class="sc">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="cn">NA</span>              </span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> Benthic Invertebrates,… Fish Farm… <span class="sc">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="cn">NA</span>              </span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> River Invertebrates     Rapid Ass… <span class="sc">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="cn">NA</span>              </span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> River Invertebrates     rict       <span class="sc">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="cn">NA</span>              </span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="dv">6</span> River Macrophytes       UKTAG Riv… <span class="sc">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="cn">NA</span>              </span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="dv">7</span> River Diatoms           River Dia… <span class="sc">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="er">&lt;</span>tibble<span class="sc">&gt;</span> <span class="cn">NA</span>              </span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co"># … with 10 more variables: indices_function &lt;list&gt;,</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co">#   prediction_function &lt;list&gt;, assessment_function &lt;list&gt;,</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co">#   confidence_function &lt;list&gt;, indices &lt;list&gt;, assessment_table &lt;list&gt;,</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   questions &lt;list&gt;, predictors &lt;list&gt;, predictions &lt;list&gt;, assessments &lt;list&gt;</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level3" number="4.6">
