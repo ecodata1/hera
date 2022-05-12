@@ -162,12 +162,9 @@ and future tool development.
 
 1. Validation
 2. Indices/metrics
-3. Classification
-4. Aggregation
-5. Reporting
-6. Diagnosis
-7. Scenarios
-  
+3. Assessment
+4. Reporting
+
 The examples below provide a taste of how this RFC could be implemented. 
 **Keep in mind, they are not full, complete or accurate. The data structure, naming and details could all change, they are presented as a rough draft**
 
@@ -216,10 +213,10 @@ See documentation
 [`prediction()`](https://ecodata1.github.io/hera/reference/prediction.html) for
 more information.
 
-### Compliance
+### Assessment
 
-Based on the predicted and observed indices - we check the compliance of each sample using
-`assessment()`. The 'compliance' stage includes any type of test or assessment of our data. This could be WFD classification, compliance check, bathing water or discharge assessment. Really any type of grading or assessment against some type of expected value. 
+Based on the predicted and observed indices - we assess each sample using
+`assessment()`. The 'assessment' stage includes any type of test or categorisation of our data. This could be WFD classification, compliance check, bathing water or discharge assessment. Broadly, any type of grading or assessment against some type of expected value. 
 
 ```{r, echo=TRUE, warning=F}
 
@@ -228,27 +225,44 @@ assessment(demo_data) %>%
 
 ```
 
-### Aggegation
+### Report
 
-We now aggregate the samples by season, year, multi-year or waterbody as
+A custom report that compiles, groups and presents one or more assessment output can be created. For instance running and presentating a number of WFD assessments, grouping by water body and hierarchy for a River Basin Management Plan:
+
+```
+# TODO!
+report(demo_data, 'rbmp') 
+
+```
+
+#### Diagnosis
+
+As well as classification of water quality, additional we need to diagnose
+potential pressures. We use the `report()` function to build a custom report to help diagnose potential
+pressures.
+
+```
+# TODO!
+rerport(demo_data, 'diagnose_wfd_pressures') %>% 
+select(sample_id, diagnosis)
+head()
+
+```
+
+#### Aggegation
+
+To facilitate general data exploration, an `aggregate` herlper function can group the outputs by season, year, multi-year or water body as
 required:
 
 ```
 
-aggregate <- aggregation(demo_data, c("year","season","waterbody"))
+aggregate <- aggregate(demo_data, c("year","season","waterbody"))
 head(class)
 
 ```
+#### Compare
 
-We could also aggregate by the WFD hierarchy.
-
-### Report
-
-We now run a report assessing samples from the same location for consistency.
-Note, that no report for fish is produced, the necessary
-adjustment/interpretation parameters have not been created for fish. This
-demonstrates that it is step by step process. Not all tools/models will have all
-the features development if not required or if not prioritized:
+A `compare` helper function allows generic comparison between years, locations or samples to allow general data analysis and comparison. 
 
 ```
 # TODO!
@@ -256,8 +270,7 @@ compare_report <- compare(new_data, old_data)
 compare_report
 
 ```
-
-We now run a report assesses two samples assess a discharge (up and downstream):  
+Another, example of comparing two samples (perhaps up and downstream):
 
 ```
 # TODO!
@@ -265,31 +278,16 @@ compare_report <- compare(site_one, site_two)
 compare_report
 
 ```
-
-### Diagnosis
-
-As well as classification of water quality, additional we need to diagnose
-potential pressures. We use the `diagnosis()` function to report potential
-pressures.
-
-```
-# TODO!
-diagnosis(demo_data) %>% 
-select(sample_id, diagnosis)
-head()
-
-```
-
-### Scenarios
+#### Scenarios
 
 A number of forecasting or scenario tools could be incorporated for either projecting current trends or assessing the impact of proposed measures. 
 
 ```
 # TODO!
-scenario(demo_data, trends) %>%  
+report(demo_data, trends, scenario="wfd_forecast") %>%  
 head()
 
-scenario(demo_data, measures) %>% 
+report(demo_data, measures, scenario="measure_impact") %>% 
 head()
 
 ```

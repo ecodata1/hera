@@ -145,16 +145,16 @@ edges <- data.frame(
 visNetwork(nodes, edges, width = "100%") %>%
   visEdges(arrows = "to") %>%
   visNodes(
-    shadow = list(enabled = TRUE, size = 10)
+    shadow = list(enabled = TRUE, size = 10),
+    size = 50
   ) %>%
   visGroups(groupname = "Question", color = "lightgreen") %>%
   visGroups(groupname = "Assessment", color = "lightblue") %>%
   visLegend() %>%
   visOptions(highlightNearest = list(enabled = T, degree = 2, hover = T)) %>%
-  visHierarchicalLayout(direction = "UD", levelSeparation = 200) %>%
+  visHierarchicalLayout(direction = "LR", levelSeparation = 150) %>%
   visOptions(highlightNearest = list(enabled = T, hover = T), 
-             nodesIdSelection = T) %>% 
-  visLayout(randomSeed = 12)   # to have always the same network
+             nodesIdSelection = T)
   
 
 

@@ -20,6 +20,7 @@ library(tidyr)
 library(magrittr)
 library(testthat)
 library(rlang)
+library(visNetwork)
 ```
 
 <!-- Create a new regulatory assessment by changing the CAPITLIZE info below: -->
@@ -45,6 +46,40 @@ standard_format$standard %>%
 ```
 
 ## Data
+
+
+```{r}
+
+data <- read.csv(system.file("extdat/data-flow", "darleq.csv", package = "hera"))
+
+nodes <- data %>%
+  select(-from, -to) %>% 
+  unique() %>% 
+  na.omit() %>% 
+  mutate("id" = label) 
+  
+edges <- data %>%
+  select(from, to) 
+
+
+visNetwork(nodes, edges, width = "100%") %>%
+  visEdges(arrows = "to") %>%
+  visNodes(
+    shadow = list(enabled = TRUE, size = 10),
+    size = 50
+  ) %>%
+  visLegend() %>%
+  visOptions(highlightNearest = list(enabled = T,
+                                     degree = 2,
+                                     hover = T)) %>%
+  visHierarchicalLayout(direction = "UD", levelSeparation = 150) %>%
+  visOptions(highlightNearest = list(enabled = T, hover = T), 
+             nodesIdSelection = T)
+  
+
+
+```
+
 
 ```{r data}
 all_data <- get_data(location_id = c(92751, 100))

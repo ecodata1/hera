@@ -31,7 +31,8 @@ Imports:
     eadata,
     testthat,
     macroinvertebrateMetrics,
-    whpt
+    whpt,
+    usethis
 Suggests: 
     knitr,
     rmarkdown,
@@ -52,4 +53,4 @@ Remotes:
 VignetteBuilder: knitr
 RoxygenNote: 7.1.2
 Depends: 
-    R (>= 2.10)
+    R (>= 3.6)

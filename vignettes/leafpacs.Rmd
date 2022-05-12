@@ -635,7 +635,8 @@ model <- tibble(
   assessment_table = list(assessment_table),
   questions = list(questions[1, ]),
   predictors = list(predictors[1, ]),
-  predictions = list(predictions[predictions$location_id == predictions$location_id[1], ])
+  predictions = list(predictions[predictions$location_id == predictions$location_id[1], ]),
+  assessments =  list(assessments[1, ])
 )
 
 catalogue <- catalogue[catalogue$assessment != standard$standard_long, ]
