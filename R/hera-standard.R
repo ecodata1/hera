@@ -45,14 +45,18 @@ usethis::use_data(catalogue, overwrite = TRUE)
 }
 
 #' @importFrom tidyr pivot_longer everything
+#' @importFrom dplyr select
 hera_format <- function(standard = NULL) {
 
-  # Format standard info
-  standard <- pivot_longer(standard,
-    names_to = "attribute",
-    cols = (everything())
-  )
-  standard$optional <- c(TRUE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE)
+  standard <- filter(standard, question %in%
+                       c("standard_short",
+                         "parameter",
+                         "status" ,
+                         "standard_long",
+                         "standard_reference"))
+
+
+  standard$optional <- c(TRUE, TRUE, TRUE, FALSE, FALSE)
 
   # Return list of Data frames
   data <- list(standard)
@@ -65,23 +69,27 @@ hera_format <- function(standard = NULL) {
 #' @importFrom tibble tibble
 hera_test <- function(standard = NULL) {
   # Check standard info --------------------------------------------------------
-  standard <- pivot_longer(standard,
+  standard <- select(standard, standard_short,
+                     parameter,
+                     status ,
+                     standard_long,
+                     standard_reference)
+
+   standard <- pivot_longer(standard,
     names_to = "attribute",
     cols = (everything())
   )
   standard$required <- NA
-  standard$required[1:6] <-  c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE)
+  standard$required <-  c(TRUE, TRUE, TRUE, FALSE, FALSE)
 
   standard_check <- tibble(
     standard_names = test_that("Correct Standard attributes", {
       expect_equal(length(standard$attribute[standard$attribute %in% c(
         "standard_short",
-        "quality_element",
         "parameter",
         "standard_long",
-        "aggregation",
         "status"
-      ) ] ),6
+      ) ] ),4
         ,
         info = "Correct Standard attributes"
       )

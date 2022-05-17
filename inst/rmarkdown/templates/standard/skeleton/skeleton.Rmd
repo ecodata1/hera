@@ -19,8 +19,11 @@ library(hera)
 library(dplyr)
 library(purrr)
 library(tidyr)
+library(tibble)
 library(magrittr)
 library(testthat)
+library(rlang)
+library(visNetwork)
 ```
 
 ## Welcome
@@ -36,13 +39,10 @@ This document has been created following the generic [assessment guidance](https
 
 standard <- tibble(
   standard_short = NA, 
-  quality_element = NA,
   parameter = "Test Assessment", 
-  sub_parameters = NA,
-  standard_long = NA, 
+  status = NA,
+  standard_long = NA,
   standard_reference = NA,
-  aggregation = NA,
-  status = NA
 )
 
 standard_format <- hera:::hera_format(standard = standard) # format assessment data

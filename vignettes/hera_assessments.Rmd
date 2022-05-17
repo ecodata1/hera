@@ -65,11 +65,11 @@ data %>%
 
 ```{r reports, echo=FALSE, warning=FALSE}
 
-reports <- catalogue$reports %>%
-  bind_rows() %>%
-  unique()
-kable(reports, format = "html", escape = FALSE) %>%
-  kable_styling(bootstrap_options = c("hover", "condensed"))
+# reports <- catalogue$reports %>%
+#   bind_rows() %>%
+#   unique()
+# kable(reports, format = "html", escape = FALSE) %>%
+#   kable_styling(bootstrap_options = c("hover", "condensed"))
 ```
 
 ## Dependencies

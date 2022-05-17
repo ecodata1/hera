@@ -50,10 +50,10 @@ The first piece of information to add is details on what your assessment is call
 details <- tibble(
   Columns = c("standard_short", "parameter","status", "standard_long", "standard_reference"),
   Required = c(TRUE, TRUE,TRUE, FALSE, FALSE),
-  Details = c("Short name for standard < 26 characters",
-              "My parameter",
-              "Required - either: \'development\',\'on-hold\', \'consultation\','deprecated\' or 'deployed\'",
-              "Optional - Long name for standard",
+  Details = c("Short name for assessment < 26 characters for example an abbrivation like TDI",
+              "Parameter or observation method being assessed for example Freshwater Diatoms, River Barriers or Estaurine Fish.",
+              "Required - either: \'prototype\', \'development\',\'on-hold\', \'consultation\','deprecated\' or 'deployed\'",
+              "Optional - Long name for standard for instance Trophic Diatom Index",
               "Link to peer-review paper"
              )
 )
