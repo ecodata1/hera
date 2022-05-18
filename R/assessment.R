@@ -26,10 +26,6 @@ assessment <- function(data = NULL, name = NULL, catalogue = NULL) {
 
   catalogue <- filter_assessment(model = catalogue, name = name)
 
-  data <- validation(data)
-  indices <- hera::indices(data = data, catalogue = catalogue)
-  predictions <- hera::prediction(data = data, catalogue = catalogue)
-  data <- bind_rows(data, indices, predictions)
 
   assessments <- purrr::map_df(
     split(catalogue, 1:nrow(catalogue)),
@@ -38,6 +34,7 @@ assessment <- function(data = NULL, name = NULL, catalogue = NULL) {
         return(NULL)
       }
 
+      model <- tidyr::unnest(model, cols =c( output  ))
       data <- data %>% dplyr::filter(.data$parameter == model$analysis_name)
       data <- data %>% dplyr::filter(.data$question %in% c(model$indices[[1]]$question) |
         .data$question %in% c(model$predictions[[1]]$question))

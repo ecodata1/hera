@@ -1,93 +1,98 @@
+#' @importFrom dplyr bind_rows select right_join
+combine_assessment <- function(data, assessment) {
+  # Rejoin output from assessment_function to input data
+  data_attributes <- data %>%
+    select(-question, -response, -result_id, -label,) %>%
+    unique()
+
+  if(!is.null(indexes)) {
+    indexes <- right_join(data_attributes, indexes,
+                          by = c("sample_id" = "sample_id")
+    )
+  } else {
+    indexes <- data_attributes
+  }
+
+  data$response <- as.character(data$response)
+  indexes$response <- as.character(indexes$response)
+  combined_data <- bind_rows(data, indexes)
+
+  return(combined_data)
+}
+
 
 #' @importFrom dplyr bind_rows
 #' @importFrom tibble tibble
 #' @importFrom usethis use_data
-update_catalogue <- function(standard,
-                             location,
-                             sample,
-                             indices_function,
-                             prediction_function,
-                             assessment_function,
-                             confidence_function,
-                             assessment_table,
-                             indexes,
-                             questions,
-                             predictors,
-                             assessments) {
+update_catalogue <- function(description = NULL,
+                             data = NULL,
+                             assessment_function = NULL,
+                             output = NULL
+                           ) {
 catalogue <- hera::catalogue
 
+data = data[data$sample_id == data$sample_id[1], ]
+data$output = FALSE
+output = output[output$sample_id == output$sample_id[1], ]
+
+output$parameter <- description$response[description$question == "name_long"]
+output$output <- TRUE
+output$type <- "calculated"
+output$response <- as.character(output$response)
+data <- bind_rows(data, output)
+
 model <- tibble(
-  analysis_name = standard$parameter,
-  assessment = standard$standard_long,
-  standard = list(standard),
-  location = list(location[1, ]),
-  sample = list(sample[1, ]),
-  validation_function = NA,
-  indices_function = list(indices_function),
-  prediction_function = list(prediction_function),
-  assessment_function = list(assessment_function),
-  confidence_function = list(confidence_function),
-  indices = list(indexes[indexes$sample_id == indexes$sample_id[1], ]),
-  assessment_table = list(assessment_table),
-  questions = list(questions[1, ]),
-  predictors = list(predictors[1, ]),
-  predictions = list(predictions[predictions$location_id == predictions$location_id[1], ]),
-  assessments =  list(assessments[1, ])
+  assessment = description$response[description$question == "name_long"],
+  description = list(description),
+  data = list(data[data$sample_id == data$sample_id[1], ]),
+  assessment_function = list(assessment_function)
 )
 
-catalogue <- catalogue[catalogue$assessment != standard$standard_long, ]
+catalogue <- catalogue[catalogue$assessment != description$response[description$question == "name_long"], ]
 
 catalogue <- bind_rows(catalogue, model)
-new_catalogue <- catalogue
-new_catalogue
+
+catalogue
 
 usethis::use_data(catalogue, overwrite = TRUE)
 }
 
 #' @importFrom tidyr pivot_longer everything
 #' @importFrom dplyr select
-hera_format <- function(standard = NULL) {
+hera_format <- function(description = NULL) {
 
-  standard <- filter(standard, question %in%
-                       c("standard_short",
+  description <- filter(description, question %in%
+                       c("name_short",
+                         "name_long",
                          "parameter",
-                         "status" ,
-                         "standard_long",
-                         "standard_reference"))
+                         "status"))
 
 
-  standard$optional <- c(TRUE, TRUE, TRUE, FALSE, FALSE)
+  description$optional <- c(TRUE, TRUE, TRUE, TRUE)
+
 
   # Return list of Data frames
-  data <- list(standard)
-  names(data) <- "standard"
-  return(data)
+  description <- list(description)
+  names(description) <- "description"
+
+  return(description)
 }
 
 #' @importFrom testthat test_that expect_equal
 #' @importFrom tidyr pivot_longer everything
 #' @importFrom tibble tibble
-hera_test <- function(standard = NULL) {
+hera_test <- function(description = NULL) {
   # Check standard info --------------------------------------------------------
-  standard <- select(standard, standard_short,
-                     parameter,
-                     status ,
-                     standard_long,
-                     standard_reference)
 
-   standard <- pivot_longer(standard,
-    names_to = "attribute",
-    cols = (everything())
-  )
-  standard$required <- NA
-  standard$required <-  c(TRUE, TRUE, TRUE, FALSE, FALSE)
+  description$required <- NA
+  description$required <-  c(TRUE, TRUE, TRUE, TRUE)
 
   standard_check <- tibble(
     standard_names = test_that("Correct Standard attributes", {
-      expect_equal(length(standard$attribute[standard$attribute %in% c(
-        "standard_short",
+      expect_equal(length(description$question[description$question %in% c(
+        "name_short",
         "parameter",
-        "standard_long",
+        "name_long",
         "status"
       ) ] ),4
         ,
@@ -96,14 +101,14 @@ hera_test <- function(standard = NULL) {
     }),
     standard_required = test_that("Correct Standard attributes", {
       expect_equal(
-        length(standard$attribute[standard$required == TRUE]),
-        length(standard$required[standard$required == TRUE]),
+        length(description$question[description$required == TRUE]),
+        length(description$required[description$required == TRUE]),
         info = "Correct required attributes"
       )
     }),
     standard_required_values =
-      if (is.null(standard$value[is.na(standard$value) &
-                               standard$required == TRUE])) {
+      if (is.null(description$response[is.na(description$response) &
+                                       description$required == TRUE])) {
         FALSE
       } else {
         TRUE

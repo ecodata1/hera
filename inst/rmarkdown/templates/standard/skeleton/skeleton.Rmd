@@ -22,7 +22,6 @@ library(tidyr)
 library(tibble)
 library(magrittr)
 library(testthat)
-library(rlang)
 library(visNetwork)
 ```
 
@@ -37,18 +36,18 @@ This document has been created following the generic [assessment guidance](https
 
 ```{r setup}
 
-standard <- tibble(
-  standard_short = NA, 
-  parameter = "Test Assessment", 
-  status = NA,
-  standard_long = NA,
-  standard_reference = NA,
+standard <- tribble(
+  ~question, ~response,
+  "standard_short", "REPLACE_ME", 
+  "parameter", "REPLACE_ME", 
+  "status", "REPLACE_ME",
+  "standard_long", "REPLACE_ME", 
+  "standard_reference", "REPLACE_ME"
 )
 
+
 standard_format <- hera:::hera_format(standard = standard) # format assessment data
-standard_format$standard %>%
-  filter(attribute != "standard_reference") %>%
-  knitr::kable()
+standard
 ```
 
 ## Data Sources

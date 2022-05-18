@@ -32,73 +32,46 @@ This document has been created following the generic [assessment guidance](https
 
 ## Details
 
-<!-- Create a new regulatory assessment by changing the CAPITLIZE info below: -->
-
 ```{r setup}
 
-standard <- tribble(
+description <- tribble(
   ~question, ~response,
-  "standard_short", "TDI", 
+  "name_short", "TDI", 
+  "name_long", "Trophic Diatom Index", 
   "parameter", "River Diatoms", 
-  "status", "prototype",
-  "standard_long", "Trophic Diatom Index", 
-  "standard_reference", NA
+  "status", "prototype"
 )
-
 
 ```
 
 ## Data
 
+Input data required for assessment. Can be from test data, real data or a short example.
+
 ```{r data}
+
 data <- tribble(
-  ~question, ~response, ~label,
-  "sample_id", "235456", NA,
-  "Taxon abundance", "12", "Taxon name"
+  ~sample_id,
+  ~question,
+  ~response,
+  ~label,
+  ~parameter, 
+  ~type,
+  ~source,
+  "235456",
+  "Taxon abundance",
+  "12",
+  "Gomphonema olivaceum", 
+  "River Diatoms",
+  "input",
+  "sepa_ecology_results"
 )
-```
 
-## Data sources
-
-```{r}
-#  data <- get_data(location_id = c(92751, 100))
-data <- demo_data
-data <- data %>% filter(parameter == "River Diatoms")
-data
 ```
 
 ## Assessment
 
 Metric, prediction, classification, confidence calculation etc you wish to run.
-
-### Categories
-
-If you calculation creates a category or classification, list your categories and associated values below:
-
-```{r assessment_table}
-
-assessment_table <- tibble(
-  assessment = c( "high", 
-                  "good", 
-                  "moderate",
-                  "poor",
-                  "bad"),
-  value = c(0.80,
-            0.60,
-            0.40,
-            0.20,
-            0)
-  # ...
-  # "red" = 0.33
-  # "amber" = 0.5
-  # "green" = 0.66
-  # ...
-  # "pass" = 0.5
-  # "fail" = 0.0
-)
-
-assessment_table
-```
 
 ### Calculation
 
@@ -106,7 +79,7 @@ Create a function to run your calculation.
 
 ```{r indices}
 
-indices_function <- function(data) {
+assessment_function <- function(data) {
   require(dplyr)
   require(tidyr)
   require(magrittr)
@@ -115,65 +88,34 @@ indices_function <- function(data) {
   darleq3_taxa <- darleq3::darleq3_taxa
   output <- filter(data, question == "Taxon abundance")
   output <- inner_join(output, darleq3_taxa, by = c("label" = "TaxonName"))
-  
-  
+
   output <- output %>% group_by(sample_id) %>% 
       mutate("total_count" = sum(as.numeric(response)))
   
-  # TDI scores for each taxa
+  # Group data to get TDI scores for each taxa
   output <- output %>% group_by(sample_id, label, total_count, Saline) %>% 
     summarise("TDI" = (total_count / 100 * as.numeric(response)) * TDI4)
   
-  # Tally TDI and work out percentage for other metrics
+  # Mean TDI scores for each taxa and work out percentage for other metrics
   output <- output %>% group_by(sample_id, total_count) %>% 
               summarise( question = c("TDI4",
                                       "Saline"),
                          "response" = c(mean(TDI, na.rm =T ),
                                         unique(total_count) / 100 * sum(Saline))
                          )
-  
-  output <- output %>% select(-total_count)
   output <- ungroup(output)
+  output <- output %>% select(-total_count)
+
   return(output)
 }
-indexes <- indices_function(data)
+output <- assessment_function(data)
 ```
 
-
-```{r together, echo=FALSE}
-
-# All Together Now - rejoin assessment to sample/location info as appropriate
-# Change this to internal function???
-sample_info <- data %>% 
-  select(names(sample), names(location)) %>%
-  unique()
-
-if(!is.null(indexes)) {
-indexes <- right_join(sample_info, indexes,
-  by = c("sample_id" = "sample_id")
-)
-} else {
-  indexes <- data
-}
-
-predictions <- right_join(sample_info, predictions,
-  by = c("location_id" = "location_id")
-)
-
-predictions$response <- as.character(predictions$response)
-questions$response <- as.character(questions$response)
-indexes$response <- as.character(indexes$response)
-combined_data <- bind_rows(questions, predictions, indexes)
-```
-
-## Checklist
+## Check
 
 ```{r checklist}
-standard_format <- hera:::hera_format(standard = standard) # format assessment data
-standard_format$standard %>%
-  filter(attribute != "standard_reference") %>%
-  knitr::kable()
-check_list <- hera:::hera_test(standard = standard)
+standard_format <- hera:::hera_format(description = description) # format details
+check_list <- hera:::hera_test(description = description) # test details data
 knitr::kable(check_list$standard_check)
 ```
 
@@ -181,32 +123,25 @@ knitr::kable(check_list$standard_check)
 
 ```{r hera_update}
 # No need to edit this code
-catalogue <- hera::catalogue
-model <- tibble(
-  analysis_name = standard$parameter,
-  assessment = standard$standard_long,
-  standard = list(standard),
-  location = list(location[1, ]),
-  sample = list(sample[1, ]),
-  validation_function = NA,
-  indices_function = list(indices_function),
-  prediction_function = list(prediction_function),
-  assessment_function = list(assessment_function),
-  confidence_function = list(confidence_function),
-  indices = list(indexes[indexes$sample_id == indexes$sample_id[1], ]),
-  assessment_table = list(assessment_table),
-  questions = list(questions[1, ]),
-  predictors = list(predictors[1, ]),
-  predictions = list(predictions[predictions$location_id == predictions$location_id[1], ])
-)
-
-catalogue <- catalogue[catalogue$assessment != standard$standard_long, ]
-
-catalogue <- bind_rows(catalogue, model)
-new_catalogue <- catalogue
-new_catalogue
-usethis::use_data(catalogue, overwrite = TRUE)
+hera:::update_catalogue(description = description,
+                        data = data,
+                        assessment_function = assessment_function,
+                        output = output
+                        )
 ```
+
+
+## Hera
+
+This section tests if this assessment is usable using `hera` function
+
+
+```{r}
+
+hera(hera::demo_data)
+assessment(data = hera::demo_data, name = "Trophic Diatom Index")
+```
+
 
 ## Launch app
 
