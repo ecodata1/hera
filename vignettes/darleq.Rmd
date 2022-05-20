@@ -51,7 +51,7 @@ standard_format$standard %>%
 
 ```{r}
 
-data <- read.csv(system.file("extdat/data-flow", "darleq.csv", package = "hera"))
+data <- read.csv(system.file("extdat/data-flow", "diatoms.csv", package = "hera"))
 
 nodes <- data %>%
   select(-from, -to) %>% 
