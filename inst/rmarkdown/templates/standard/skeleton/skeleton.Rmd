@@ -38,11 +38,11 @@ This document has been created following the generic [assessment guidance](https
 
 standard <- tribble(
   ~question, ~response,
-  "standard_short", "REPLACE_ME", 
+  "name_short", "REPLACE_ME", 
+  "name_long", "REPLACE_ME",
   "parameter", "REPLACE_ME", 
   "status", "REPLACE_ME",
-  "standard_long", "REPLACE_ME", 
-  "standard_reference", "REPLACE_ME"
+  "reference", "REPLACE_ME"
 )
 
 

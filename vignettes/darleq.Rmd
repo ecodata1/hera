@@ -5,6 +5,8 @@ vignette: >
   %\VignetteIndexEntry{darleq}
   %\VignetteEncoding{UTF-8}  
   %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -30,20 +32,18 @@ library(visNetwork)
 
 ```{r setup}
 
-standard <- tibble(
-  standard_short = "darleq", # Short name for standard < 26 characters
-  quality_element = "River Diatoms", # Quality element  < 26 characters
-  parameter = "River Diatoms", # My parameter
-  standard_long = "River Diatoms (phytobenthos)", # Optional - Long name for standard
-  standard_reference = NA,
-  aggregation = NA, # Optional - usually "waterbody" or "area"
-  status = "testing" # Optional - "development", "on-hold", "consultation", "deprecated" or "deployed"
+standard <- tribble(
+  ~question, ~response,
+  "name_short", "darleq", 
+  "name_long", "River Diatoms (phytobenthos)",
+  "parameter", "River Diatoms", 
+  "status", "development",
+  "reference", NA
 )
 
-standard_format <- hera:::hera_format(standard = standard) # format assessment data
-standard_format$standard %>%
-  filter(attribute != "standard_reference") %>%
-  knitr::kable()
+
+standard <- hera:::hera_format(description = standard) # format assessment data
+standard
 ```
 
 ## Data

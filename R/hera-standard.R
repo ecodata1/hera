@@ -58,7 +58,7 @@ usethis::use_data(catalogue, overwrite = TRUE)
 }
 
 #' @importFrom tidyr pivot_longer everything
-#' @importFrom dplyr select
+#' @importFrom dplyr select filter
 hera_format <- function(description = NULL) {
 
   description <- filter(description, question %in%
@@ -68,7 +68,7 @@ hera_format <- function(description = NULL) {
                          "status"))
 
 
-  description$optional <- c(TRUE, TRUE, TRUE, TRUE)
+  description$optional <- c(FALSE, FALSE, FALSE, FALSE)
 
 
   # Return list of Data frames
