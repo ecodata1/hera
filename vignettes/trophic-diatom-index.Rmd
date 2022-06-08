@@ -22,7 +22,6 @@ library(tidyr)
 library(tibble)
 library(magrittr)
 library(testthat)
-library(rlang)
 library(visNetwork)
 ```
 
@@ -30,92 +29,111 @@ library(visNetwork)
 
 This document has been created following the generic [assessment guidance](https://ecodata1.github.io/hera/articles/development_guide.html).
 
-## Details
+## Description
 
 ```{r setup}
-
 description <- tribble(
   ~question, ~response,
-  "name_short", "TDI", 
-  "name_long", "Trophic Diatom Index", 
-  "parameter", "River Diatoms", 
+  "name_short", "TDI",
+  "name_long", "Trophic Diatom Index",
+  "parameter", "River Diatoms",
   "status", "prototype"
 )
 
+description
 ```
 
-## Data
+## Input
 
 Input data required for assessment. Can be from test data, real data or a short example.
 
-```{r data}
-
-data <- tribble(
+```{r input}
+input <- tribble(
   ~sample_id,
   ~question,
   ~response,
   ~label,
-  ~parameter, 
+  ~parameter,
   ~type,
+  ~max,
+  ~min,
   ~source,
-  "235456",
+  "12345",
   "Taxon abundance",
   "12",
-  "Gomphonema olivaceum", 
+  "Gomphonema olivaceum",
   "River Diatoms",
-  "input",
+  "number",
+  NA,
+  NA,
   "sepa_ecology_results"
 )
-
+input
 ```
 
 ## Assessment
 
-Metric, prediction, classification, confidence calculation etc you wish to run.
+Calculate the Trophic Diatom Score (TDI) for a given sample. This score is used to assess the nutrient status of freshwaters.
 
-### Calculation
-
-Create a function to run your calculation.
-
-```{r indices}
-
+```{r assessment, echo=TRUE}
 assessment_function <- function(data) {
   require(dplyr)
   require(tidyr)
   require(magrittr)
   require(tibble)
-  
+
   darleq3_taxa <- darleq3::darleq3_taxa
   output <- filter(data, question == "Taxon abundance")
   output <- inner_join(output, darleq3_taxa, by = c("label" = "TaxonName"))
 
-  output <- output %>% group_by(sample_id) %>% 
-      mutate("total_count" = sum(as.numeric(response)))
-  
+  output <- output %>%
+    group_by(sample_id) %>%
+    mutate("total_count" = sum(as.numeric(response)))
+
   # Group data to get TDI scores for each taxa
-  output <- output %>% group_by(sample_id, label, total_count, Saline) %>% 
-    summarise("TDI" = (total_count / 100 * as.numeric(response)) * TDI4)
-  
-  # Mean TDI scores for each taxa and work out percentage for other metrics
-  output <- output %>% group_by(sample_id, total_count) %>% 
-              summarise( question = c("TDI4",
-                                      "Saline"),
-                         "response" = c(mean(TDI, na.rm =T ),
-                                        unique(total_count) / 100 * sum(Saline))
-                         )
+  output <- output %>%
+    group_by(sample_id, label, total_count, Saline) %>%
+    summarise("TDI" = (total_count / 100 * as.numeric(response)) * TDI4,
+               .groups = "drop")
+
+  # Mean TDI scores for each taxa and work out percentage for other
+  # metrics
+  output <- output %>%
+    group_by(sample_id, total_count) %>%
+    summarise(
+      question = c(
+        "TDI4",
+        "Saline"
+      ),
+      "response" = c(
+        mean(TDI, na.rm = T),
+        unique(total_count) / 100 * sum(Saline)
+      ),
+      .groups = "drop")
   output <- ungroup(output)
   output <- output %>% select(-total_count)
 
   return(output)
 }
-output <- assessment_function(data)
+```
+
+## Output
+
+```{r output}
+output <- assessment_function(input)
+output
 ```
 
 ## Check
 
+Run checks on the assessment:
+
 ```{r checklist}
-standard_format <- hera:::hera_format(description = description) # format details
-check_list <- hera:::hera_test(description = description) # test details data
+# No need to edit this code
+# Format description
+standard_format <- hera:::hera_format(description = description) 
+# Check description
+check_list <- hera:::hera_test(description = description)
 knitr::kable(check_list$standard_check)
 ```
 
@@ -123,25 +141,22 @@ knitr::kable(check_list$standard_check)
 
 ```{r hera_update}
 # No need to edit this code
-hera:::update_catalogue(description = description,
-                        data = data,
-                        assessment_function = assessment_function,
-                        output = output
-                        )
+hera:::update_catalogue(
+  description = description,
+  input = input,
+  assessment_function = assessment_function,
+  output = output
+)
 ```
-
 
 ## Hera
 
 This section tests if this assessment is usable using `hera` function
 
-
 ```{r}
-
 hera(hera::demo_data)
 assessment(data = hera::demo_data, name = "Trophic Diatom Index")
 ```
-
 
 ## Launch app
 
@@ -149,6 +164,5 @@ Below is an interactive application displaying the results of your assessment.
 
 ```{r launch_app, echo=FALSE, eval=FALSE}
 # No need to edit this code
-launch_app(new_catalogue = catalogue, data = data)
-
+# launch_app(new_catalogue = catalogue, data = data)
 ```

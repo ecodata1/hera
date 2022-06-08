@@ -604,7 +604,7 @@ List of reports where this assessment is used
 ## Checklist
 
 ```{r checklist}
-check_list <- hera:::hera_test(standard = standard)
+check_list <- hera:::hera_test(description = standard)
 knitr::kable(check_list$standard_check)
 ```
 
@@ -613,6 +613,11 @@ knitr::kable(check_list$standard_check)
 ```{r}
 
 catalogue <- hera::catalogue
+hera:::update_catalogue(description = standard,
+                             data = data,
+                             assessment_function = assessment_function,
+                             output = output)
+
 
 model <- tibble(
   analysis_name = standard$parameter,

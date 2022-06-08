@@ -51,6 +51,6 @@ Remotes:
     aquaMetrics/macroinvertebrateMetrics,
     ecodata1/whpt
 VignetteBuilder: knitr
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Depends: 
     R (>= 3.6)

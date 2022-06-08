@@ -1,28 +1,16 @@
-#' Dataframe of models for each WFD parameter
+#' Catalogue of assessments
 #'
-#' A dataset containing a dataframe of functions to validate, calculate indices,
-#' predict reference indices, and calculate classification.
+#' A data frame containing descriptions, data and functions used by assessment
+#' methods. This catalogue is automatically extended by knitting new assessment
+#' vignettes and rebuilding the package.
 #'
-#' @format A data frame with 1 rows and 5 variables:
+#' @format A data frame with 4 variables:
 #' \describe{
-#'   \item{analysis_name}{Name of WFD analysis}
-#'   \item{assessment}{assessment}
-#'   \item{standard}{standard}
-#'   \item{location}{Meta data collected for Location}
-#'   \item{sample}{Meta data collected for sample}
-#'   \item{validation_function}{Function to validate data}
-#'   \item{indices_function}{Function to calculate observed indices from raw
-#'   data}
-#'   \item{prediction_function}{Function to predict reference indices based on
-#'   predictors}
-#'   \item{assessment_function}{Function to
-#'   assess predictions based on observed against predicted indices}
-#'   \item{confidence_function}{Confidence function}
-#'   \item{indices}{Indices}
-#'   \item{assessment_table}{Assessment table}
-#'   \item{questions}{Questions}
-#'   \item{predictors}{Predictors}
-#'   \item{predictions}{Predictions}
+#'   \item{assessment}{Name of assessment}
+#'   \item{data}{List data frame describing the input and output data of the
+#'   assessment}
+#'   \item{assessment_function}{Assessment function that generates calculated
+#'   output values}
 #' }
 #' @source Agency sampling data
 "catalogue"

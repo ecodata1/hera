@@ -25,34 +25,33 @@ combine_assessment <- function(data, assessment) {
 #' @importFrom tibble tibble
 #' @importFrom usethis use_data
 update_catalogue <- function(description = NULL,
-                             data = NULL,
+                             input = NULL,
                              assessment_function = NULL,
                              output = NULL
                            ) {
 catalogue <- hera::catalogue
-
-data = data[data$sample_id == data$sample_id[1], ]
-data$output = FALSE
-output = output[output$sample_id == output$sample_id[1], ]
-
-output$parameter <- description$response[description$question == "name_long"]
+input <- input[input$sample_id == input$sample_id[1], ]
+input$output <- FALSE
+output <- output[output$sample_id == output$sample_id[1], ]
+parameter <- description$response[description$question == "name_long"]
+output$parameter <- parameter
 output$output <- TRUE
-output$type <- "calculated"
 output$response <- as.character(output$response)
-data <- bind_rows(data, output)
+input$response <- as.character(input$response)
+description$response <-as.character(description$response)
 
+# bind description, input and output data into single table
+data <- bind_rows(input, output, description)
+data <- list(data[input$sample_id == data$sample_id[1] | is.na(input$sample_id), ])
 model <- tibble(
   assessment = description$response[description$question == "name_long"],
-  description = list(description),
-  data = list(data[data$sample_id == data$sample_id[1], ]),
+  data = data,
   assessment_function = list(assessment_function)
 )
 
 catalogue <- catalogue[catalogue$assessment != description$response[description$question == "name_long"], ]
 
 catalogue <- bind_rows(catalogue, model)
-
-catalogue
 
 usethis::use_data(catalogue, overwrite = TRUE)
 }
@@ -83,7 +82,6 @@ hera_format <- function(description = NULL) {
 #' @importFrom tibble tibble
 hera_test <- function(description = NULL) {
   # Check standard info --------------------------------------------------------
-
   description$required <- NA
   description$required <-  c(TRUE, TRUE, TRUE, TRUE)
 
