@@ -42,7 +42,9 @@ description$response <-as.character(description$response)
 
 # bind description, input and output data into single table
 data <- bind_rows(input, output, description)
-data <- list(data[input$sample_id == data$sample_id[1] | is.na(input$sample_id), ])
+
+data <- list(data[data$sample_id == input$sample_id[1] |
+                  is.na(data$sample_id), ])
 model <- tibble(
   assessment = description$response[description$question == "name_long"],
   data = data,

@@ -27,14 +27,15 @@ library(visNetwork)
 
 ## Welcome
 
-This document has been created following the generic [assessment
-guidance](https://ecodata1.github.io/hera/articles/development_guide.html).
+This document has been created following the generic [assessment guidance](https://ecodata1.github.io/hera/articles/development_guide.html).
 
 <!-- Create a new regulatory assessment by updating the code info below, for guidance see https://ecodata1.github.io/hera/articles/development_guide.html  -->
 
 ## Description
 
-```{r setup}
+Basic details about the assessment. Update the 'response' values as required.
+
+```{r description}
 
 description <- tribble(
   ~question, ~response,
@@ -49,7 +50,9 @@ description
 
 ## Input
 
-```{r data}
+A list of questions required to run the assessment.
+
+```{r input}
 
 input <- tribble(
   ~sample_id,
@@ -76,7 +79,7 @@ input
 
 ## Assessment
 
-If applicable, write a function to assess your input data and return an output. For example, a metric, statistic, prediction etc
+If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
 
 ```{r assessment}
 
@@ -98,16 +101,18 @@ assessment_function <- function(data) {
 }
 ```
 
-## Output
+## Outcome
+
+The outcome of your assessment.
 
 ```{r output}
-output <- assessment_function(input)
-output
+outcome <- assessment_function(input)
+outcome
 ```
 
 ## Check
 
-Run checks on the assessment:
+Run checks on the assessment.
 
 ```{r checklist}
 # No need to edit this code
@@ -120,23 +125,29 @@ knitr::kable(check_list$standard_check)
 
 ## Update
 
+Update the catalogue of assessments to make them available.
+
 ```{r hera_update}
 # No need to edit this code
 hera:::update_catalogue(
   description = description,
   input = input,
   assessment_function = assessment_function,
-  output = output
+  output = outcome
 )
 ```
 
-## Hera
+After **updating the catalogue, rebuild the package**, click on Build > Install and Restart menu or 'Install and Restart' button in the Build pane.
 
-This section tests if this assessment is usable using `hera` function
+## Test
+
+This section tests if this assessment is usable using `assessment` function.
 
 ```{r}
-# hera(hera::demo_data)
-# assessment(data = hera::demo_data, name = "Example")
+# No need to edit this code
+assessment(data = hera::demo_data,
+           name = description$response[
+             description$question == "name_long"])
 ```
 
 ## Launch app

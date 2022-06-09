@@ -31,6 +31,8 @@ This document has been created following the generic [assessment guidance](https
 
 ## Description
 
+Basic details about the assessment. Update the 'response' values as required.
+
 ```{r setup}
 description <- tribble(
   ~question, ~response,
@@ -117,7 +119,9 @@ assessment_function <- function(data) {
 }
 ```
 
-## Output
+## Outcome
+
+The outcome of your assessment.
 
 ```{r output}
 output <- assessment_function(input)
@@ -126,7 +130,7 @@ output
 
 ## Check
 
-Run checks on the assessment:
+Run checks on the assessment.
 
 ```{r checklist}
 # No need to edit this code
@@ -139,6 +143,8 @@ knitr::kable(check_list$standard_check)
 
 ## Update
 
+Update the catalogue with the assessment.
+
 ```{r hera_update}
 # No need to edit this code
 hera:::update_catalogue(
@@ -149,13 +155,16 @@ hera:::update_catalogue(
 )
 ```
 
-## Hera
+## Test
 
-This section tests if this assessment is usable using `hera` function
+This section tests if this assessment is usable using `hera` and `assessment` functions.
 
 ```{r}
+# No need to edit this code
 hera(hera::demo_data)
-assessment(data = hera::demo_data, name = "Trophic Diatom Index")
+assessment(data = hera::demo_data,
+           name = description$response[
+             description$question == "name_long"])
 ```
 
 ## Launch app
