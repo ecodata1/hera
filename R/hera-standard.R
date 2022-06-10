@@ -2,12 +2,12 @@
 combine_assessment <- function(data, assessment) {
   # Rejoin output from assessment_function to input data
   data_attributes <- data %>%
-    select(-question, -response, -result_id, -label,) %>%
+    select(-question, -response, -result_id, -label, ) %>%
     unique()
 
-  if(!is.null(indexes)) {
+  if (!is.null(indexes)) {
     indexes <- right_join(data_attributes, indexes,
-                          by = c("sample_id" = "sample_id")
+      by = c("sample_id" = "sample_id")
     )
   } else {
     indexes <- data_attributes
@@ -27,46 +27,45 @@ combine_assessment <- function(data, assessment) {
 update_catalogue <- function(description = NULL,
                              input = NULL,
                              assessment_function = NULL,
-                             output = NULL
-                           ) {
-catalogue <- hera::catalogue
-input <- input[input$sample_id == input$sample_id[1], ]
-input$output <- FALSE
-output <- output[output$sample_id == output$sample_id[1], ]
-parameter <- description$response[description$question == "name_long"]
-output$parameter <- parameter
-output$output <- TRUE
-output$response <- as.character(output$response)
-input$response <- as.character(input$response)
-description$response <-as.character(description$response)
+                             output = NULL) {
+  catalogue <- hera::catalogue
+  input <- input[input$sample_id == input$sample_id[1], ]
+  input$output <- FALSE
+  output <- output[output$sample_id == output$sample_id[1] |
+    is.na(output$sample_id), ]
+  parameter <- description$response[description$question == "name_long"]
+  output$parameter <- parameter
+  output$output <- TRUE
+  output$response <- as.character(output$response)
+  input$response <- as.character(input$response)
+  description$response <- as.character(description$response)
 
-# bind description, input and output data into single table
-data <- bind_rows(input, output, description)
+  # bind description, input and output data into single table
+  data <- bind_rows(input, output, description)
 
-data <- list(data[data$sample_id == input$sample_id[1] |
-                  is.na(data$sample_id), ])
-model <- tibble(
-  assessment = description$response[description$question == "name_long"],
-  data = data,
-  assessment_function = list(assessment_function)
-)
+  data <- list(data[data$sample_id == input$sample_id[1] |
+    is.na(data$sample_id), ])
+  model <- tibble(
+    assessment = description$response[description$question == "name_long"],
+    data = data,
+    assessment_function = list(assessment_function)
+  )
 
-catalogue <- catalogue[catalogue$assessment != description$response[description$question == "name_long"], ]
-
-catalogue <- bind_rows(catalogue, model)
-
-usethis::use_data(catalogue, overwrite = TRUE)
+  catalogue <- catalogue[catalogue$assessment != description$response[description$question == "name_long"], ]
+  catalogue <- bind_rows(catalogue, model)
+  usethis::use_data(catalogue, overwrite = TRUE)
 }
 
 #' @importFrom tidyr pivot_longer everything
 #' @importFrom dplyr select filter
 hera_format <- function(description = NULL) {
-
   description <- filter(description, question %in%
-                       c("name_short",
-                         "name_long",
-                         "parameter",
-                         "status"))
+    c(
+      "name_short",
+      "name_long",
+      "parameter",
+      "status"
+    ))
 
 
   description$optional <- c(FALSE, FALSE, FALSE, FALSE)
@@ -85,7 +84,7 @@ hera_format <- function(description = NULL) {
 hera_test <- function(description = NULL) {
   # Check standard info --------------------------------------------------------
   description$required <- NA
-  description$required <-  c(TRUE, TRUE, TRUE, TRUE)
+  description$required <- c(TRUE, TRUE, TRUE, TRUE)
 
   standard_check <- tibble(
     standard_names = test_that("Correct Standard attributes", {
@@ -94,9 +93,8 @@ hera_test <- function(description = NULL) {
         "parameter",
         "name_long",
         "status"
-      ) ] ),4
-        ,
-        info = "Correct Standard attributes"
+      )]), 4,
+      info = "Correct Standard attributes"
       )
     }),
     standard_required = test_that("Correct Standard attributes", {
@@ -108,7 +106,7 @@ hera_test <- function(description = NULL) {
     }),
     standard_required_values =
       if (is.null(description$response[is.na(description$response) &
-                                       description$required == TRUE])) {
+        description$required == TRUE])) {
         FALSE
       } else {
         TRUE

@@ -128,9 +128,9 @@ assessment_function <- function(data) {
   header <- arrange(header, .data$SampleID)
 
   # Prepare dataframe of 'diatom_data' -------------------------------
-  # - Include columns for each diatom ID (from NEMS Dares table)
-  # - responses are abundances.
-  # - row.names are SAMPLE_NUMBER.
+  # Include columns for each diatom ID (from NEMS Dares table)
+  # responses are abundances.
+  # dataframe row.names are SAMPLE_NUMBER.
 
   # DARES table
   # - must use table from NEMS - this links TAXON to TAXONLD code
@@ -179,7 +179,8 @@ assessment_function <- function(data) {
   # Prepare dataframe of 'taxon_names'  ------------------------------
   # include columns 'TaxonCode','TaxonName'
   taxon_names <- diatom_taxonname %>%
-    select("TaxonCode" = .data$TaxonId, "TaxonName" = .data$TaxonName) %>%
+    select("TaxonCode" = .data$TaxonId,
+           "TaxonName" = .data$TaxonName) %>%
     unique()
   taxon_names <- arrange(taxon_names, .data$TaxonName)
 
@@ -193,16 +194,28 @@ assessment_function <- function(data) {
     truncate_EQR = TRUE,
     verbose = TRUE
   )
-  output <- output$EQR
-  output <- output %>% mutate_all(as.character)
-  output <- pivot_longer(output,
+ 
+  sample <- output$EQR
+  sample <- sample %>% mutate_all(as.character)
+  sample <- pivot_longer(sample,
     cols = c(-SampleID, -SiteID, -SAMPLE_DATE),
     names_to = "question",
     values_to = "response"
   )
-  output <- select(output, -SiteID, -SAMPLE_DATE)
-  names(output) <- c("sample_id", "question", "response")
-  return(output)
+  sample <- select(sample, -SAMPLE_DATE)
+  names(sample) <- c("sample_id", "location_id", "question", "response")
+  
+  location <- output$Uncertainty
+  location <- location %>% mutate_all(as.character)
+   location <- pivot_longer(location,
+    cols = c(-SiteID),
+    names_to = "question",
+    values_to = "response"
+  )
+    names(location) <- c("location_id", "question", "response")
+  data <- bind_rows(sample, location)
+  
+  return(data)
 }
 ```
 
@@ -250,7 +263,7 @@ This section tests if this assessment is usable using `assessment` function.
 
 ```{r}
 # No need to edit this code
-assessment(
+assess(
   data = hera::demo_data,
   name = description$response[description$question == "name_long"]
 )

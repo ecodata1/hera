@@ -34,126 +34,33 @@ ui <- tagList(
             ".csv"
           )
         ),
-        h4("Or click me!..."),
-        actionButton(inputId = "demo", label = "Demo Data"),
-        p(),
-        selectInput("standard",
-          label = "Standard",
-          choices = c(
-            "rict" = "FW_TX_WHPT",
-            "darleq" = "DIAT_TST"
-          ),
-          multiple = TRUE, selected = c(
-            "rict" = "FW_TX_WHPT",
-            "darleq" = "DIAT_TST"
-          )
-        ),
-        p(),
-        uiOutput("sites"),
-        p()
+        h4("Or run demo..."),
+        actionButton(inputId = "click for demo", label = "Demo Data")
       ),
       # Show tables
       mainPanel(
         htmlOutput("app"),
         leafletOutput("map_first"),
-        # p(),
         htmlOutput("data_table")
       )
-    ),
-    tabPanel(
-      "Indices",
-      sidebarPanel(
-        htmlOutput("indices_filter")
-      ),
-      # Show tables
-      mainPanel(
-        leafletOutput("map"),
-        p(),
-        htmlOutput("indices")
-      )
-    ),
-    tabPanel("Predict", mainPanel(
-      htmlOutput("predictions")
-    )),
-    tabPanel(
-      "Compliance",
-      mainPanel(
-        htmlOutput("compliance")
-      )
-    ),
-    tabPanel("Aggregate", sidebarPanel(
-      h3("Options"),
-      p(),
-      selectInput("grouping",
-        label = "Group by",
-        choices = c(
-          "water_body_id" = "water_body_id",
-          "year" = "year"
-        ),
-        selected = c("water_body_id" = "water_body_id")
-      )
-    ), mainPanel(
-      htmlOutput("aggregation")
-    )),
-    tabPanel("Compare", "This panel is intentionally left blank."),
-    tabPanel("Diagnose", "This panel is intentionally left blank."),
-    tabPanel("Simulations", "This panel is intentionally left blank.")
+    )
   )
 )
 
-# Define server logic ------------------------------------------------------------------
+# Define server logic ---------------------------------------------------------
 server <- function(input, output) {
 
-  data <- hera:::PKGENVIR$data
-  new_cataloguee <- hera:::PKGENVIR$new_catalogue
-
-  reactiveA <- reactive({
-
-
-    return(data)
-
+    reactiveA <- reactive({
     inFile <- input$dataset
     # Create a Progress object
     progress <- shiny::Progress$new()
-    progress$set(message = "Calculating", value = 1)
+
     # Make sure it closes when we exit this reactive, even if there's an error
     on.exit(progress$close())
 
-    if (length(input$sites) == 0) {
-     sites_data_frame <- reactive({
-    sites <- eadata::get_sites(take = 1000)
-    sites <- sites[complete.cases(sites), ]
-    })
-    output$sites <-  renderUI(list(
-      selectInput(multiple = TRUE, "sites",
-                  label = "Sites",
-                  choices = as.character(unique(unlist(c(sites_data_frame()["local_id"], 43378, 43296))))
-
-    )))
-    }
-
-    if (is.null(inFile) & input$demo & length(input$sites) > 0) {
+    if (is.null(inFile) & input$`click for demo`) {
       data <- hera::demo_data
-      message("ea data")
-      # Add in EA data
-      ea <- hera:::ead(site_id = input$sites)
-      data$location_id <- as.character(data$location_id)
-      data$sample_id <- as.character(data$sample_id)
-      ea$response <- as.character(ea$response)
-      ea$response <- as.factor(ea$response)
-      ea$date_taken <- as.Date(ea$date_taken)
-      data <- dplyr::bind_rows(data, ea)
 
-      if (length(input$standard) == 1 && input$standard[1] == "FW_TX_WHPT") {
-        data <- dplyr::filter(data, analysis_name %in% input$standard |
-          analysis_name %in% "SURVEY_INV" |
-          quality_element == "River Invertebrates")
-      }
-
-      if (length(input$standard) == 1 && input$standard[1] == "DIAT_TST") {
-        data <- dplyr::filter(data, analysis_name %in% input$standard)
-      }
-      data <- data
     } else if (is.null(inFile)) {
       return(NULL)
     } else {
@@ -166,7 +73,6 @@ server <- function(input, output) {
     data <- reactiveA()
 
     if (!is.null(data)) {
-
       indices <- indices(data, catalogue = catalogue)
       indices <- bind_rows(indices, data)
       # indices <- bind_rows(data, indices)
@@ -204,9 +110,12 @@ server <- function(input, output) {
       map <- leaflet(map_data) %>%
         addTiles() %>%
         addMarkers(~longitude, ~latitude,
-                   popup = ~ htmlEscape(location_id),
-                   clusterOptions = markerClusterOptions(lng=~longitude,
-                                                         lat=~latitude))
+          popup = ~ htmlEscape(location_id),
+          clusterOptions = markerClusterOptions(
+            lng = ~longitude,
+            lat = ~latitude
+          )
+        )
 
       output$map <- renderLeaflet(map)
       output$map_first <- renderLeaflet(map)
@@ -241,19 +150,24 @@ server <- function(input, output) {
           predictions %>% select(location_id, sample_id, date_taken, parameter, question, response)
         })
       ))
-      assessments <- assess(data, catalogue = new_catalogue)
+      assessments <- assessment(data, catalogue = new_catalogue)
 
-      filter_assessments <- assessments %>% select(-date_taken) %>%
-         pivot_wider(names_from = question, values_from = response)
+      filter_assessments <- assessments %>%
+        select(-date_taken) %>%
+        pivot_wider(names_from = question, values_from = response)
       output$compliance <- renderUI(list(
         h3("Compliance"), DT::renderDataTable({
-
-          if(nrow(filter_assessments) == 0) {return(NULL)}
+          if (nrow(filter_assessments) == 0) {
+            return(NULL)
+          }
           filter_assessments <- filter_assessments %>% filter(!is.na(status))
-          filter_assessments <- filter_assessments %>% select(location_id, parameter, sample_id, eqr,
-                                                       class, status, level, high,
-                                                       good, moderate, poor,
-                                                       bad) %>%
+          filter_assessments <- filter_assessments %>%
+            select(
+              location_id, parameter, sample_id, eqr,
+              class, status, level, high,
+              good, moderate, poor,
+              bad
+            ) %>%
             unique()
         })
       ))
@@ -261,11 +175,13 @@ server <- function(input, output) {
 
       output$indices_filter <- renderUI(list(
         renderUI({
-          selectInput(selectize = FALSE, "Question",
-                      label = "Questions",
-                      choices = unique(data$question),
-                      multiple = T,
-                      selected = unique(data$question))
+          selectInput(
+            selectize = FALSE, "Question",
+            label = "Questions",
+            choices = unique(data$question),
+            multiple = T,
+            selected = unique(data$question)
+          )
         })
       ))
 
@@ -283,14 +199,19 @@ server <- function(input, output) {
 
       output$aggregation <- renderUI(list(
         h3("Aggregates"), DT::renderDataTable({
-          aggregates <- hera:::aggregation(assessments,
-                          aggregation_variables <- c("parameter","water_body_id", "year"))
+          aggregates <- hera:::aggregation(
+            assessments,
+            aggregation_variables <- c("parameter", "water_body_id", "year")
+          )
 
           aggregates <- pivot_wider(aggregates,
-                                    names_from = question,
-                                    values_from = response)
-          aggregates <- select(aggregates, parameter, water_body_id, year, level, eqr,
-                               high, good, moderate, poor, bad, level)
+            names_from = question,
+            values_from = response
+          )
+          aggregates <- select(
+            aggregates, parameter, water_body_id, year, level, eqr,
+            high, good, moderate, poor, bad, level
+          )
         })
       ))
 

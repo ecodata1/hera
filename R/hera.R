@@ -17,6 +17,6 @@
 #' @importFrom purrr map
 #' @export
 hera <- function(data = NULL) {
-  assessments <- assessment(data)
+  assessments <- assess(data)
   return(assessments)
 }

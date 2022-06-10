@@ -1,8 +1,8 @@
-#' Assessment
+#' Assess
 #'
 #' Run assessment
 #' @details
-#' \code{assessment()} assessment
+#' \code{assess()} assess
 #'
 #' @param data Dataframe of variables in hera inter-change format
 #' @param catalogue Dataframe of model_dataframe see `catalogue`
@@ -10,14 +10,14 @@
 #'
 #' @return Dataframe of assessments
 #' @examples
-#' assessments <- assessment(demo_data)
+#' assessments <- assess(demo_data)
 #' @importFrom rlang .data
 #' @importFrom tibble tibble
 #' @importFrom dplyr group_by inner_join mutate bind_rows bind_cols filter
 #' @importFrom magrittr `%>%`
 #' @importFrom purrr map
 #' @export
-assessment <- function(data = NULL, name = NULL, catalogue = NULL) {
+assess <- function(data = NULL, name = NULL, catalogue = NULL) {
   message("Hello from hera, ...work in progress!")
   data <- validation(data)
   if (is.null(catalogue)) {
@@ -32,12 +32,12 @@ assessment <- function(data = NULL, name = NULL, catalogue = NULL) {
       if (is.null(model$assessment_function[[1]])) {
         return(NULL)
       }
-
       assessment_function <- model$assessment_function[[1]]
       data <- assessment_function(data)
       data$response <- as.character(data$response)
       return(data)
     }
   )
+
   return(assessments)
 }
