@@ -6,7 +6,6 @@
 #
 #    http://shiny.rstudio.com/
 
-library(hera)
 library(shiny)
 library(dplyr)
 library(purrr)
@@ -16,6 +15,7 @@ library(leaflet)
 library(htmltools)
 library(dplyr)
 library(rict)
+library(ggplot2)
 
 
 # Define UI for application
@@ -49,37 +49,27 @@ ui <- tagList(
 
 # Define server logic ---------------------------------------------------------
 server <- function(input, output) {
-
-    reactiveA <- reactive({
+  reactiveA <- reactive({
     inFile <- input$dataset
     # Create a Progress object
     progress <- shiny::Progress$new()
-
     # Make sure it closes when we exit this reactive, even if there's an error
     on.exit(progress$close())
 
     if (is.null(inFile) & input$`click for demo`) {
       data <- hera::demo_data
-
     } else if (is.null(inFile)) {
       return(NULL)
     } else {
       data <- read.csv(inFile$datapath, check.names = FALSE)
+      data <- hera:::convert(data)
     }
   })
 
-
   output$app <- renderUI({
     data <- reactiveA()
-
     if (!is.null(data)) {
-      indices <- indices(data, catalogue = catalogue)
-      indices <- bind_rows(indices, data)
-      # indices <- bind_rows(data, indices)
-      # %>%
-      #   select(sample_number, indices) %>%
-      #   unnest(indices)
-
+      indices <- assess(data)
 
       if (!is.null(data)) {
         output_files <- list(
@@ -104,8 +94,10 @@ server <- function(input, output) {
           zip(zipfile = fname, files = fs)
         }
       )
-
-      map_data <- select(data, longitude, latitude, location_id)
+      map_data <- select(data,
+                         longitude,
+                         latitude,
+                         location_id)
       map_data <- distinct(map_data)
       map <- leaflet(map_data) %>%
         addTiles() %>%
@@ -116,7 +108,6 @@ server <- function(input, output) {
             lat = ~latitude
           )
         )
-
       output$map <- renderLeaflet(map)
       output$map_first <- renderLeaflet(map)
 
@@ -140,39 +131,16 @@ server <- function(input, output) {
 
       output$data_table <- renderUI(list(
         h3("Data"), DT::renderDataTable({
-          select(data, location_id, location_description, sample_id, question, response)
+          select(
+            indices,
+            location_id,
+            location_description,
+            sample_id,
+            question,
+            response
+          )
         })
       ))
-
-      output$predictions <- renderUI(list(
-        h3("Predictions"), DT::renderDataTable({
-          predictions <- hera::prediction(data, catalogue = new_catalogue)
-          predictions %>% select(location_id, sample_id, date_taken, parameter, question, response)
-        })
-      ))
-      assessments <- assessment(data, catalogue = new_catalogue)
-
-      filter_assessments <- assessments %>%
-        select(-date_taken) %>%
-        pivot_wider(names_from = question, values_from = response)
-      output$compliance <- renderUI(list(
-        h3("Compliance"), DT::renderDataTable({
-          if (nrow(filter_assessments) == 0) {
-            return(NULL)
-          }
-          filter_assessments <- filter_assessments %>% filter(!is.na(status))
-          filter_assessments <- filter_assessments %>%
-            select(
-              location_id, parameter, sample_id, eqr,
-              class, status, level, high,
-              good, moderate, poor,
-              bad
-            ) %>%
-            unique()
-        })
-      ))
-
-
       output$indices_filter <- renderUI(list(
         renderUI({
           selectInput(
@@ -184,7 +152,6 @@ server <- function(input, output) {
           )
         })
       ))
-
       output$indices <- renderUI(list(
         renderUI({
           downloadButton("download_file", "Download Outputs")
@@ -193,29 +160,46 @@ server <- function(input, output) {
           chart
         }),
         h3("Indices"), DT::renderDataTable({
-          indices %>% select(location_id, sample_id, date_taken, parameter, question, response)
+          indices %>% select(
+            location_id,
+            sample_id,
+            date_taken,
+            parameter,
+            question,
+            response
+          )
         })
       ))
-
       output$aggregation <- renderUI(list(
         h3("Aggregates"), DT::renderDataTable({
           aggregates <- hera:::aggregation(
             assessments,
-            aggregation_variables <- c("parameter", "water_body_id", "year")
+            aggregation_variables <- c(
+              "parameter",
+              "water_body_id",
+              "year"
+            )
           )
-
           aggregates <- pivot_wider(aggregates,
             names_from = question,
             values_from = response
           )
           aggregates <- select(
-            aggregates, parameter, water_body_id, year, level, eqr,
-            high, good, moderate, poor, bad, level
+            aggregates,
+            parameter,
+            water_body_id,
+            year,
+            level,
+            eqr,
+            high,
+            good,
+            moderate,
+            poor,
+            bad,
+            level
           )
         })
       ))
-
-
       return(NULL)
     }
   })

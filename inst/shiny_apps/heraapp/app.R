@@ -6,7 +6,6 @@
 #
 #    http://shiny.rstudio.com/
 
-library(hera)
 library(shiny)
 library(dplyr)
 library(purrr)

@@ -1,11 +1,11 @@
 
-convert <- function(data, convert_to = "hera", convert_from = "sepa") {
+convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
   names <- utils::read.csv(system.file("extdat",
     "column-names.csv",
     package = "hera"
   ))
 
-  if (convert_to == "hera" & convert_to == "sepa") {
+  if (convert_to == "hera" & convert_from == "sepa") {
     data$taxon_id <- NA
     data$nbn_code <- as.character(data$nbn_code)
     data$taxon_id[!is.na(data$nbn_code)] <-
@@ -20,12 +20,9 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa") {
       names$hera_latest != ""]
     names(data)[to_change] <- change_to
     return(data)
-  } else {
-    message(paste("No conversion rules created for", convert_to, "/", convert_from))
-    return(NULL)
   }
 
-  if (convert_to == "hera" & convert_to == "sepa_lims") {
+  if (convert_to == "hera" & convert_from == "sepa_lims") {
     data <- utils::read.csv(system.file("extdat/demo-data",
       "lims.csv",
       package = "hera"
@@ -47,4 +44,9 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa") {
     data <- data %>% mutate_all(as.character)
     return(data)
   }
+  else {
+    message(paste("No conversion rules created for", convert_to, "/", convert_from))
+    return(NULL)
+  }
+
 }
