@@ -1,10 +1,10 @@
 ---
-title: "Assessment Template"
+title: "Macroinvertebrate Metrics"
 output: rmarkdown::html_vignette
 editor_options: 
   chunk_output_type: console
 vignette: >
-  %\VignetteIndexEntry{Assessment Template}
+  %\VignetteIndexEntry{Macroinvertebrate Metrics}
   %\VignetteEncoding{UTF-8}  
   %\VignetteEngine{knitr::rmarkdown}
 ---
@@ -39,9 +39,9 @@ Basic details about the assessment. Update the 'response' values as required.
 
 description <- tribble(
   ~question, ~response,
-  "name_short", "TDI",
-  "name_long", "Example",
-  "parameter", "River Diatoms",
+  "name_short", "Macroinvertebrate Metrics",
+  "name_long", "Freshwater Macroinvertebrate Metrics",
+  "parameter", "River Invertevates",
   "status", "prototype"
 )
 
@@ -54,18 +54,25 @@ A list of questions required to run the assessment.
 
 ```{r input}
 
-input <- tibble(
-  location_id = c("8175", "8175"),
-  sample_id = c("12345", "12345"),
-  date_taken = c("2019-11-21", "2019-11-21"),
-  question = c("Taxon abundance", "Alkalinity"),
-  response = c("12", "45"),
-  label = c("Gomphonema olivaceum", NA),
-  parameter = c("River Diatoms", "Chemistry"),
-  type = c("number", "number"),
-  max = c(NA, NA),
-  min = c(NA, NA),
-  source = c("sepa_ecology_results", "location_attributes")
+input <- tribble(
+  ~sample_id,
+  ~question,
+  ~response,
+  ~label,
+  ~parameter,
+  ~type,
+  ~max,
+  ~min,
+  ~source,
+  "12345",
+  "Taxon abundance",
+  "12",
+  "Baetidae",
+  "River Family Inverts",
+  "number",
+  NA,
+  NA,
+  "sepa_ecology_results"
 )
 input
 ```
@@ -77,20 +84,28 @@ If applicable, write a function to assess your input data and return an outcome.
 ```{r assessment}
 
 assessment_function <- function(data) {
-  # Calculated some statistic...
+  # Calculated invert metrics...
   # Note, any non-standard base R library must be call using require().
-  # require(dplyr)
-  # require(tidyr)
-  # require(magrittr)
-  # require(tibble)
-  # data <- data %>%
-  #   group_by(sample_id) %>% 
-  #   summarise(question = "n_count",
-  #             response = n(),
-  #             sample_id = unique(sample_id)
-  #             )
-  
-  return(data)
+  require(dplyr)
+  require(macroinvertebrateMetrics)
+  input <- data
+  input <- dplyr::filter(input, parameter == "River Family Inverts") 
+  input <- dplyr::filter(input, question == "Taxon abundance") 
+  input$TAXON <- input$label 
+  input <- rename(input,  "SAMPLE_ID" = sample_id)
+  input$RESULT <- input$response
+  input <- select(input, SAMPLE_ID, TAXON, RESULT)
+  input <- mutate_all(input, na_if, "")
+  input <- input[complete.cases(input),]
+  input$RESULT <- as.numeric(input$RESULT)
+  epsi <- macroinvertebrateMetrics::calcEpsi(input)
+  whpt <- macroinvertebrateMetrics::calcWhpt(input)
+  whpt$RESULT <- as.character(whpt$RESULT)
+  output <- bind_rows(epsi, whpt)
+  output <- select(output, SAMPLE_ID, DETERMINAND, RESULT)
+  names(output) <- c("sample_id", "question", "response")
+  row.names(output) <- NULL
+  return(output)
 }
 ```
 

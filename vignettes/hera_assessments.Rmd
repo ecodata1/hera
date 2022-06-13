@@ -26,9 +26,7 @@ library(visNetwork)
 
 ```{r questions, echo=FALSE}
 
-questions <- catalogue$questions %>%
-  bind_rows() %>%
-  unique()
+questions <- questions()
 kable(questions[, 1:3], format = "html", escape = FALSE) %>%
   kable_styling(bootstrap_options = c("hover", "condensed"))
 ```
@@ -37,12 +35,14 @@ kable(questions[, 1:3], format = "html", escape = FALSE) %>%
 
 ```{r assessment-carousel, echo=FALSE}
 
-data <- bind_rows(catalogue$standard)
-dt_url <- paste0(gsub(" ", "-", tolower(trimws(data$standard_short))), ".html")
+data <- bind_rows(catalogue$data)
+data <- filter(data, question == "name_short")
+
+dt_url <- paste0(gsub(" ", "-", tolower(trimws(data$response))), ".html")
 
 slickR::slickR(
   list.files("images", full.names = TRUE, pattern = "png"),
-  objLinks = dt_url[1:4],
+  objLinks = dt_url[1:2],
   height = 200,
   width = "95%"
 )
@@ -52,11 +52,15 @@ slickR::slickR(
 
 ```{r assessments, echo=FALSE}
 
-data <- bind_rows(catalogue$standard)
-dt_url <- paste0(gsub(" ", "-", tolower(trimws(data$standard_short))), ".html")
-data <- data %>% select(standard_long, status)
+data <- bind_rows(catalogue$data)
+data <- filter(data, question == "name_short")
+dt_url <- paste0(gsub(" ", "-", tolower(trimws(data$response))), ".html")
+
+data <- bind_rows(catalogue$data)
+data <- filter(data, question == "name_long")
 data %>%
-  mutate(link = cell_spec(standard_long, "html", link = dt_url)) %>%
+  mutate(name = cell_spec(response, "html", link = dt_url)) %>%
+  select(name) %>% 
   kable(format = "html", escape = FALSE) %>%
   kable_styling(bootstrap_options = c("hover", "condensed"))
 ```
@@ -75,87 +79,87 @@ data %>%
 ## Dependencies
 
 ```{r dependencies, echo=FALSE}
-nodes <- catalogue %>%
-  select(assessment) %>%
-  rename("id" = assessment) %>%
-  mutate(
-    "label" = id,
-    group = "Assessment",
-    "level" = 2
-  )
-
-nodes <- catalogue$questions %>%
-  bind_rows() %>%
-  select(question) %>%
-  unique() %>%
-  na.omit() %>%
-  rename("id" = question) %>%
-  mutate(
-    "label" = id,
-    group = "Question",
-    "level" = 1
-  ) %>%
-  bind_rows(nodes)
-
-
- predictors <- unnest(select(catalogue, predictors, assessment),
-                 c(predictors, assessment)) %>%
-   bind_rows() %>% 
-   mutate(across(names(.), as.character)) %>% 
-   pivot_longer(cols = -assessment, 
-                names_to = "question") %>% 
-   filter(!is.na(value)) %>% 
-   select(question, assessment) 
- 
-   nodes <- predictors %>% 
-    select(question) %>% 
-      unique() %>%
-   na.omit() %>%
-   rename("id" = question) %>%
-   mutate(
-     "label" = id,
-   group = "Question",
-     "level" = 1
-   ) %>%
-   bind_rows(nodes)
-
-
-questions <- catalogue$questions %>%
-  bind_rows() %>%
-  select(question) %>%
-  na.omit()
-
-questions <- predictors %>%
-     select(question) %>% 
-  bind_rows(questions)
-
-assessments <- catalogue %>% 
-  select(assessment) %>% 
-  filter(assessment != "rict")
-
-assessments <- predictors %>%
-     select(assessment) %>% 
-  bind_rows(assessments)
-
-edges <- data.frame(
-  "from" = unlist(questions$question),
-  "to" = unlist(assessments$assessment)
-)
-
-visNetwork(nodes, edges, width = "100%") %>%
-  visEdges(arrows = "to") %>%
-  visNodes(
-    shadow = list(enabled = TRUE, size = 10),
-    size = 50
-  ) %>%
-  visGroups(groupname = "Question", color = "lightgreen") %>%
-  visGroups(groupname = "Assessment", color = "lightblue") %>%
-  visLegend() %>%
-  visOptions(highlightNearest = list(enabled = T, degree = 2, hover = T)) %>%
-  visHierarchicalLayout(direction = "LR", levelSeparation = 150) %>%
-  visOptions(highlightNearest = list(enabled = T, hover = T), 
-             nodesIdSelection = T)
-  
+# nodes <- catalogue %>%
+#   select(assessment) %>%
+#   rename("id" = assessment) %>%
+#   mutate(
+#     "label" = id,
+#     group = "Assessment",
+#     "level" = 2
+#   )
+# 
+# nodes <- catalogue$questions %>%
+#   bind_rows() %>%
+#   select(question) %>%
+#   unique() %>%
+#   na.omit() %>%
+#   rename("id" = question) %>%
+#   mutate(
+#     "label" = id,
+#     group = "Question",
+#     "level" = 1
+#   ) %>%
+#   bind_rows(nodes)
+# 
+# 
+#  predictors <- unnest(select(catalogue, predictors, assessment),
+#                  c(predictors, assessment)) %>%
+#    bind_rows() %>% 
+#    mutate(across(names(.), as.character)) %>% 
+#    pivot_longer(cols = -assessment, 
+#                 names_to = "question") %>% 
+#    filter(!is.na(value)) %>% 
+#    select(question, assessment) 
+#  
+#    nodes <- predictors %>% 
+#     select(question) %>% 
+#       unique() %>%
+#    na.omit() %>%
+#    rename("id" = question) %>%
+#    mutate(
+#      "label" = id,
+#    group = "Question",
+#      "level" = 1
+#    ) %>%
+#    bind_rows(nodes)
+# 
+# 
+# questions <- catalogue$questions %>%
+#   bind_rows() %>%
+#   select(question) %>%
+#   na.omit()
+# 
+# questions <- predictors %>%
+#      select(question) %>% 
+#   bind_rows(questions)
+# 
+# assessments <- catalogue %>% 
+#   select(assessment) %>% 
+#   filter(assessment != "rict")
+# 
+# assessments <- predictors %>%
+#      select(assessment) %>% 
+#   bind_rows(assessments)
+# 
+# edges <- data.frame(
+#   "from" = unlist(questions$question),
+#   "to" = unlist(assessments$assessment)
+# )
+# 
+# visNetwork(nodes, edges, width = "100%") %>%
+#   visEdges(arrows = "to") %>%
+#   visNodes(
+#     shadow = list(enabled = TRUE, size = 10),
+#     size = 50
+#   ) %>%
+#   visGroups(groupname = "Question", color = "lightgreen") %>%
+#   visGroups(groupname = "Assessment", color = "lightblue") %>%
+#   visLegend() %>%
+#   visOptions(highlightNearest = list(enabled = T, degree = 2, hover = T)) %>%
+#   visHierarchicalLayout(direction = "LR", levelSeparation = 150) %>%
+#   visOptions(highlightNearest = list(enabled = T, hover = T), 
+#              nodesIdSelection = T)
+#   
 
 
 ```

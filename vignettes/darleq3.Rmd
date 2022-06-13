@@ -92,8 +92,9 @@ assessment_function <- function(data) {
   stringsAsFactors = FALSE, check.names = F
   )
   predictors$location_id <- as.character(predictors$location_id)
+  if(is.null(data$alkalinity)) {
   data <- inner_join(data, predictors, by = c("location_id"))
-
+  }
   if (any(names(data) %in% "alkalinity")) {
     data$alkalinity[is.na(data$alkalinity)] <- 75
   } else {

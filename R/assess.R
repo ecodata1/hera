@@ -32,9 +32,13 @@ assess <- function(data = NULL, name = NULL, catalogue = NULL) {
       if (is.null(model$assessment_function[[1]])) {
         return(NULL)
       }
+
       assessment_function <- model$assessment_function[[1]]
       data <- assessment_function(data)
       data$response <- as.character(data$response)
+      description <- bind_rows(model$data)
+      description <- filter(description, question == "name_short")
+      data$parameter <- description$response
       return(data)
     }
   )

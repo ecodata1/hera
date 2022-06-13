@@ -19,319 +19,157 @@ library(hera)
 library(dplyr)
 library(purrr)
 library(tidyr)
-
+library(tibble)
+library(magrittr)
+library(testthat)
+library(visNetwork)
 ```
 
 ## Welcome
 
 This document has been created following the generic [assessment guidance](https://ecodata1.github.io/hera/articles/development_guide.html).
 
+<!-- Create a new regulatory assessment by updating the code info below, for guidance see https://ecodata1.github.io/hera/articles/development_guide.html  -->
+
 This is the Rapid Assessment Technique (RAT) for rsults from bankside invertebrates analysis to check consistency with Water Body Status.
 
-## Details
+## Description
 
-<!-- Create a new regulatory assessment by changing the CAPITLIZE info below: -->
+Basic details about the assessment. Update the 'response' values as required.
 
-```{r setup}
+```{r description}
 
-standard <- tibble(
-  standard_short = "Bankside Consistency", 
-  quality_element = "River Invertebrates",
-  parameter = "River Invertebrates", 
-  standard_long = "Rapid Assessment of Bankside Consistency with Water Body Status", 
-  standard_reference = NA,
-  aggregation = NA,
-  status = "development"
+description <- tribble(
+  ~question, ~response,
+  "name_short", "Bankside Consistency",
+  "name_long", "Rapid Assessment of Bankside Consistency with Water Body Status",
+  "parameter", "River Family Inverts",
+  "status", "prototype"
 )
 
-standard_format <- hera:::hera_format(standard = standard) # format assessment data
-standard_format$standard %>%
-  filter(attribute != "standard_reference") %>%
-  knitr::kable()
+description
 ```
 
-## Data
+## Input
 
-```{r data}
-data <- tibble(
-  parameter = "River Invertebrates",
-  question = "Taxon abundance",
-  response = "12",
-  label = "Baetidae",
-  sample_id = "1234",
-  location_id = "8175",
-  location_description = "Eden at Kemback",
-  grid_reference = "NO2342323434",
-  water_body_id = "3100",
-  year = "2022",
-  date_taken = "2022-02-12",
-  units = NA,
-  min = NA,
+A list of questions required to run the assessment.
+
+```{r input}
+
+input <- tibble(
+  location_id = c("206972"),
+  sample_id = c("12345"),
+  date_taken = c(as.Date("2019-11-21")),
+  question = c("Taxon abundance"),
+  response = c("12"),
+  label = c("Baetidae"),
+  parameter = c("River Family Inverts"),
+  type = c("number"),
   max = NA,
-  d_f_source = 13,
-  Altitude = 24,
-  NGR = "NJ 53085 46834",
-  logaltbar = 2.29 ,
-  log_area = 2.44,
-  disch_cat = 5,
-  slope = 1.72,
-  chalk = 0,
-  clay = 0,
-  hardrock = 0.946,
-  limestone = 0.0435,
-  peat = 0.0691
+  min = NA,
+  source = c("sepa_ecology_results")
 )
-data
+input
 ```
-
-## Locate
-
-Metadata required about the location
-
-```{r}
-# A list of metadata for location of sampling
-location <- data %>% select(
-  location_id, # optional (recommended)
-  location_description,
-  grid_reference
-)
-location <- location %>% unique()
-head(location)
-```
-
-## Sample
-
-Metadata required to assess each sample. (Excluding direct observations)
-
-```{r}
-# A list of questions and responses collected through observation
-sample <- data %>% select(
-  parameter,
-  sample_id, # optional (recommended)
-  date_taken
-)
-sample <- sample %>% unique()
-head(sample)
-```
-
-## Observe
-
-```{r}
-questions <- data %>% select(
-  question,
-  response,
-  label # optional (usually for taxonomic/species name)
-)
-questions
-```
-
-## Metrics
-
-If applicable...
-
-```{r indices}
-
-indices_function <- function(data) {
-  # Only calculate metric if required
-    if (!is.null(
-      nrow(data$question[data$question == "WHPT_ASPT"]))) {
-    return(NULL)
-    }
-
-  metric <- 
-    catalogue$indices_function[
-      catalogue$assessment == "Freshwater Invertebrate Model"]
- 
-  data <- metric[[1]](data)
-  return(data)
-}
-indexes <- indices_function(data)
-indexes
-```
-
-## Predictors
-
-```{r predictors}
-predictors <- tibble(
-   location_id = NA
-  # ...
-)
-knitr::kable(predictors) 
-```
-
-## Predict
-
-```{r prediction}
-prediction_function <- function(predictors) {
-
-  # Generates prediction based on predictors...
-  prediction <- tibble(
-    question = NA,
-    response = NA,
-    location_id = NA
-  )
-
-  return(prediction)
-}
-predictions <- prediction_function(predictors)
-predictions
-```
-
-```{r together, echo=FALSE}
-
-# All Together Now
-sample_info <- data %>% 
-  select(names(sample), names(location)) %>%
-  unique()
-
-if(!is.null(indexes)) {
-indexes <- right_join(sample_info, indexes,
-  by = c("sample_id" = "sample_id")
-)
-} else {
-  indexes <- data
-}
-
-predictions <- right_join(sample_info, predictions,
-  by = c("location_id" = "location_id")
-)
-predictions$response <- as.character(predictions$response)
-
-combined_data <- bind_rows(data, predictions, indexes)
-```
-
 
 ## Assessment
 
-```{r assessment_table}
-
-assessment_table <- tibble(
-  assessment = c( "high", 
-                  "good", 
-                  "moderate",
-                  "poor",
-                  "bad"),
-  value = c(0.80,
-            0.60,
-            0.40,
-            0.20,
-            0)
-  # ...
-  # "red" = 0.33
-  # "amber" = 0.5
-  # "green" = 0.66
-  # ...
-  # "pass" = 0.5
-  # "fail" = 0.0
-)
-
-assessment_table
-```
-
-## Assess
+If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
 
 ```{r assessment}
-assessment_function <- function(data, assessment_table) {
 
-  if (nrow(data %>%  filter(question == "MY_METRIC")) == 0) {
+assessment_function <- function(data) {
+  # Some calculated a statistic...
+  # Note, any non-standard base R library must be call using require().
+  require(dplyr)
+  require(tidyr)
+  require(magrittr)
+  require(tibble)
+  require(whpt)
+  require(macroinvertebrateMetrics)
+  data$date_taken <- as.character(as.Date(data$date_taken, "%Y/%m/%d"))
+  metric_function <- catalogue[catalogue$assessment ==
+                           "Freshwater Macroinvertebrate Metrics", 3][[1]]
+  output <- metric_function[[1]](data)
+  output <- filter(output, question %in% c("WHPT_ASPT", "WHPT_NTAXA"))
+  predictors <- read.csv(system.file("extdat",
+    "predictors.csv",
+    package = "whpt"
+  ), check.names = FALSE)
+  predictors$location_id <- as.character(predictors$location_id)
+  predict_data <- filter(predictors, location_id %in% unique(data$location_id))
+  output_location <- inner_join(output,
+                       data[, c("location_id",
+                                "sample_id", 
+                                "date_taken")],
+                       by = "sample_id")
+  whpt_input <- inner_join(output_location, predict_data, by = "location_id")
+  whpt_input$question[whpt_input$question == "WHPT_ASPT"] <- "WHPT ASPT Abund"
+  whpt_input$question[whpt_input$question == "WHPT_NTAXA"] <- "WHPT NTAXA Abund"
+  if(nrow(whpt_input) < 1) {
     return(NULL)
+  } else {
+  consistency_check <- whpts(whpt_input)
   }
-
-  # Transform data -----------------------------------------------------------
-  data <- data %>%
-    select(.data$sample_id, .data$question, .data$response) %>%
-    filter(.data$question %in% c("MY_PREDICTION",
-                                 "MY_METRIC"))
-  data$response <- as.numeric(data$response)
-
-  data <- data %>%
-    distinct() %>%
-    group_by(.data$sample_id) %>%
-    pivot_wider(names_from = .data$question, values_from = .data$response) %>%
-    ungroup()
-    data[is.na(data)] <- 0
-  
-  data$eqr <- data$MY_METRIC / data$MY_PREDICTION 
-  
-  class <- cut(data$eqr,
-    breaks = c(1, assessment_table$value),
-    labels = assessment_table$assesssment
-  )
-
-  assessments <- data.frame(
-    sample_id = data$sample_id,
-    class = class,
-    eqr = data$eqr,
-    status = data$status
-  )
-
- assessments <- pivot_longer(assessments, -sample_id,
-    names_to = "question", values_to = "response"
-  )
-    
-  return(assessments)
+  return(consistency_check)
 }
-assessments <- assessment_function(combined_data, assessment_table)
-assessments
 ```
 
+## Outcome
 
-## Confidence
+The outcome of your assessment.
 
-Confidence of assessment. 
-
-```{r}
-
-confidence_function <- function(data, aggregates = "sample_id") {
-
-  confidence <- tibble(
-    aggregates = NA,
-    question = NA,
-    response = NA
-  )
-  
-  names(confidence)[1] <- aggregates[1]
-  
-}
-
+```{r output}
+outcome <- assessment_function(input)
+outcome
 ```
 
-## Checklist
+## Check
+
+Run checks on the assessment.
 
 ```{r checklist}
-check_list <- hera:::hera_test(standard = standard)
+# No need to edit this code
+# Format description
+standard_format <- hera:::hera_format(description = description) 
+# Check description
+check_list <- hera:::hera_test(description = description)
 knitr::kable(check_list$standard_check)
 ```
 
 ## Update
 
+Update the catalogue of assessments to make them available.
+
 ```{r hera_update}
 # No need to edit this code
-catalogue <- hera::catalogue
-model <- tibble(
-  analysis_name = standard$parameter,
-  assessment = standard$standard_long,
-  standard = list(standard),
-  location = list(location[1, ]),
-  sample = list(sample[1, ]),
-  validation_function = NA,
-  indices_function = list(indices_function),
-  prediction_function = list(prediction_function),
-  assessment_function = list(assessment_function),
-  confidence_function = list(confidence_function),
-  indices = list(indexes[indexes$sample_id == indexes$sample_id[1], ]),
-  assessment_table = list(assessment_table),
-  questions = list(questions[1, ]),
-  predictors = list(predictors[1, ]),
-  predictions = list(predictions[predictions$location_id == predictions$location_id[1], ])
+hera:::update_catalogue(
+  description = description,
+  input = input,
+  assessment_function = assessment_function,
+  output = outcome
+)
+```
+
+After **updating the catalogue, rebuild the package**, click on Build \> Install and Restart menu or 'Install and Restart' button in the Build pane.
+
+## Test
+
+This section tests if this assessment is usable using `assessment` function.
+
+```{r}
+# No need to edit this code
+assess(
+  data = hera::demo_data,
+  name = description$response[description$question == "name_long"]
 )
 
-catalogue <- catalogue[catalogue$assessment != standard$standard_long, ]
+lims_data <- hera:::convert(lims_data)
+assess(
+  data = lims_data,
+  name = description$response[description$question == "name_long"]
+)
 
-catalogue <- bind_rows(catalogue, model)
-new_catalogue <- catalogue
-new_catalogue
-usethis::use_data(catalogue, overwrite = TRUE)
 ```
 
 ## Launch app
@@ -340,6 +178,5 @@ Below is an interactive application displaying the results of your assessment.
 
 ```{r launch_app, echo=FALSE, eval=FALSE}
 # No need to edit this code
-launch_app(new_catalogue = catalogue, data = data)
-
+# launch_app(new_catalogue = catalogue, data = data)
 ```

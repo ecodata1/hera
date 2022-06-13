@@ -95,23 +95,27 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
     "location_id" = .data$site_id,
     "latitude" = .data$lat,
     "longitude" = .data$long,
-    "sand" = .data$Sand,
     "water_body_id" = .data$`WFD Waterbody ID`,
     "water_body_type" = .data$`Waterbody Type`,
     "water_body" = .data$`Water Body`,
-    "river_width" = .data$Width,
-    "mean_depth" = .data$Depth,
-    "boulders_cobbles" = .data$`Boulders/Cobbles`,
-    "pebbles_gravel" = .data$`Pebbles/Gravel`,
-    "silt_clay" = .data$`Silt/Clay`,
     "result_id" = .data$obs_id,
     "dist_from_source" = .data$`Distance from Source`,
     "source_altitude" = .data$`Source Altitude`,
     "label" = .data$pref_label,
-    "units" = .data$property_id,
-    "discharge_category" = .data$Discharge
+    "units" = .data$property_id
   )
-
+  # Not all locations have these attributes:
+ if(!is.null(data$Sand)) {
+  data <- data %>% dplyr::rename(
+  "river_width" = .data$Width,
+  "mean_depth" = .data$Depth,
+  "boulders_cobbles" = .data$`Boulders/Cobbles`,
+  "pebbles_gravel" = .data$`Pebbles/Gravel`,
+  "sand" = .data$Sand,
+  "silt_clay" = .data$`Silt/Clay`,
+  "discharge_category" = .data$Discharge,
+  )
+}
   data$question[grep("-percentageCoverBand", data$result_id)] <-
     "PercentageCoverBand"
   data$question[data$question == "WHPT_ASPT"] <- "WHPT ASPT Abund"
@@ -164,6 +168,7 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
   names(data) <- tolower(names(data))
   data <- utils::type.convert(data, as.is = TRUE)
   data$sample_id <- as.character(data$sample_id)
+data$response <- as.character(data$response)
   data$label.x <- NULL
   data <- tibble(data)
   return(data)

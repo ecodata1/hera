@@ -40,8 +40,8 @@ ui <- tagList(
       # Show tables
       mainPanel(
         htmlOutput("app"),
-        leafletOutput("map_first"),
-        htmlOutput("data_table")
+        htmlOutput("indices"),
+        htmlOutput("data_table"),
       )
     )
   )
@@ -70,6 +70,7 @@ server <- function(input, output) {
     data <- reactiveA()
     if (!is.null(data)) {
       indices <- assess(data)
+      indices <- hera:::combine(indices, data)
 
       if (!is.null(data)) {
         output_files <- list(
@@ -94,31 +95,31 @@ server <- function(input, output) {
           zip(zipfile = fname, files = fs)
         }
       )
-      map_data <- select(data,
-                         longitude,
-                         latitude,
-                         location_id)
-      map_data <- distinct(map_data)
-      map <- leaflet(map_data) %>%
-        addTiles() %>%
-        addMarkers(~longitude, ~latitude,
-          popup = ~ htmlEscape(location_id),
-          clusterOptions = markerClusterOptions(
-            lng = ~longitude,
-            lat = ~latitude
-          )
+
+      if (!is.null(data$longitude)) {
+        map_data <- select(
+          data,
+          longitude,
+          latitude,
+          location_id
         )
-      output$map <- renderLeaflet(map)
-      output$map_first <- renderLeaflet(map)
+        map_data <- distinct(map_data)
+        map <- leaflet(map_data) %>%
+          addTiles() %>%
+          addMarkers(~longitude, ~latitude,
+            popup = ~ htmlEscape(location_id),
+            clusterOptions = markerClusterOptions(
+              lng = ~longitude,
+              lat = ~latitude
+            )
+          )
+        output$map <- renderLeaflet(map)
+        output$map_first <- renderLeaflet(map)
+      }
 
-      output$standard <- renderUI(selectInput(
-        inputId = "standard",
-        label = "Select Standard",
-        choices = unique(data$standard)
-      ))
-
-      indices$response <- as.numeric(indices$response)
-      chart_data <- indices %>% filter(!is.na(response))
+      chart_data <- indices
+      chart_data$response <- as.numeric(chart_data$response)
+      chart_data <- chart_data %>% filter(!is.na(response))
       options(digits = 3)
       chart_data$response <- as.numeric(chart_data$response)
       if (nrow(indices) > 0) {
@@ -128,7 +129,7 @@ server <- function(input, output) {
       } else {
         chart <- NULL
       }
-
+      indices$date_taken <- format.Date(indices$date_taken, "%Y/%m/%d")
       output$data_table <- renderUI(list(
         h3("Data"), DT::renderDataTable({
           select(
@@ -136,68 +137,16 @@ server <- function(input, output) {
             location_id,
             location_description,
             sample_id,
+            date_taken,
             question,
-            response
-          )
-        })
-      ))
-      output$indices_filter <- renderUI(list(
-        renderUI({
-          selectInput(
-            selectize = FALSE, "Question",
-            label = "Questions",
-            choices = unique(data$question),
-            multiple = T,
-            selected = unique(data$question)
+            response,
+            parameter
           )
         })
       ))
       output$indices <- renderUI(list(
         renderUI({
           downloadButton("download_file", "Download Outputs")
-        }),
-        h3("Chart"), renderPlot({
-          chart
-        }),
-        h3("Indices"), DT::renderDataTable({
-          indices %>% select(
-            location_id,
-            sample_id,
-            date_taken,
-            parameter,
-            question,
-            response
-          )
-        })
-      ))
-      output$aggregation <- renderUI(list(
-        h3("Aggregates"), DT::renderDataTable({
-          aggregates <- hera:::aggregation(
-            assessments,
-            aggregation_variables <- c(
-              "parameter",
-              "water_body_id",
-              "year"
-            )
-          )
-          aggregates <- pivot_wider(aggregates,
-            names_from = question,
-            values_from = response
-          )
-          aggregates <- select(
-            aggregates,
-            parameter,
-            water_body_id,
-            year,
-            level,
-            eqr,
-            high,
-            good,
-            moderate,
-            poor,
-            bad,
-            level
-          )
         })
       ))
       return(NULL)

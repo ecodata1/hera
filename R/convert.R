@@ -1,6 +1,10 @@
-
+#' @importFrom rlang .data
+#' @importFrom tibble tibble
+#' @importFrom dplyr filter group_by left_join summarise mutate_all select
+#' @importFrom magrittr `%>%`
+#' @importFrom utils read.csv
 convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
-  names <- utils::read.csv(system.file("extdat",
+  names <- read.csv(system.file("extdat",
     "column-names.csv",
     package = "hera"
   ))
@@ -23,11 +27,8 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
   }
 
   if (convert_to == "hera" & convert_from == "sepa_lims") {
-    data <- utils::read.csv(system.file("extdat/demo-data",
-      "lims.csv",
-      package = "hera"
-    ))
-
+    data$SAMPLED_DATE <- as.Date(data$SAMPLED_DATE,format =  "%d/%m/%Y" )
+    data$SAMPLED_DATE <- format.Date(data$SAMPLED_DATE, "%Y/%m/%d")
     # Add a label column for taxon name rows
     labels <- data %>%
       group_by(TEST_NUMBER) %>%
@@ -37,9 +38,10 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
     # Change records to match Hera standard
     data$REPORTED_NAME[data$REPORTED_NAME == "Abundance"] <- "Taxon abundance"
     data$ANALYSIS[data$ANALYSIS == "RIVER_DIATOMS"] <- "River Diatoms"
+    data$ANALYSIS[data$ANALYSIS == "LAB_INVERTS"] <- "River Family Inverts"
     # Change column names to match hera standard
     changes <- names[names$sepa_lims != "" & names$hera_latest != "", ]
-    data <- dplyr::select(data, c(changes$sepa_lims, "label"))
+    data <- select(data, c(changes$sepa_lims, "label"))
     names(data) <- c(changes$hera_latest, "label")
     data <- data %>% mutate_all(as.character)
     return(data)
