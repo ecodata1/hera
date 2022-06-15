@@ -1,0 +1,13 @@
+name: basicapp
+title: basicapp
+username:
+account: ecodata
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 6493906
+bundleId: 6010290
+url: https://ecodata.shinyapps.io/basicapp/
+when: 1655301495.19585
+lastSyncTime: 1655301495.19586
+asMultiple: FALSE
+asStatic: FALSE
