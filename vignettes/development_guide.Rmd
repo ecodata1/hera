@@ -87,7 +87,7 @@ Create a demo input data.
 
 
 ```{r input, echo=FALSE}
-description <- tibble(
+input_table <- tibble(
   Columns = c("sample_id", "question", "response","label", "..."),
   Required = c(TRUE, TRUE,TRUE, FALSE, FALSE),
   Details = c(
@@ -98,7 +98,7 @@ description <- tibble(
     "..."
              )
 )
-knitr::kable(description)
+knitr::kable(input_table)
 ```
 
 For example:

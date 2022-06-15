@@ -50,10 +50,7 @@ standard <- tibble(
   status = "testing"
 )
 
-standard_format <- hera:::hera_format(standard = standard) # format assessment data
-standard_format$standard %>%
-  filter(attribute != "standard_reference") %>%
-  knitr::kable()
+
 ```
 
 ## Data
@@ -529,8 +526,8 @@ assessment_function <- function(data, assessment_table = NULL) {
 
   return(assessments)
 }
-assessments <- assessment_function(combined_data, assessment_table)
-assessments
+# assessments <- assessment_function(combined_data, assessment_table)
+# assessments
 ```
 
 ## Confidence
@@ -603,54 +600,54 @@ confidence_function <- function(data, aggregates = "sample_id") {
 }
 
 
-confidences <- confidence_function(data = assessments)
-confidences
+# confidences <- confidence_function(data = assessments)
+# confidences
 ```
 
 ## Checklist
 
 ```{r checklist}
-check_list <- hera:::hera_test(standard = standard)
-knitr::kable(check_list$standard_check)
+# check_list <- hera:::hera_test(standard = standard)
+# knitr::kable(check_list$standard_check)
 ```
 
 ## Update hera
 
 ```{r}
 
-catalogue <- hera::catalogue
-
-model <- tibble(
-  analysis_name = standard$parameter,
-  assessment = standard$standard_long,
-  standard = list(standard),
-  location = list(location[1, ]),
-  sample = list(sample[1, ]),
-  validation_function = NA,
-  indices_function = list(indices_function),
-  prediction_function = list(prediction_function),
-  assessment_function = list(assessment_function),
-  confidence_function = list(confidence_function),
-  indices = list(indexes[indexes$sample_id == indexes$sample_id[1], ]),
-  assessment_table = list(assessment_table),
-  questions = list(questions[1, ]),
-  predictors = list(predictors[1, ]),
-  predictions = list(predictions[predictions$location_id == predictions$location_id[1], ]),
-  assessments =  list(assessments[1, ])
-)
-
-catalogue <- catalogue[catalogue$assessment != standard$standard_long, ]
-
-catalogue <- bind_rows(catalogue, model)
-new_catalogue <- catalogue
-new_catalogue
-
-usethis::use_data(catalogue, overwrite = TRUE)
+# catalogue <- hera::catalogue
+# 
+# model <- tibble(
+#   analysis_name = standard$parameter,
+#   assessment = standard$standard_long,
+#   standard = list(standard),
+#   location = list(location[1, ]),
+#   sample = list(sample[1, ]),
+#   validation_function = NA,
+#   indices_function = list(indices_function),
+#   prediction_function = list(prediction_function),
+#   assessment_function = list(assessment_function),
+#   confidence_function = list(confidence_function),
+#   indices = list(indexes[indexes$sample_id == indexes$sample_id[1], ]),
+#   assessment_table = list(assessment_table),
+#   questions = list(questions[1, ]),
+#   predictors = list(predictors[1, ]),
+#   predictions = list(predictions[predictions$location_id == predictions$location_id[1], ]),
+#   assessments =  list(assessments[1, ])
+# )
+# 
+# catalogue <- catalogue[catalogue$assessment != standard$standard_long, ]
+# 
+# catalogue <- bind_rows(catalogue, model)
+# new_catalogue <- catalogue
+# new_catalogue
+# 
+# usethis::use_data(catalogue, overwrite = TRUE)
 ```
 
 ## Launch app
 
 ```{r launch_app, echo=TRUE, eval=FALSE}
 # No need to edit this code
-launch_app(new_catalogue = catalogue, data = all_data)
+# launch_app(new_catalogue = catalogue, data = all_data)
 ```

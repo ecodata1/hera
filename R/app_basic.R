@@ -25,9 +25,9 @@ ui <- tagList(
     # theme = "cerulean",  # <--- To use a theme, uncomment this
     "hera",
     tabPanel(
-      "Validate", sidebarPanel(
+      "Metrics", sidebarPanel(
         h3("Options"),
-        fileInput("dataset", "Choose CSV File",
+        fileInput("dataset", "Choose CSV File exported from LIMS",
           accept = c(
             "text/csv",
             "text/comma-separated-values,text/plain",

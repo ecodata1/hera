@@ -59,7 +59,7 @@ A list of questions required to run the assessment.
 input <- tibble(
   location_id = c("206972"),
   sample_id = c("12345"),
-  date_taken = c(as.Date("2019-11-21")),
+  date_taken = c("2019-11-21"),
   question = c("Taxon abundance"),
   response = c("12"),
   label = c("Baetidae"),
@@ -87,7 +87,7 @@ assessment_function <- function(data) {
   require(tibble)
   require(whpt)
   require(macroinvertebrateMetrics)
-  data$date_taken <- as.character(as.Date(data$date_taken, "%Y/%m/%d"))
+  data$date_taken <- as.character(format.Date(data$date_taken, "%Y/%m/%d"))
   metric_function <- catalogue[catalogue$assessment ==
                            "Freshwater Macroinvertebrate Metrics", 3][[1]]
   output <- metric_function[[1]](data)

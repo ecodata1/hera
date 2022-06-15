@@ -1,10 +1,6 @@
 ---
 title: "RICT"
-pkgdown:
-  as_is: yes
-output: 
-  rmarkdown::html_vignette:
-    toc: yes
+output: rmarkdown::html_vignette
 editor_options: 
   chunk_output_type: console
 vignette: >
@@ -23,191 +19,127 @@ library(hera)
 library(dplyr)
 library(purrr)
 library(tidyr)
+library(tibble)
 library(magrittr)
 library(testthat)
+library(visNetwork)
 ```
 
 ## Welcome
 
-This document has been created following the generic assessment guidance.
+This document has been created following the generic [assessment guidance](https://ecodata1.github.io/hera/articles/development_guide.html).
 
+<!-- Create a new regulatory assessment by updating the code info below, for guidance see https://ecodata1.github.io/hera/articles/development_guide.html  -->
 
-## Details
+## Description
 
-<!-- Create a new regulatory assessment by changing the CAPITLIZE info below: -->
+Basic details about the assessment. Update the 'response' values as required.
 
-```{r setup}
+```{r description}
 
-standard <- tibble(
-  standard_short = "rict", 
-  quality_element = NA,
-  parameter = c("River Invertebrates"), 
-  standard_long = "rict", 
-  standard_reference = NA,
-  aggregation = NA,
-  status = "development"
+description <- tribble(
+  ~question, ~response,
+  "name_short", "RICT",
+  "name_long", "RICT",
+  "parameter", "River Family Invertebrates",
+  "status", "prototype"
 )
 
-standard_format <- hera:::hera_format(standard = standard) # format assessment data
-standard_format$standard %>%
-  filter(attribute != "standard_reference") %>%
-  knitr::kable()
+description
 ```
 
-## Data Sources
+## Input
 
-List of data sources (to test against). Can be more than source such as demo data stored within package, web services or shared online file.
+A list of questions required to run the assessment.
 
-```{r}
-sources <- tibble(
-  data_sources = c("ea")
+```{r input}
+
+input <- tibble(
+  location_id = c("206972"),
+  sample_id = c("12345"),
+  date_taken = c(as.Date("2019-11-21")),
+  question = c("Taxon abundance"),
+  response = c("12"),
+  label = c("Baetidae"),
+  parameter = c("River Family Inverts"),
+  type = c("number"),
+  max = NA,
+  min = NA,
+  source = c("sepa_ecology_results")
 )
+input
 ```
 
-## Data
+## Assessment
 
-```{r data}
+If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
 
-data <- get_data(location_id = c(92751, 100))
-data$year <- lubridate::year(data$date_taken)
+```{r assessment}
 
-```
-
-## Locate
-
-Metadata required about the location
-
-```{r}
-# A list of metadata for location of sampling
-location <- data %>% select(
-  location_id, # optional (recommended)
-  location_description, 
-  grid_reference
-)
-location <- location %>% unique()
-head(location)
-```
-
-## Sample
-
-Metadata required to assess each sample. (Excluding direct observations)
-
-```{r}
-# A list of questions and responses collected through observation
-sample <- data %>% select(
-  parameter,
-  sample_id, # optional (recommended)
-  date_taken
-)
-sample <- sample %>% unique()
-head(sample)
-```
-
-## Observe
-
-```{r}
-questions <- data %>% filter(parameter == "River Invertebrates")
-questions <- questions %>% filter(question == "Taxon abundance")
-questions <- questions %>% select(
-  question,
-  response,
-  label # optional (usually for taxonomic/species name)
-)
-questions
-```
-
-## Metrics
-
-Calculate WHPT metric (currently only metric used in rict classification).
-
-```{r indices}
-indices_function <- function(data) {
- # Only calculate metric if required
-    if (!is.null(
-      nrow(data$question[data$question == "WHPT_ASPT"]))) {
-    return(NULL)
-    }
-
-  metric <- 
-    catalogue$indices_function[
-      catalogue$assessment == "Freshwater Invertebrate Model"]
+assessment_function <- function(data) {
+  # Calculated some statistic...
+  # Note, any non-standard base R library must be call using require().
+  require(rict)
+  require(macroinvertebrateMetrics)
+  # data$date_taken <- as.character(as.Date(data$date_taken, "%Y/%m/%d"))
  
-  data <- metric[[1]](data)
-  return(data)
-}
-indexes <- indices_function(data)
-indexes
-```
-
-## Predictors
-
-```{r predictors}
-predictors <- tibble(
-   dist_from_source = NA,
-   date_taken = NA,
-   alkalinity = NA,
-   location_id = NA,
-   grid_reference = NA,
-   altitude = NA,
-   slope = NA,
-   discharge_category = NA,
-   boulders_cobbles = NA,
-   pebbles_gravel = NA,
-   sand = NA,
-   silt_clay = NA,
-   mean_depth = NA,
-   river_width = NA
-)
-knitr::kable(predictors) 
-```
-
-## Predict
-
-```{r prediction}
-prediction_function <- function(data) {
+  metric_function <- catalogue[catalogue$assessment ==
+    "Freshwater Macroinvertebrate Metrics", 3][[1]]
+  output <- metric_function[[1]](data)
+  output <- filter(output, question %in% c("WHPT_ASPT", "WHPT_NTAXA"))
+  predictors <- read.csv(system.file("extdat",
+    "predictors.csv",
+    package = "hera"
+  ), check.names = FALSE)
+  predictors$location_id <- as.character(predictors$location_id)
+  predict_data <- filter(predictors, location_id %in% unique(data$location_id))
+  output_location <- inner_join(output,
+    unique(data[, c(
+      "location_id",
+      "sample_id",
+      "date_taken"
+    )]),
+    by = "sample_id"
+  )
+  whpt_input <- inner_join(output_location, predict_data, by = "location_id")
+  whpt_input$question[whpt_input$question == "WHPT_ASPT"] <- "WHPT ASPT Abund"
+  whpt_input$question[whpt_input$question == "WHPT_NTAXA"] <- "WHPT NTAXA Abund"
+  data <- whpt_input
 
   bias <- 6.21
   analysis <- "whpt ntaxa abund"
 
   names(data) <- tolower(names(data))
   data <- data[!is.na(data$river_width), ]
-  # Remove any duplicate chemistry samples
-  # otherwise pivot will not work later
-  # if (is.null(data$result_id)) {
-  #   names(data) <- toupper(names(data))
-  #   data <- sepaTools:::uniqueResultIdentifer(data)
-  #   names(data) <- tolower(names(data))
-  # }
-  # data <- data[!duplicated(data$result_id), ]
 
   # Add year  columns
   data$year <- format.Date(data$date_taken, "%Y")
   data$year <- as.integer(data$year)
   check <- FALSE
-  predict_data <- purrr::map(unique(data$location_id), function(location) {
- 
-    data <- data[data$location_id == location, ]
+  predict_data <- purrr::map(unique(data$location_id), function(location_id) {
+    data <- data[data$location_id == location_id, ]
 
-     if(!is.null(data$river_width)) {
-    if (any(!is.na(data$river_width))) {
-      data$river_width <- as.numeric(data$river_width)
-      data$mean_depth <- as.numeric(data$mean_depth)
-      data$boulders_cobbles <- as.numeric(data$boulders_cobbles)
-      data$pebbles_gravel <- as.numeric(data$pebbles_gravel)
-      data$silt_clay <- as.numeric(data$silt_clay)
-      data$sand <- as.numeric(data$sand)
-      check <- TRUE
-    } else {
-      data <- select(data,
-                      -.data$river_width,
-                      -.data$mean_depth,
-                      -.data$boulders_cobbles,
-                      -.data$pebbles_gravel,
-                      -.data$sand,
-                      -.data$silt_clay)
-
+    if (!is.null(data$river_width)) {
+      if (any(!is.na(data$river_width))) {
+        data$river_width <- as.numeric(data$river_width)
+        data$mean_depth <- as.numeric(data$mean_depth)
+        data$boulders_cobbles <- as.numeric(data$boulders_cobbles)
+        data$pebbles_gravel <- as.numeric(data$pebbles_gravel)
+        data$silt_clay <- as.numeric(data$silt_clay)
+        data$sand <- as.numeric(data$sand)
+        check <- TRUE
+      } else {
+        data <- select(
+          data,
+          -.data$river_width,
+          -.data$mean_depth,
+          -.data$boulders_cobbles,
+          -.data$pebbles_gravel,
+          -.data$sand,
+          -.data$silt_clay
+        )
+      }
     }
-     }
     # NGR columns
 
     data <- tidyr::separate(data,
@@ -220,24 +152,11 @@ prediction_function <- function(data) {
       sep = " "
     )
     # needs refactoring - but if no Alk results returned then add blanks/NAs
-   # data$alkalinity <- 75
+    # data$alkalinity <- 75
     data$sample_count <- NA
     data$samples_used <- NA
     data$min_date <- NA
     data$max_date <- NA
-
-    # Only predict for data which has RICT predictors?
-    # data <- purrr::map_df(split(data, data$sample_id), function(sample) {
-    #   if (any(sample$question %in% analysis)) {
-    #     return(sample)
-    #   } else {
-    #     return(NULL)
-    #   }
-    # })
-    # 
-    # if (nrow(data) == 0) {
-    #   return(NULL)
-    # }
 
     data$response <- as.numeric(as.character(data$response))
     data <- pivot_wider(data, names_from = .data$question, values_from = .data$response)
@@ -270,14 +189,15 @@ prediction_function <- function(data) {
         "Aut_Season_ID" = numeric(),
         "Aut_TL2_WHPT_NTaxa (AbW,DistFam)" = numeric(),
         "Aut_TL2_WHPT_ASPT (AbW,DistFam)" = numeric(),
+        sample_id = character(),
         check.names = check
       )
     }
 
     template_nems <- rict_template()
     names(template_nems) <- tolower(names(template_nems))
-     data$easting <- as.factor(data$NGR_EASTING)
-     data$northing <- as.factor(data$NGR_EASTING)
+    data$easting <- as.factor(data$NGR_EASTING)
+    data$northing <- as.factor(data$NGR_EASTING)
     names(data) <- tolower(names(data))
     data <- dplyr::bind_rows(template_nems, data)
 
@@ -289,30 +209,27 @@ prediction_function <- function(data) {
     names(data) <- tolower(names(data))
 
     data$date_taken <- as.Date(data$date_taken)
-    if (is.null(data$season)) {
-      data$season <- 1
-    }
-  
-    summarise_data <- dplyr::group_by(
-      data,
-      .data$location_id,
-      .data$ngr,
-      .data$ngr_easting,
-      .data$ngr_northing,
-      .data$sample_id,
-      .data$season,
-      .data$discharge_category,
-      .data$water_body_id,
-      .name_repair = TRUE
-    )
+    data$season <- season(data$date_taken)
+
+    # summarise_data <- dplyr::group_by(
+    #   data,
+    #   .data$location_id,
+    #   .data$ngr,
+    #   .data$ngr_easting,
+    #   .data$ngr_northing,
+    #   .data$sample_id,
+    #   .data$season,
+    #   .data$discharge_category,
+    #   .data$water_body_id,
+    #   .name_repair = TRUE
+    # )
     # Suppress warning because of missing values
-    summarise_data <- suppressWarnings(dplyr::summarise_all(
-      summarise_data,
-      ~ mean(.x, na.rm = TRUE)
-    ))
-  
+    # summarise_data <- suppressWarnings(dplyr::summarise_all(
+    #   summarise_data,
+    #   ~ mean(.x, na.rm = TRUE)
+    # ))
     # Select
-    rict_data <- dplyr::select(summarise_data,
+    rict_data <- dplyr::select(data,
       "SITE" = .data$location_id,
       "Waterbody" = .data$water_body_id,
       "Year" = .data$year,
@@ -346,25 +263,22 @@ prediction_function <- function(data) {
       .data$sample_id,
       season = "season"
     )
+    # Remove season not used
+   
+    cols <- grep("Sum_|Spr_", names(rict_data), perl = TRUE)
+    rict_data[rict_data$season == 3, cols] <- NA
 
-    # Remove season not used.uniqueSampleIdentifer
-    rict_data[
-      rict_data$season == "AUT",
-      grep("Sum_|Spr_", names(rict_data), perl = TRUE),
-    ] <- NA
-    rict_data[
-      rict_data$season == "SUM",
-      grep("Aut_|Spr_", names(rict_data), perl = TRUE),
-    ] <- NA
-    rict_data[
-      rict_data$season == "SPR",
-      grep("Sum_|Aut_", names(rict_data), perl = TRUE),
-    ] <- NA
+    cols <- grep("Spr_|Aut_", names(rict_data), perl = TRUE)
+    rict_data[rict_data$season == 2, cols] <- NA
+
+    cols <- grep("Sum_|Aut_", names(rict_data), perl = TRUE)
+    rict_data[rict_data$season == 1, cols] <- NA
+
 
     # Add season id when required
-    rict_data$Spr_Season_ID[!is.na(rict_data$Spr_Season_ID)] <- 1
-    rict_data$Sum_Season_ID[!is.na(rict_data$Sum_Season_ID)] <- 2
-    rict_data$Aut_Season_ID[!is.na(rict_data$Aut_Season_ID)] <- 3
+    rict_data$Spr_Season_ID <- 1
+    rict_data$Sum_Season_ID <- 2
+    rict_data$Aut_Season_ID <- 3
     # Bias where required
     rict_data$SPR_NTAXA_BIAS <- bias
     rict_data$SUM_NTAXA_BIAS <- bias
@@ -382,14 +296,8 @@ prediction_function <- function(data) {
     # Discharge must be numeric to pass validation
     rict_data$Discharge <- as.numeric(rict_data$Discharge)
     rict_data <- data.frame(rict_data, check.names = FALSE)
-
-
-    # rict_data$Altitude <- 34
-    # rict_data$Slope <- 3
-    # rict_data$Discharge <- 4
-    # rict_data$Dist_from_Source <- 15
-    rict_data <- rict_data[rict_data$sample_id != '1582198',]
-    rict_data <- rict_data[rict_data$sample_id != '1017980',]
+    rict_data <- rict_data[rict_data$sample_id != "1582198", ]
+    rict_data <- rict_data[rict_data$sample_id != "1017980", ]
     if (nrow(rict_data) == 0) {
       return(NULL)
     }
@@ -399,198 +307,173 @@ prediction_function <- function(data) {
       return(NULL)
     }
 
-    rict_prediction <- rict::rict_predict(rict_data)
+    rict_output <<- rict::rict(rict_data, year_type = "single")
+    rict_output$sample_id <- rict_data$sample_id
+    spr_ntaxa <- select(
+      rict_output,
+      sample_id,
+      "H" = H_NTAXA_spr,
+      "G" = G_NTAXA_spr,
+      "M" = M_NTAXA_spr,
+      "P" = P_NTAXA_spr,
+      "B" = B_NTAXA_spr,
+      "Class" = mostProb_NTAXA_spr,
+      "EQR" = NTAXA_eqr_av_spr
+    )
+
+    sum_ntaxa <- select(
+      rict_output,
+      sample_id,
+      "H" = H_NTAXA_sum,
+      "G" = G_NTAXA_sum,
+      "M" = M_NTAXA_sum,
+      "P" = P_NTAXA_sum,
+      "B" = B_NTAXA_sum,
+      "Class" = mostProb_NTAXA_sum,
+      "EQR" = NTAXA_eqr_av_sum
+    )
+
+    aut_ntaxa <- select(
+      rict_output,
+      sample_id,
+      "H" = H_NTAXA_aut,
+      "G" = G_NTAXA_aut,
+      "M" = M_NTAXA_aut,
+      "P" = P_NTAXA_aut,
+      "B" = B_NTAXA_aut,
+      "Class" = mostProb_NTAXA_aut,
+      "EQR" = NTAXA_eqr_av_aut
+    )
+
+    aut_aspt <- select(
+      rict_output,
+      sample_id,
+      "H" = H_ASPT_aut,
+      "G" = G_ASPT_aut,
+      "M" = M_ASPT_aut,
+      "P" = P_ASPT_aut,
+      "B" = B_ASPT_aut,
+      "Class" = mostProb_ASPT_aut,
+      "EQR" = ASPT_eqr_av_aut
+    )
+
+    spr_aspt <- select(
+      rict_output,
+      sample_id,
+      "H" = H_ASPT_spr,
+      "G" = G_ASPT_spr,
+      "M" = M_ASPT_spr,
+      "P" = P_ASPT_spr,
+      "B" = B_ASPT_spr,
+      "Class" = mostProb_ASPT_spr,
+      "EQR" = ASPT_eqr_av_spr
+    )
+
+    sum_aspt <- select(
+      rict_output,
+      sample_id,
+      "H" = H_ASPT_sum,
+      "G" = G_ASPT_sum,
+      "M" = M_ASPT_sum,
+      "P" = P_ASPT_sum,
+      "B" = B_ASPT_sum,
+      "Class" = mostProb_ASPT_sum,
+      "EQR" = eqr_av_sum_aspt
+    )
+
+  rict_class <- bind_rows(spr_aspt,
+                          sum_aspt,
+                          aut_aspt,
+                          spr_ntaxa,
+                          sum_ntaxa,
+                          aut_ntaxa)
+    browser()
+  rict_class <- rict_class[complete.cases(rict_class), ]
+  rict_class <- mutate_all(rict_class, as.character)
+  rict_class <- pivot_longer(rict_class,
+                             names_to = "question",
+                             values_to = "response",
+                             cols = -sample_id    )
+  
+rict_prediction <- rict_predict(rict_data)
     rict_aspt <- tibble(
       "location_id" = rict_prediction$SITE,
-      "question" = "REFERENCE WHPT ASPT",
-      "response" =  as.character(rict_prediction$TL2_WHPT_ASPT_AbW_DistFam_spr
-      )
+      "sample_id" = rict_data$sample_id,
+      "question" = "RICT Reference WHPT ASPT",
+      "response" = as.character(rict_prediction$TL2_WHPT_ASPT_AbW_DistFam_spr)
     )
     rict_ntaxa <- tibble(
       "location_id" = rict_prediction$SITE,
-      "question" = "REFERENCE WHPT NTAXA",
+      "sample_id" = rict_data$sample_id,
+      "question" = "RICT Rerference WHPT NTAXA",
       "response" = as.character(rict_prediction$TL2_WHPT_NTAXA_AbW_DistFam_spr)
     )
     rict_prediction <- bind_rows(rict_aspt, rict_ntaxa)
+    
+    
   })
   rict_prediction <- bind_rows(predict_data)
   rict_prediction <- unique(rict_prediction)
 
   return(rict_prediction)
 }
-predictions <- prediction_function(data)
-predictions
 ```
 
-```{r together, echo=FALSE}
+## Outcome
 
-# All Together Now
-sample_info <- data %>% 
-  select(names(sample), names(location)) %>%
-  unique()
+The outcome of your assessment.
 
-if(!is.null(indexes)) {
-indexes <- right_join(sample_info, indexes,
-  by = c("sample_id" = "sample_id")
-)
-} else {
-  indexes <- data
-}
-
-predictions <- right_join(sample_info, predictions,
-  by = c("location_id" = "location_id")
-)
-
-# predictions$response <- as.character(predictions$response)
-
-combined_data <- bind_rows(questions, predictions, indexes)
-
-
+```{r output}
+outcome <- assessment_function(demo_data)
+outcome
 ```
 
+## Check
 
-## Assessment
-
-```{r assessment_table}
-
-assessment_table <- tibble(
-  asesssment = c( "high", 
-                  "good", 
-                  "moderate",
-                  "poor",
-                  "bad"),
-  value = c(0.80,
-            0.60,
-            0.40,
-            0.20,
-            0)
-  # ...
-  # "red" = 0.33
-  # "amber" = 0.5
-  # "green" = 0.66
-  # ...
-  # "pass" = 0.5
-  # "fail" = 0.0
-)
-
-assessment_table
-```
-
-## Assess
-
-```{r assessment}
-assessment_function <- function(data, assessment_table) {
-
-  if (nrow(data %>%  filter(question == "MY_METRIC")) == 0) {
-    return(NULL)
-  }
-  require(dplyr)
-  require(tidyr)
-  require(magrittr)
-  require(tibble)
-  # Transform data -----------------------------------------------------------
-  data <- data %>%
-    select(.data$sample_id, .data$question, .data$response) %>%
-    filter(.data$question %in% c("MY_PREDICTION"))
-  data$response <- as.numeric(data$response)
-
-  data <- data %>%
-    distinct() %>%
-    group_by(.data$sample_id) %>%
-    pivot_wider(names_from = .data$question, values_from = .data$response) %>%
-    ungroup()
-    data[is.na(data)] <- 0
-  
-  data$eqr <- data$MY_METRIC / data$MY_PREDICTION 
-  
-  class <- cut(data$eqr,
-    breaks = c(1, assessment_table$value),
-    labels = assessment_table$assesssment
-  )
-
-  assessments <- data.frame(
-    sample_id = data$sample_id,
-    class = class,
-    eqr = data$eqr,
-    status = data$status
-  )
-
- assessments <- pivot_longer(assessments, -sample_id,
-    names_to = "question", values_to = "response"
-  )
-    
-  return(assessments)
-}
-assessments <- assessment_function(data = combined_data, assessment_table)
-assessments
-```
-
-
-## Confidence
-
-Confidence of assessment. 
-
-```{r}
-
-confidence_function <- function(data, aggregates = "sample_id") {
-
-  confidence <- tibble(
-    aggregates = NA,
-    question = NA,
-    response = NA
-  )
-  
-  names(confidence)[1] <- aggregates[1]
-  
-}
-
-```
-
-## Checklist
+Run checks on the assessment.
 
 ```{r checklist}
-check_list <- hera:::hera_test(standard = standard)
+# No need to edit this code
+# Format description
+standard_format <- hera:::hera_format(description = description)
+# Check description
+check_list <- hera:::hera_test(description = description)
 knitr::kable(check_list$standard_check)
 ```
 
 ## Update
 
+Update the catalogue of assessments to make them available.
+
 ```{r hera_update}
 # No need to edit this code
-catalogue <- hera::catalogue
-model <- tibble(
-  analysis_name = standard$parameter,
-  assessment = standard$standard_long,
-  standard = list(standard),
-  location = list(location[1, ]),
-  sample = list(sample[1, ]),
-  validation_function = NA,
-  indices_function = list(indices_function),
-  prediction_function = list(prediction_function),
-  assessment_function = list(assessment_function),
-  confidence_function = list(confidence_function),
-  indices = list(indexes[indexes$sample_id == indexes$sample_id[1], ]),
-  assessment_table = list(assessment_table),
-  questions = list(questions[1, ]),
-  predictors = list(predictors[1, ]),
-  predictions = list(predictions[predictions$location_id == predictions$location_id[1], ])
-)
+# hera:::update_catalogue(
+#   description = description,
+#   input = input,
+#   assessment_function = assessment_function,
+#   output = outcome
+# )
+```
 
-catalogue <- catalogue[catalogue$assessment != standard$standard_long, ]
+After **updating the catalogue, rebuild the package**, click on Build > Install and Restart menu or 'Install and Restart' button in the Build pane.
 
-catalogue <- bind_rows(catalogue, model)
-new_catalogue <- catalogue
-new_catalogue 
-usethis::use_data(catalogue, overwrite = TRUE)
+## Test
+
+This section tests if this assessment is usable using `assessment` function.
+
+```{r}
+# No need to edit this code
+# assess(
+#   data = hera::demo_data,
+#   name = description$response[description$question == "name_long"]
+# )
 ```
 
 ## Launch app
 
 Below is an interactive application displaying the results of your assessment.
 
-```{r launch_app, echo=TRUE, eval=FALSE}
-
+```{r launch_app, echo=FALSE, eval=FALSE}
 # No need to edit this code
-launch_app(new_catalogue = catalogue, data = data)
-
+# launch_app(new_catalogue = catalogue, data = data)
 ```
