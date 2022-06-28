@@ -31,9 +31,9 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
     data$SAMPLED_DATE <- format.Date(data$SAMPLED_DATE, "%Y/%m/%d")
     # Add a label column for taxon name rows
     labels <- data %>%
-      group_by(TEST_NUMBER) %>%
-      filter(REPORTED_NAME == "Taxon name") %>%
-      summarise(label = unique(FORMATTED_ENTRY))
+      group_by(.data$TEST_NUMBER) %>%
+      filter(.data$REPORTED_NAME == "Taxon name") %>%
+      summarise(label = unique(.data$FORMATTED_ENTRY))
     data <- left_join(data, labels, by = "TEST_NUMBER")
     # Change records to match Hera standard
     data$REPORTED_NAME[data$REPORTED_NAME == "Abundance"] <- "Taxon abundance"

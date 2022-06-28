@@ -87,7 +87,7 @@ assessment_function <- function(data) {
     "Freshwater Macroinvertebrate Metrics", 3][[1]]
   output <- metric_function[[1]](data)
   output <- filter(output, question %in% c("WHPT_ASPT", "WHPT_NTAXA"))
-  predictors <- read.csv(system.file("extdat",
+  predictors <- utils::read.csv(system.file("extdat",
     "predictors.csv",
     package = "hera"
   ), check.names = FALSE)

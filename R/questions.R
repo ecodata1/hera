@@ -4,12 +4,12 @@
 #'
 #' @return dataframe
 #' @export
-#'
+#' @importFrom rlang .data
 #' @examples
-#' questions <- questions(catalogue)
+#' questions <- questions()
 questions <- function() {
-  data <- unnest(catalogue, data)
+  data <- unnest(hera::catalogue, data)
   data <- data[data$output == FALSE & !is.na(data$output), ]
-  data <- select(data, assessment, question, source)
+  data <- select(data, .data$assessment, .data$question, .data$source)
   return(data)
 }

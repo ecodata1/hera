@@ -1,8 +1,9 @@
 #' @importFrom dplyr bind_rows select right_join
+#' @importFrom rlang .data
 combine_assessment <- function(data, assessment) {
   # Rejoin output from assessment_function to input data
   data_attributes <- data %>%
-    select(-question, -response, -result_id, -label, ) %>%
+    select(-.data$question, -.data$response, -.data$result_id, -.data$label, ) %>%
     unique()
 
   if (!is.null(indexes)) {
@@ -58,8 +59,9 @@ update_catalogue <- function(description = NULL,
 
 #' @importFrom tidyr pivot_longer everything
 #' @importFrom dplyr select filter
+#' @importFrom rlang .data
 hera_format <- function(description = NULL) {
-  description <- filter(description, question %in%
+  description <- filter(description, .data$question %in%
     c(
       "name_short",
       "name_long",

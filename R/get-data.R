@@ -22,9 +22,13 @@
 #' data <- get_data(location_id = 100)
 #' class <- assessment(data)
 #' }
-get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to = NULL) {
+get_data <- function(location_id = NULL,
+                     take = 10000,
+                     date_from = NULL,
+                     date_to = NULL) {
   message("Downloading data from data.gov.uk web services...")
-  location_id <- paste0("http://environment.data.gov.uk/ecology/site/bio/", location_id)
+  location_id <- paste0("http://environment.data.gov.uk/ecology/site/bio/",
+                        location_id)
   obs <- get_observations(
     location_id,
     date_from = date_from,
@@ -35,7 +39,7 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
     return()
   }
 
-  # Join taxa table -------------------------------------------------------------
+  # Join taxa table ------------------------------------------------------------
   taxa <- get_taxa()
 
   ultimate_foi_id <- strsplit(obs$ultimate_foi_id, "/|-")
@@ -46,7 +50,7 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
   obs$ultimate_foi_id <- unlist(ultimate_foi_id)
   obs <- dplyr::left_join(obs, taxa, by = c("ultimate_foi_id" = "notation"))
 
-  # Join site info --------------------------------------------------------------
+  # Join site info -------------------------------------------------------------
   site <- unique(obs$site_id)
 
   site_info <- get_site_info(site_id = site)
@@ -61,9 +65,10 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
 
   # Join properties of the observations ----------------------------------------
   properties <- eadata::get_properties()
-  data <- dplyr::inner_join(data, properties, by = c("property_id" = "property"))
+  data <- dplyr::inner_join(data, properties,
+                            by = c("property_id" = "property"))
 
-  # Format columns --------------------------------------------------------------
+  # Format columns -------------------------------------------------------------
   sample_id <- strsplit(data$truncated_id, "/|-")
   sample_id <- map(sample_id, function(x) {
     x[2]
@@ -168,7 +173,7 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
   names(data) <- tolower(names(data))
   data <- utils::type.convert(data, as.is = TRUE)
   data$sample_id <- as.character(data$sample_id)
-data$response <- as.character(data$response)
+  data$response <- as.character(data$response)
   data$label.x <- NULL
   data <- tibble(data)
   return(data)

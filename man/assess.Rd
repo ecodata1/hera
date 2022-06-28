@@ -23,5 +23,7 @@ Run assessment
 \code{assess()} assess
 }
 \examples{
+\dontrun{
 assessments <- assess(demo_data)
+}
 }

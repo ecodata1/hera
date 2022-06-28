@@ -13,7 +13,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  echo = F
+  echo = FALSE
 )
 library(hera)
 library(dplyr)

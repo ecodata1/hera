@@ -10,7 +10,9 @@
 #'
 #' @return Dataframe of assessments
 #' @examples
+#' \dontrun{
 #' assessments <- assess(demo_data)
+#' }
 #' @importFrom rlang .data
 #' @importFrom tibble tibble
 #' @importFrom dplyr group_by inner_join mutate bind_rows bind_cols filter
@@ -37,7 +39,7 @@ assess <- function(data = NULL, name = NULL, catalogue = NULL) {
       data <- assessment_function(data)
       data$response <- as.character(data$response)
       description <- bind_rows(model$data)
-      description <- filter(description, question == "name_short")
+      description <- filter(description, .data$question == "name_short")
       data$parameter <- description$response
       return(data)
     }

@@ -11,26 +11,26 @@ combine <- function(outcome, data) {
   # Get unique location attributes from data -------------------------------
   location_attributes <- select(
     data,
-    -sample_id,
-    -label,
-    -response,
-    -question,
-    -date_taken,
-    -parameter,
-    -units
+    -.data$sample_id,
+    -.data$label,
+    -.data$response,
+    -.data$question,
+    -.data$date_taken,
+    -.data$parameter,
+    -.data$units
   )
   # Needs refactor! Remove result level columns
   if(!is.null(data$result_id)) {
-    location_attributes <- select(location_attributes, -result_id)
+    location_attributes <- select(location_attributes, -.data$result_id)
   }
   if(!is.null(data$quality_element)) {
-    location_attributes <- select(location_attributes, -quality_element)
+    location_attributes <- select(location_attributes, -.data$quality_element)
   }
   if(!is.null(data$standard)) {
-    location_attributes <- select(location_attributes, -standard)
+    location_attributes <- select(location_attributes, -.data$standard)
   }
   if(!is.null(data$analysis_name)) {
-    location_attributes <- select(location_attributes, -analysis_name)
+    location_attributes <- select(location_attributes, -.data$analysis_name)
   }
   location_attributes <- unique(location_attributes)
   # Join to outcome

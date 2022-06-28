@@ -19,5 +19,7 @@ Validate, Predict and Assess
 \code{assessment()} assessment
 }
 \examples{
+\dontrun{
 assessments <- hera(demo_data)
+}
 }
