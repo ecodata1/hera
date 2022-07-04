@@ -86,23 +86,24 @@ If applicable, write a function to assess your input data and return an outcome.
 assessment_function <- function(data) {
   # Calculated invert metrics...
   # Note, any non-standard base R library must be call using require().
-  require(dplyr)
-  require(macroinvertebrateMetrics)
+   require(dplyr)
   input <- data
   input <- dplyr::filter(input, parameter == "River Family Inverts") 
   input <- dplyr::filter(input, question == "Taxon abundance") 
   input$TAXON <- input$label 
-  input <- rename(input,  "SAMPLE_ID" = sample_id)
+  input <-  dplyr::rename(input,  "SAMPLE_ID" = sample_id)
   input$RESULT <- input$response
-  input <- select(input, SAMPLE_ID, TAXON, RESULT)
-  input <- mutate_all(input, na_if, "")
+  input <-  dplyr::select(input, SAMPLE_ID,
+                 TAXON, RESULT)
+  input <-  dplyr::mutate_all(input, na_if, "")
   input <- input[complete.cases(input),]
   input$RESULT <- as.numeric(input$RESULT)
   epsi <- macroinvertebrateMetrics::calcEpsi(input)
   whpt <- macroinvertebrateMetrics::calcWhpt(input)
   whpt$RESULT <- as.character(whpt$RESULT)
-  output <- bind_rows(epsi, whpt)
-  output <- select(output, SAMPLE_ID, DETERMINAND, RESULT)
+  output <-  dplyr::bind_rows(epsi, whpt)
+  output <-  dplyr::select(output, SAMPLE_ID,
+                   DETERMINAND, RESULT)
   names(output) <- c("sample_id", "question", "response")
   row.names(output) <- NULL
   return(output)

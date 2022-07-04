@@ -8,9 +8,7 @@
 #'
 #' @return Dataframe of assessments
 #' @examples
-#' \dontrun{
-#' assessments <- hera(demo_data)
-#' }
+#' assessments <- hera(hera::demo_data)
 #' @importFrom rlang .data
 #' @importFrom tibble tibble
 #' @importFrom dplyr group_by inner_join mutate

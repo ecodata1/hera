@@ -23,7 +23,6 @@ Run assessment
 \code{assess()} assess
 }
 \examples{
-\dontrun{
-assessments <- assess(demo_data)
-}
+data <- hera::demo_data
+assessments <- assess(data)
 }

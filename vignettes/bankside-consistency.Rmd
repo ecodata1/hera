@@ -85,8 +85,8 @@ assessment_function <- function(data) {
   require(tidyr)
   require(magrittr)
   require(tibble)
-  require(whpt)
-  require(macroinvertebrateMetrics)
+  # require(whpt)
+  # require(macroinvertebrateMetrics)
   data$date_taken <- as.character(format.Date(data$date_taken, "%Y/%m/%d"))
   metric_function <- catalogue[catalogue$assessment ==
                            "Freshwater Macroinvertebrate Metrics", 3][[1]]
@@ -109,7 +109,7 @@ assessment_function <- function(data) {
   if(nrow(whpt_input) < 1) {
     return(NULL)
   } else {
-  consistency_check <- whpts(whpt_input)
+  consistency_check <- whpt::whpts(whpt_input)
   }
   return(consistency_check)
 }

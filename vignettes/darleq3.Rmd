@@ -89,7 +89,7 @@ assessment_function <- function(data) {
     "predictors.csv",
     package = "hera"
   ),
-  stringsAsFactors = FALSE, check.names = F
+  stringsAsFactors = FALSE, check.names = FALSE
   )
   predictors$location_id <- as.character(predictors$location_id)
   if(is.null(data$alkalinity)) {

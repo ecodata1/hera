@@ -157,10 +157,10 @@ indices_function <- function(data) {
   # Some calculated index e.g. summary of sample responses:
   # index = sum(data$response, na.rm = TRUE)
   message("Calculating indices...")
-  require(dplyr)
-  require(tidyr)
-  require(magrittr)
-  require(tibble)
+  # require(dplyr)
+  # require(tidyr)
+  # require(magrittr)
+  # require(tibble)
   if (!is.null(nrow(data$question[data$question == "rmni"]))) {
     return(NULL)
   }
@@ -253,10 +253,10 @@ Create predicted or expected responses to questions.
 ```{r prediction}
 prediction_function <- function(predictors, reference_algae = 0.05) {
   message("Calculating predictions...")
-  require(dplyr)
-  require(tidyr)
-  require(magrittr)
-  require(tibble)
+  # require(dplyr)
+  # require(tidyr)
+  # require(magrittr)
+  # require(tibble)
   # Predict reference RMNI
   prediction <-
     transmute(predictors,
@@ -351,10 +351,10 @@ A function to compare observed against expected.
 ```{r Assessing}
 assessment_function <- function(data, assessment_table = NULL) {
   message("Calculating Assessment")
-  require(dplyr)
-  require(tidyr)
-  require(magrittr)
-  require(tibble)
+  # require(dplyr)
+  # require(tidyr)
+  # require(magrittr)
+  # require(tibble)
   if (nrow(data %>% filter(question == "rmni")) == 0) {
     return(NULL)
   }

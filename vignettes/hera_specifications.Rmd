@@ -414,20 +414,18 @@ format.
 For instance, here is a prototype function to pull data Environment Agency's
 data.gov.uk web service and convert to the required `hera` input format.
 
-```{r, echo=TRUE}
+```r
 environment_agency_data <- hera:::get_data(location_id = c(43378, 92751))
 tibble(environment_agency_data)
 ```
 
 We can then run this EA data through `hera`:
 
-```
+```r
 predictions <- hera::prediction(environment_agency_data)
-
 predictions %>%
   select(date_taken, question, response) %>%
   unique()
-
 ```
 
 ## Shared Data Tables 
