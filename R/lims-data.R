@@ -18,6 +18,9 @@
 #'   \item{SAMPLED_DATE}{SAMPLED_DATE}
 #'   \item{TEMPLATE}{TEMPLATE}
 #'   \item{SAMPLED_BY}{SAMPLED_BY}
+#'   \item{REPORTABLE}{REPORTABLE}
+#'   \item{FORMULATION}{FORMULATION}
+#'   \item{TEST_NUMBER}{TEST_NUMBER}
 #' }
 #' @source Agency sampling data
 "lims_data"

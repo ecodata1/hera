@@ -19,6 +19,5 @@ Validate, Predict and Assess
 \code{assessment()} assessment
 }
 \examples{
-data <- hera::demo_data
-assessments <- hera(data)
+assessments <- hera(hera::demo_data)
 }

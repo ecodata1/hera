@@ -16,6 +16,9 @@
 #' @importFrom dplyr group_by inner_join mutate bind_rows bind_cols filter
 #' @importFrom magrittr `%>%`
 #' @importFrom purrr map
+#' @importFrom whpt whpt_predict
+#' @importFrom darleq3 calc_Metric
+#' @importFrom macroinvertebrateMetrics calcEpsi
 #' @export
 assess <- function(data = NULL, name = NULL, catalogue = NULL) {
   message("Hello from hera, ...work in progress!")

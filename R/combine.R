@@ -39,8 +39,8 @@ combine <- function(outcome, data) {
   # Get sample info ----------------------------------------------------
   sample_attributes <- select(
     data,
-    sample_id,
-    date_taken,
+    .data$sample_id,
+    .data$date_taken,
   )
 
   sample_attributes <- unique(sample_attributes)

@@ -20,6 +20,9 @@ A data frame with 42 rows and 16 variables:
   \item{SAMPLED_DATE}{SAMPLED_DATE}
   \item{TEMPLATE}{TEMPLATE}
   \item{SAMPLED_BY}{SAMPLED_BY}
+  \item{REPORTABLE}{REPORTABLE}
+  \item{FORMULATION}{FORMULATION}
+  \item{TEST_NUMBER}{TEST_NUMBER}
 }
 }
 \source{

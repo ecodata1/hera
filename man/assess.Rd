@@ -23,6 +23,5 @@ Run assessment
 \code{assess()} assess
 }
 \examples{
-data <- hera::demo_data
-assessments <- assess(data)
+assessments <- assess(hera::demo_data)
 }
