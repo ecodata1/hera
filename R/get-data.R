@@ -42,7 +42,7 @@ get_data <- function(location_id = NULL,
   # Join taxa table ------------------------------------------------------------
   taxa <- get_taxa()
 
-  ultimate_foi_id <- strsplit(obs$ultimate_foi_id, "/|-")
+  ultimate_foi_id <- strsplit(obs$ultimate_feature_of_interest_id, "/|-")
   ultimate_foi_id <- map(ultimate_foi_id, function(x) {
     x[7]
   })
@@ -69,9 +69,9 @@ get_data <- function(location_id = NULL,
                             by = c("property_id" = "property"))
 
   # Format columns -------------------------------------------------------------
-  sample_id <- strsplit(data$truncated_id, "/|-")
+  sample_id <- strsplit(data$survey_id, "/|-")
   sample_id <- map(sample_id, function(x) {
-    x[2]
+    x[7]
   })
   data$sample_id <- unlist(sample_id)
 
@@ -84,14 +84,13 @@ get_data <- function(location_id = NULL,
     substr(data$grid_reference, 7, 10),
     "0"
   )
-
   data$parameter <- NA
-  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverDiatTaxaObservation"] <- "River Diatoms"
-  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverDiatMetricsObservation"] <- "River Diatoms"
-  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvMetricsObservation"] <- "River Invertebrates"
-  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvTaxaObservation"] <- "River Invertebrates"
-  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpMetricsObservation"] <- "River Macrophytes"
-  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpTaxaObservation"] <- "River Macrophytes"
+  data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverDiatTaxaObservation"] <- "River Diatoms"
+  data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverDiatMetricsObservation"] <- "River Diatoms"
+  data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvMetricsObservation"] <- "River Invertebrates"
+  data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvTaxaObservation"] <- "River Invertebrates"
+  data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpMetricsObservation"] <- "River Macrophytes"
+  data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpTaxaObservation"] <- "River Macrophytes"
 
   data <- data %>% dplyr::rename(
     "question" = .data$label.y,
@@ -103,7 +102,6 @@ get_data <- function(location_id = NULL,
     "water_body_id" = .data$`WFD Waterbody ID`,
     "water_body_type" = .data$`Waterbody Type`,
     "water_body" = .data$`Water Body`,
-    "result_id" = .data$obs_id,
     "dist_from_source" = .data$`Distance from Source`,
     "source_altitude" = .data$`Source Altitude`,
     "label" = .data$pref_label,
