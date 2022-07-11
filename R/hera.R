@@ -8,7 +8,7 @@
 #'
 #' @return Dataframe of assessments
 #' @examples
-#' assessments <- hera(demo_data)
+#' assessments <- hera(hera::demo_data)
 #' @importFrom rlang .data
 #' @importFrom tibble tibble
 #' @importFrom dplyr group_by inner_join mutate
@@ -17,6 +17,6 @@
 #' @importFrom purrr map
 #' @export
 hera <- function(data = NULL) {
-  assessments <- assessment(data)
+  assessments <- assess(data)
   return(assessments)
 }

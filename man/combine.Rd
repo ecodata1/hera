@@ -2,20 +2,16 @@
 % Please edit documentation in R/combine.R
 \name{combine}
 \alias{combine}
-\title{Combine output with all columns from data relevant to assessment name
-Either by sample_id or location_id (depending how output is calculated)}
+\title{Combine}
 \usage{
-combine(output, data, name = NULL)
+combine(outcome, data)
 }
 \arguments{
-\item{output}{The output from prediction or other hera function}
+\item{outcome}{The output from prediction or other hera function}
 
 \item{data}{The input data to prediction or other hera function}
-
-\item{name}{Specify a named assessment to combine i.e. filter `data` and
-`output` for specific assessment}
 }
 \description{
-Combine output with all columns from data relevant to assessment name
-Either by sample_id or location_id (depending how output is calculated)
+Output with all columns from data relevant to assessment name. Either by
+sample_id or location_id (depending how output is calculated)
 }

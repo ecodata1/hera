@@ -183,45 +183,29 @@ data <- validation(demo_data)
 data[5, ]
 ```
 
-### Indices
+### Assess
 
-Using the  `indices()` function, we calculate observed indices scores if required for each sample. 
+Using the  `assess()` function, we calculate indices, metrics, predictions or reports as required. The 'assessment' stage includes any type of test or categorisation of our data. This could be WFD classification, compliance check, bathing water or discharge assessment. Broadly, any type of grading or assessment against some type of expected value. 
 
 ```{r, echo=TRUE, warning=F, message=F}
 data %>% 
-  filter(question == "Taxon abundance") %>% 
-  indices() %>%
+  assess() %>%
   select(sample_id, question, response) %>%
   slice_sample(n = 4) 
 
 ```
 
-Note, the invert indices are not calculated, they have been pre-calculated and are in the demo_data from the start. 
+Alternatively, we can select a list of specific assessments from the `catalogue` to run as required.
 
-### Prediction 
-
-We then predict reference scores for each sample:
-
-```{r, echo=TRUE, warning=F, message=F}
-prediction(demo_data[1:2200, ]) %>%
-  slice_sample(n = 4) %>%
-  select(sample_id, question, response)
-
+```{r}
+catalogue$assessment[1:2]
 ```
 
-See documentation
-[`prediction()`](https://ecodata1.github.io/hera/reference/prediction.html) for
-more information.
-
-### Assessment
-
-Based on the predicted and observed indices - we assess each sample using
-`assessment()`. The 'assessment' stage includes any type of test or categorisation of our data. This could be WFD classification, compliance check, bathing water or discharge assessment. Broadly, any type of grading or assessment against some type of expected value. 
-
-```{r, echo=TRUE, warning=F}
-
-assessment(demo_data) %>% 
- slice_sample(n = 4) 
+```{r, echo=TRUE, warning=F, message=F}
+data %>% 
+  assess(name = catalogue$assessment[1:2]) %>%
+  select(sample_id, question, response) %>%
+  slice_sample(n = 4) 
 
 ```
 
@@ -231,7 +215,7 @@ A custom report that compiles, groups and presents one or more assessment output
 
 ```
 # TODO!
-report(demo_data, 'rbmp') 
+assess(demo_data, 'rbmp_report') 
 
 ```
 
@@ -243,7 +227,7 @@ pressures.
 
 ```
 # TODO!
-rerport(demo_data, 'diagnose_wfd_pressures') %>% 
+assess(demo_data, 'diagnose_wfd_pressures') %>% 
 select(sample_id, diagnosis)
 head()
 
@@ -430,20 +414,18 @@ format.
 For instance, here is a prototype function to pull data Environment Agency's
 data.gov.uk web service and convert to the required `hera` input format.
 
-```{r, echo=TRUE}
+```r
 environment_agency_data <- hera:::get_data(location_id = c(43378, 92751))
 tibble(environment_agency_data)
 ```
 
 We can then run this EA data through `hera`:
 
-```
+```r
 predictions <- hera::prediction(environment_agency_data)
-
 predictions %>%
   select(date_taken, question, response) %>%
   unique()
-
 ```
 
 ## Shared Data Tables 
@@ -459,10 +441,7 @@ Following data tables are shared through `hera`...
 ### Models and Environmental Standards names
 
 ```{r echo=TRUE, warning=F}
-
 hera::catalogue
-
-
 ```
 
 ## Model platform

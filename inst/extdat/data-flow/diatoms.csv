@@ -19,9 +19,9 @@ question,total taxa,2,green,box,sample_id,Trophic Diatom Index
 question,total count,2,green,box,sample_id,DARLEQ assessment
 question,salinity index,2,green,box,location_id,DARLEQ assessment
 metric,Trophic Diatom Index,3,purple,diamond,TDI prediction,DARLEQ assessment
-prediction,DARLEQ prediction,4,orange,diamond,TDI,DARLEQ assessment
-assessment,DARLEQ assessment,5,darkred,diamond,Sample EQR,RBMP
-report,RBMP,6,red,square,date_taken,RBMP
+prediction,DARLEQ prediction,3,orange,diamond,TDI,DARLEQ assessment
+assessment,DARLEQ assessment,3,darkred,diamond,Sample EQR,RBMP
+report,RBMP,3,red,square,date_taken,RBMP
 ,,,,,Sample EQR,Data warehouse
 ,,,,,Data warehouse,Sample EQR
 ,,,,,DARLEQ assessment,Sample EQR

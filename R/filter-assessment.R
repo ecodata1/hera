@@ -1,3 +1,5 @@
+#' @importFrom dplyr filter
+#' @importFrom magrittr `%>%`
 filter_assessment <- function(model = NULL, name = NULL) {
   if (!is.null(name)) {
     model <- model %>%  filter(.data$assessment %in% name)

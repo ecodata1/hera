@@ -18,39 +18,39 @@ BugReports: https://github.com/ecodata1/hera/issues
 Encoding: UTF-8
 LazyData: true
 Imports:
-    shiny,
-    tidyr,
-    dplyr,
-    purrr,
-    magrittr,
-    rlang,
-    tibble,
-    lubridate,
     darleq3,
-    rict,
+    dplyr,
     eadata,
-    testthat,
+    lubridate,
     macroinvertebrateMetrics,
-    whpt,
-    usethis
+    magrittr,
+    purrr,
+    rlang,
+    rict,
+    shiny,
+    tibble,
+    tidyr,
+    testthat,
+    usethis,
+    whpt
 Suggests: 
-    knitr,
-    rmarkdown,
     covr,
-    Matrix,
     devtools,
     kableExtra,
-    slickR,
-    visNetwork,
+    knitr,
+    Matrix,
+    pkgdown,
     readr,
-    pkgdown
+    rmarkdown,
+    slickR,
+    visNetwork
 Remotes:
     nsj3/darleq3,
-    aquaMetrics/rict,
     aquaMetrics/eadata,
     aquaMetrics/macroinvertebrateMetrics,
+    aquaMetrics/rict,
     ecodata1/whpt
 VignetteBuilder: knitr
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Depends: 
     R (>= 3.6)

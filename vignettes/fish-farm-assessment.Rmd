@@ -19,52 +19,46 @@ library(hera)
 library(dplyr)
 library(purrr)
 library(tidyr)
+library(tibble)
+library(magrittr)
+library(testthat)
+library(visNetwork)
 ```
 
 ## Welcome
 
 This document has been created following the generic [assessment guidance](https://ecodata1.github.io/hera/articles/development_guide.html).
 
+<!-- Create a new regulatory assessment by updating the code info below, for guidance see https://ecodata1.github.io/hera/articles/development_guide.html  -->
 
-## Details
+## Description
 
-<!-- Create a new regulatory assessment by changing the CAPITLIZE info below: -->
+Basic details about the assessment. Update the 'response' values as required.
 
-```{r setup}
+```{r description}
 
-standard <- tibble(
-  standard_short = "Fish Farm assessment", 
-  quality_element = NA,
-  parameter = "Benthic Invertebrates, Benthic DNA, Sediment Chemistry",
-  standard_long = "Fish Farm assessment", 
-  standard_reference = NA,
-  aggregation = "event",
-  status = "prototype"
+description <- tribble(
+  ~question, ~response,
+  "name_short", "Fish farm assessment",
+  "name_long", "Fish farm assessment",
+  "parameter", "Marine Benthic Inverts",
+  "status", "prototype"
 )
 
-standard_format <- hera:::hera_format(standard = standard) # format assessment data
-standard_format$standard %>%
-  filter(attribute != "standard_reference") %>%
-  knitr::kable()
+description
 ```
 
-## Data Sources
+## Input
 
-List of data sources. Can be demo data stored within package, web services or shared online file.
+A list of questions required to run the assessment.
 
-```{r}
-sources <- tibble(
-  data_sources = c(NA)
-)
-```
+```{r input}
 
-## Data
-
-```{r data}
-data <- tibble(
+input <- tibble(
   parameter = c("Benthic DNA","Benthic Invertebrates", "Sediment Chemistry"),
   question = c("dna_reads","taxon_abundance", "toxicity"),
   response = c("BBB-CCC-AAA",2, 10),
+  type = c("character","number", "number"),
   label =  c(NA,"bug",NA),
   sample_id = NA,
   location_id = NA,
@@ -77,270 +71,87 @@ data <- tibble(
   date_taken = NA,
   units = NA, 
   min = NA, 
-  max = NA
+  max = NA,
+  source = c("sepa_ecology_results",
+             "sepa_ecology_results", 
+             "sepa_ecology_results")
 )
-data
+input
+
 ```
-
-## Locate
-
-Metadata required about the location
-
-```{r}
-# A list of metadata for location of sampling
-location <- data %>% select(
-  location_id, # optional (recommended)
-  location_description, 
-  grid_reference
-)
-location <- location %>% unique()
-head(location)
-```
-
-## Sample
-
-Metadata required to assess each sample. (Excluding direct observations)
-
-```{r}
-# A list of questions and responses collected through observation
-sample <- data %>% select(
-  parameter,
-  sample_id, # optional (recommended)
-  date_taken
-)
-sample <- sample %>% unique()
-head(sample)
-```
-
-## Observe
-
-```{r}
-questions <- data %>% select(
-  question,
-  response,
-  label # optional (usually for taxonomic/species name)
-)
-questions
-```
-
-
-## Metrics
-
-If applicable...
-
-```{r indices}
-
-indices_function <- function(data) {
-  # Calculate the bacteria taxa from sample DNA reads...
-  # Run bioinformatics pipeline?? 
-  data <- data %>% filter(response == "BBB-CCC-AAA")
- if(nrow(data) > 0) {
-   taxa <- tibble(
-     sample_id = NA,
-     question = "taxon_name",
-     response = "bacteria-23432"
-   )
-  # Run IQI?
-  iqi <- tibble(
-      sample_id = NA,
-     question = "iqi_score",
-     response = "14"
-   )
-  data <- bind_rows(iqi, taxa)
- } else {
-   return(NULL)
- }
-  return(data)
-}
-
-indexes <- indices_function(data)
-indexes
-```
-
-## Predictors
-
-```{r predictors}
-predictors <- tibble(
-   psa = 23
-)
-knitr::kable(predictors) 
-```
-
-## Predict
-
-```{r prediction}
-prediction_function <- function(predictors) {
-
-  # Generates prediction based on predictors...
-  prediction <- tibble(
-    question = NA,
-    response = NA,
-    location_id = NA
-  )
-
-  return(prediction)
-}
-predictions <- prediction_function(predictors)
-predictions
-```
-
-```{r together, echo=FALSE}
-
-# All Together Now
-sample_info <- data %>% 
-  select(names(sample), names(location)) %>%
-  unique()
-
-if(!is.null(indexes)) {
-indexes <- right_join(sample_info, indexes,
-  by = c("sample_id" = "sample_id")
-)
-} else {
-  indexes <- data
-}
-
-predictions <- right_join(sample_info, predictions,
-  by = c("location_id" = "location_id")
-)
-predictions$response <- as.character(predictions$response)
-
-combined_data <- bind_rows(questions, predictions, indexes)
-```
-
 
 ## Assessment
 
-```{r assessment_table}
-
-assessment_table <- tibble(
-  assessment = c( "high", 
-                  "good", 
-                  "moderate",
-                  "poor",
-                  "bad"),
-  value = c(0.80,
-            0.60,
-            0.40,
-            0.20,
-            0)
-  # ...
-  # "red" = 0.33
-  # "amber" = 0.5
-  # "green" = 0.66
-  # ...
-  # "pass" = 0.5
-  # "fail" = 0.0
-)
-
-assessment_table
-```
-
-## Assess
+If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
 
 ```{r assessment}
-assessment_function <- function(data, assessment_table) {
 
-  if (nrow(data %>%  filter(question == "MY_METRIC")) == 0) {
-    return(NULL)
-  }
-
-  # Transform data -----------------------------------------------------------
-  data <- data %>%
-    select(.data$sample_id, .data$question, .data$response) %>%
-    filter(.data$question %in% c("MY_PREDICTION",
-                                 "MY_METRIC"))
-  data$response <- as.numeric(data$response)
-
-  data <- data %>%
-    distinct() %>%
-    group_by(.data$sample_id) %>%
-    pivot_wider(names_from = .data$question, values_from = .data$response) %>%
-    ungroup()
-    data[is.na(data)] <- 0
+assessment_function <- function(data) {
+  # Calculated some statistic...
+  # Note, any non-standard base R library must be call using require().
+  # require(dplyr)
+  # require(tidyr)
+  # require(magrittr)
+  # require(tibble)
+  # data <- data %>%
+  #   group_by(sample_id) %>% 
+  #   summarise(question = "n_count",
+  #             response = n(),
+  #             sample_id = unique(sample_id)
+  #             )
   
-  data$eqr <- data$MY_METRIC / data$MY_PREDICTION 
-  
-  class <- cut(data$eqr,
-    breaks = c(1, assessment_table$value),
-    labels = assessment_table$assesssment
-  )
-
-  assessments <- data.frame(
-    sample_id = data$sample_id,
-    class = class,
-    eqr = data$eqr,
-    status = data$status
-  )
-
- assessments <- pivot_longer(assessments, -sample_id,
-    names_to = "question", values_to = "response"
-  )
-    
-  return(assessments)
+  return(data)
 }
-assessments <- assessment_function(combined_data, assessment_table)
-assessments
 ```
 
+## Outcome
 
-## Confidence
+The outcome of your assessment.
 
-Confidence of assessment. 
-
-```{r}
-
-confidence_function <- function(data, aggregates = "sample_id") {
-
-  confidence <- tibble(
-    aggregates = NA,
-    question = "confidence",
-    response = '100',
-    unit = "percentage"
-  )
-  
-  names(confidence)[1] <- aggregates[1]
-  return(confidence)
-}
-confidence_function(data, aggregates = "sample_id")
-
+```{r output}
+outcome <- assessment_function(input)
+outcome
 ```
 
-## Checklist
+## Check
+
+Run checks on the assessment.
 
 ```{r checklist}
-check_list <- hera:::hera_test(standard = standard)
+# No need to edit this code
+# Format description
+standard_format <- hera:::hera_format(description = description) 
+# Check description
+check_list <- hera:::hera_test(description = description)
 knitr::kable(check_list$standard_check)
 ```
 
 ## Update
 
+Update the catalogue of assessments to make them available.
+
 ```{r hera_update}
 # No need to edit this code
-catalogue <- hera::catalogue
-model <- tibble(
-  analysis_name = standard$parameter,
-  assessment = standard$standard_long,
-  standard = list(standard),
-  location = list(location[1, ]),
-  sample = list(sample[1, ]),
-  validation_function = NA,
-  indices_function = list(indices_function),
-  prediction_function = list(prediction_function),
-  assessment_function = list(assessment_function),
-  confidence_function = list(confidence_function),
-  indices = list(indexes[indexes$sample_id == indexes$sample_id[1], ]),
-  assessment_table = list(assessment_table),
-  questions = list(questions[1, ]),
-  predictors = list(predictors[1, ]),
-  predictions = list(predictions[predictions$location_id == predictions$location_id[1], ])
-)
+# hera:::update_catalogue(
+#   description = description,
+#   input = input,
+#   assessment_function = assessment_function,
+#   output = outcome
+# )
+```
 
-catalogue <- catalogue[catalogue$assessment != standard$standard_long, ]
+After **updating the catalogue, rebuild the package**, click on Build > Install and Restart menu or 'Install and Restart' button in the Build pane.
 
-catalogue <- bind_rows(catalogue, model)
-new_catalogue <- catalogue
-new_catalogue
-usethis::use_data(catalogue, overwrite = TRUE)
+## Test
+
+This section tests if this assessment is usable using `assessment` function.
+
+```{r}
+# No need to edit this code
+# assess(
+#   data = hera::demo_data,
+#   name = description$response[description$question == "name_long"]
+# )
 ```
 
 ## Launch app
@@ -349,6 +160,5 @@ Below is an interactive application displaying the results of your assessment.
 
 ```{r launch_app, echo=FALSE, eval=FALSE}
 # No need to edit this code
-launch_app(new_catalogue = catalogue, data = data)
-
+# launch_app(new_catalogue = catalogue, data = data)
 ```

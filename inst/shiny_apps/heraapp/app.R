@@ -6,7 +6,6 @@
 #
 #    http://shiny.rstudio.com/
 
-library(hera)
 library(shiny)
 library(dplyr)
 library(purrr)
@@ -241,7 +240,7 @@ server <- function(input, output) {
           predictions %>% select(location_id, sample_id, date_taken, parameter, question, response)
         })
       ))
-      assessments <- assessment(data, catalogue = new_catalogue)
+      assessments <- assess(data, catalogue = new_catalogue)
 
       filter_assessments <- assessments %>% select(-date_taken) %>%
          pivot_wider(names_from = question, values_from = response)

@@ -1,10 +1,10 @@
 ---
-title: "Bankside Consistency"
+title: "Macroinvertebrate Metrics"
 output: rmarkdown::html_vignette
 editor_options: 
   chunk_output_type: console
 vignette: >
-  %\VignetteIndexEntry{Bankside Consistency}
+  %\VignetteIndexEntry{Macroinvertebrate Metrics}
   %\VignetteEncoding{UTF-8}  
   %\VignetteEngine{knitr::rmarkdown}
 ---
@@ -13,7 +13,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  echo = F
+  echo = FALSE
 )
 library(hera)
 library(dplyr)
@@ -31,8 +31,6 @@ This document has been created following the generic [assessment guidance](https
 
 <!-- Create a new regulatory assessment by updating the code info below, for guidance see https://ecodata1.github.io/hera/articles/development_guide.html  -->
 
-This is the Rapid Assessment Technique (RAT) for rsults from bankside invertebrates analysis to check consistency with Water Body Status.
-
 ## Description
 
 Basic details about the assessment. Update the 'response' values as required.
@@ -41,9 +39,9 @@ Basic details about the assessment. Update the 'response' values as required.
 
 description <- tribble(
   ~question, ~response,
-  "name_short", "Bankside Consistency",
-  "name_long", "Rapid Assessment of Bankside Consistency with Water Body Status",
-  "parameter", "River Family Inverts",
+  "name_short", "Macroinvertebrate Metrics",
+  "name_long", "Freshwater Macroinvertebrate Metrics",
+  "parameter", "River Invertevates",
   "status", "prototype"
 )
 
@@ -56,18 +54,25 @@ A list of questions required to run the assessment.
 
 ```{r input}
 
-input <- tibble(
-  location_id = c("206972"),
-  sample_id = c("12345"),
-  date_taken = c("2019-11-21"),
-  question = c("Taxon abundance"),
-  response = c("12"),
-  label = c("Baetidae"),
-  parameter = c("River Family Inverts"),
-  type = c("number"),
-  max = NA,
-  min = NA,
-  source = c("sepa_ecology_results")
+input <- tribble(
+  ~sample_id,
+  ~question,
+  ~response,
+  ~label,
+  ~parameter,
+  ~type,
+  ~max,
+  ~min,
+  ~source,
+  "12345",
+  "Taxon abundance",
+  "12",
+  "Baetidae",
+  "River Family Inverts",
+  "number",
+  NA,
+  NA,
+  "sepa_ecology_results"
 )
 input
 ```
@@ -79,39 +84,29 @@ If applicable, write a function to assess your input data and return an outcome.
 ```{r assessment}
 
 assessment_function <- function(data) {
-  # Some calculated a statistic...
+  # Calculated invert metrics...
   # Note, any non-standard base R library must be call using require().
-  require(dplyr)
-  require(tidyr)
-  require(magrittr)
-  require(tibble)
-  # require(whpt)
-  # require(macroinvertebrateMetrics)
-  data$date_taken <- as.character(format.Date(data$date_taken, "%Y/%m/%d"))
-  metric_function <- catalogue[catalogue$assessment ==
-                           "Freshwater Macroinvertebrate Metrics", 3][[1]]
-  output <- metric_function[[1]](data)
-  output <- filter(output, question %in% c("WHPT_ASPT", "WHPT_NTAXA"))
-  predictors <- utils::read.csv(system.file("extdat",
-    "predictors.csv",
-    package = "whpt"
-  ), check.names = FALSE)
-  predictors$location_id <- as.character(predictors$location_id)
-  predict_data <- filter(predictors, location_id %in% unique(data$location_id))
-  output_location <- inner_join(output,
-                       data[, c("location_id",
-                                "sample_id", 
-                                "date_taken")],
-                       by = "sample_id")
-  whpt_input <- inner_join(output_location, predict_data, by = "location_id")
-  whpt_input$question[whpt_input$question == "WHPT_ASPT"] <- "WHPT ASPT Abund"
-  whpt_input$question[whpt_input$question == "WHPT_NTAXA"] <- "WHPT NTAXA Abund"
-  if(nrow(whpt_input) < 1) {
-    return(NULL)
-  } else {
-  consistency_check <- whpt::whpts(whpt_input)
-  }
-  return(consistency_check)
+   require(dplyr)
+  input <- data
+  input <- dplyr::filter(input, parameter == "River Family Inverts") 
+  input <- dplyr::filter(input, question == "Taxon abundance") 
+  input$TAXON <- input$label 
+  input <-  dplyr::rename(input,  "SAMPLE_ID" = sample_id)
+  input$RESULT <- input$response
+  input <-  dplyr::select(input, SAMPLE_ID,
+                 TAXON, RESULT)
+  input <-  dplyr::mutate_all(input, na_if, "")
+  input <- input[complete.cases(input),]
+  input$RESULT <- as.numeric(input$RESULT)
+  epsi <- macroinvertebrateMetrics::calcEpsi(input)
+  whpt <- macroinvertebrateMetrics::calcWhpt(input)
+  whpt$RESULT <- as.character(whpt$RESULT)
+  output <-  dplyr::bind_rows(epsi, whpt)
+  output <-  dplyr::select(output, SAMPLE_ID,
+                   DETERMINAND, RESULT)
+  names(output) <- c("sample_id", "question", "response")
+  row.names(output) <- NULL
+  return(output)
 }
 ```
 
@@ -151,7 +146,7 @@ hera:::update_catalogue(
 )
 ```
 
-After **updating the catalogue, rebuild the package**, click on Build \> Install and Restart menu or 'Install and Restart' button in the Build pane.
+After **updating the catalogue, rebuild the package**, click on Build > Install and Restart menu or 'Install and Restart' button in the Build pane.
 
 ## Test
 
@@ -163,13 +158,6 @@ assess(
   data = hera::demo_data,
   name = description$response[description$question == "name_long"]
 )
-
-lims_data <- hera:::convert(lims_data)
-assess(
-  data = lims_data,
-  name = description$response[description$question == "name_long"]
-)
-
 ```
 
 ## Launch app

@@ -22,9 +22,13 @@
 #' data <- get_data(location_id = 100)
 #' class <- assessment(data)
 #' }
-get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to = NULL) {
+get_data <- function(location_id = NULL,
+                     take = 10000,
+                     date_from = NULL,
+                     date_to = NULL) {
   message("Downloading data from data.gov.uk web services...")
-  location_id <- paste0("http://environment.data.gov.uk/ecology/site/bio/", location_id)
+  location_id <- paste0("http://environment.data.gov.uk/ecology/site/bio/",
+                        location_id)
   obs <- get_observations(
     location_id,
     date_from = date_from,
@@ -35,10 +39,10 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
     return()
   }
 
-  # Join taxa table -------------------------------------------------------------
+  # Join taxa table ------------------------------------------------------------
   taxa <- get_taxa()
 
-  ultimate_foi_id <- strsplit(obs$ultimate_foi_id, "/|-")
+  ultimate_foi_id <- strsplit(obs$ultimate_feature_of_interest_id, "/|-")
   ultimate_foi_id <- map(ultimate_foi_id, function(x) {
     x[7]
   })
@@ -46,7 +50,7 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
   obs$ultimate_foi_id <- unlist(ultimate_foi_id)
   obs <- dplyr::left_join(obs, taxa, by = c("ultimate_foi_id" = "notation"))
 
-  # Join site info --------------------------------------------------------------
+  # Join site info -------------------------------------------------------------
   site <- unique(obs$site_id)
 
   site_info <- get_site_info(site_id = site)
@@ -61,12 +65,13 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
 
   # Join properties of the observations ----------------------------------------
   properties <- eadata::get_properties()
-  data <- dplyr::inner_join(data, properties, by = c("property_id" = "property"))
+  data <- dplyr::inner_join(data, properties,
+                            by = c("property_id" = "property"))
 
-  # Format columns --------------------------------------------------------------
-  sample_id <- strsplit(data$truncated_id, "/|-")
+  # Format columns -------------------------------------------------------------
+  sample_id <- strsplit(data$survey_id, "/|-")
   sample_id <- map(sample_id, function(x) {
-    x[2]
+    x[7]
   })
   data$sample_id <- unlist(sample_id)
 
@@ -79,14 +84,13 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
     substr(data$grid_reference, 7, 10),
     "0"
   )
-
   data$parameter <- NA
-  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverDiatTaxaObservation"] <- "River Diatoms"
-  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverDiatMetricsObservation"] <- "River Diatoms"
-  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvMetricsObservation"] <- "River Invertebrates"
-  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvTaxaObservation"] <- "River Invertebrates"
-  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpMetricsObservation"] <- "River Macrophytes"
-  data$parameter[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpTaxaObservation"] <- "River Macrophytes"
+  data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverDiatTaxaObservation"] <- "River Diatoms"
+  data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverDiatMetricsObservation"] <- "River Diatoms"
+  data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvMetricsObservation"] <- "River Invertebrates"
+  data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvTaxaObservation"] <- "River Invertebrates"
+  data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpMetricsObservation"] <- "River Macrophytes"
+  data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpTaxaObservation"] <- "River Macrophytes"
 
   data <- data %>% dplyr::rename(
     "question" = .data$label.y,
@@ -95,23 +99,26 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
     "location_id" = .data$site_id,
     "latitude" = .data$lat,
     "longitude" = .data$long,
-    "sand" = .data$Sand,
     "water_body_id" = .data$`WFD Waterbody ID`,
     "water_body_type" = .data$`Waterbody Type`,
     "water_body" = .data$`Water Body`,
-    "river_width" = .data$Width,
-    "mean_depth" = .data$Depth,
-    "boulders_cobbles" = .data$`Boulders/Cobbles`,
-    "pebbles_gravel" = .data$`Pebbles/Gravel`,
-    "silt_clay" = .data$`Silt/Clay`,
-    "result_id" = .data$obs_id,
     "dist_from_source" = .data$`Distance from Source`,
     "source_altitude" = .data$`Source Altitude`,
     "label" = .data$pref_label,
-    "units" = .data$property_id,
-    "discharge_category" = .data$Discharge
+    "units" = .data$property_id
   )
-
+  # Not all locations have these attributes:
+ if(!is.null(data$Sand)) {
+  data <- data %>% dplyr::rename(
+  "river_width" = .data$Width,
+  "mean_depth" = .data$Depth,
+  "boulders_cobbles" = .data$`Boulders/Cobbles`,
+  "pebbles_gravel" = .data$`Pebbles/Gravel`,
+  "sand" = .data$Sand,
+  "silt_clay" = .data$`Silt/Clay`,
+  "discharge_category" = .data$Discharge,
+  )
+}
   data$question[grep("-percentageCoverBand", data$result_id)] <-
     "PercentageCoverBand"
   data$question[data$question == "WHPT_ASPT"] <- "WHPT ASPT Abund"
@@ -164,6 +171,7 @@ get_data <- function(location_id = NULL, take = 10000, date_from = NULL, date_to
   names(data) <- tolower(names(data))
   data <- utils::type.convert(data, as.is = TRUE)
   data$sample_id <- as.character(data$sample_id)
+  data$response <- as.character(data$response)
   data$label.x <- NULL
   data <- tibble(data)
   return(data)

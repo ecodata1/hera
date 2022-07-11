@@ -1,0 +1,280 @@
+---
+title: "DARLEQ3"
+output: rmarkdown::html_vignette
+editor_options: 
+  chunk_output_type: console
+vignette: >
+  %\VignetteIndexEntry{DARLEQ3}
+  %\VignetteEncoding{UTF-8}  
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = FALSE
+)
+library(hera)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(tibble)
+library(magrittr)
+library(testthat)
+library(visNetwork)
+```
+
+## Welcome
+
+This document has been created following the generic [assessment guidance](https://ecodata1.github.io/hera/articles/development_guide.html).
+
+<!-- Create a new regulatory assessment by updating the code info below, for guidance see https://ecodata1.github.io/hera/articles/development_guide.html  -->
+
+## Description
+
+Basic details about the assessment. Update the 'response' values as required.
+
+```{r setup}
+
+description <- tribble(
+  ~question, ~response,
+  "name_short", "DARLEQ3",
+  "name_long", "UKTAG River Assessment Method Macrophytes and Phytobenthos",
+  "parameter", "River Diatoms",
+  "status", "prototype"
+)
+
+knitr::kable(description)
+```
+
+## Input
+
+A list of questions required to run the assessment.
+
+```{r input}
+input <- tibble(
+  location_id = c("8175", "8175"),
+  sample_id = c("12345", "12345"),
+  date_taken = c("2019-11-21", "2019-11-21"),
+  question = c("Taxon abundance", "Alkalinity"),
+  response = c("12", "45"),
+  label = c("Gomphonema olivaceum", NA),
+  parameter = c("River Diatoms", "Chemistry"),
+  type = c("number", "number"),
+  max = c(NA, NA),
+  min = c(NA, NA),
+  source = c("sepa_ecology_results", "location_attributes")
+)
+input
+```
+
+## Assessment
+
+If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
+
+```{r assessment, echo=TRUE}
+
+assessment_function <- function(data) {
+  require(dplyr)
+  require(tidyr)
+  require(magrittr)
+  require(tibble)
+
+  data <- filter(data, question == "Taxon abundance" &
+    parameter == "River Diatoms")
+  data$response <- as.numeric(data$response)
+  # Generates prediction based on predictors...
+  predictors <- utils::read.csv(system.file("extdat",
+    "predictors.csv",
+    package = "hera"
+  ),
+  stringsAsFactors = FALSE, check.names = FALSE
+  )
+  predictors$location_id <- as.character(predictors$location_id)
+  if(is.null(data$alkalinity)) {
+  data <- inner_join(data, predictors, by = c("location_id"))
+  }
+  if (any(names(data) %in% "alkalinity")) {
+    data$alkalinity[is.na(data$alkalinity)] <- 75
+  } else {
+    data$alkalinity <- 75
+  }
+
+  data$alkalinity <- as.numeric(data$alkalinity)
+  # Combine mean alkalinity with other site headers
+  header <- data %>%
+    mutate(
+      "SampleID" = as.factor(.data$sample_id),
+      "DATE_TAKEN" = as.Date(.data$date_taken, tz = "GB")
+    ) %>%
+    select(.data$SampleID,
+      "SiteID" = .data$location_id,
+      "SAMPLE_DATE" = .data$date_taken,
+      "Alkalinity" = .data$alkalinity
+    ) %>%
+    unique()
+
+  # Loch samples also require an Alkalinity 'type';
+  # 'HA' - High Alkalninty etc
+  # This will be ignored if running river classification
+  header$lake_TYPE <- NA
+  header$lake_TYPE[header$Alkalinity > 50] <- "HA"
+  header$lake_TYPE[header$Alkalinity >= 10 &
+    header$Alkalinity <= 50] <- "MA"
+  header$lake_TYPE[header$Alkalinity < 10] <- "LA"
+
+  header$SiteID <- as.character(header$SiteID)
+  ## Important: Arrange to match order of 'diatom_data' data frame.
+  header <- arrange(header, .data$SampleID)
+
+  # Prepare dataframe of 'diatom_data' -------------------------------
+  # Include columns for each diatom ID (from NEMS Dares table)
+  # responses are abundances.
+  # dataframe row.names are SAMPLE_NUMBER.
+
+  # DARES table
+  # - must use table from NEMS - this links TAXON to TAXONLD code
+  dares_table <- darleq3::darleq3_taxa
+  # Filter for taxon abundance only
+  diatom_taxon_abundance <- data %>%
+    filter(.data$question == "taxon abundance" |
+      .data$question == "Taxon abundance")
+
+  # Join to S_TAXON_DARES table using Taxon name.
+  diatom_taxonname <- diatom_taxon_abundance %>%
+    select(.data$sample_id, .data$label, .data$response, .data$date_taken) %>%
+    inner_join(dares_table[, c("TaxonName", "TaxonId", "TaxonNameSEPA")],
+      by = c("label" = "TaxonNameSEPA")
+    )
+
+  # Make sure numeric
+  diatom_taxonname$response <-
+    as.numeric(as.character(diatom_taxonname$response))
+
+  # Sum response if duplicate taxon names entered within a single sample
+  diatom_tidied <- diatom_taxonname %>%
+    group_by(.data$sample_id, .data$TaxonId, .data$label, .data$date_taken) %>%
+    summarise(response = sum(.data$response, na.rm = TRUE), .groups = "drop")
+  # Arrange to keep in same order as 'taxon_names' data.frame
+  diatom_tidied <- diatom_tidied %>%
+    ungroup() %>%
+    arrange(.data$label) %>%
+    select(-.data$label)
+
+  # DARLEQ3 requires Taxon IDs and responses pivoted into wide format
+  diatom_data <- diatom_tidied %>% pivot_wider(
+    names_from = .data$TaxonId,
+    values_from = .data$response,
+  )
+  diatom_data[is.na(diatom_data)] <- 0
+
+  # Arrange by sampled_date to match order of 'header' data frame.
+  diatom_data <- arrange(diatom_data, .data$sample_id)
+  # darleq3 requires row.names equal SAMPLE_NUMBER. Must convert
+  # to be data.frame first (row.names deprecated on tibble).
+  diatom_data <- data.frame(diatom_data, check.names = FALSE)
+  row.names(diatom_data) <- diatom_data$sample_id
+  diatom_data <- select(diatom_data, -.data$sample_id, -.data$date_taken)
+
+  # Prepare dataframe of 'taxon_names'  ------------------------------
+  # include columns 'TaxonCode','TaxonName'
+  taxon_names <- diatom_taxonname %>%
+    select("TaxonCode" = .data$TaxonId,
+           "TaxonName" = .data$TaxonName) %>%
+    unique()
+  taxon_names <- arrange(taxon_names, .data$TaxonName)
+
+  # Combine dataframes into named list ------------------------
+  header <- data.frame(header)
+  header <- header[header$SampleID %in% row.names(diatom_data), ]
+  header <- header[!duplicated(header$SampleID), ]
+  output <- darleq3::calc_Metric(diatom_data, metric = "TDI4")
+  output <- darleq3::calc_EQR(output,
+    header,
+    truncate_EQR = TRUE,
+    verbose = TRUE
+  )
+ 
+  sample <- output$EQR
+  sample <- sample %>% mutate_all(as.character)
+  sample <- pivot_longer(sample,
+    cols = c(-SampleID, -SiteID, -SAMPLE_DATE),
+    names_to = "question",
+    values_to = "response"
+  )
+  sample <- select(sample, -SAMPLE_DATE)
+  names(sample) <- c("sample_id", "location_id", "question", "response")
+  
+  location <- output$Uncertainty
+  location <- location %>% mutate_all(as.character)
+   location <- pivot_longer(location,
+    cols = c(-SiteID),
+    names_to = "question",
+    values_to = "response"
+  )
+    names(location) <- c("location_id", "question", "response")
+  data <- bind_rows(sample, location)
+  
+  return(data)
+}
+```
+
+## Outcome
+
+The outcome of your assessment.
+
+```{r output}
+outcome <- assessment_function(input)
+outcome
+```
+
+## Check
+
+Run checks on the assessment.
+
+```{r checklist}
+# No need to edit this code
+# Format description
+standard_format <- hera:::hera_format(description = description)
+# Check description
+check_list <- hera:::hera_test(description = description)
+knitr::kable(check_list$standard_check)
+```
+
+## Update
+
+Update the catalogue of assessments to make them available.
+
+```{r hera_update}
+# No need to edit this code
+hera:::update_catalogue(
+  description = description,
+  input = input,
+  assessment_function = assessment_function,
+  output = outcome
+)
+```
+
+<!-- Remember to rebuild the package before testing!  -->
+
+## Test
+
+This section tests if this assessment is usable using `assessment` function.
+
+```{r}
+# No need to edit this code
+assess(
+  data = hera::demo_data,
+  name = description$response[description$question == "name_long"]
+)
+```
+
+## Launch app
+
+Below is an interactive application displaying the results of your assessment.
+
+```{r launch_app, echo=FALSE, eval=FALSE}
+# No need to edit this code
+# launch_app(new_catalogue = catalogue, data = data)
+```
