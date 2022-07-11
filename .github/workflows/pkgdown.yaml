@@ -49,7 +49,7 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt install libgdal-dev libproj-dev libgeos-dev libudunits2-dev
 
-      - uses: r-lib/actions/setup-r-dependencies@v2
+      - uses: r-lib/actions/setup-r-dependencies@v1
 
       - name: Deploy package
         if: ${{ github.event_name == 'push' }}
