@@ -63,7 +63,7 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt install libgdal-dev libproj-dev libgeos-dev libudunits2-dev
 
-      - uses: r-lib/actions/setup-r-dependencies@v1
+      - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: rcmdcheck
 
