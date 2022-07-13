@@ -7,19 +7,13 @@
     <loc>https://ecodata1.github.io/hera/articles/bankside-consistency.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/hera/articles/combined-aquatic-plants.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/articles/darleq.html</loc>
+    <loc>https://ecodata1.github.io/hera/articles/darleq3.html</loc>
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/articles/deployment_guide.html</loc>
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/articles/development_guide.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/articles/fim.html</loc>
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/articles/fish-farm-assessment.html</loc>
@@ -34,7 +28,7 @@
     <loc>https://ecodata1.github.io/hera/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/hera/articles/leafpacs.html</loc>
+    <loc>https://ecodata1.github.io/hera/articles/macroinvertebrate-metrics.html</loc>
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/articles/rict.html</loc>
@@ -46,7 +40,7 @@
     <loc>https://ecodata1.github.io/hera/index.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/hera/reference/assessment.html</loc>
+    <loc>https://ecodata1.github.io/hera/reference/assess.html</loc>
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/reference/catalogue.html</loc>
@@ -76,7 +70,13 @@
     <loc>https://ecodata1.github.io/hera/reference/launch_app.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/hera/reference/prediction.html</loc>
+    <loc>https://ecodata1.github.io/hera/reference/lims_data.html</loc>
+  </url>
+  <url>
+    <loc>https://ecodata1.github.io/hera/reference/questions.html</loc>
+  </url>
+  <url>
+    <loc>https://ecodata1.github.io/hera/reference/season.html</loc>
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/reference/validation.html</loc>

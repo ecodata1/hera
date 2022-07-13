@@ -69,8 +69,10 @@
 </nav><div class="container template-article">
 
 
+
+
 <div class="row">
-  <main id="main"><div class="page-header">
+  <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>RICT</h1>
             
       
@@ -83,211 +85,84 @@
 <div class="section level2">
 <h2 id="welcome">Welcome<a class="anchor" aria-label="anchor" href="#welcome"></a>
 </h2>
-<p>This document has been created following the generic assessment guidance.</p>
+<p>This document has been created following the generic <a href="https://ecodata1.github.io/hera/articles/development_guide.html">assessment guidance</a>.</p>
+<!-- Create a new regulatory assessment by updating the code info below, for guidance see https://ecodata1.github.io/hera/articles/development_guide.html  -->
 </div>
 <div class="section level2">
-<h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a>
+<h2 id="description">Description<a class="anchor" aria-label="anchor" href="#description"></a>
 </h2>
-<!-- Create a new regulatory assessment by changing the CAPITLIZE info below: -->
-<table class="table">
-<thead><tr class="header">
-<th align="left">attribute</th>
-<th align="left">value</th>
-<th align="left">optional</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">standard_short</td>
-<td align="left">rict</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="left">quality_element</td>
-<td align="left">NA</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="left">parameter</td>
-<td align="left">River Invertebrates</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="even">
-<td align="left">standard_long</td>
-<td align="left">rict</td>
-<td align="left">TRUE</td>
-</tr>
-<tr class="odd">
-<td align="left">aggregation</td>
-<td align="left">NA</td>
-<td align="left">FALSE</td>
-</tr>
-<tr class="even">
-<td align="left">status</td>
-<td align="left">development</td>
-<td align="left">FALSE</td>
-</tr>
-</tbody>
-</table>
+<p>Basic details about the assessment. Update the ‘response’ values as required.</p>
+<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 2</span></span></span>
+<span><span class="co">#&gt;   question   response                  </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> name_short RICT                      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> name_long  RICT                      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> parameter  River Family Invertebrates</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> status     prototype</span></span></code></pre>
 </div>
 <div class="section level2">
-<h2 id="data-sources">Data Sources<a class="anchor" aria-label="anchor" href="#data-sources"></a>
+<h2 id="input">Input<a class="anchor" aria-label="anchor" href="#input"></a>
 </h2>
-<p>List of data sources (to test against). Can be more than source such as demo data stored within package, web services or shared online file.</p>
-</div>
-<div class="section level2">
-<h2 id="data">Data<a class="anchor" aria-label="anchor" href="#data"></a>
-</h2>
-<pre><code><span class="co">#&gt; Downloading data from data.gov.uk web services...</span></code></pre>
-</div>
-<div class="section level2">
-<h2 id="locate">Locate<a class="anchor" aria-label="anchor" href="#locate"></a>
-</h2>
-<p>Metadata required about the location</p>
-<pre><code><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 3</span></span>
-<span class="co">#&gt;   location_id                                    location_descri… grid_reference</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> http://environment.data.gov.uk/ecology/site/b… DERWENT (DALES)… SE 70730 63640</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> http://environment.data.gov.uk/ecology/site/b… CAM - 92751      TL 35550 54580</span></code></pre>
-</div>
-<div class="section level2">
-<h2 id="sample">Sample<a class="anchor" aria-label="anchor" href="#sample"></a>
-</h2>
-<p>Metadata required to assess each sample. (Excluding direct observations)</p>
-<pre><code><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 3</span></span>
-<span class="co">#&gt;   parameter         sample_id date_taken</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> River Macrophytes 777394    2018-08-03</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> River Macrophytes 758757    2017-07-20</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> River Macrophytes 724530    2015-09-08</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> River Macrophytes 699722    2014-09-05</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> River Macrophytes 628979    2011-09-02</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">6</span> River Diatoms     609895    2011-02-10</span></code></pre>
-</div>
-<div class="section level2">
-<h2 id="observe">Observe<a class="anchor" aria-label="anchor" href="#observe"></a>
-</h2>
-<pre><code><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 3</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 3 variables: question &lt;chr&gt;, response &lt;chr&gt;, label &lt;chr&gt;</span></span></code></pre>
-</div>
-<div class="section level2">
-<h2 id="metrics">Metrics<a class="anchor" aria-label="anchor" href="#metrics"></a>
-</h2>
-<p>Calculate WHPT metric (currently only metric used in rict classification).</p>
-<pre><code><span class="co">#&gt; Warning in mask$eval_all_mutate(quo): NAs introduced by coercion</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 69 × 3</span></span>
-<span class="co">#&gt;    sample_id question   response</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 11125     WHPT_SCORE 85.4    </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 320838    WHPT_SCORE 180.2   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 331662    WHPT_SCORE 162.7   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 331673    WHPT_SCORE 132.5   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 331674    WHPT_SCORE 118.1   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 345636    WHPT_SCORE 140.4   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 345859    WHPT_SCORE 141     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 377128    WHPT_SCORE 173.1   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 388111    WHPT_SCORE 109     </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 390329    WHPT_SCORE 136.8   </span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 59 more rows</span></span></code></pre>
-</div>
-<div class="section level2">
-<h2 id="predictors">Predictors<a class="anchor" aria-label="anchor" href="#predictors"></a>
-</h2>
-<table class="table">
-<colgroup>
-<col width="10%">
-<col width="6%">
-<col width="6%">
-<col width="7%">
-<col width="8%">
-<col width="5%">
-<col width="3%">
-<col width="11%">
-<col width="10%">
-<col width="8%">
-<col width="2%">
-<col width="5%">
-<col width="6%">
-<col width="7%">
-</colgroup>
-<thead><tr class="header">
-<th align="left">dist_from_source</th>
-<th align="left">date_taken</th>
-<th align="left">alkalinity</th>
-<th align="left">location_id</th>
-<th align="left">grid_reference</th>
-<th align="left">altitude</th>
-<th align="left">slope</th>
-<th align="left">discharge_category</th>
-<th align="left">boulders_cobbles</th>
-<th align="left">pebbles_gravel</th>
-<th align="left">sand</th>
-<th align="left">silt_clay</th>
-<th align="left">mean_depth</th>
-<th align="left">river_width</th>
-</tr></thead>
-<tbody><tr class="odd">
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-</tr></tbody>
-</table>
-</div>
-<div class="section level2">
-<h2 id="predict">Predict<a class="anchor" aria-label="anchor" href="#predict"></a>
-</h2>
-<pre><code><span class="co">#&gt; Warning in .f(.x[[i]], ...): NAs introduced by coercion</span>
-<span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span>
-<span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="co">#&gt; Success, all validation checks passed!</span>
-<span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span>
-<span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="co">#&gt; Success, all validation checks passed!</span>
-<span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 3</span></span>
-<span class="co">#&gt;   location_id                                         question          response</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> http://environment.data.gov.uk/ecology/site/bio/100 REFERENCE WHPT A… 4.57529…</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> http://environment.data.gov.uk/ecology/site/bio/100 REFERENCE WHPT N… 24.8816…</span></code></pre>
+<p>A list of questions required to run the assessment.</p>
+<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 11</span></span></span>
+<span><span class="co">#&gt;   location_id sample_id date_taken question response label parameter type  max  </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 206972      12345     2019-11-21 Taxon a… 12       Baet… River Fa… numb… <span style="color: #BB0000;">NA</span>   </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with 2 more variables: min &lt;lgl&gt;, source &lt;chr&gt;</span></span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="assessment">Assessment<a class="anchor" aria-label="anchor" href="#assessment"></a>
 </h2>
-<pre><code><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span>
-<span class="co">#&gt;   asesssment value</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> high         0.8</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> good         0.6</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> moderate     0.4</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> poor         0.2</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> bad          0</span></code></pre>
+<p>If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.</p>
 </div>
 <div class="section level2">
-<h2 id="assess">Assess<a class="anchor" aria-label="anchor" href="#assess"></a>
+<h2 id="outcome">Outcome<a class="anchor" aria-label="anchor" href="#outcome"></a>
 </h2>
-<pre><code><span class="co">#&gt; NULL</span></code></pre>
+<p>The outcome of your assessment.</p>
+<pre><code><span><span class="co">#&gt; Loading required package: rict</span></span>
+<span><span class="co">#&gt; Loading required package: macroinvertebrateMetrics</span></span>
+<span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
+<span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
+<span><span class="co">#&gt; Success, all validation checks passed!</span></span>
+<span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
+<span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
+<span><span class="co">#&gt; Success, all validation checks passed!</span></span>
+<span><span class="co">#&gt; Classifying...</span></span>
+<span><span class="co">#&gt; Called from: .f(.x[[i]], ...)</span></span>
+<span><span class="co">#&gt; debug at &lt;text&gt;#314: rict_class &lt;- rict_class[complete.cases(rict_class), ]</span></span>
+<span><span class="co">#&gt; debug at &lt;text&gt;#315: rict_class &lt;- mutate_all(rict_class, as.character)</span></span>
+<span><span class="co">#&gt; debug at &lt;text&gt;#316: rict_class &lt;- pivot_longer(rict_class, names_to = "question", </span></span>
+<span><span class="co">#&gt;     values_to = "response", cols = -sample_id)</span></span>
+<span><span class="co">#&gt; debug at &lt;text&gt;#321: rict_prediction &lt;- rict_predict(rict_data)</span></span>
+<span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
+<span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
+<span><span class="co">#&gt; Success, all validation checks passed!</span></span>
+<span><span class="co">#&gt; debug at &lt;text&gt;#322: rict_aspt &lt;- tibble(location_id = rict_prediction$SITE, sample_id = rict_data$sample_id, </span></span>
+<span><span class="co">#&gt;     question = "RICT Reference WHPT ASPT", response = as.character(rict_prediction$TL2_WHPT_ASPT_AbW_DistFam_spr))</span></span>
+<span><span class="co">#&gt; debug at &lt;text&gt;#328: rict_ntaxa &lt;- tibble(location_id = rict_prediction$SITE, sample_id = rict_data$sample_id, </span></span>
+<span><span class="co">#&gt;     question = "RICT Rerference WHPT NTAXA", response = as.character(rict_prediction$TL2_WHPT_NTAXA_AbW_DistFam_spr))</span></span>
+<span><span class="co">#&gt; debug at &lt;text&gt;#334: rict_prediction &lt;- bind_rows(rict_aspt, rict_ntaxa)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 62 × 4</span></span></span>
+<span><span class="co">#&gt;    location_id sample_id question                 response        </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 8175        1101214   RICT Reference WHPT ASPT 6.72224953754603</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 8175        1250462   RICT Reference WHPT ASPT 6.72224953754603</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 8175        1419451   RICT Reference WHPT ASPT 6.72224953754603</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 8175        1457665   RICT Reference WHPT ASPT 6.72224953754603</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 8175        1564589   RICT Reference WHPT ASPT 6.72224953754603</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 8175        1672942   RICT Reference WHPT ASPT 6.72224953754603</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 8175        1800006   RICT Reference WHPT ASPT 6.72224953754603</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 8175        1912578   RICT Reference WHPT ASPT 6.72224953754603</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 8175        2031713   RICT Reference WHPT ASPT 6.72224953754603</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 8175        213268    RICT Reference WHPT ASPT 6.72224953754603</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with 52 more rows</span></span></span></code></pre>
 </div>
 <div class="section level2">
-<h2 id="confidence">Confidence<a class="anchor" aria-label="anchor" href="#confidence"></a>
+<h2 id="check">Check<a class="anchor" aria-label="anchor" href="#check"></a>
 </h2>
-<p>Confidence of assessment.</p>
-</div>
-<div class="section level2">
-<h2 id="checklist">Checklist<a class="anchor" aria-label="anchor" href="#checklist"></a>
-</h2>
-<pre><code><span class="co">#&gt; Warning in standard$required[1:6] &lt;- c(TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, :</span>
-<span class="co">#&gt; number of items to replace is not a multiple of replacement length</span>
-<span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🥇</span>
-<span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🌈</span></code></pre>
+<p>Run checks on the assessment.</p>
+<pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🥇</span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🥇</span></span></code></pre>
 <table class="table">
 <thead><tr class="header">
 <th align="left">check</th>
@@ -312,32 +187,18 @@
 <div class="section level2">
 <h2 id="update">Update<a class="anchor" aria-label="anchor" href="#update"></a>
 </h2>
-<pre><code><span class="co">#&gt; <span style="color: #949494;"># A tibble: 7 × 16</span></span>
-<span class="co">#&gt;   analysis_name           assessment standard location sample   validation_func…</span>
-<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>           </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Combined aquatic plants Combined … &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> River Invertebrates     Freshwate… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Benthic Invertebrates,… Fish Farm… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> River Invertebrates     Rapid Ass… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> River Macrophytes       UKTAG Riv… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">6</span> River Diatoms           River Dia… &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">7</span> River Invertebrates     rict       &lt;tibble&gt; &lt;tibble&gt; &lt;tibble&gt; <span style="color: #BB0000;">NA</span>              </span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 10 more variables: indices_function &lt;list&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   prediction_function &lt;list&gt;, assessment_function &lt;list&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   confidence_function &lt;list&gt;, indices &lt;list&gt;, assessment_table &lt;list&gt;,</span></span>
-<span class="co">#&gt; <span style="color: #949494;">#   questions &lt;list&gt;, predictors &lt;list&gt;, predictions &lt;list&gt;, assessments &lt;list&gt;</span></span>
-<span class="co">#&gt; <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/home/runner/work/hera/hera'</span></span>
-<span class="co">#&gt; <span style="color: #00BB00;">✔</span> Saving <span style="color: #0000BB;">'catalogue'</span> to <span style="color: #0000BB;">'data/catalogue.rda'</span></span>
-<span class="co">#&gt; <span style="color: #BB0000;">•</span> Document your data (see <span style="color: #0000BB;">'https://r-pkgs.org/data.html'</span>)</span></code></pre>
+<p>Update the catalogue of assessments to make them available.</p>
+<p>After <strong>updating the catalogue, rebuild the package</strong>, click on Build &gt; Install and Restart menu or ‘Install and Restart’ button in the Build pane.</p>
+</div>
+<div class="section level2">
+<h2 id="test">Test<a class="anchor" aria-label="anchor" href="#test"></a>
+</h2>
+<p>This section tests if this assessment is usable using <code>assessment</code> function.</p>
 </div>
 <div class="section level2">
 <h2 id="launch-app">Launch app<a class="anchor" aria-label="anchor" href="#launch-app"></a>
 </h2>
 <p>Below is an interactive application displaying the results of your assessment.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-<span class="co"># No need to edit this code</span>
-<span class="fu"><a href="../reference/launch_app.html">launch_app</a></span><span class="op">(</span>new_catalogue <span class="op">=</span> <span class="va">catalogue</span>, data <span class="op">=</span> <span class="va">data</span><span class="op">)</span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
@@ -352,7 +213,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer>
