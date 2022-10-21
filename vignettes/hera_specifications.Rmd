@@ -61,7 +61,7 @@ We propose regulatory tools share a common set of design principles, interfaces
 and data structures.
 
 Specifically, we propose an official collection of R packages designed to
-provide collaborative workflow for building and using classification tools. In
+provide collaborative workflow for building and using assessment tools. In
 turn, these packages will be unified into a single package called 'hera'.
 This provides a common interface to run regulatory assessments. We expect
 this process will facilitate code re-use, faster integration and knowledge
@@ -78,7 +78,7 @@ scientific understanding. As access to modelling tools become more routine, we
 expect a proliferation of models and indices in the years ahead. For instance,
 new tools for diagnosing pressures, updates to existing tools and catchment
 scale planning. To aid better understanding of the environment through
-effectively combining multiple models and tools, we propose a they share a
+effectively combining multiple models and tools, we propose they share a
 common design philosophy to aid integration and collaboration.
 
 # Key Ideas
@@ -116,7 +116,7 @@ plant DNA or aerial imagery etc, into a 'lake' of environmental data.
 To take step towards this vision, the underlying design of a models and tools
 must be modular and easy to connect and integrate in a variety of ways.
 
-# Detailed design
+# Detailed Design
 
 To aid collaboration and respond to the changing environmentally pressures,
 we propose creating a joint collections of packages to share understanding on
@@ -145,7 +145,7 @@ Currently we have a number of classification tool R packages shared on github:
 We propose these tools become part of official collection of packages and
 we work towards making them inter-operable via the `hera` package.
 
-## Key steps
+## Key Steps
 
 Here we introduce a prototype R package called
 [hera](https://github.com/ecodata1/hera). The key idea, is `hera` provides a
@@ -160,20 +160,21 @@ and future tool development.
 
 **Steps**
 
-1. Validation
-2. Indices/metrics
-3. Assessment
-4. Reporting
+**1. Validation**
+**2. Indices/metrics**
+**3. Assessment**
+**4. Reporting**
 
-The examples below provide a taste of how this RFC could be implemented. 
-**Keep in mind, they are not full, complete or accurate. The data structure, naming and details could all change, they are presented as a rough draft**
+The examples below illustrative of how this RFC could be implemented. 
+Keep in mind these **examples are not full, complete or accurate**. The data structure, naming and details could all change, they are presented as a rough draft.
 
 ### Validation
 
-Firstly, sense-check the predictor and observation data is with expect limits.
-Additionally, check the data is within the expect parameter space based on
-training data used to create the classification model. Return the passing
-data and list of warnings/fails.
+1. Firstly, sense-check the predictor and observation data is with expect limits and formatting rules.
+2. Additionally, validation could check the data is within the expect parameter space based on
+training data used to create the classification model.
+
+The `validation()` function will returns the passing data and list of warnings/fails.
 
 ```{r, echo=TRUE, warning=F, message=F}
 # install.packages("devtools")
@@ -185,7 +186,14 @@ data[5, ]
 
 ### Assess
 
-Using the  `assess()` function, we calculate indices, metrics, predictions or reports as required. The 'assessment' stage includes any type of test or categorisation of our data. This could be WFD classification, compliance check, bathing water or discharge assessment. Broadly, any type of grading or assessment against some type of expected value. 
+Using the  `assess()` function, we can calculate as required:
+**1. Indices/Metrics (summary stats)**
+**2. Predictions (output from models)**
+**3. Classification/Reports (assessments combining summary and prediction stats)**
+
+The 'assessment' stage includes any type of index, test or categorisation of our data. This could be WFD classification, compliance check, bathing water or discharge assessment. Broadly, any type of grading or assessment.
+  
+By default the `assess()` function we run all the assessments possible based on the data provided.
 
 ```{r, echo=TRUE, warning=F, message=F}
 data %>% 
@@ -209,9 +217,12 @@ data %>%
 
 ```
 
-### Report
+#### Assessment Reports
 
-A custom report that compiles, groups and presents one or more assessment output can be created. For instance running and presentating a number of WFD assessments, grouping by water body and hierarchy for a River Basin Management Plan:
+The `catalogue` can contain complex reporting assessments that compile, group
+and presents one or more assessment output. For instance running and presenting
+a number of WFD assessments, grouping by water body and hierarchy for a River
+Basin Management Plan.
 
 ```
 # TODO!
@@ -222,24 +233,24 @@ assess(demo_data, 'rbmp_report')
 #### Diagnosis
 
 As well as classification of water quality, additional we need to diagnose
-potential pressures. We use the `report()` function to build a custom report to help diagnose potential
-pressures.
+potential pressures. Again, we can add a assessment to the `catalogue` for
+diagnostic reporting. We use the `assess()` function to build a custom report to
+help diagnose potential pressures.
 
 ```
 # TODO!
 assess(demo_data, 'diagnose_wfd_pressures') %>% 
-select(sample_id, diagnosis)
+select(sample_id, question, response)
 head()
 
 ```
 
 #### Aggegation
 
-To facilitate general data exploration, an `aggregate` herlper function can group the outputs by season, year, multi-year or water body as
-required:
+To facilitate general data exploration, an `aggregate` helper function can group the outputs by season, year, multi-year or water body as
+required. This allows a standard way to aggregate data within the `hera` toolset.
 
 ```
-
 aggregate <- aggregate(demo_data, c("year","season","waterbody"))
 head(class)
 
@@ -268,10 +279,10 @@ A number of forecasting or scenario tools could be incorporated for either proje
 
 ```
 # TODO!
-report(demo_data, trends, scenario="wfd_forecast") %>%  
+assess(demo_data, trends, scenario="wfd_forecast") %>%  
 head()
 
-report(demo_data, measures, scenario="measure_impact") %>% 
+assess(demo_data, measures, scenario="measure_impact") %>% 
 head()
 
 ```
@@ -291,7 +302,7 @@ service](https://cloud.opencpu.org/ocpu/apps/ecodata1/hera/info) and [api
 documentation](https://www.opencpu.org/api.html) for using
 [opencpu](https://www.opencpu.org/) hosted packages.
 
-## Lots of datasets - one underlying data structure?
+## Lots of Datasets - one underlying data structure?
 
 Models rely on observed sampling for training. Samples come in a range of forms
 from points, transects, images, grabs, DNA etc. But the general feature of
@@ -398,12 +409,12 @@ dataframes in R.
 demo_data %>%  select(`mean_alkalinity`, `grid_reference`, `slope`)
 ```
 
-### Indices, predictions, classification, reports
+### Assessments
 
 The outputs are all presented in a consistent format making
 outputs from different models instantly comparable and portable.
 
-## Data input
+## Data Input
 
 For students and consultancies requiring *ad hoc* usage, templates and
 documentation for preparing data will be provided.
@@ -422,8 +433,8 @@ tibble(environment_agency_data)
 We can then run this EA data through `hera`:
 
 ```r
-predictions <- hera::prediction(environment_agency_data)
-predictions %>%
+report <- hera::assess(environment_agency_data)
+report %>%
   select(date_taken, question, response) %>%
   unique()
 ```
@@ -469,7 +480,7 @@ results as required (Waterbody, Year, Catchment etc). Where it would be possible
 to share techniques for producing Confidence of Class, assessment of data
 suitability and adjustment factors etc.
 
-# How we Teach This
+# How We Teach This
 
 As new regulatory developments and updates requirements are identified, the lead
 contacts from the agencies and method developers are 'on-boarded' to demonstrate
@@ -509,16 +520,36 @@ collaboration.
 
 # Alternatives
 
+1. Status Quo - Future development takes the form of bespoke, custom code in
+self-contained R packages or Excel spreadsheets. No code re-use, collaboration
+or consistency against tools/metrics/assessments.
 
+2. Other computational document standards such as Python Julia, JS based Jupiter
+or Quarto documents. Currently, most of our code is either Excel or R based. We
+wish to avoid re-writing R code into other languages. But this doesn't preclude
+future developments using other languages or computational document standards.
 
-# Unresolved questions
+3. Web assembly - Compile our R, Python, Julia, C++ etc into widely supported
+Web Assembly language for fast use within web browser (on or offline). This is
+only at a prototype stage in R and Python and many existing libraries cannot
+compile to Web Assembly. Possibly in future this may be an option. But current
+tools for integrating and combining languages provide broad enough
+consistency/compatibility even if a back-end server is required. Requiring a
+back-end server can impact offline or native usage in some situations such on
+mobile devices. For instance, R only supports MacOS, Linux and Windows. R isn't
+officially supported to run locally/natively on Android or iOS. On these
+devices, R must run in a web server and requires mobile/wifi signal to
+communicate with the device. Using Web Assembly in future may avoid the need for
+web-server for mobile / offline devices.
+
+# Unresolved Questions
 
 - Should all reference/predictor data be combined into a single repository / web service?
 
 # Appendix
 
 
-## List of current data structure in R packages
+## List of Current Data Structures in R packages
 
 ### FCS2 tool 
 
@@ -614,7 +645,7 @@ WBName ...
 [41] #Trout_parr expected total catch if present# 
 [42] #Trout_parr expected total catch#      
 ```
-### Darleq tool
+### Darleq Tool
 
 Input data for DARLEQ3 tool is a list of dataframes. Here's an example of input
 data format (truncated) and full list of column names

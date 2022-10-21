@@ -29,7 +29,7 @@ TRUE,TRUE,TRUE,,Sampling Time,date_taken,date,phenomenonTimeSamplingDate,date_ta
 TRUE,,,TRUE,,determinand,label,,determinand,question,REPORTED_NAME
 TRUE,,,TRUE,Observed value,result,result.value,resultObservedValue,result,response,FORMATTED_ENTRY
 ,,,TRUE,Unit of measure,units,,resultUom,units,units,UNITS
-,,,TRUE,,taxon,,,taxon,taxon,
+,,,TRUE,,taxon,,,taxon,label,
 ,TRUE,,,,nbn_code,,,nbn_code,taxon_id,
 ,TRUE,,,,maitland_code,,,maitland_code,taxon_id,
 ,TRUE,,,,whitton_code,,,whitton_code,taxon_id,

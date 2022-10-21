@@ -44,7 +44,8 @@ description <- tribble(
   "name_short", "Bankside Consistency",
   "name_long", "Rapid Assessment of Bankside Consistency with Water Body Status",
   "parameter", "River Family Inverts",
-  "status", "prototype"
+  "status", "prototype",
+  "type", "metric"
 )
 
 description
@@ -59,7 +60,7 @@ A list of questions required to run the assessment.
 input <- tibble(
   location_id = c("206972"),
   sample_id = c("12345"),
-  date_taken = c("2019-11-21"),
+  date_taken = as.Date(c("2019-11-21")),
   question = c("Taxon abundance"),
   response = c("12"),
   label = c("Baetidae"),
@@ -85,6 +86,7 @@ assessment_function <- function(data) {
   require(tidyr)
   require(magrittr)
   require(tibble)
+  browser()
   # require(whpt)
   # require(macroinvertebrateMetrics)
   data$date_taken <- as.character(format.Date(data$date_taken, "%Y/%m/%d"))
@@ -103,12 +105,14 @@ assessment_function <- function(data) {
                                 "sample_id", 
                                 "date_taken")],
                        by = "sample_id")
+  output_location$location_id <-   as.character(output_location$location_id)
   whpt_input <- inner_join(output_location, predict_data, by = "location_id")
   whpt_input$question[whpt_input$question == "WHPT_ASPT"] <- "WHPT ASPT Abund"
   whpt_input$question[whpt_input$question == "WHPT_NTAXA"] <- "WHPT NTAXA Abund"
   if(nrow(whpt_input) < 1) {
     return(NULL)
   } else {
+    whpt_input <- unique(whpt_input)
   consistency_check <- whpt::whpts(whpt_input)
   }
   return(consistency_check)

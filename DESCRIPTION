@@ -51,6 +51,7 @@ Remotes:
     aquaMetrics/rict,
     ecodata1/whpt
 VignetteBuilder: knitr
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.1
 Depends: 
     R (>= 3.6)
+Config/testthat/edition: 3

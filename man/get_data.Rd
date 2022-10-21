@@ -4,7 +4,16 @@
 \alias{get_data}
 \title{Get data}
 \usage{
-get_data(location_id = NULL, take = 10000, date_from = NULL, date_to = NULL)
+get_data(
+  location_id = NULL,
+  take = 10000,
+  date_from = NULL,
+  date_to = NULL,
+  type = NULL,
+  year = NULL,
+  water_body_id = NULL,
+  source = "sepa"
+)
 }
 \arguments{
 \item{location_id}{Unique ID of location.}
@@ -14,17 +23,25 @@ get_data(location_id = NULL, take = 10000, date_from = NULL, date_to = NULL)
 \item{date_from}{Start of date taken window in string format: "2013-12-31".}
 
 \item{date_to}{End of date taken window in string format: "2015-12-31".}
+
+\item{type}{Default will get monitoring data, set to "replocs" to represent
+location data for SEPA}
+
+\item{year}{Classification year}
+
+\item{provider}{Which provider, either "EA or "SEPA". SEPA is internal access
+only.}
 }
 \value{
 Data frame
 }
 \description{
-Import data from web services (currently EA only) and convert into standard
-format for `hera` regulatory assessment tool.
+Import data from web services and convert into standard format for `hera`
+regulatory assessment tool.
 }
 \examples{
 \dontrun{
-data <- get_data(location_id = 100)
+data <- get_data(location_id = 1000, source = "ea")
 class <- assessment(data)
 }
 }

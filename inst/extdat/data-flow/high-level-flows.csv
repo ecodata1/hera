@@ -1,0 +1,14 @@
+assessment,group,label,level,color,shape,from,to
+visual survey,data_source,data store,1,blue,database,data store,video imagery
+visual survey,question,video imagery,2,red,ellipse,video imagery,habitat assessment
+visual survey,output,habitat assessment,3,green,box,,
+Benthic Marine eDNA,data_source,data store,1,blue,database,data store,DNA reads
+Benthic Marine eDNA,question,DNA reads,2,red,ellipse,DNA reads,IQI assessment
+Benthic Marine eDNA,output,IQI assessment,3,green,box,DNA reads,IQI assessment
+LIMS assessments,data_source,LIMS,1,blue,database,,
+LIMS assessments,question,lab results,2,red,ellipse,,
+LIMS assessments,output,LIMS assessments,3,green,box,,
+Reg Photos,,,,,,,
+Remote sensing,,,,,,,
+Data Loggers,,,,,,,
+Other DNA,,,,,,,

@@ -1,0 +1,18 @@
+---
+title: "data-flows"
+format: html
+editor: visual
+---
+
+## Dataflows
+
+```{mermaid}
+flowchart LR
+  A(Database) --> D[Invertebrate Assessment]
+  B(GIS Database) --> D[Invertebrate Assessment]
+  C(Spreadsheet) --> D[Invertebrate Assessment]
+  I(DNA files) --> D[Invertebrate Assessment]
+  D --> E{Compliance Report}
+  D --> F{WFD Report}
+
+```

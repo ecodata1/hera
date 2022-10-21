@@ -42,7 +42,8 @@ description <- tribble(
   "name_short", "DARLEQ3",
   "name_long", "UKTAG River Assessment Method Macrophytes and Phytobenthos",
   "parameter", "River Diatoms",
-  "status", "prototype"
+  "status", "prototype",
+  "type", "metric"
 )
 
 knitr::kable(description)
@@ -54,9 +55,55 @@ A list of questions required to run the assessment.
 
 ```{r input}
 input <- tibble(
+  question = c("location_id",
+               "sample_id",
+               "date_taken",
+               "Taxon abundance",
+               "parameter",
+               "Alkalinity",
+               "TDI4",
+               "Predicted TDI4"
+              ),
+  response = c( "8175",
+                "1", 
+                "2021-05-21",
+                "12",
+                "45",
+                "River Diatoms",
+                "45",
+                "67"),
+  label = c("Gomphonema olivaceum", NA, NA, NA, NA, NA, NA, NA),
+  parameter = c(NA, NA, NA, NA, NA, "River Diatoms", NA, NA),
+  data_type = c("character", "character",
+           "character", "number",
+           "number", "character", 
+           "number",  "number"),
+  max = c(NA, NA, NA, NA, NA, NA, NA, NA),
+  min = c(NA, NA, NA, NA, NA, NA, NA, NA),
+  source = c("sepa_ecology_results",
+             "sepa_ecology_results",
+             "sepa_ecology_results",
+             "sepa_ecology_results",
+             "location_attributes",
+             "sepa_ecology_results",
+             "sepa_metric_results",
+             "sepa_metric_results"),
+  question_type = c("reference",
+           "reference",
+           "reference",
+           "observation",
+           "reference",
+           "predictor",
+           "outcome",
+           "outcome")
+)
+input
+
+
+input <- tibble(
   location_id = c("8175", "8175"),
   sample_id = c("12345", "12345"),
-  date_taken = c("2019-11-21", "2019-11-21"),
+  date_taken = as.Date(c("2019-11-21", "2019-11-21")),
   question = c("Taxon abundance", "Alkalinity"),
   response = c("12", "45"),
   label = c("Gomphonema olivaceum", NA),
@@ -92,14 +139,12 @@ assessment_function <- function(data) {
   stringsAsFactors = FALSE, check.names = FALSE
   )
   predictors$location_id <- as.character(predictors$location_id)
-  if(is.null(data$alkalinity)) {
+  if(!any(names(data) %in% "alkalinity")) {
   data <- inner_join(data, predictors, by = c("location_id"))
-  }
-  if (any(names(data) %in% "alkalinity")) {
-    data$alkalinity[is.na(data$alkalinity)] <- 75
-  } else {
-    data$alkalinity <- 75
-  }
+  } 
+  
+  data$alkalinity[is.na(data$alkalinity)] <- 75
+
 
   data$alkalinity <- as.numeric(data$alkalinity)
   # Combine mean alkalinity with other site headers
@@ -215,7 +260,11 @@ assessment_function <- function(data) {
   )
     names(location) <- c("location_id", "question", "response")
   data <- bind_rows(sample, location)
-  
+  data$parameter <- "Phytobenthos (diatoms)"
+  data <-  mutate(data,
+                   question = ifelse(question == "WFDClass",
+                                     "Class",
+                                     question))
   return(data)
 }
 ```
