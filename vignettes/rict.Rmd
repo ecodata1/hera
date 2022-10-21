@@ -85,7 +85,7 @@ assessment_function <- function(data) {
   # data$date_taken <- as.character(as.Date(data$date_taken, "%Y/%m/%d"))
 
   metric_function <- catalogue[catalogue$assessment ==
-    "Freshwater Macroinvertebrate Metrics", 3][[1]]
+    "Macroinvertebrate Metrics", 3][[1]]
   output <- metric_function[[1]](data)
   output <- filter(output, question %in% c("WHPT_ASPT", "WHPT_NTAXA"))
   if (!any(names(data) %in% "alkalinity")) {
@@ -337,7 +337,7 @@ assessment_function <- function(data) {
     if (nrow(rict_prediction$data) == 0) {
       return(NULL)
     }
- browser()
+
     rict_multi_year <-  rict_data %>%
       group_by(SITE, Year) %>%
       select(SITE, Year, contains("_WHPT_")) %>% 
@@ -582,7 +582,7 @@ This section tests if this assessment is usable using `assessment` function.
 # No need to edit this code
 assess(
   data = hera::demo_data,
-  name = description$response[description$question == "name_long"]
+  name = description$response[description$question == "name_short"]
 )
 ```
 

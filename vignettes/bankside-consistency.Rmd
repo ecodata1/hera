@@ -86,12 +86,11 @@ assessment_function <- function(data) {
   require(tidyr)
   require(magrittr)
   require(tibble)
-  browser()
   # require(whpt)
   # require(macroinvertebrateMetrics)
   data$date_taken <- as.character(format.Date(data$date_taken, "%Y/%m/%d"))
   metric_function <- catalogue[catalogue$assessment ==
-                           "Freshwater Macroinvertebrate Metrics", 3][[1]]
+                           "Macroinvertebrate Metrics", 3][[1]]
   output <- metric_function[[1]](data)
   output <- filter(output, question %in% c("WHPT_ASPT", "WHPT_NTAXA"))
   predictors <- utils::read.csv(system.file("extdat",
@@ -165,13 +164,13 @@ This section tests if this assessment is usable using `assessment` function.
 # No need to edit this code
 assess(
   data = hera::demo_data,
-  name = description$response[description$question == "name_long"]
+  name = description$response[description$question == "name_short"]
 )
 
 lims_data <- hera:::convert(lims_data)
 assess(
   data = lims_data,
-  name = description$response[description$question == "name_long"]
+  name = description$response[description$question == "name_short"]
 )
 
 ```

@@ -315,7 +315,7 @@ This section tests if this assessment is usable using `assessment` function.
 # No need to edit this code
 assess(
   data = hera::demo_data,
-  name = description$response[description$question == "name_long"]
+  name = description$response[description$question == "name_short"]
 )
 ```
 

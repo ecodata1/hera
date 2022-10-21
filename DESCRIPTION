@@ -21,6 +21,7 @@ Imports:
     darleq3,
     dplyr,
     eadata,
+    httr,
     lubridate,
     macroinvertebrateMetrics,
     magrittr,
@@ -28,9 +29,9 @@ Imports:
     rlang,
     rict,
     shiny,
+    testthat,
     tibble,
     tidyr,
-    testthat,
     usethis,
     whpt
 Suggests: 

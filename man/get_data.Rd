@@ -9,7 +9,7 @@ get_data(
   take = 10000,
   date_from = NULL,
   date_to = NULL,
-  type = NULL,
+  type = "data",
   year = NULL,
   water_body_id = NULL,
   source = "sepa"

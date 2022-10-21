@@ -2,7 +2,7 @@
 
 
 
-get_sepa_data <- function(location_id, take, date_from, date_to, year, water_body_id, type) {
+get_sepa_data <- function(location_id, take, date_from, date_to, year = NULL, water_body_id = NULL, type = "data") {
   message("Downloading data from SEPA internal only web services...")
   # Replocs query ------------------------------------------------------------
   if (type == "replocs") {
