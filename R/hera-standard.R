@@ -34,7 +34,7 @@ update_catalogue <- function(description = NULL,
   input$output <- FALSE
   output <- output[output$sample_id == output$sample_id[1] |
     is.na(output$sample_id), ]
-  parameter <- description$response[description$question == "name_long"]
+  parameter <- description$response[description$question == "name_short"]
   output$parameter <- parameter
   output$output <- TRUE
   output$response <- as.character(output$response)
@@ -47,12 +47,13 @@ update_catalogue <- function(description = NULL,
   data <- list(data[data$sample_id == input$sample_id[1] |
     is.na(data$sample_id), ])
   model <- tibble(
-    assessment = description$response[description$question == "name_long"],
+    assessment = description$response[description$question == "name_short"],
     data = data,
     assessment_function = list(assessment_function)
   )
 
-  catalogue <- catalogue[catalogue$assessment != description$response[description$question == "name_long"], ]
+  catalogue <- catalogue[catalogue$assessment !=
+                           description$response[description$question == "name_short"], ]
   catalogue <- bind_rows(catalogue, model)
   usethis::use_data(catalogue, overwrite = TRUE)
 }
@@ -86,7 +87,7 @@ hera_format <- function(description = NULL) {
 hera_test <- function(description = NULL) {
   # Check standard info --------------------------------------------------------
   description$required <- NA
-  description$required <- c(TRUE, TRUE, TRUE, TRUE)
+  description$required <- c(TRUE, TRUE, TRUE, TRUE, TRUE)
 
   standard_check <- tibble(
     standard_names = test_that("Correct Standard attributes", {

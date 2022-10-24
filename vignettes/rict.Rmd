@@ -42,7 +42,8 @@ description <- tribble(
   "name_short", "RICT",
   "name_long", "RICT",
   "parameter", "River Family Invertebrates",
-  "status", "prototype"
+  "status", "prototype",
+  "type", "metric"
 )
 
 description
@@ -82,26 +83,55 @@ assessment_function <- function(data) {
   require(rict)
   require(macroinvertebrateMetrics)
   # data$date_taken <- as.character(as.Date(data$date_taken, "%Y/%m/%d"))
- 
+
   metric_function <- catalogue[catalogue$assessment ==
-    "Freshwater Macroinvertebrate Metrics", 3][[1]]
+    "Macroinvertebrate Metrics", 3][[1]]
   output <- metric_function[[1]](data)
   output <- filter(output, question %in% c("WHPT_ASPT", "WHPT_NTAXA"))
-  predictors <- utils::read.csv(system.file("extdat",
-    "predictors.csv",
-    package = "hera"
-  ), check.names = FALSE)
-  predictors$location_id <- as.character(predictors$location_id)
-  predict_data <- filter(predictors, location_id %in% unique(data$location_id))
-  output_location <- inner_join(output,
-    unique(data[, c(
-      "location_id",
-      "sample_id",
-      "date_taken"
-    )]),
-    by = "sample_id"
-  )
-  whpt_input <- inner_join(output_location, predict_data, by = "location_id")
+  if (!any(names(data) %in% "alkalinity")) {
+    predictors <- utils::read.csv(system.file("extdat",
+      "predictors.csv",
+      package = "hera"
+    ), check.names = FALSE)
+    predictors$location_id <- as.character(predictors$location_id)
+    predict_data <- filter(predictors, location_id %in% unique(data$location_id))
+    output_location <- inner_join(output,
+      unique(data[, c(
+        "location_id",
+        "sample_id",
+        "date_taken"
+      )]),
+      by = "sample_id"
+    )
+
+    whpt_input <- inner_join(output_location, predict_data, by = "location_id")
+  } else {
+    data <- select(
+      data,
+      sample_id,
+      location_id,
+      date_taken,
+      "grid_reference",
+      "alkalinity",
+      "river_width",
+      "mean_depth",
+      "boulders_cobbles",
+      "pebbles_gravel",
+      "sand",
+      "silt_clay",
+      "northing",
+      "easting",
+      "dist_from_source",
+      "altitude",
+      "slope",
+      "grid_reference",
+      "discharge_category"
+    )
+    whpt_input <- inner_join(output,
+      unique(data),
+      by = "sample_id"
+    )
+  }
   whpt_input$question[whpt_input$question == "WHPT_ASPT"] <- "WHPT ASPT Abund"
   whpt_input$question[whpt_input$question == "WHPT_NTAXA"] <- "WHPT NTAXA Abund"
   data <- whpt_input
@@ -116,7 +146,7 @@ assessment_function <- function(data) {
   data$year <- format.Date(data$date_taken, "%Y")
   data$year <- as.integer(data$year)
   check <- FALSE
-  predict_data <- purrr::map(unique(data$location_id), function(location_id) {
+  rict_output <- purrr::map(unique(data$location_id), function(location_id) {
     data <- data[data$location_id == location_id, ]
 
     if (!is.null(data$river_width)) {
@@ -229,6 +259,7 @@ assessment_function <- function(data) {
     #   ~ mean(.x, na.rm = TRUE)
     # ))
     # Select
+ 
     rict_data <- dplyr::select(data,
       "SITE" = .data$location_id,
       "Waterbody" = .data$water_body_id,
@@ -264,7 +295,7 @@ assessment_function <- function(data) {
       season = "season"
     )
     # Remove season not used
-   
+
     cols <- grep("Sum_|Spr_", names(rict_data), perl = TRUE)
     rict_data[rict_data$season == 3, cols] <- NA
 
@@ -307,7 +338,58 @@ assessment_function <- function(data) {
       return(NULL)
     }
 
-    rict_output <<- rict::rict(rict_data, year_type = "single")
+    rict_multi_year <-  rict_data %>%
+      group_by(SITE, Year) %>%
+      select(SITE, Year, contains("_WHPT_")) %>% 
+      summarise_all(~ mean(.x, na.rm = TRUE))
+    predictors <- rict_data %>%  select(-Year,-season, -contains("_WHPT_"), -sample_id) %>% unique()
+    multi <- inner_join(rict_multi_year, predictors, by = c("SITE"))
+    multi <- data.frame(multi, check.names = FALSE)
+    multi_class <- rict::rict(multi, year_type = "multi")
+ 
+    multi_year_ntaxa <- select(
+      multi_class,
+      SITE,
+      "H" = H_NTAXA_spr_aut,
+      "G" = G_NTAXA_spr_aut,
+      "M" = M_NTAXA_spr_aut,
+      "P" = P_NTAXA_spr_aut,
+      "B" = B_NTAXA_spr_aut,
+      "Class" = mostProb_NTAXA_spr_aut,
+      "EQR" = NTAXA_aver_spr_aut
+    )
+     multi_year_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
+     multi_year_aspt <- select(
+      multi_class,
+      SITE,
+      "H" = H_ASPT_spr_aut,
+      "G" = G_ASPT_spr_aut,
+      "M" = M_ASPT_spr_aut,
+      "P" = P_ASPT_spr_aut,
+      "B" = B_ASPT_spr_aut,
+      "Class" = mostProb_ASPT_spr_aut,
+      "EQR" = ASPT_aver_spr_aut
+    )
+     
+      multi_year_aspt$parameter <- "Macroinvertebrates (ASPT)"
+    multi_year_output <- bind_rows(
+      multi_year_aspt,
+    multi_year_ntaxa
+    )
+     multi_year_output <- multi_year_output[complete.cases(multi_year_output), ]
+    multi_year_output <- mutate_all(multi_year_output, as.character)
+    multi_year_output <- pivot_longer(multi_year_output,
+      names_to = "question",
+      values_to = "response",
+      cols = c(-parameter, -SITE)
+    )
+    # rict_class <- inner_join(rict_class,
+    #                          rict_data[, c("SITE","sample_id")],
+    #                          by = "sample_id")
+    multi_year_output <-
+      rename(multi_year_output, "location_id" = SITE)
+    
+    rict_output <- rict::rict(rict_data, year_type = "single")
     rict_output$sample_id <- rict_data$sample_id
     spr_ntaxa <- select(
       rict_output,
@@ -320,6 +402,7 @@ assessment_function <- function(data) {
       "Class" = mostProb_NTAXA_spr,
       "EQR" = NTAXA_eqr_av_spr
     )
+    spr_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
 
     sum_ntaxa <- select(
       rict_output,
@@ -332,6 +415,7 @@ assessment_function <- function(data) {
       "Class" = mostProb_NTAXA_sum,
       "EQR" = NTAXA_eqr_av_sum
     )
+    sum_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
 
     aut_ntaxa <- select(
       rict_output,
@@ -344,6 +428,7 @@ assessment_function <- function(data) {
       "Class" = mostProb_NTAXA_aut,
       "EQR" = NTAXA_eqr_av_aut
     )
+    aut_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
 
     aut_aspt <- select(
       rict_output,
@@ -356,6 +441,7 @@ assessment_function <- function(data) {
       "Class" = mostProb_ASPT_aut,
       "EQR" = ASPT_eqr_av_aut
     )
+    aut_aspt$parameter <- "Macroinvertebrates (ASPT)"
 
     spr_aspt <- select(
       rict_output,
@@ -368,6 +454,7 @@ assessment_function <- function(data) {
       "Class" = mostProb_ASPT_spr,
       "EQR" = ASPT_eqr_av_spr
     )
+    spr_aspt$parameter <- "Macroinvertebrates (ASPT)"
 
     sum_aspt <- select(
       rict_output,
@@ -380,22 +467,29 @@ assessment_function <- function(data) {
       "Class" = mostProb_ASPT_sum,
       "EQR" = eqr_av_sum_aspt
     )
+    sum_aspt$parameter <- "Macroinvertebrates (ASPT)"
+    rict_class <- bind_rows(
+      spr_aspt,
+      sum_aspt,
+      aut_aspt,
+      spr_ntaxa,
+      sum_ntaxa,
+      aut_ntaxa
+    )
 
-  rict_class <- bind_rows(spr_aspt,
-                          sum_aspt,
-                          aut_aspt,
-                          spr_ntaxa,
-                          sum_ntaxa,
-                          aut_ntaxa)
-    browser()
-  rict_class <- rict_class[complete.cases(rict_class), ]
-  rict_class <- mutate_all(rict_class, as.character)
-  rict_class <- pivot_longer(rict_class,
-                             names_to = "question",
-                             values_to = "response",
-                             cols = -sample_id    )
-  
-rict_prediction <- rict_predict(rict_data)
+    rict_class <- rict_class[complete.cases(rict_class), ]
+    rict_class <- mutate_all(rict_class, as.character)
+    rict_class <- pivot_longer(rict_class,
+      names_to = "question",
+      values_to = "response",
+      cols = c(-sample_id, -parameter)
+    )
+    rict_class <- inner_join(rict_class,
+                             rict_data[, c("SITE","sample_id")],
+                             by = "sample_id")
+    rict_class <- rename(rict_class, "location_id" = SITE)
+
+    rict_prediction <- rict_predict(rict_data)
     rict_aspt <- tibble(
       "location_id" = rict_prediction$SITE,
       "sample_id" = rict_data$sample_id,
@@ -409,13 +503,33 @@ rict_prediction <- rict_predict(rict_data)
       "response" = as.character(rict_prediction$TL2_WHPT_NTAXA_AbW_DistFam_spr)
     )
     rict_prediction <- bind_rows(rict_aspt, rict_ntaxa)
-    
-    
+    rict_prediction$parameter <- "RICT Prediction"
+    rict_prediction <- bind_rows(rict_prediction,
+                                 rict_class,
+                                 multi_year_output)
   })
-  rict_prediction <- bind_rows(predict_data)
-  rict_prediction <- unique(rict_prediction)
-
-  return(rict_prediction)
+  output <- bind_rows(rict_output)
+  output <- unique(output)
+  output <- mutate(output,
+                   question = ifelse(question == "M",
+                                     "CoCM",
+                                     question),
+                   question = ifelse(question == "P",
+                                     "CoCP", 
+                                     question),
+                   question = ifelse(question == "B",
+                                     "CoCB",
+                                     question),
+                   question = ifelse(question == "H",
+                                     "CoCH",
+                                     question),
+                   question = ifelse(question == "G",
+                                     "CoCG",
+                                     question))
+  
+  
+ 
+  return(output)
 }
 ```
 
@@ -424,6 +538,9 @@ rict_prediction <- rict_predict(rict_data)
 The outcome of your assessment.
 
 ```{r output}
+# demo_data <- get_data(1000)
+# Pretend no alkalinity - force to use supporting table of alkalinity and
+# physical survey results (silt, river_width etc)
 outcome <- assessment_function(demo_data)
 outcome
 ```
@@ -447,12 +564,12 @@ Update the catalogue of assessments to make them available.
 
 ```{r hera_update}
 # No need to edit this code
-# hera:::update_catalogue(
-#   description = description,
-#   input = input,
-#   assessment_function = assessment_function,
-#   output = outcome
-# )
+hera:::update_catalogue(
+  description = description,
+  input = input,
+  assessment_function = assessment_function,
+  output = outcome
+)
 ```
 
 After **updating the catalogue, rebuild the package**, click on Build > Install and Restart menu or 'Install and Restart' button in the Build pane.
@@ -463,10 +580,10 @@ This section tests if this assessment is usable using `assessment` function.
 
 ```{r}
 # No need to edit this code
-# assess(
-#   data = hera::demo_data,
-#   name = description$response[description$question == "name_long"]
-# )
+assess(
+  data = hera::demo_data,
+  name = description$response[description$question == "name_short"]
+)
 ```
 
 ## Launch app

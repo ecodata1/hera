@@ -12,7 +12,7 @@
 #' @examples
 #' assessments <- assess(hera::demo_data)
 #' @importFrom rlang .data
-#' @importFrom tibble tibble
+#' @importFrom tibble as_tibble
 #' @importFrom dplyr group_by inner_join mutate bind_rows bind_cols filter
 #' @importFrom magrittr `%>%`
 #' @importFrom purrr map
@@ -39,12 +39,13 @@ assess <- function(data = NULL, name = NULL, catalogue = NULL) {
       assessment_function <- model$assessment_function[[1]]
       data <- assessment_function(data)
       data$response <- as.character(data$response)
-      description <- bind_rows(model$data)
-      description <- filter(description, .data$question == "name_short")
-      data$parameter <- description$response
+      # description <- bind_rows(model$data)
+      # description <- filter(description, .data$question == "name_short")
+      # data$parameter <- description$response
       return(data)
     }
   )
 
+  assessments <- as_tibble(assessments)
   return(assessments)
 }

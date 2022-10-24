@@ -24,7 +24,6 @@
 #'   \item{water_body_id}{water body id}
 #'   \item{label}{label}
 #'   \item{dist_from_source}{distance from source}
-#'   \item{alkalinity}{alkalinity}
 #'   \item{slope}{slope}
 #'   \item{source_altitude}{source altitude}
 #'   \item{parameter}{parameter}

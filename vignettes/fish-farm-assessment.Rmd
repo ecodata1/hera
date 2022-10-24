@@ -42,7 +42,8 @@ description <- tribble(
   "name_short", "Fish farm assessment",
   "name_long", "Fish farm assessment",
   "parameter", "Marine Benthic Inverts",
-  "status", "prototype"
+  "status", "prototype",
+  "type", "compliance"
 )
 
 description

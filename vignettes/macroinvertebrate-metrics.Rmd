@@ -42,7 +42,8 @@ description <- tribble(
   "name_short", "Macroinvertebrate Metrics",
   "name_long", "Freshwater Macroinvertebrate Metrics",
   "parameter", "River Invertevates",
-  "status", "prototype"
+  "status", "prototype",
+  "type", "metric"
 )
 
 description
@@ -115,6 +116,8 @@ assessment_function <- function(data) {
 The outcome of your assessment.
 
 ```{r output}
+# data <- get_data(location_id = 8175)
+# outcome <- assessment_function(data)
 outcome <- assessment_function(input)
 outcome
 ```
@@ -156,7 +159,7 @@ This section tests if this assessment is usable using `assessment` function.
 # No need to edit this code
 assess(
   data = hera::demo_data,
-  name = description$response[description$question == "name_long"]
+  name = description$response[description$question == "name_short"]
 )
 ```
 

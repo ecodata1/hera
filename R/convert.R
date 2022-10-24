@@ -10,25 +10,36 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
   ))
 
   if (convert_to == "hera" & convert_from == "sepa") {
-    data$taxon_id <- NA
-    data$nbn_code <- as.character(data$nbn_code)
-    data$taxon_id[!is.na(data$nbn_code)] <-
-      data$nbn_code[!is.na(data$nbn_code)]
-    data$taxon_id[!is.na(data$maitland_code)] <-
-      data$maitland_code[!is.na(data$maitland_code)]
-    data$taxon_id[!is.na(data$whitton_code)] <-
-      data$whitton_code[!is.na(data$whitton_code)]
+    names(data) <- tolower(names(data))
 
+    data$determinand[data$determinand == "Abundance"] <- "Taxon abundance"
+    data$`analysis_name`[data$`analysis_repname` == "Diatom Taxa"] <- "River Diatoms"
+    data$`analysis_name`[data$`analysis_repname` == "Invert Taxa Family Lab"] <- "River Family Inverts"
+    data$taxon_id <- NA
+    data$`nbn_code` <- as.character(data$`nbn_code`)
+    data$taxon_id[!is.na(data$`nbn_code`)] <-
+      data$`nbn_code`[!is.na(data$`nbn_code`)]
+    data$taxon_id[!is.na(data$`maitland_code`)] <-
+      data$`maitland_code`[!is.na(data$`maitland_code`)]
+    data$taxon_id[!is.na(data$`whitton_code`)] <-
+      data$`whitton_code`[!is.na(data$`whitton_code`)]
+    data$taxon_id[data$taxon_id == ""] <- NA
+    data <- data %>% select(-`maitland_code`,
+                            -`whitton_code`,
+                            -`nbn_code`)
+    names(data) <- gsub(" ", "_", names(data))
     to_change <- which(names(data) %in% names$sepa_view[names$hera_latest != ""])
     change_to <- names$hera_latest[names$sepa_view %in% names(data) &
       names$hera_latest != ""]
     names(data)[to_change] <- change_to
+    data <- data %>% mutate_all(as.character)
+    data$date_taken <- as.Date(data$date_taken)
     return(data)
   }
 
   if (convert_to == "hera" & convert_from == "sepa_lims") {
     data$SAMPLED_DATE <- as.Date(data$SAMPLED_DATE,format =  "%d/%m/%Y" )
-    data$SAMPLED_DATE <- format.Date(data$SAMPLED_DATE, "%Y/%m/%d")
+    data$SAMPLED_DATE <- format.Date(data$SAMPLED_DATE, "%Y-%m-%d")
     # Add a label column for taxon name rows
     labels <- data %>%
       group_by(.data$TEST_NUMBER) %>%
@@ -44,6 +55,7 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
     data <- select(data, c(changes$sepa_lims, "label"))
     names(data) <- c(changes$hera_latest, "label")
     data <- data %>% mutate_all(as.character)
+    data$date_taken <- as.Date(data$date_taken)
     return(data)
   }
   else {

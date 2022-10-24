@@ -19,7 +19,7 @@ library(rict)
 library(ggplot2)
 
 
-# Define UI for application
+# Define UI for application ----------
 ui <- tagList(
   #  shinythemes::themeSelector(),
   navbarPage(
