@@ -9,9 +9,9 @@ get_data(
   take = 10000,
   date_from = NULL,
   date_to = NULL,
-  type = "data",
+  dataset = "analytical_results",
   year = NULL,
-  water_body_id = NULL,
+  water_body_id = "",
   source = "sepa"
 )
 }
@@ -24,13 +24,13 @@ get_data(
 
 \item{date_to}{End of date taken window in string format: "2015-12-31".}
 
-\item{type}{Default will get monitoring data, set to "replocs" to represent
-location data for SEPA}
-
 \item{year}{Classification year}
 
 \item{provider}{Which provider, either "EA or "SEPA". SEPA is internal access
 only.}
+
+\item{type}{Default will get monitoring data, set to "replocs" to represent
+location data for SEPA}
 }
 \value{
 Data frame

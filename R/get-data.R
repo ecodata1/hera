@@ -32,9 +32,9 @@ get_data <- function(location_id = NULL,
                      take = 10000,
                      date_from = NULL,
                      date_to = NULL,
-                     type = "data",
+                     dataset = "analytical_results",
                      year = NULL,
-                     water_body_id = NULL,
+                     water_body_id = "",
                      source = "sepa") {
 if(source == "ea") {
   data <- get_ea_data(location_id, take, date_from, date_to)
@@ -47,7 +47,7 @@ if(source == "sepa") {
                           date_to,
                           year,
                           water_body_id,
-                          type)
+                          dataset)
   }
 
 return(data)
