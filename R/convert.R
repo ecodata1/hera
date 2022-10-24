@@ -11,7 +11,8 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
 
   if (convert_to == "hera" & convert_from == "sepa") {
     names(data) <- tolower(names(data))
-
+    # Add '_' if from data recover citrix app (web services doesn't need this)
+    names(data) <- gsub(" ", "_", names(data))
     data$determinand[data$determinand == "Abundance"] <- "Taxon abundance"
     data$`analysis_name`[data$`analysis_repname` == "Diatom Taxa"] <- "River Diatoms"
     data$`analysis_name`[data$`analysis_repname` == "Invert Taxa Family Lab"] <- "River Family Inverts"
