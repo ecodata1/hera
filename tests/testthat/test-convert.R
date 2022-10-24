@@ -1,5 +1,5 @@
 test_that("test convert function works", {
-  skip('csv import different from web services import? = capital letters??')
+  # skip('csv import different from web services import? = capital letters??')
   # Data download from Recovered Datasets tool
   recovered_data <-
     read.csv(system.file("extdat",
@@ -18,5 +18,5 @@ test_that("test convert function works", {
 
   # Run assessment
   test <- assess(data,
-                 "UKTAG River Assessment Method Macrophytes and Phytobenthos")
+                 "DARLEQ3")
 })
