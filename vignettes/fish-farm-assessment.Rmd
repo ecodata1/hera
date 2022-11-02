@@ -39,14 +39,14 @@ Basic details about the assessment. Update the 'response' values as required.
 
 description <- tribble(
   ~question, ~response,
-  "name_short", "Fish farm assessment",
-  "name_long", "Fish farm assessment",
+  "name_short", "MPFF Compliance",
+  "name_long", "Marine Pen Fish farm Compliance",
   "parameter", "Marine Benthic Inverts",
   "status", "prototype",
   "type", "compliance"
 )
 
-description
+knitr::kable(description)
 ```
 
 ## Input
@@ -55,29 +55,17 @@ A list of questions required to run the assessment.
 
 ```{r input}
 
-input <- tibble(
-  parameter = c("Benthic DNA","Benthic Invertebrates", "Sediment Chemistry"),
-  question = c("dna_reads","taxon_abundance", "toxicity"),
-  response = c("BBB-CCC-AAA",2, 10),
-  type = c("character","number", "number"),
-  label =  c(NA,"bug",NA),
-  sample_id = NA,
-  location_id = NA,
-  location_description = NA,
-  grid_reference = NA,
-  water_body_id = NA,
-  year = NA,
-  latitude = 0,
-  longitude = 0,
-  date_taken = NA,
-  units = NA, 
-  min = NA, 
-  max = NA,
-  source = c("sepa_ecology_results",
-             "sepa_ecology_results", 
-             "sepa_ecology_results")
-)
-input
+file <- system.file("extdat",
+                      "demo-data/220421-SelfMon-N4952-CAV1-Enhanced.xlsx",
+                      package = "hera"
+  )
+input <- survey_import(file)
+
+data <- input
+data <- select(data, question, response) 
+data <- data[!duplicated(data[ , c("question")]), ]  
+
+knitr::kable(data)
 
 ```
 
@@ -85,23 +73,13 @@ input
 
 If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
 
-```{r assessment}
+```{r assessment, message=FALSE, warning=FALSE}
 
 assessment_function <- function(data) {
-  # Calculated some statistic...
-  # Note, any non-standard base R library must be call using require().
-  # require(dplyr)
-  # require(tidyr)
-  # require(magrittr)
-  # require(tibble)
-  # data <- data %>%
-  #   group_by(sample_id) %>% 
-  #   summarise(question = "n_count",
-  #             response = n(),
-  #             sample_id = unique(sample_id)
-  #             )
+ 
+  results <- kraken::kraken(input, hera_format = TRUE, loess = TRUE)
   
-  return(data)
+  return(results)
 }
 ```
 
@@ -109,9 +87,11 @@ assessment_function <- function(data) {
 
 The outcome of your assessment.
 
-```{r output}
+```{r output, message=FALSE, warning=FALSE}
 outcome <- assessment_function(input)
-outcome
+outcome <- select(outcome, question, response) 
+outcome <- outcome[!duplicated(outcome[ , c("question")]), ] 
+knitr::kable(outcome)
 ```
 
 ## Check

@@ -41,7 +41,8 @@ get_sepa_data <- function(location_id,
                                      count_n = 5000,
                                      count = NULL) {
           while (count == count_n) {
-            message(paste0("fetching records...", offset - count_n + 1, ":", offset))
+            message(paste0("fetching records...",
+                           offset - count_n + 1, ":", offset))
             Sys.sleep(sleep)
             url$query <- paste(query, "&offset=", offset, sep = "")
 
@@ -63,7 +64,13 @@ get_sepa_data <- function(location_id,
       return(data)
     })
   } else if (dataset == "locations") {
-    output <- purrr::map_df(location_id, function(id) {
+
+    loops <- seq_len(floor(length(location_id) / 50) + 1)
+    output <- purrr::map_df(loops, function(loop) {
+      max <- loop * 50
+      min <-  max - 49
+      id <- location_id[min:max]
+      id <- na.omit(id)
       url <- parse_url("https://geospatial.cloudnet.sepa.org.uk/server/rest/services")
       url$path <-
         paste(url$path,
@@ -82,7 +89,7 @@ get_sepa_data <- function(location_id,
       )
       request <- build_url(url)
       geojson <- GET(request, cacert = FALSE) # skip server certificate check
-      data <- suppressMessages(sf::st_read(geojson))
+      data <- sf::st_read(geojson, quiet = TRUE)
       data$hydro_code <- as.character(data$hydro_code)
       Sys.sleep(0.1)
       return(data)
@@ -112,10 +119,11 @@ get_sepa_data <- function(location_id,
       offset <- 5000
       while (count == 5000) {
         Sys.sleep(0.1)
+        n_offset <- 5000
         message(paste0(
           "fetching records...",
           offset + 1, ":",
-          offset, " for ",
+          offset + offset, " for ",
           id
         ))
         url$query <- paste(site_query, "&offset=", offset, sep = "")
@@ -125,7 +133,7 @@ get_sepa_data <- function(location_id,
         count <- offset_data$count
         offset_data <- offset_data[["items"]]
 
-        n_offset <- 5000
+
         offset <- offset + n_offset
         data <- bind_rows(data, offset_data)
       }

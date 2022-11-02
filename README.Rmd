@@ -27,19 +27,20 @@ Hera is a prototype package to explore the future of regulatory environmental
 modelling. The package outlines possible approaches to creating a shared
 research platform for building, testing and deploying models used to assess
 environmental risk for regulatory purposes.
+See [Request for
+comment](https://ecodata1.github.io/hera/articles/hera_specifications.html)
+paper for an outline and broad technical specifications.
 
-See [Request for comment](https://ecodata1.github.io/hera/articles/hera_specifications.html) paper for an outline and broad technical
-specifications.
-
-Hera is envisaged as an opinionated collections of R packages designed for sharing
-environmental models. All packages share an underlying design, grammar and data
-structures. This allows the separation of the concerns between data, models,
-post-modelling steps and visualisation. Allowing greater collaboration and
-sharing of methods and tools.
+Hera is envisaged as an opinionated collections of R packages designed for
+sharing environmental models. All packages share an underlying design, grammar
+and data structures. This allows the separation of the concerns between data,
+models, post-modelling steps and visualisation. Allowing greater collaboration
+and sharing of methods and tools.
 
 ## Installation
 
-Install the development version from [GitHub](https://github.com/ecodata1/hera) with:
+Install the development version from [GitHub](https://github.com/ecodata1/hera)
+with:
 
 ``` r
 # install.packages("devtools")
@@ -52,43 +53,29 @@ Read the [white paper article and documentation website](https://ecodata1.github
 
 ## Example
 
-Classify some demo data for a number of different assessment parameters:
+Assess some demo data for various environmental risks:
 
-```{r example, warning=F, message=F}
+```{r example, warning=FALSE, message=FALSE}
 library(hera)
-data <- hera(hera::demo_data)
+data <- assess(hera::demo_data)
 data[1:5, c("sample_id", "parameter", "question", "response")]
 
 ```
 
-Alternatively, breakdown each step in assessment:
+Alternatively, you can view the `catalogue` and select which assessments to be
+run.
 
-### Validate
-
-```{r steps, validation, warning=F, message=F}
-library(hera)
-validated <- validation(hera::demo_data) # Return validated data
-head(validated)
+```{r catalogue, message=FALSE, warning=FALSE}
+catalogue
 ```
 
-### Metrics
+Then select which assessment(s) you wish to run by name:
 
-```{r steps, indices, warning=F, message=F}
-indices <- indices(validated) # Calculate indices used for assessment (if required)
-indices[1:5, c("sample_id", "parameter", "question", "response")]
-```
-
-### Predict
-
-```{r predictions, warning=F, message=F}
-
-predictions <- prediction(validated) # Predict the expected 
-predictions[1:5, c("sample_id", "parameter", "question", "response")]
-```
-
-### Assess
-
-```{r assessments, warning=F, message=F}
-assessments <- assessment(hera::demo_data) # Assess the observed data against the expected/predicted 
+```{r selected, message=FALSE, warning=FALSE}
+assessments <- assess(demo_data, 
+                      name = c("RICT",
+                               "Macroinvertebrate Metrics"))
 assessments[1:5, c("sample_id", "parameter", "question", "response")]
 ```
+
+

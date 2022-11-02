@@ -89,8 +89,9 @@ assessment_function <- function(data) {
   # require(whpt)
   # require(macroinvertebrateMetrics)
   data$date_taken <- as.character(format.Date(data$date_taken, "%Y/%m/%d"))
+    data <- filter(data, parameter == "River Family Inverts")
   metric_function <- catalogue[catalogue$assessment ==
-                           "Macroinvertebrate Metrics", 3][[1]]
+    "Macroinvertebrate Metrics", 3][[1]]
   output <- metric_function[[1]](data)
   output <- filter(output, question %in% c("WHPT_ASPT", "WHPT_NTAXA"))
   predictors <- utils::read.csv(system.file("extdat",
@@ -100,19 +101,31 @@ assessment_function <- function(data) {
   predictors$location_id <- as.character(predictors$location_id)
   predict_data <- filter(predictors, location_id %in% unique(data$location_id))
   output_location <- inner_join(output,
-                       data[, c("location_id",
-                                "sample_id", 
-                                "date_taken")],
-                       by = "sample_id")
-  output_location$location_id <-   as.character(output_location$location_id)
-  whpt_input <- inner_join(output_location, predict_data, by = "location_id")
-  whpt_input$question[whpt_input$question == "WHPT_ASPT"] <- "WHPT ASPT Abund"
-  whpt_input$question[whpt_input$question == "WHPT_NTAXA"] <- "WHPT NTAXA Abund"
-  if(nrow(whpt_input) < 1) {
+    data[, c(
+      "location_id",
+      "sample_id",
+      "date_taken"
+    )],
+    by = "sample_id"
+  )
+  output_location$location_id <-
+    as.character(output_location$location_id)
+  whpt_input <- inner_join(output_location,
+    predict_data,
+    by = "location_id"
+  )
+  whpt_input$question[whpt_input$question == "WHPT_ASPT"] <-
+    "WHPT ASPT Abund"
+  whpt_input$question[whpt_input$question == "WHPT_NTAXA"] <-
+    "WHPT NTAXA Abund"
+  if (nrow(whpt_input) < 1) {
     return(NULL)
   } else {
     whpt_input <- unique(whpt_input)
-  consistency_check <- whpt::whpts(whpt_input)
+    whpt_input$response <- as.numeric(whpt_input$response)
+    consistency_check <- whpt::whpts(whpt_input)
+    consistency_check$response <-
+      as.character(consistency_check$response)
   }
   return(consistency_check)
 }
@@ -134,7 +147,7 @@ Run checks on the assessment.
 ```{r checklist}
 # No need to edit this code
 # Format description
-standard_format <- hera:::hera_format(description = description) 
+standard_format <- hera:::hera_format(description = description)
 # Check description
 check_list <- hera:::hera_test(description = description)
 knitr::kable(check_list$standard_check)
@@ -172,7 +185,6 @@ assess(
   data = lims_data,
   name = description$response[description$question == "name_short"]
 )
-
 ```
 
 ## Launch app

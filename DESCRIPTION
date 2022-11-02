@@ -50,6 +50,7 @@ Suggests:
 Remotes:
     nsj3/darleq3,
     aquaMetrics/eadata,
+    aquaMetrics/kraken,
     aquaMetrics/macroinvertebrateMetrics,
     aquaMetrics/rict,
     ecodata1/whpt
