@@ -15,14 +15,14 @@ get_bulk_data <- function() {
   message("Downloading bulk data from data.gov.uk...")
   # Download data ------------------------------------------------------------
   temp <- tempfile(fileext = ".zip")
-  url = "https://environment.data.gov.uk/ecology/explorer/downloads/MACP_OPEN_DATA.zip"
+  url <- "https://environment.data.gov.uk/ecology/explorer/downloads/MACP_OPEN_DATA.zip"
   wd <- getwd()
   td <- tempdir()
   setwd(td)
   utils::download.file(url, temp)
   utils::unzip(temp)
   # f <- list.files()
-  indices <- utils::read.csv( "MACP_OPEN_DATA_METRICS.csv")
+  indices <- utils::read.csv("MACP_OPEN_DATA_METRICS.csv")
   predictors <- utils::read.csv("MACP_OPEN_DATA_SITE.csv")
   taxa <- utils::read.csv("MACP_OPEN_DATA_TAXA.csv")
 
@@ -62,23 +62,25 @@ get_bulk_data <- function() {
   # )
 
   # Format date to match observation web services
-  data$date_taken <- as.Date(data$date_taken, "%d/%m/%Y" )
-  data$date_taken <- as.Date(data$date_taken, "%Y-%m-%d" )
+  data$date_taken <- as.Date(data$date_taken, "%d/%m/%Y")
+  data$date_taken <- as.Date(data$date_taken, "%Y-%m-%d")
 
-  data <- data %>% select(.data$location_id,
-                          .data$sample_id,
-                          .data$date_taken,
-                          .data$rmni,
-                          .data$rn_a_taxa,
-                          .data$n_rfg,
-                          .data$rfa_pc,
-                          .data$alkalinity,
-                          .data$source_altitude,
-                          .data$dist_from_source,
-                          .data$slope,
-                          .data$water_body_id,
-                          .data$grid_reference,
-                          .data$location_description)
+  data <- data %>% select(
+    .data$location_id,
+    .data$sample_id,
+    .data$date_taken,
+    .data$rmni,
+    .data$rn_a_taxa,
+    .data$n_rfg,
+    .data$rfa_pc,
+    .data$alkalinity,
+    .data$source_altitude,
+    .data$dist_from_source,
+    .data$slope,
+    .data$water_body_id,
+    .data$grid_reference,
+    .data$location_description
+  )
 
   data$parameter <- "River Macrophytes"
 

@@ -25,9 +25,11 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
     data$taxon_id[!is.na(data$`whitton_code`)] <-
       data$`whitton_code`[!is.na(data$`whitton_code`)]
     data$taxon_id[data$taxon_id == ""] <- NA
-    data <- data %>% select(-`maitland_code`,
-                            -`whitton_code`,
-                            -`nbn_code`)
+    data <- data %>% select(
+      -.data$`maitland_code`,
+      -.data$`whitton_code`,
+      -.data$`nbn_code`
+    )
     names(data) <- gsub(" ", "_", names(data))
     to_change <- which(names(data) %in% names$sepa_view[names$hera_latest != ""])
     change_to <- names$hera_latest[names$sepa_view %in% names(data) &
@@ -39,7 +41,7 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
   }
 
   if (convert_to == "hera" & convert_from == "sepa_lims") {
-    data$SAMPLED_DATE <- as.Date(data$SAMPLED_DATE,format =  "%d/%m/%Y" )
+    data$SAMPLED_DATE <- as.Date(data$SAMPLED_DATE, format = "%d/%m/%Y")
     data$SAMPLED_DATE <- format.Date(data$SAMPLED_DATE, "%Y-%m-%d")
     # Add a label column for taxon name rows
     labels <- data %>%
@@ -58,10 +60,8 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
     data <- data %>% mutate_all(as.character)
     data$date_taken <- as.Date(data$date_taken)
     return(data)
-  }
-  else {
+  } else {
     message(paste("No conversion rules created for", convert_to, "/", convert_from))
     return(NULL)
   }
-
 }

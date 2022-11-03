@@ -15,7 +15,7 @@ ead <- function(site_id) {
     date_to = "2015-12-31",
     take = 2000
   )
-  if(length(obs) == 0) {
+  if (length(obs) == 0) {
     return()
   }
   taxa <- eadata::get_taxa()
@@ -44,15 +44,19 @@ ead <- function(site_id) {
   data$sample_id <- unlist(sample_id)
 
 
-  data$grid_reference <- en_to_os(dplyr::select(data,
-                                                .data$easting,
-                                                .data$northing))
-  data$grid_reference <- paste0(substr(data$grid_reference, 1 ,2),
-                               " ",
-                               substr(data$grid_reference, 3 ,6),
-                               "0 ",
-                               substr(data$grid_reference, 7 ,10),
-                               "0")
+  data$grid_reference <- en_to_os(dplyr::select(
+    data,
+    .data$easting,
+    .data$northing
+  ))
+  data$grid_reference <- paste0(
+    substr(data$grid_reference, 1, 2),
+    " ",
+    substr(data$grid_reference, 3, 6),
+    "0 ",
+    substr(data$grid_reference, 7, 10),
+    "0"
+  )
   data$river.width..m. <- data$Width
   data$mean.depth..cm. <- data$Depth
   data$x..boulders.cobbles <- data$`Boulders/Cobbles`
@@ -65,7 +69,7 @@ ead <- function(site_id) {
   data$quality_element[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverDiatMetricsObservation"] <- "River Diatoms"
   data$quality_element[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvMetricsObservation"] <- "River Invertebrates"
   data$quality_element[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvTaxaObservation" &
-                       data$taxonRank == "Family"] <- "River Family Inverts"
+    data$taxonRank == "Family"] <- "River Family Inverts"
   data$quality_element[data$obs_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpMetricsObservation"] <- "River Macrophytes"
 
 

@@ -28,6 +28,7 @@ Imports:
     magrittr,
     purrr,
     rlang,
+    readxl,
     rict,
     shiny,
     sf,
@@ -35,6 +36,7 @@ Imports:
     tibble,
     tidyr,
     usethis,
+    uuid,
     whpt
 Suggests: 
     covr,

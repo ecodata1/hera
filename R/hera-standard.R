@@ -53,7 +53,7 @@ update_catalogue <- function(description = NULL,
   )
 
   catalogue <- catalogue[catalogue$assessment !=
-                           description$response[description$question == "name_short"], ]
+    description$response[description$question == "name_short"], ]
   catalogue <- bind_rows(catalogue, model)
   usethis::use_data(catalogue, overwrite = TRUE)
 }

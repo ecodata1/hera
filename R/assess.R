@@ -32,16 +32,19 @@ assess <- function(data = NULL, name = NULL, catalogue = NULL) {
   assessments <- purrr::map_df(
     split(catalogue, 1:nrow(catalogue)),
     function(model) {
+      # No assessment available (perhaps being developed)
       if (is.null(model$assessment_function[[1]])) {
         return(NULL)
       }
-
+      # Check data available for assessment function
+      model_data <- model$data[[1]]
+      if (!any(unique(data$parameter) %in%
+        unique(model_data$parameter))) {
+        return(NULL) # not the right data for this function  - skip
+      }
       assessment_function <- model$assessment_function[[1]]
       data <- assessment_function(data)
       data$response <- as.character(data$response)
-      # description <- bind_rows(model$data)
-      # description <- filter(description, .data$question == "name_short")
-      # data$parameter <- description$response
       return(data)
     }
   )

@@ -26,14 +26,14 @@ ui <- tagList(
     # theme = "cerulean",  # <--- To use a theme, uncomment this
     "hera",
     tabPanel(
-      "Metrics", sidebarPanel(
-        h3("Options"),
-        fileInput("dataset", "Choose CSV File exported from LIMS",
-          accept = c(
-            "text/csv",
-            "text/comma-separated-values,text/plain",
-            ".csv"
-          )
+      "Assessment", sidebarPanel(
+        h3("Import Data"),
+        fileInput("dataset", "Choose File"
+          # accept = c(
+          #   "text/csv",
+          #   "text/comma-separated-values,text/plain",
+          #   ".csv"
+          # )
         ),
         h4("Or run demo..."),
         actionButton(inputId = "click for demo", label = "Demo Data")
@@ -42,6 +42,7 @@ ui <- tagList(
       mainPanel(
         htmlOutput("app"),
         htmlOutput("indices"),
+        plotOutput("map"),
         htmlOutput("data_table"),
       )
     )
@@ -62,8 +63,7 @@ server <- function(input, output) {
     } else if (is.null(inFile)) {
       return(NULL)
     } else {
-      data <- read.csv(inFile$datapath, check.names = FALSE)
-      data <- hera:::convert(data)
+      data <- hera::survey_import(inFile$datapath)
     }
   })
 
@@ -71,7 +71,7 @@ server <- function(input, output) {
     data <- reactiveA()
     if (!is.null(data)) {
       indices <- assess(data)
-      indices <- hera:::combine(indices, data)
+      # indices <- hera:::combine(indices, data)
 
       if (!is.null(data)) {
         output_files <- list(
@@ -118,30 +118,30 @@ server <- function(input, output) {
         output$map_first <- renderLeaflet(map)
       }
 
-      chart_data <- indices
-      chart_data$response <- as.numeric(chart_data$response)
-      chart_data <- chart_data %>% filter(!is.na(response))
-      options(digits = 3)
-      chart_data$response <- as.numeric(chart_data$response)
-      if (nrow(indices) > 0) {
-        chart <- ggplot(chart_data, aes(x = date_taken, y = response)) +
-          geom_point() +
-          facet_wrap(vars(question), scales = "free_y")
-      } else {
-        chart <- NULL
-      }
-      indices$date_taken <- format.Date(indices$date_taken, "%Y/%m/%d")
+     map <- indices$object[indices$question == "map"]
+     output$map <- renderPlot({map[[1]]})
+
+      # chart_data <- indices
+      # chart_data$response <- as.numeric(chart_data$response)
+      # chart_data <- chart_data %>% filter(!is.na(response))
+      # options(digits = 3)
+      # chart_data$response <- as.numeric(chart_data$response)
+      # if (nrow(indices) > 0) {
+      #   chart <- ggplot(chart_data, aes(x = date_taken, y = response)) +
+      #     geom_point() +
+      #     facet_wrap(vars(question), scales = "free_y")
+      # } else {
+      #   chart <- NULL
+      # }
+
+      # indices$date_taken <- format.Date(indices$date_taken, "%Y/%m/%d")
       output$data_table <- renderUI(list(
         h3("Data"), DT::renderDataTable({
           select(
             indices,
-            location_id,
-            location_description,
             sample_id,
-            date_taken,
             question,
-            response,
-            parameter
+            response
           )
         })
       ))

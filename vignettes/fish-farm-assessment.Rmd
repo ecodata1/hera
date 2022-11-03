@@ -76,10 +76,15 @@ If applicable, write a function to assess your input data and return an outcome.
 ```{r assessment, message=FALSE, warning=FALSE}
 
 assessment_function <- function(data) {
- 
-  results <- kraken::kraken(input, hera_format = TRUE, loess = TRUE)
+  data <- dplyr::filter(data, parameter == "MPFF Compliance" )
+  if(nrow(data) > 0 ) {
+  results <- kraken::kraken(data, hera_format = TRUE, loess = TRUE)
+  } else {
+    return(NULL)
+  }
   
   return(results)
+  
 }
 ```
 
@@ -89,9 +94,9 @@ The outcome of your assessment.
 
 ```{r output, message=FALSE, warning=FALSE}
 outcome <- assessment_function(input)
-outcome <- select(outcome, question, response) 
-outcome <- outcome[!duplicated(outcome[ , c("question")]), ] 
-knitr::kable(outcome)
+outcome_table <- select(outcome, question, response) 
+outcome_table <- outcome_table[!duplicated(outcome_table[ , c("question")]), ] 
+knitr::kable(outcome_table)
 ```
 
 ## Check
@@ -113,12 +118,12 @@ Update the catalogue of assessments to make them available.
 
 ```{r hera_update}
 # No need to edit this code
-# hera:::update_catalogue(
-#   description = description,
-#   input = input,
-#   assessment_function = assessment_function,
-#   output = outcome
-# )
+hera:::update_catalogue(
+  description = description,
+  input = input,
+  assessment_function = assessment_function,
+  output = outcome
+)
 ```
 
 After **updating the catalogue, rebuild the package**, click on Build > Install and Restart menu or 'Install and Restart' button in the Build pane.

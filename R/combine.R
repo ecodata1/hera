@@ -20,16 +20,16 @@ combine <- function(outcome, data) {
     -.data$units
   )
   # Needs refactor! Remove result level columns
-  if(!is.null(data$result_id)) {
+  if (!is.null(data$result_id)) {
     location_attributes <- select(location_attributes, -.data$result_id)
   }
-  if(!is.null(data$quality_element)) {
+  if (!is.null(data$quality_element)) {
     location_attributes <- select(location_attributes, -.data$quality_element)
   }
-  if(!is.null(data$standard)) {
+  if (!is.null(data$standard)) {
     location_attributes <- select(location_attributes, -.data$standard)
   }
-  if(!is.null(data$analysis_name)) {
+  if (!is.null(data$analysis_name)) {
     location_attributes <- select(location_attributes, -.data$analysis_name)
   }
   location_attributes <- unique(location_attributes)

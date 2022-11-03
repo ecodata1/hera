@@ -18,19 +18,21 @@ get_data(
 \arguments{
 \item{location_id}{Unique ID of location.}
 
-\item{take}{Number of observation to download.}
+\item{take}{Number of observation to download. For "EA" API services.}
 
 \item{date_from}{Start of date taken window in string format: "2013-12-31".}
 
 \item{date_to}{End of date taken window in string format: "2015-12-31".}
 
+\item{dataset}{Default will get Ecology monitoring data, set to "replocs" to
+represent location data for SEPA}
+
 \item{year}{Classification year}
 
-\item{provider}{Which provider, either "EA or "SEPA". SEPA is internal access
-only.}
+\item{water_body_id}{Water body ID used for replocs table queries.}
 
-\item{type}{Default will get monitoring data, set to "replocs" to represent
-location data for SEPA}
+\item{source}{Which data source, either "EA or "SEPA". SEPA is internal access
+only.}
 }
 \value{
 Data frame

@@ -1,7 +1,7 @@
 
 
-
-
+#' @importFrom utils URLencode
+#' @importFrom stats na.omit
 get_sepa_data <- function(location_id,
                           take,
                           date_from,
@@ -41,8 +41,10 @@ get_sepa_data <- function(location_id,
                                      count_n = 5000,
                                      count = NULL) {
           while (count == count_n) {
-            message(paste0("fetching records...",
-                           offset - count_n + 1, ":", offset))
+            message(paste0(
+              "fetching records...",
+              offset - count_n + 1, ":", offset
+            ))
             Sys.sleep(sleep)
             url$query <- paste(query, "&offset=", offset, sep = "")
 
@@ -64,11 +66,10 @@ get_sepa_data <- function(location_id,
       return(data)
     })
   } else if (dataset == "locations") {
-
     loops <- seq_len(floor(length(location_id) / 50) + 1)
     output <- purrr::map_df(loops, function(loop) {
       max <- loop * 50
-      min <-  max - 49
+      min <- max - 49
       id <- location_id[min:max]
       id <- na.omit(id)
       url <- parse_url("https://geospatial.cloudnet.sepa.org.uk/server/rest/services")
@@ -137,14 +138,14 @@ get_sepa_data <- function(location_id,
         offset <- offset + n_offset
         data <- bind_rows(data, offset_data)
       }
-      data <- hera:::convert(data, convert_to = "hera", convert_from = "sepa")
+      data <- convert(data, convert_to = "hera", convert_from = "sepa")
       Sys.sleep(0.1)
       return(data)
     })
   } else {
     message(paste0(
-      "You provided a `type =` argument of: ", type,
-      "This didn't match any of the types supported e.g. 'locations', 'replocs'...etc"
+      "You provided a `type =` argument of: ", dataset,
+      "This didn't match any of the dataset supported e.g. 'locations', 'replocs'...etc"
     ))
     data <- NULL
   }

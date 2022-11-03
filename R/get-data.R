@@ -4,14 +4,15 @@
 #' regulatory assessment tool.
 #'
 #' @param location_id Unique ID of location.
-#' @param take Number of observation to download.
+#' @param take Number of observation to download. For "EA" API services.
 #' @param date_from Start of date taken window in string format: "2013-12-31".
 #' @param date_to End of date taken window in string format: "2015-12-31".
-#' @param provider Which provider, either "EA or "SEPA". SEPA is internal access
-#'   only.
-#' @param type Default will get monitoring data, set to "replocs" to represent
-#'   location data for SEPA
+#' @param dataset Default will get Ecology monitoring data, set to "replocs" to
+#'   represent location data for SEPA
 #' @param year Classification year
+#' @param water_body_id Water body ID used for replocs table queries.
+#' @param source Which data source, either "EA or "SEPA". SEPA is internal access
+#'   only.
 #'
 #' @return Data frame
 #' @export
@@ -36,19 +37,21 @@ get_data <- function(location_id = NULL,
                      year = NULL,
                      water_body_id = "",
                      source = "sepa") {
-if(source == "ea") {
-  data <- get_ea_data(location_id, take, date_from, date_to)
-}
-
-if(source == "sepa") {
-    data <- get_sepa_data(location_id,
-                          take,
-                          date_from,
-                          date_to,
-                          year,
-                          water_body_id,
-                          dataset)
+  if (source == "ea") {
+    data <- get_ea_data(location_id, take, date_from, date_to)
   }
 
-return(data)
+  if (source == "sepa") {
+    data <- get_sepa_data(
+      location_id,
+      take,
+      date_from,
+      date_to,
+      year,
+      water_body_id,
+      dataset
+    )
+  }
+
+  return(data)
 }

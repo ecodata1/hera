@@ -24,10 +24,10 @@
 #' season <- season(Sys.Date())
 #' }
 season <- function(dates,
-                       winter = "2012-12-1",
-                       spring = "2012-3-1",
-                       summer = "2012-6-1",
-                       autumn = "2012-9-1", output = "numeric") {
+                   winter = "2012-12-1",
+                   spring = "2012-3-1",
+                   summer = "2012-6-1",
+                   autumn = "2012-9-1", output = "numeric") {
   WS <- as.Date(winter, format = "%Y-%m-%d") # Winter Solstice
   SE <- as.Date(spring, format = "%Y-%m-%d") # Spring Equinox
   SS <- as.Date(summer, format = "%Y-%m-%d") # Summer Solstice
@@ -38,25 +38,25 @@ season <- function(dates,
   # Convert dates from any year to 2012 dates
   if (output == "numeric") {
     return(ifelse(d >= WS | d < SE, "4",
-                  ifelse(d >= SE & d < SS, "1",
-                         ifelse(d >= SS & d < FE, "2", "3")
-                  )
+      ifelse(d >= SE & d < SS, "1",
+        ifelse(d >= SS & d < FE, "2", "3")
+      )
     ))
   }
 
   if (output == "shortname") {
     return(ifelse(d >= WS | d < SE, "WIN",
-                  ifelse(d >= SE & d < SS, "SPR",
-                         ifelse(d >= SS & d < FE, "SUM", "AUT")
-                  )
+      ifelse(d >= SE & d < SS, "SPR",
+        ifelse(d >= SS & d < FE, "SUM", "AUT")
+      )
     ))
   }
 
   if (output == "fullname") {
     return(ifelse(d >= WS | d < SE, "Winter",
-                  ifelse(d >= SE & d < SS, "Spring",
-                         ifelse(d >= SS & d < FE, "Summer", "Autumn")
-                  )
+      ifelse(d >= SE & d < SS, "Spring",
+        ifelse(d >= SS & d < FE, "Summer", "Autumn")
+      )
     ))
   }
 }

@@ -11,15 +11,17 @@
 #' \item{label}{label - Mainly used for labelling taxonomic observations}
 #' }
 #' @export
-#'
+#' @importFrom rlang .data
 #' @examples
 #' \dontrun{
 #' file <- system.file("extdat",
-#' "survey-template/220421-SelfMon-N4952-CAV1-Enhanced.xlsx", package =
-#' "aquaman" )
+#'   "survey-template/220421-SelfMon-N4952-CAV1-Enhanced.xlsx",
+#'   package =
+#'     "aquaman"
+#' )
 #' data <- survey_import(file)
 #' }
-
+#'
 survey_import <- function(path = NULL) {
 
   # Survey metadata ------------------------------------------------------------
@@ -58,19 +60,29 @@ survey_import <- function(path = NULL) {
     names(sample_1) <- as.character(sample_1[1, ])
     sample_1 <- sample_1[2:nrow(sample_1), ]
     sample_long <- tidyr::pivot_longer(sample_1,
-                                       cols = -1,
-                                       values_to = "response",
-                                       names_to = "sample_id"
+      cols = -1,
+      values_to = "response",
+      names_to = "sample_id"
     )
 
     names(sample_long) <- c("question", "sample_id", "response")
-    sample_long <- dplyr::select(sample_long, sample_id, question, response)
+    sample_long <- dplyr::select(
+      sample_long,
+      .data$sample_id,
+      .data$question,
+      .data$response
+    )
     return(sample_long)
   })
 
   samples$project_id <- project_id
   meta <- dplyr::bind_rows(survey, samples)
-  meta <- dplyr::select(meta, project_id, sample_id, question, response)
+  meta <- dplyr::select(
+    meta, .data$project_id,
+    .data$sample_id,
+    .data$question,
+    .data$response
+  )
 
   # PSA, Chemistry, meta data sheets - 'data' sheets. --------------------------
   data_sheets_ref <- c(
@@ -84,16 +96,16 @@ survey_import <- function(path = NULL) {
   )
   # Loop through sheets and format
   data_sheets <- purrr::map_df(data_sheets_ref, function(data_sheet) {
-    t1_data <-  suppressMessages(readxl::read_xlsx(path, sheet = data_sheet))
+    t1_data <- suppressMessages(readxl::read_xlsx(path, sheet = data_sheet))
     names(t1_data) <- as.character(t1_data[2, ])
     t1_data <- t1_data[3:nrow(t1_data), ]
-    t1_data <- dplyr::select(t1_data, -`NA`)
+    t1_data <- dplyr::select(t1_data, -.data$`NA`)
     t1_data <- tidyr::pivot_longer(t1_data,
-                                   cols = c(2:ncol(t1_data)),
-                                   names_to = "sample_id",
-                                   values_to = "response"
+      cols = c(2:ncol(t1_data)),
+      names_to = "sample_id",
+      values_to = "response"
     )
-    t1_data <- dplyr::select(t1_data, sample_id, question = 1, response)
+    t1_data <- dplyr::select(t1_data, .data$sample_id, question = 1, .data$response)
     t1_data <- dplyr::filter(t1_data, !is.na(question))
     t1_data <- dplyr::filter(t1_data, question != "Notes:")
     t1_data$project_id <- project_id
@@ -114,56 +126,61 @@ survey_import <- function(path = NULL) {
   )
   # Loop through fauna worksheets and format data
   fauna_sheets <- purrr::map_df(fauna_sheets_ref, function(data_sheet) {
-    fauna <-  suppressMessages(readxl::read_xlsx(path, sheet = data_sheet))
+    fauna <- suppressMessages(readxl::read_xlsx(path, sheet = data_sheet))
     # Format 'number of replicates' info
     replicates <- fauna[2, ]
     replicates <- tidyr::pivot_longer(replicates,
-                                      cols = c(4:ncol(fauna)),
-                                      names_to = "sample_id",
-                                      values_to = "response"
+      cols = c(4:ncol(fauna)),
+      names_to = "sample_id",
+      values_to = "response"
     )
     replicates$project_id <- project_id
     replicates <- dplyr::select(replicates,
-                                project_id,
-                                sample_id,
-                                question = `...3`,
-                                response)
+      .data$project_id,
+      .data$sample_id,
+      question = .data$`...3`,
+      .data$response
+    )
 
     # Format taxonomic info
     fauna <- fauna[4:nrow(fauna), ]
     fauna <- tidyr::pivot_longer(fauna,
-                                 cols = c(4:ncol(fauna)),
-                                 names_to = "sample_id",
-                                 values_to = "response"
+      cols = c(4:ncol(fauna)),
+      names_to = "sample_id",
+      values_to = "response"
     )
     fauna <- tidyr::pivot_longer(fauna,
-                                 cols = -c(2, 4)
+      cols = -c(2, 4)
     )
 
     fauna <- dplyr::select(fauna,
-                           sample_id,
-                           question = name,
-                           response = value,
-                           label = 1,
+      .data$sample_id,
+      question = .data$name,
+      response = .data$value,
+      label = 1,
     )
 
     # Define 'question' for comment, count and MCS responses
     fauna <- dplyr::mutate(fauna,
-                           question = replace(question,
-                                              question == "...3",
-                                              "comment")
+      question = replace(
+        question,
+        question == "...3",
+        "comment"
+      )
     )
     fauna <- dplyr::mutate(fauna,
-                           question =
-                             replace(
-                               question,
-                               question == "Transect 1 Species Abundance Matrix",
-                               "MCS Code"
-                             )
+      question =
+        replace(
+          question,
+          question == "Transect 1 Species Abundance Matrix",
+          "MCS Code"
+        )
     )
     fauna <- dplyr::mutate(fauna,
-                           question = replace(question, question == "response",
-                                              "Taxon abundance")
+      question = replace(
+        question, question == "response",
+        "Taxon abundance"
+      )
     )
     fauna <- dplyr::filter(fauna, !is.na(label))
     fauna$project_id <- project_id
@@ -173,6 +190,7 @@ survey_import <- function(path = NULL) {
 
   # Bind all sheets into single dataframe --------------------------------------
   result <- dplyr::bind_rows(meta, data_sheets, fauna_sheets)
-  result <- dplyr:: filter(result, !grepl("Table", question))
+  result <- dplyr::filter(result, !grepl("Table", question))
+  result$parameter <- "MPFF Compliance"
   return(result)
 }
