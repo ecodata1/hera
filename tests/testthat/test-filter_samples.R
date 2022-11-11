@@ -1,5 +1,4 @@
 test_that("filter samples function works", {
-
   data <- hera:::filter_samples(demo_data)
   expect_equal(nrow(data), 113)
 
@@ -32,6 +31,4 @@ test_that("filter samples function works", {
   )
   data <- hera:::filter_samples(demo_data, options = options)
   expect_equal(nrow(data), 720)
-
-
 })

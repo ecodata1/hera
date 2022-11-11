@@ -13,10 +13,12 @@ test_that("test convert function works", {
   l <- lims_data %>% hera:::convert()
   class(r$location_id)
   class(l$location_id)
-  data <- bind_rows(l, r)  # Lims data doesn't have NGR currently - so add a default
+  data <- bind_rows(l, r) # Lims data doesn't have NGR currently - so add a default
   data$grid_reference <- "NO 41452 15796"
 
   # Run assessment
-  test <- assess(data,
-                 "DARLEQ3")
+  test <- assess(
+    data,
+    "DARLEQ3"
+  )
 })

@@ -23,16 +23,21 @@ Imports:
     eadata,
     httr,
     lubridate,
+    jsonlite,
+    kraken,
     macroinvertebrateMetrics,
     magrittr,
     purrr,
     rlang,
+    readxl,
     rict,
     shiny,
+    sf,
     testthat,
     tibble,
     tidyr,
     usethis,
+    uuid,
     whpt
 Suggests: 
     covr,
@@ -48,6 +53,7 @@ Suggests:
 Remotes:
     nsj3/darleq3,
     aquaMetrics/eadata,
+    aquaMetrics/kraken,
     aquaMetrics/macroinvertebrateMetrics,
     aquaMetrics/rict,
     ecodata1/whpt

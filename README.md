@@ -18,9 +18,8 @@ WORK IN PROGRESS
 Hera is a prototype package to explore the future of regulatory
 environmental modelling. The package outlines possible approaches to
 creating a shared research platform for building, testing and deploying
-models used to assess environmental risk for regulatory purposes.
-
-See [Request for
+models used to assess environmental risk for regulatory purposes. See
+[Request for
 comment](https://ecodata1.github.io/hera/articles/hera_specifications.html)
 paper for an outline and broad technical specifications.
 
@@ -48,87 +47,49 @@ website](https://ecodata1.github.io/hera/articles/hera_specifications.html)
 
 ## Example
 
-Classify some demo data for a number of different assessment parameters:
+Assess some demo data for various environmental risks:
 
 ``` r
 library(hera)
-data <- hera(hera::demo_data)
+data <- assess(hera::demo_data)
 data[1:5, c("sample_id", "parameter", "question", "response")]
 #> # A tibble: 5 × 4
-#>   sample_id parameter         question response         
-#>   <chr>     <chr>             <chr>    <chr>            
-#> 1 1840203   River Macrophytes class    poor             
-#> 2 1840203   River Macrophytes eqr      0.635381220416031
-#> 3 1840203   River Macrophytes status   classified       
-#> 4 1840203   River Macrophytes level    4                
-#> 5 3256506   River Macrophytes class    bad
+#>   sample_id parameter question           response                         
+#>   <chr>     <chr>     <chr>              <chr>                            
+#> 1 1017980   <NA>      EPSI Score TL2     97.2877525074163                 
+#> 2 1017980   <NA>      EPSI Condition TL2 Minimally sedimented/unsedimented
+#> 3 1101214   <NA>      EPSI Score TL2     94.6979865771812                 
+#> 4 1101214   <NA>      EPSI Condition TL2 Minimally sedimented/unsedimented
+#> 5 1250462   <NA>      EPSI Score TL2     97.8168378529374
 ```
 
-Alternatively, breakdown each step in assessment:
-
-### Validate
+Alternatively, you can view the `catalogue` and select which assessments
+to be run.
 
 ``` r
-library(hera)
-validated <- validation(hera::demo_data) # Return validated data
-head(validated)
-#> # A tibble: 6 × 22
-#>   location_id location_description           easting northing latitude longitude
-#>   <chr>       <fct>                            <dbl>    <dbl>    <dbl>     <dbl>
-#> 1 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95
-#> 2 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95
-#> 3 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95
-#> 4 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95
-#> 5 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95
-#> 6 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95
-#> # … with 16 more variables: date_taken <dttm>, sample_id <chr>, question <chr>,
-#> #   response <fct>, mean_alkalinity <dbl>, grid_reference <chr>,
-#> #   standard <chr>, quality_element <chr>, water_body_id <dbl>, label <fct>,
-#> #   dist_from_source <dbl>, alkalinity <dbl>, slope <dbl>,
-#> #   source_altitude <dbl>, parameter <chr>, year <dbl>
+catalogue
+#> # A tibble: 4 × 3
+#>   assessment                data               assessment_function
+#>   <chr>                     <list>             <list>             
+#> 1 Macroinvertebrate Metrics <tibble [11 × 10]> <fn>               
+#> 2 DARLEQ3                   <tibble [35 × 12]> <fn>               
+#> 3 Bankside Consistency      <tibble [11 × 12]> <fn>               
+#> 4 RICT                      <tibble [20 × 12]> <fn>
 ```
 
-### Metrics
+Then select which assessment(s) you wish to run by name:
 
 ``` r
-indices <- indices(validated) # Calculate indices used for assessment (if required)
-indices[1:5, c("sample_id", "parameter", "question", "response")]
-#> # A tibble: 5 × 4
-#>   sample_id parameter         question  response        
-#>   <chr>     <chr>             <chr>     <chr>           
-#> 1 1840203   River Macrophytes rmni      7.07013957800168
-#> 2 1840203   River Macrophytes rn_a_taxa 6               
-#> 3 1840203   River Macrophytes n_rfg     4               
-#> 4 1840203   River Macrophytes rfa_pc    0               
-#> 5 3256506   River Macrophytes rmni      6.22099043940684
-```
-
-### Predict
-
-``` r
-predictions <- prediction(validated) # Predict the expected 
-predictions[1:5, c("sample_id", "parameter", "question", "response")]
-#> # A tibble: 5 × 4
-#>   sample_id parameter         question  response        
-#>   <chr>     <chr>             <chr>     <chr>           
-#> 1 3256506   River Macrophytes ref_taxa  8.18193000184553
-#> 2 3256506   River Macrophytes ref_algae 0.05            
-#> 3 3256506   River Macrophytes ref_nfg   5.26620315804775
-#> 4 3256506   River Macrophytes ref_rmni  5.96735638218237
-#> 5 758729    River Macrophytes ref_taxa  8.18193000184553
-```
-
-### Assess
-
-``` r
-assessments <- assessment(hera::demo_data) # Assess the observed data against the expected/predicted 
+assessments <- assess(demo_data, 
+                      name = c("RICT",
+                               "Macroinvertebrate Metrics"))
 assessments[1:5, c("sample_id", "parameter", "question", "response")]
 #> # A tibble: 5 × 4
-#>   sample_id parameter         question response         
-#>   <chr>     <chr>             <chr>    <chr>            
-#> 1 1840203   River Macrophytes class    poor             
-#> 2 1840203   River Macrophytes eqr      0.635381220416031
-#> 3 1840203   River Macrophytes status   classified       
-#> 4 1840203   River Macrophytes level    4                
-#> 5 3256506   River Macrophytes class    bad
+#>   sample_id parameter question           response                         
+#>   <chr>     <chr>     <chr>              <chr>                            
+#> 1 1017980   <NA>      EPSI Score TL2     97.2877525074163                 
+#> 2 1017980   <NA>      EPSI Condition TL2 Minimally sedimented/unsedimented
+#> 3 1101214   <NA>      EPSI Score TL2     94.6979865771812                 
+#> 4 1101214   <NA>      EPSI Condition TL2 Minimally sedimented/unsedimented
+#> 5 1250462   <NA>      EPSI Score TL2     97.8168378529374
 ```

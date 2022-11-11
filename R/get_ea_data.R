@@ -1,7 +1,9 @@
 get_ea_data <- function(location_id, take, date_from, date_to) {
   message("Downloading data from data.gov.uk web services...")
-  location_id <- paste0("http://environment.data.gov.uk/ecology/site/bio/",
-                        location_id)
+  location_id <- paste0(
+    "http://environment.data.gov.uk/ecology/site/bio/",
+    location_id
+  )
   obs <- get_observations(
     location_id,
     date_from = date_from,
@@ -28,18 +30,19 @@ get_ea_data <- function(location_id, take, date_from, date_to) {
 
   site_info <- get_site_info(site_id = site)
   site_info_wide <- tidyr::pivot_wider(site_info,
-                                       names_from = .data$properties.property_label,
-                                       values_from = .data$properties.value
+    names_from = .data$properties.property_label,
+    values_from = .data$properties.value
   )
 
-  site_info_wide$location_description <-  site_info_wide$label
+  site_info_wide$location_description <- site_info_wide$label
   site_info_wide$label <- NULL
   data <- dplyr::inner_join(obs, site_info_wide, by = c("site_id" = "site_id"))
 
   # Join properties of the observations ----------------------------------------
   properties <- eadata::get_properties()
   data <- dplyr::inner_join(data, properties,
-                            by = c("property_id" = "property"))
+    by = c("property_id" = "property")
+  )
 
   # Format columns -------------------------------------------------------------
   sample_id <- strsplit(data$survey_id, "/|-")
@@ -62,7 +65,7 @@ get_ea_data <- function(location_id, take, date_from, date_to) {
   data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverDiatMetricsObservation"] <- "River Diatoms"
   data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvMetricsObservation"] <- "River Invertebrates"
   data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverInvTaxaObservation" &
-                   data$taxonRank == "Family"] <- "River Family Inverts"
+    data$taxonRank == "Family"] <- "River Family Inverts"
   data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpMetricsObservation"] <- "River Macrophytes"
   data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpTaxaObservation"] <- "River Macrophytes"
 
@@ -82,7 +85,7 @@ get_ea_data <- function(location_id, take, date_from, date_to) {
     "units" = .data$property_id
   )
   # Not all locations have these attributes:
-  if(!is.null(data$Sand)) {
+  if (!is.null(data$Sand)) {
     data <- data %>% dplyr::rename(
       "river_width" = .data$Width,
       "mean_depth" = .data$Depth,
@@ -103,9 +106,9 @@ get_ea_data <- function(location_id, take, date_from, date_to) {
   # Generate season -----------------------------------------------------------
   data$Month <- lubridate::month(data$date_taken)
   data$season <- ifelse((data$Month >= 3) & (data$Month <= 5), "1",
-                        ifelse((data$Month >= 6) & (data$Month <= 8), "2",
-                               ifelse((data$Month >= 9) & (data$Month <= 11), "3", "4")
-                        )
+    ifelse((data$Month >= 6) & (data$Month <= 8), "2",
+      ifelse((data$Month >= 9) & (data$Month <= 11), "3", "4")
+    )
   )
   data$full_result_id <- NULL
   data$result.result_id <- NULL
