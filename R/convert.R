@@ -17,16 +17,25 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
     data$`analysis_name`[data$`analysis_repname` == "Diatom Taxa"] <- "River Diatoms"
     data$`analysis_name`[data$`analysis_repname` == "Invert Taxa Family Lab"] <- "River Family Inverts"
     data$taxon_id <- NA
+
     data$`nbn_code` <- as.character(data$`nbn_code`)
     data$taxon_id[!is.na(data$`nbn_code`)] <-
       data$`nbn_code`[!is.na(data$`nbn_code`)]
-    data$taxon_id[!is.na(data$`maitland_code`)] <-
-      data$`maitland_code`[!is.na(data$`maitland_code`)]
+    # Current 'infolink' internally in SEPA is missing maitland_code column, so
+    # make this optional for inclusion in the taxon_id column. Maitland code is
+    # historic not currently required as a lookup for any assessments (so can
+    # live without it).
+    if (any(names(data) %in% "maitland_code")) {
+      data$taxon_id[!is.na(data$`maitland_code`)] <-
+        data$`maitland_code`[!is.na(data$`maitland_code`)]
+      data <- data %>% select(
+        -.data$`maitland_code`
+      )
+    }
     data$taxon_id[!is.na(data$`whitton_code`)] <-
       data$`whitton_code`[!is.na(data$`whitton_code`)]
     data$taxon_id[data$taxon_id == ""] <- NA
     data <- data %>% select(
-      -.data$`maitland_code`,
       -.data$`whitton_code`,
       -.data$`nbn_code`
     )

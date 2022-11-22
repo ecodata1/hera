@@ -21,4 +21,14 @@ test_that("test convert function works", {
     data,
     "DARLEQ3"
   )
+
+  # Check removing dreprecated Maitland Code (may not be included within
+  # internal SEPA table) makes no difference
+  recovered_data <- dplyr::select(recovered_data, -`Maitland Code`)
+  r <- recovered_data %>% hera:::convert(convert_from = "sepa")
+  r <- filter(r, parameter == "River Family Inverts")
+  test <- assess(
+    r[1:10, ],
+    "Macroinvertebrate Metrics"
+  )
 })

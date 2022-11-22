@@ -28,13 +28,7 @@ ui <- tagList(
     tabPanel(
       "Assessment", sidebarPanel(
         h3("Import Data"),
-        fileInput("dataset", "Choose File"
-          # accept = c(
-          #   "text/csv",
-          #   "text/comma-separated-values,text/plain",
-          #   ".csv"
-          # )
-        ),
+        fileInput("dataset", "Choose File"),
         h4("Or run demo..."),
         actionButton(inputId = "click for demo", label = "Demo Data")
       ),
@@ -118,8 +112,10 @@ server <- function(input, output) {
         output$map_first <- renderLeaflet(map)
       }
 
-     map <- indices$object[indices$question == "map"]
-     output$map <- renderPlot({map[[1]]})
+      map <- indices$object[indices$question == "map"]
+      output$map <- renderPlot({
+        map[[1]]
+      })
 
       # chart_data <- indices
       # chart_data$response <- as.numeric(chart_data$response)

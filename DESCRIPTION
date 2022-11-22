@@ -49,6 +49,7 @@ Suggests:
     readr,
     rmarkdown,
     slickR,
+    tidyverse,
     visNetwork
 Remotes:
     nsj3/darleq3,
