@@ -23,8 +23,10 @@ library(visNetwork)
 
 ```{r echo=FALSE, fig.height=3, fig.width=4, message=FALSE, warning=FALSE, results='asis'}
 
-high_level_flows <- read_csv("inst/extdat/data-flow/high-level-flows.csv" )
-
+high_level_flows <- read_csv(system.file("extdat",
+      "data-flow/high-level-flows.csv",
+      package = "hera"
+    ))
 
   nodes <- high_level_flows %>%
     select(label, group, level, shape) %>%
