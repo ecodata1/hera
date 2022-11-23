@@ -10,6 +10,9 @@
     <loc>https://ecodata1.github.io/hera/articles/darleq3.html</loc>
   </url>
   <url>
+    <loc>https://ecodata1.github.io/hera/articles/data-dictionary.html</loc>
+  </url>
+  <url>
     <loc>https://ecodata1.github.io/hera/articles/deployment_guide.html</loc>
   </url>
   <url>
@@ -64,9 +67,6 @@
     <loc>https://ecodata1.github.io/hera/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/hera/reference/indices.html</loc>
-  </url>
-  <url>
     <loc>https://ecodata1.github.io/hera/reference/launch_app.html</loc>
   </url>
   <url>
@@ -77,6 +77,9 @@
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/reference/season.html</loc>
+  </url>
+  <url>
+    <loc>https://ecodata1.github.io/hera/reference/survey_import.html</loc>
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/reference/validation.html</loc>

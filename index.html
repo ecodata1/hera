@@ -12,8 +12,8 @@
     models, post-modelling steps and visualisation.">
 <title>Building Environmental Models Together • hera</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Building Environmental Models Together">
 <meta property="og:description" content="Hera is an opinionated collections of R packages designed
@@ -81,9 +81,9 @@
 </h1></div>
 <p><img src="https://raw.githubusercontent.com/ecodata1/hera/main/man/figures/heraverse_logo_2.png" align="right" width="300"></p>
 <!-- badges: start -->
+
 <p>WORK IN PROGRESS</p>
-<p>Hera is a prototype package to explore the future of regulatory environmental modelling. The package outlines possible approaches to creating a shared research platform for building, testing and deploying models used to assess environmental risk for regulatory purposes.</p>
-<p>See <a href="https://ecodata1.github.io/hera/articles/hera_specifications.html">Request for comment</a> paper for an outline and broad technical specifications.</p>
+<p>Hera is a prototype package to explore the future of regulatory environmental modelling. The package outlines possible approaches to creating a shared research platform for building, testing and deploying models used to assess environmental risk for regulatory purposes. See <a href="https://ecodata1.github.io/hera/articles/hera_specifications.html">Request for comment</a> paper for an outline and broad technical specifications.</p>
 <p>Hera is envisaged as an opinionated collections of R packages designed for sharing environmental models. All packages share an underlying design, grammar and data structures. This allows the separation of the concerns between data, models, post-modelling steps and visualisation. Allowing greater collaboration and sharing of methods and tools.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -101,87 +101,43 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>Classify some demo data for a number of different assessment parameters:</p>
+<p>Assess some demo data for various environmental risks:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ecodata1.github.io/hera">hera</a></span><span class="op">)</span></span>
-<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hera.html">hera</a></span><span class="op">(</span><span class="fu">hera</span><span class="fu">::</span><span class="va"><a href="reference/demo_data.html">demo_data</a></span><span class="op">)</span></span>
+<span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/assess.html">assess</a></span><span class="op">(</span><span class="fu">hera</span><span class="fu">::</span><span class="va"><a href="reference/demo_data.html">demo_data</a></span><span class="op">)</span></span>
 <span><span class="va">data</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample_id"</span>, <span class="st">"parameter"</span>, <span class="st">"question"</span>, <span class="st">"response"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt; # A tibble: 5 × 4</span></span>
-<span><span class="co">#&gt;   sample_id parameter         question response         </span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt;            </span></span>
-<span><span class="co">#&gt; 1 1840203   River Macrophytes class    poor             </span></span>
-<span><span class="co">#&gt; 2 1840203   River Macrophytes eqr      0.635381220416031</span></span>
-<span><span class="co">#&gt; 3 1840203   River Macrophytes status   classified       </span></span>
-<span><span class="co">#&gt; 4 1840203   River Macrophytes level    4                </span></span>
-<span><span class="co">#&gt; 5 3256506   River Macrophytes class    bad</span></span></code></pre></div>
-<p>Alternatively, breakdown each step in assessment:</p>
-<div class="section level3">
-<h3 id="validate">Validate<a class="anchor" aria-label="anchor" href="#validate"></a>
-</h3>
+<span><span class="co">#&gt;   sample_id parameter question           response                         </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;              &lt;chr&gt;                            </span></span>
+<span><span class="co">#&gt; 1 1017980   &lt;NA&gt;      EPSI Score TL2     97.2877525074163                 </span></span>
+<span><span class="co">#&gt; 2 1017980   &lt;NA&gt;      EPSI Condition TL2 Minimally sedimented/unsedimented</span></span>
+<span><span class="co">#&gt; 3 1101214   &lt;NA&gt;      EPSI Score TL2     94.6979865771812                 </span></span>
+<span><span class="co">#&gt; 4 1101214   &lt;NA&gt;      EPSI Condition TL2 Minimally sedimented/unsedimented</span></span>
+<span><span class="co">#&gt; 5 1250462   &lt;NA&gt;      EPSI Score TL2     97.8168378529374</span></span></code></pre></div>
+<p>Alternatively, you can view the <code>catalogue</code> and select which assessments to be run.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ecodata1.github.io/hera">hera</a></span><span class="op">)</span></span>
-<span><span class="va">validated</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/validation.html">validation</a></span><span class="op">(</span><span class="fu">hera</span><span class="fu">::</span><span class="va"><a href="reference/demo_data.html">demo_data</a></span><span class="op">)</span> <span class="co"># Return validated data</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">validated</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 6 × 22</span></span>
-<span><span class="co">#&gt;   location_id location_description           easting northing latitude longitude</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;       &lt;fct&gt;                            &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95</span></span>
-<span><span class="co">#&gt; 2 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95</span></span>
-<span><span class="co">#&gt; 3 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95</span></span>
-<span><span class="co">#&gt; 4 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95</span></span>
-<span><span class="co">#&gt; 5 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95</span></span>
-<span><span class="co">#&gt; 6 8175        River Eden @ Kemback Gauging …  341452   715796     56.3     -2.95</span></span>
-<span><span class="co">#&gt; # … with 16 more variables: date_taken &lt;dttm&gt;, sample_id &lt;chr&gt;, question &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   response &lt;fct&gt;, mean_alkalinity &lt;dbl&gt;, grid_reference &lt;chr&gt;,</span></span>
-<span><span class="co">#&gt; #   standard &lt;chr&gt;, quality_element &lt;chr&gt;, water_body_id &lt;dbl&gt;, label &lt;fct&gt;,</span></span>
-<span><span class="co">#&gt; #   dist_from_source &lt;dbl&gt;, alkalinity &lt;dbl&gt;, slope &lt;dbl&gt;,</span></span>
-<span><span class="co">#&gt; #   source_altitude &lt;dbl&gt;, parameter &lt;chr&gt;, year &lt;dbl&gt;</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="metrics">Metrics<a class="anchor" aria-label="anchor" href="#metrics"></a>
-</h3>
+<code class="sourceCode R"><span><span class="va">catalogue</span></span>
+<span><span class="co">#&gt; # A tibble: 4 × 3</span></span>
+<span><span class="co">#&gt;   assessment                data               assessment_function</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                     &lt;list&gt;             &lt;list&gt;             </span></span>
+<span><span class="co">#&gt; 1 Macroinvertebrate Metrics &lt;tibble [11 × 10]&gt; &lt;fn&gt;               </span></span>
+<span><span class="co">#&gt; 2 DARLEQ3                   &lt;tibble [35 × 12]&gt; &lt;fn&gt;               </span></span>
+<span><span class="co">#&gt; 3 Bankside Consistency      &lt;tibble [11 × 12]&gt; &lt;fn&gt;               </span></span>
+<span><span class="co">#&gt; 4 RICT                      &lt;tibble [20 × 12]&gt; &lt;fn&gt;</span></span></code></pre></div>
+<p>Then select which assessment(s) you wish to run by name:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">indices</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/indices.html">indices</a></span><span class="op">(</span><span class="va">validated</span><span class="op">)</span> <span class="co"># Calculate indices used for assessment (if required)</span></span>
-<span><span class="va">indices</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample_id"</span>, <span class="st">"parameter"</span>, <span class="st">"question"</span>, <span class="st">"response"</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="co">#&gt; # A tibble: 5 × 4</span></span>
-<span><span class="co">#&gt;   sample_id parameter         question  response        </span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;             &lt;chr&gt;     &lt;chr&gt;           </span></span>
-<span><span class="co">#&gt; 1 1840203   River Macrophytes rmni      7.07013957800168</span></span>
-<span><span class="co">#&gt; 2 1840203   River Macrophytes rn_a_taxa 6               </span></span>
-<span><span class="co">#&gt; 3 1840203   River Macrophytes n_rfg     4               </span></span>
-<span><span class="co">#&gt; 4 1840203   River Macrophytes rfa_pc    0               </span></span>
-<span><span class="co">#&gt; 5 3256506   River Macrophytes rmni      6.22099043940684</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="predict">Predict<a class="anchor" aria-label="anchor" href="#predict"></a>
-</h3>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">predictions</span> <span class="op">&lt;-</span> <span class="fu">prediction</span><span class="op">(</span><span class="va">validated</span><span class="op">)</span> <span class="co"># Predict the expected </span></span>
-<span><span class="va">predictions</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample_id"</span>, <span class="st">"parameter"</span>, <span class="st">"question"</span>, <span class="st">"response"</span><span class="op">)</span><span class="op">]</span></span>
-<span><span class="co">#&gt; # A tibble: 5 × 4</span></span>
-<span><span class="co">#&gt;   sample_id parameter         question  response        </span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;             &lt;chr&gt;     &lt;chr&gt;           </span></span>
-<span><span class="co">#&gt; 1 3256506   River Macrophytes ref_taxa  8.18193000184553</span></span>
-<span><span class="co">#&gt; 2 3256506   River Macrophytes ref_algae 0.05            </span></span>
-<span><span class="co">#&gt; 3 3256506   River Macrophytes ref_nfg   5.26620315804775</span></span>
-<span><span class="co">#&gt; 4 3256506   River Macrophytes ref_rmni  5.96735638218237</span></span>
-<span><span class="co">#&gt; 5 758729    River Macrophytes ref_taxa  8.18193000184553</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="assess">Assess<a class="anchor" aria-label="anchor" href="#assess"></a>
-</h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">assessments</span> <span class="op">&lt;-</span> <span class="fu">assessment</span><span class="op">(</span><span class="fu">hera</span><span class="fu">::</span><span class="va"><a href="reference/demo_data.html">demo_data</a></span><span class="op">)</span> <span class="co"># Assess the observed data against the expected/predicted </span></span>
+<code class="sourceCode R"><span><span class="va">assessments</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/assess.html">assess</a></span><span class="op">(</span><span class="va">demo_data</span>, </span>
+<span>                      name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"RICT"</span>,</span>
+<span>                               <span class="st">"Macroinvertebrate Metrics"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">assessments</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample_id"</span>, <span class="st">"parameter"</span>, <span class="st">"question"</span>, <span class="st">"response"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt; # A tibble: 5 × 4</span></span>
-<span><span class="co">#&gt;   sample_id parameter         question response         </span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt;            </span></span>
-<span><span class="co">#&gt; 1 1840203   River Macrophytes class    poor             </span></span>
-<span><span class="co">#&gt; 2 1840203   River Macrophytes eqr      0.635381220416031</span></span>
-<span><span class="co">#&gt; 3 1840203   River Macrophytes status   classified       </span></span>
-<span><span class="co">#&gt; 4 1840203   River Macrophytes level    4                </span></span>
-<span><span class="co">#&gt; 5 3256506   River Macrophytes class    bad</span></span></code></pre></div>
-</div>
+<span><span class="co">#&gt;   sample_id parameter question           response                         </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;              &lt;chr&gt;                            </span></span>
+<span><span class="co">#&gt; 1 1017980   &lt;NA&gt;      EPSI Score TL2     97.2877525074163                 </span></span>
+<span><span class="co">#&gt; 2 1017980   &lt;NA&gt;      EPSI Condition TL2 Minimally sedimented/unsedimented</span></span>
+<span><span class="co">#&gt; 3 1101214   &lt;NA&gt;      EPSI Score TL2     94.6979865771812                 </span></span>
+<span><span class="co">#&gt; 4 1101214   &lt;NA&gt;      EPSI Condition TL2 Minimally sedimented/unsedimented</span></span>
+<span><span class="co">#&gt; 5 1250462   &lt;NA&gt;      EPSI Score TL2     97.8168378529374</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
@@ -233,7 +189,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer>

@@ -8,8 +8,8 @@
 <meta name="description" content="hera">
 <title>Fish farm assessment • hera</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.1.0/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.1.0/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link href="../deps/bootstrap-5.1.3/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.1.3/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Fish farm assessment">
 <meta property="og:description" content="hera">
@@ -85,60 +85,553 @@
 <div class="section level2">
 <h2 id="welcome">Welcome<a class="anchor" aria-label="anchor" href="#welcome"></a>
 </h2>
-<p>This document has been created following the generic <a href="https://ecodata1.github.io/hera/articles/development_guide.html">assessment guidance</a>.</p>
+<p>This document has been created following the generic <a href="https://ecodata1.github.io/hera/articles/development_guide.html">assessment
+guidance</a>.</p>
 <!-- Create a new regulatory assessment by updating the code info below, for guidance see https://ecodata1.github.io/hera/articles/development_guide.html  -->
 </div>
 <div class="section level2">
 <h2 id="description">Description<a class="anchor" aria-label="anchor" href="#description"></a>
 </h2>
-<p>Basic details about the assessment. Update the ‘response’ values as required.</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 4 × 2</span></span></span>
-<span><span class="co">#&gt;   question   response              </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> name_short Fish farm assessment  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> name_long  Fish farm assessment  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> parameter  Marine Benthic Inverts</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> status     prototype</span></span></code></pre>
+<p>Basic details about the assessment. Update the ‘response’ values as
+required.</p>
+<table class="table">
+<thead><tr class="header">
+<th align="left">question</th>
+<th align="left">response</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">name_short</td>
+<td align="left">MPFF Compliance</td>
+</tr>
+<tr class="even">
+<td align="left">name_long</td>
+<td align="left">Marine Pen Fish farm Compliance</td>
+</tr>
+<tr class="odd">
+<td align="left">parameter</td>
+<td align="left">Marine Benthic Inverts</td>
+</tr>
+<tr class="even">
+<td align="left">status</td>
+<td align="left">prototype</td>
+</tr>
+<tr class="odd">
+<td align="left">type</td>
+<td align="left">compliance</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level2">
 <h2 id="input">Input<a class="anchor" aria-label="anchor" href="#input"></a>
 </h2>
 <p>A list of questions required to run the assessment.</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 18</span></span></span>
-<span><span class="co">#&gt;   parameter question response type  label sample_id location_id location_descri…</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Benthic … dna_rea… BBB-CCC… char… <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>          <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Benthic … taxon_a… 2        numb… bug   <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>          <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Sediment… toxicity 10       numb… <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>          <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 10 more variables: grid_reference &lt;lgl&gt;, water_body_id &lt;lgl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   year &lt;lgl&gt;, latitude &lt;dbl&gt;, longitude &lt;dbl&gt;, date_taken &lt;lgl&gt;, units &lt;lgl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   min &lt;lgl&gt;, max &lt;lgl&gt;, source &lt;chr&gt;</span></span></span></code></pre>
+<table class="table">
+<colgroup>
+<col width="33%">
+<col width="66%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">question</th>
+<th align="left">response</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Site Name</td>
+<td align="left">South Cava</td>
+</tr>
+<tr class="even">
+<td align="left">Permit</td>
+<td align="left">CAR/L/1072725</td>
+</tr>
+<tr class="odd">
+<td align="left">Responsible person</td>
+<td align="left">Chris Webb</td>
+</tr>
+<tr class="even">
+<td align="left">Operator (if different from above)</td>
+<td align="left">Cooke Aquaculture Scotland</td>
+</tr>
+<tr class="odd">
+<td align="left">Maximum licensed biomass (tonnes)</td>
+<td align="left">2500</td>
+</tr>
+<tr class="even">
+<td align="left">Date site stocked</td>
+<td align="left">44421</td>
+</tr>
+<tr class="odd">
+<td align="left">Peak biomass during growing cycle (tonnes)</td>
+<td align="left">2344</td>
+</tr>
+<tr class="even">
+<td align="left">Date peak biomass first reached</td>
+<td align="left">44602</td>
+</tr>
+<tr class="odd">
+<td align="left">Date when biomass reduced to 75% of peak biomass</td>
+<td align="left">44658</td>
+</tr>
+<tr class="even">
+<td align="left">Date of survey (start date)</td>
+<td align="left">44672</td>
+</tr>
+<tr class="odd">
+<td align="left">Date of survey (finish date)</td>
+<td align="left">44673</td>
+</tr>
+<tr class="even">
+<td align="left">Biomass on site at time of survey (tonnes)</td>
+<td align="left">1485</td>
+</tr>
+<tr class="odd">
+<td align="left">If fallow, date fish last on site</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Site centre Easting</td>
+<td align="left">333270</td>
+</tr>
+<tr class="odd">
+<td align="left">Site centre Northing</td>
+<td align="left">9333270</td>
+</tr>
+<tr class="even">
+<td align="left">Number of pens</td>
+<td align="left">16</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of pens stocked at time of survey</td>
+<td align="left">14</td>
+</tr>
+<tr class="even">
+<td align="left">Pen dimension</td>
+<td align="left">120m</td>
+</tr>
+<tr class="odd">
+<td align="left">Pen configuraton</td>
+<td align="left">8 x 2</td>
+</tr>
+<tr class="even">
+<td align="left">Surveyed by</td>
+<td align="left">Cooke Aquaculture Scotland</td>
+</tr>
+<tr class="odd">
+<td align="left">Comments (any relevant information)</td>
+<td align="left">Organic matter results for mps stations are given in
+“TOC” boxes - NOTE these are %LOI and not TOC figures</td>
+</tr>
+<tr class="even">
+<td align="left">Fauna</td>
+<td align="left">Biotikos</td>
+</tr>
+<tr class="odd">
+<td align="left">Carbon</td>
+<td align="left">Peatfield Scientific</td>
+</tr>
+<tr class="even">
+<td align="left">Particle Size</td>
+<td align="left">Peatfield Scientific</td>
+</tr>
+<tr class="odd">
+<td align="left">Residues</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Report By</td>
+<td align="left">Inga Williamson</td>
+</tr>
+<tr class="odd">
+<td align="left">Report Date</td>
+<td align="left">44775</td>
+</tr>
+<tr class="even">
+<td align="left">Authorised By</td>
+<td align="left">Inga Williamson</td>
+</tr>
+<tr class="odd">
+<td align="left">Authorised date</td>
+<td align="left">44775</td>
+</tr>
+<tr class="even">
+<td align="left">Description (unprotected cell - can be edited)</td>
+<td align="left">SW0</td>
+</tr>
+<tr class="odd">
+<td align="left">Easting</td>
+<td align="left">333031</td>
+</tr>
+<tr class="even">
+<td align="left">Northing</td>
+<td align="left">998594</td>
+</tr>
+<tr class="odd">
+<td align="left">Depth (m)</td>
+<td align="left">28.3</td>
+</tr>
+<tr class="even">
+<td align="left">Date sampled (dd/mm/yy)</td>
+<td align="left">44672</td>
+</tr>
+<tr class="odd">
+<td align="left">Time sampled (hh:mm)</td>
+<td align="left">0.4513888888888889</td>
+</tr>
+<tr class="even">
+<td align="left">Parmeters sampled: Fauna (Yes/No)</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">Carbon (Yes/No)</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">Particle Size (Yes/No)</td>
+<td align="left">Yes</td>
+</tr>
+<tr class="odd">
+<td align="left">Emamectin Benzoate Residues (Yes/No)</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">Parmeters sampled: Fauna (Yes/No)</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Distance from cages (m)</td>
+<td align="left">506</td>
+</tr>
+<tr class="even">
+<td align="left">Direction from cages (deg)</td>
+<td align="left">SW - 222</td>
+</tr>
+<tr class="odd">
+<td align="left">Description</td>
+<td align="left">SW0</td>
+</tr>
+<tr class="even">
+<td align="left">Depth</td>
+<td align="left">28.3</td>
+</tr>
+<tr class="odd">
+<td align="left">Date sampled</td>
+<td align="left">44672</td>
+</tr>
+<tr class="even">
+<td align="left">% Grab filled</td>
+<td align="left">70</td>
+</tr>
+<tr class="odd">
+<td align="left">Grab size</td>
+<td align="left">4.4999999999999998E-2</td>
+</tr>
+<tr class="even">
+<td align="left">Colour</td>
+<td align="left">Dark brown</td>
+</tr>
+<tr class="odd">
+<td align="left">Consistency/Texture</td>
+<td align="left">Fine sand, silt</td>
+</tr>
+<tr class="even">
+<td align="left">Surface smell (Yes/No)</td>
+<td align="left">No</td>
+</tr>
+<tr class="odd">
+<td align="left">Fungus (Yes/No)</td>
+<td align="left">No</td>
+</tr>
+<tr class="even">
+<td align="left">% &lt; 0.063mm</td>
+<td align="left">3.2727170993733208</td>
+</tr>
+<tr class="odd">
+<td align="left">% 0.125-0.063mm</td>
+<td align="left">16.226359668755592</td>
+</tr>
+<tr class="even">
+<td align="left">% 0.25-0.125mm</td>
+<td align="left">51.504168531781552</td>
+</tr>
+<tr class="odd">
+<td align="left">% 0.5 - 0.25mm</td>
+<td align="left">20.387057967770811</td>
+</tr>
+<tr class="even">
+<td align="left">% 1 - 0.5mm</td>
+<td align="left">3.5312220232766336</td>
+</tr>
+<tr class="odd">
+<td align="left">% 2 - 1mm</td>
+<td align="left">2.2896150402864812</td>
+</tr>
+<tr class="even">
+<td align="left">% 4 - 2mm</td>
+<td align="left">2.3059814234556848</td>
+</tr>
+<tr class="odd">
+<td align="left">% 8 - 4mm</td>
+<td align="left">0.48287824529991036</td>
+</tr>
+<tr class="even">
+<td align="left">% &gt; 8mm</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Degree of sorting</td>
+<td align="left">Moderately Sorted</td>
+</tr>
+<tr class="even">
+<td align="left">Degree of skewness</td>
+<td align="left">Coarse Skewed</td>
+</tr>
+<tr class="odd">
+<td align="left">Degree of kurtosis</td>
+<td align="left">Very Leptokurtic</td>
+</tr>
+<tr class="even">
+<td align="left">Folk Triangle</td>
+<td align="left">Slightly Gravelly Sand</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of taxa (S)</td>
+<td align="left">5</td>
+</tr>
+<tr class="even">
+<td align="left">Abundance (N)</td>
+<td align="left">1357</td>
+</tr>
+<tr class="odd">
+<td align="left">Magalef’s Richness (d)</td>
+<td align="left">0.55455184291975967</td>
+</tr>
+<tr class="even">
+<td align="left">Pielou’s Evenness (J)</td>
+<td align="left">0.25807116764664573</td>
+</tr>
+<tr class="odd">
+<td align="left">S-Wiener Diversity H’log 2</td>
+<td align="left">0.59922269463913325</td>
+</tr>
+<tr class="even">
+<td align="left">Number of Enrichment Polychaete Species</td>
+<td align="left">2</td>
+</tr>
+<tr class="odd">
+<td align="left">Abundance of Enrichment Polychaetes (m2)</td>
+<td align="left">1555.5555555555557</td>
+</tr>
+<tr class="even">
+<td align="left">ITI</td>
+<td align="left">0.24723655121592003</td>
+</tr>
+<tr class="odd">
+<td align="left">IQI</td>
+<td align="left">0.34918566141370255</td>
+</tr>
+<tr class="even">
+<td align="left">Replicate 1 (see note 1 below)</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Replicate 2 (see note 1 below)</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Replicate 3 (see note 1 below)</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Mean (see note 1 below)</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">LOD</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of replicates</td>
+<td align="left">2</td>
+</tr>
+<tr class="even">
+<td align="left">MCS Code</td>
+<td align="left">A</td>
+</tr>
+<tr class="odd">
+<td align="left">comment</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">Taxon abundance</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Transect 2 Species Abundance Matrix</td>
+<td align="left">A</td>
+</tr>
+<tr class="even">
+<td align="left">Transect 3 Species Abundance Matrix</td>
+<td align="left">A</td>
+</tr>
+<tr class="odd">
+<td align="left">Transect 4 Species Abundance Matrix</td>
+<td align="left">A</td>
+</tr>
+<tr class="even">
+<td align="left">Transect 5 Species Abundance Matrix</td>
+<td align="left">MCS Code (optional)</td>
+</tr>
+<tr class="odd">
+<td align="left">Transect 6 Species Abundance Matrix</td>
+<td align="left">MCS Code (optional)</td>
+</tr>
+<tr class="even">
+<td align="left">Additional Stations Species Abundance Matrix</td>
+<td align="left">A</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level2">
 <h2 id="assessment">Assessment<a class="anchor" aria-label="anchor" href="#assessment"></a>
 </h2>
-<p>If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.</p>
+<p>If applicable, write a function to assess your input data and return
+an outcome. For example, a metric, statistic, prediction etc.</p>
 </div>
 <div class="section level2">
 <h2 id="outcome">Outcome<a class="anchor" aria-label="anchor" href="#outcome"></a>
 </h2>
 <p>The outcome of your assessment.</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 18</span></span></span>
-<span><span class="co">#&gt;   parameter question response type  label sample_id location_id location_descri…</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Benthic … dna_rea… BBB-CCC… char… <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>          <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Benthic … taxon_a… 2        numb… bug   <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>          <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Sediment… toxicity 10       numb… <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        <span style="color: #BB0000;">NA</span>          <span style="color: #BB0000;">NA</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 10 more variables: grid_reference &lt;lgl&gt;, water_body_id &lt;lgl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   year &lt;lgl&gt;, latitude &lt;dbl&gt;, longitude &lt;dbl&gt;, date_taken &lt;lgl&gt;, units &lt;lgl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   min &lt;lgl&gt;, max &lt;lgl&gt;, source &lt;chr&gt;</span></span></span></code></pre>
+<table class="table">
+<colgroup>
+<col width="36%">
+<col width="63%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">question</th>
+<th align="left">response</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">stationNumber</td>
+<td align="left">Compliant: Min. number of stations have been taken
+(8)</td>
+</tr>
+<tr class="even">
+<td align="left">twoConsecutiveStations</td>
+<td align="left">Compliant: 2 consecutive stations at Good are
+returned</td>
+</tr>
+<tr class="odd">
+<td align="left">breachDistanceBestFit</td>
+<td align="left">97</td>
+</tr>
+<tr class="even">
+<td align="left">breachLongitude</td>
+<td align="left">-3.16422049321529</td>
+</tr>
+<tr class="odd">
+<td align="left">breachLatitude</td>
+<td align="left">58.8689019638222</td>
+</tr>
+<tr class="even">
+<td align="left">area_95_confidence</td>
+<td align="left">147643.06981096</td>
+</tr>
+<tr class="odd">
+<td align="left">package_version</td>
+<td align="left">0.2.1</td>
+</tr>
+<tr class="even">
+<td align="left">package_date</td>
+<td align="left">2022-11-22</td>
+</tr>
+<tr class="odd">
+<td align="left">IQI</td>
+<td align="left">0.349185661413703</td>
+</tr>
+<tr class="even">
+<td align="left">Easting</td>
+<td align="left">333031</td>
+</tr>
+<tr class="odd">
+<td align="left">Northing</td>
+<td align="left">998594</td>
+</tr>
+<tr class="even">
+<td align="left">MCFF_Transect</td>
+<td align="left">South Cava - 1</td>
+</tr>
+<tr class="odd">
+<td align="left">Longitude</td>
+<td align="left">-3.16298523772361</td>
+</tr>
+<tr class="even">
+<td align="left">Latitude</td>
+<td align="left">58.8694927035989</td>
+</tr>
+<tr class="odd">
+<td align="left">Bearing</td>
+<td align="left">-132.717722103408</td>
+</tr>
+<tr class="even">
+<td align="left">Distance</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of stations per transect</td>
+<td align="left">8</td>
+</tr>
+<tr class="even">
+<td align="left">WFD status</td>
+<td align="left">Poor</td>
+</tr>
+<tr class="odd">
+<td align="left">ellipse</td>
+<td align="left">object</td>
+</tr>
+<tr class="even">
+<td align="left">polygon</td>
+<td align="left">object</td>
+</tr>
+<tr class="odd">
+<td align="left">spotfire_polygon</td>
+<td align="left">object</td>
+</tr>
+<tr class="even">
+<td align="left">breachPositionEnsemble</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">map</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">model_info</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">ellipse_warnings</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">geoDf</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="left">Median distance to Good (m)</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level2">
 <h2 id="check">Check<a class="anchor" aria-label="anchor" href="#check"></a>
 </h2>
 <p>Run checks on the assessment.</p>
 <pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🎊</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 😀</span></span></code></pre>
+<span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🎊</span></span></code></pre>
 <table class="table">
 <thead><tr class="header">
 <th align="left">check</th>
@@ -164,17 +657,24 @@
 <h2 id="update">Update<a class="anchor" aria-label="anchor" href="#update"></a>
 </h2>
 <p>Update the catalogue of assessments to make them available.</p>
-<p>After <strong>updating the catalogue, rebuild the package</strong>, click on Build &gt; Install and Restart menu or ‘Install and Restart’ button in the Build pane.</p>
+<pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/home/runner/work/hera/hera'</span></span></span>
+<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Saving <span style="color: #0000BB;">'catalogue'</span> to <span style="color: #0000BB;">'data/catalogue.rda'</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">•</span> Document your data (see <span style="color: #0000BB;">'https://r-pkgs.org/data.html'</span>)</span></span></code></pre>
+<p>After <strong>updating the catalogue, rebuild the package</strong>,
+click on Build &gt; Install and Restart menu or ‘Install and Restart’
+button in the Build pane.</p>
 </div>
 <div class="section level2">
 <h2 id="test">Test<a class="anchor" aria-label="anchor" href="#test"></a>
 </h2>
-<p>This section tests if this assessment is usable using <code>assessment</code> function.</p>
+<p>This section tests if this assessment is usable using
+<code>assessment</code> function.</p>
 </div>
 <div class="section level2">
 <h2 id="launch-app">Launch app<a class="anchor" aria-label="anchor" href="#launch-app"></a>
 </h2>
-<p>Below is an interactive application displaying the results of your assessment.</p>
+<p>Below is an interactive application displaying the results of your
+assessment.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
@@ -189,7 +689,7 @@
 
 <div class="pkgdown-footer-right">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
     </footer>
