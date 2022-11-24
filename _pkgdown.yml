@@ -9,6 +9,8 @@ navbar:
     - text: Request for comment - Shared Design Principles
       href: articles/hera_specifications.html
     - text: -------
+    - text: Vocabulary
+      href: articles/data_dictionary.html
     - text: Regulatory Catalogue
       href: articles/hera_assessments.html
     - text: -------
