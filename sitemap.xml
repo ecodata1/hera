@@ -10,16 +10,13 @@
     <loc>https://ecodata1.github.io/hera/articles/darleq3.html</loc>
   </url>
   <url>
-    <loc>https://ecodata1.github.io/hera/articles/data-dictionary.html</loc>
+    <loc>https://ecodata1.github.io/hera/articles/data_dictionary.html</loc>
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/articles/deployment_guide.html</loc>
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/articles/development_guide.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/articles/fish-farm-assessment.html</loc>
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/articles/hera_assessments.html</loc>
@@ -32,6 +29,9 @@
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/articles/macroinvertebrate-metrics.html</loc>
+  </url>
+  <url>
+    <loc>https://ecodata1.github.io/hera/articles/mpff-compliance.html</loc>
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/articles/rict.html</loc>
@@ -50,6 +50,9 @@
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/reference/combine.html</loc>
+  </url>
+  <url>
+    <loc>https://ecodata1.github.io/hera/reference/convert.html</loc>
   </url>
   <url>
     <loc>https://ecodata1.github.io/hera/reference/demo_data.html</loc>
