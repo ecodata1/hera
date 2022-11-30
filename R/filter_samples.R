@@ -2,7 +2,14 @@
 filter_samples <- function(data,
                            options = NULL,
                            classification_year_data = TRUE) {
+ if(class(data$date_take) == "Date") {
   data <- mutate(data, year = lubridate::year(.data$date_taken))
+ }
+ else if(class(data$date_take) == "character") {
+   data$year <- as.integer(substr(data$date_taken, 7, 10))
+ } else {
+   stop("date_taken must be either character or Date type in DD/MM/YYYY format")
+ }
 
   # Create default option data frame if options not provided
   if (is.null(options)) {
