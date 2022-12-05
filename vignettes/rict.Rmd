@@ -75,7 +75,7 @@ input
 
 If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
 
-```{r assessment}
+```{r assessment, message=FALSE, warning=FALSE}
 
 assessment_function <- function(data) {
   # Calculated some statistic...

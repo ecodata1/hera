@@ -70,7 +70,7 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
       names$hera_latest != ""]
     names(data)[to_change] <- change_to
     data <- data %>% mutate_all(as.character)
-    data$date_taken <- as.Date(data$date_taken, format = "%d/%m/%Y")
+    data$date_taken <- as.Date(data$date_taken)
     return(data)
   }
 
