@@ -7,23 +7,23 @@ filter_samples <- function(data,
   # Create default option data frame if options not provided
   if (is.null(options)) {
     options <- tibble(
-      classification_year = unique(max(data$year)),
-      seasons = list(c("SPR", "AUT")),
-      classification_window = 6,
-      min_year = 1,
-      max_year = 3,
-      min_seasons = 2,
-      max_seasons = 2,
-      min_samples_per_season = 1,
-      max_samples_per_season = 1,
-      parameter = "River Family Inverts"
+      classification_year = c(unique(max(data$year))) ,
+      seasons = c(list(c("SPR", "AUT"))),
+      classification_window = c(6),
+      min_year = c(1),
+      max_year = c(3),
+      min_seasons = c(2),
+      max_seasons = c(2),
+      min_samples_per_season = c(1),
+      max_samples_per_season = c(1),
+      parameter = c("River Family Inverts")
     )
   }
-
+browser()
   # Filter to year and window
   data <- filter(data, .data$year <= options$classification_year &
     .data$year >= options$classification_year - options$classification_window + 1 &
-    .data$parameter == options$parameter)
+    .data$parameter %in% c("River Family Inverts","River Diatoms"))
 
   # Make season
   data <- mutate(data, season = season(.data$date_taken, output = "shortname"))
