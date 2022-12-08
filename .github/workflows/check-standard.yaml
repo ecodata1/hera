@@ -81,7 +81,7 @@ jobs:
           path: check
 
       - name: Upload check results
-        if: runner.os == 'Windows'
+        if: runner.os == 'windows-latest'
         # Upload artifacts for Windows - R 4.0.5 for direct install if required.
         uses: actions/upload-artifact@main
         with:
