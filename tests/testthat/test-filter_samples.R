@@ -1,7 +1,9 @@
 test_that("filter samples function works", {
-  skip("WIP")
   data <- hera:::filter_samples(demo_data)
   expect_equal(nrow(data), 113)
+
+  data <- hera:::filter_samples(demo_data, classification_year_data = FALSE)
+  expect_equal(nrow(data), 733)
 
   options <- tibble(
     classification_year = 2015,
