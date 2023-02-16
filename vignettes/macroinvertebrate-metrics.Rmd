@@ -89,6 +89,7 @@ assessment_function <- function(data) {
   # Note, any non-standard base R library must be call using require().
    require(dplyr)
   input <- data
+  input$label <- trimws(input$label)
   input <- dplyr::filter(input, parameter == "River Family Inverts") 
   input <- dplyr::filter(input, question == "Taxon abundance") 
   input$TAXON <- input$label 
@@ -96,7 +97,7 @@ assessment_function <- function(data) {
   input$RESULT <- input$response
   input <-  dplyr::select(input, SAMPLE_ID,
                  TAXON, RESULT)
-  input <-  dplyr::mutate_all(input, na_if, "")
+  # input <-  dplyr::mutate_all(input, na_if, "")
   input <- input[complete.cases(input),]
   input$RESULT <- as.numeric(input$RESULT)
   epsi <- macroinvertebrateMetrics::calcEpsi(input)

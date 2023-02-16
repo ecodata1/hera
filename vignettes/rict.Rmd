@@ -528,7 +528,24 @@ assessment_function <- function(data) {
                                      question))
   
   
- 
+  output <- mutate(output,
+                   response = ifelse(response == "H",
+                                     "High",
+                                     response),
+                   response = ifelse(response == "G",
+                                     "Good",
+                                     response),
+                   response = ifelse(response == "M",
+                                     "Moderate",
+                                     response),
+                   response = ifelse(response == "P",
+                                     "Poor",
+                                     response),
+                   response = ifelse(response == "B",
+                                     "Bad",
+                                     response)
+                   )
+  
   return(output)
 }
 ```

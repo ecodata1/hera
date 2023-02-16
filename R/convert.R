@@ -18,7 +18,7 @@
 #' @importFrom magrittr `%>%`
 #' @importFrom utils read.csv
 #' @return Dataframe in `hera` structure. See `demo_data`
-#' @example
+#' @examples
 #'  data <-
 #' read.csv(system.file("extdat",
 #'                     "demo-data/analysis-results-ecology.csv",

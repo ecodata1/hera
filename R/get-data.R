@@ -4,14 +4,14 @@
 #' regulatory assessment tool.
 #'
 #' @param location_id Unique ID of location.
-#' @param take Number of observation to download. For "EA" API services.
+#' @param take Number of observation to download. For "ea" API services.
 #' @param date_from Start of date taken window in string format: "2013-12-31".
 #' @param date_to End of date taken window in string format: "2015-12-31".
 #' @param dataset Default will get Ecology monitoring data, set to "replocs" to
 #'   represent location data for SEPA
 #' @param year Classification year
 #' @param water_body_id Water body ID used for replocs table queries.
-#' @param source Which data source, either "EA or "SEPA". SEPA is internal access
+#' @param source Which data source, either "ea" or "sepa". SEPA is internal access
 #'   only.
 #'
 #' @return Data frame

@@ -18,7 +18,7 @@ get_data(
 \arguments{
 \item{location_id}{Unique ID of location.}
 
-\item{take}{Number of observation to download. For "EA" API services.}
+\item{take}{Number of observation to download. For "ea" API services.}
 
 \item{date_from}{Start of date taken window in string format: "2013-12-31".}
 
@@ -31,7 +31,7 @@ represent location data for SEPA}
 
 \item{water_body_id}{Water body ID used for replocs table queries.}
 
-\item{source}{Which data source, either "EA or "SEPA". SEPA is internal access
+\item{source}{Which data source, either "ea" or "sepa". SEPA is internal access
 only.}
 }
 \value{

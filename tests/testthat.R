@@ -8,5 +8,9 @@
 
 library(testthat)
 library(hera)
+library(magrittr)
+library(dplyr)
+library(tidyr)
+library(tibble)
 
 test_check("hera")
