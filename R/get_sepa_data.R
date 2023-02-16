@@ -138,8 +138,14 @@ get_sepa_data <- function(location_id,
         offset <- offset + n_offset
         data <- bind_rows(data, offset_data)
       }
-      data <- convert(data, convert_to = "hera", convert_from = "sepa")
-      Sys.sleep(0.1)
+      # If no data found set to NULL (data could return an empty list at this
+      # point)
+      if(length(data) == 0) {
+        return(NULL)
+      } else {
+        data <- convert(data, convert_to = "hera", convert_from = "sepa")
+        Sys.sleep(0.1)
+      }
       return(data)
     })
   } else {

@@ -1,0 +1,192 @@
+---
+title: "assessment-checking"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+# Checks
+
+4\. Grab all the data ✓
+
+5\. Compare changes in real classification between years? Difficult because sites not always sampled every year. 
+- Need solution.
+
+6\. Compare to changes between new tools and old for single year(s)? ✓ Lots of changes in diatom classification.
+- Check one site against RICT3 output?
+- Need solution for finding water body IDs for location for invert sites. No contributing location?
+
+6\. Check results from darleq2 outputs against NEMS?
+
+7\. Have a look at suitability codes
+
+8\. Have a look at warnings and fails?
+
+9\. Have a look at excluded samples (missing Alk for Diatoms etc)
+
+10\. Use dynamic predictive variables Vs fixed predictive values
+
+11\. Test one sample from beginning to end??
+
+## Replocs
+
+Get replocs values for parameters and years of interest:
+
+```{r}
+library(hera)
+library(tidyverse)
+
+# Get data --------------------------------------------------------------------
+# These three steps would be much faster / easier to achieve in Spotfire!
+# 1. Get replocs table for specific year
+replocs <- get_data(
+  year = c(2016,2017,2018),
+  dataset = "replocs"
+)
+
+
+#  3451 invert ASPT
+glimpse(replocs)
+
+```
+
+## Data
+
+Use replocs site list to get all data.
+
+Classification paramters:
+
+- Macroinvertebrate (NTAXA)	3452
+- Macroinvertebrate (ASPT)	3451
+- Phytobenthos (diatoms)	3350
+
+
+
+```{r}
+# 2. Filter for specific parameter(s) we want to classify
+replocs <- replocs %>%
+  filter(classification_parameter %in% c(3451,3452,3350)) %>%
+  select(location_code,
+         water_body_id,
+         year,
+         classification_parameter,
+         on_wb) %>%
+  unique()
+
+# 3. Get Ecology analytical results
+# WARNING this takes 1hr + to run! Better to filter to a few specific locations
+data <- get_data(location_id = unique(replocs$location_code))
+```
+
+
+## Filter Data
+
+```{r}
+# Filter data-----------------------------------------------------------------
+# We only want samples that pass our criteria (season, number of samples etc)
+data <- filter(data, parameter %in% c("River Family Inverts", 
+                                      "River Diatoms"))
+
+results <- map(c(2018), function(class_year){
+  
+filtered_data <- data %>%
+  mutate(year = lubridate::year(date_taken)) %>%
+   filter(year <= class_year) %>%
+ hera:::filter_samples()
+
+# filtered_data <- dplyr::filter(filtered_data, !year %in% c(2017, 2016, 2015))
+
+# Run the classification for 'RICT' (produces output for 3451 parameter as well
+# as 3452) for each location.
+# Also classifies each sample and returns predicted values
+wfd_results <- assess(filtered_data[filtered_data$location_id %in%                                 unique(filtered_data$location_id)[1:100],],
+                      name = c("RICT", "DARLEQ3"))
+
+# Filter out the predicted values and sample level results. We only want the
+# location level results
+results_3 <- filter(
+  wfd_results,
+  question %in% c(
+    "CoCH",
+    "CoCG",
+    "CoCM",
+    "CoCP",
+    "CoCB",
+    "Class",
+    "EQR"
+  ),
+  is.na(sample_id)
+) %>%
+  select(-sample_id)
+
+# Pivot results to make them look nice
+results_3 <- pivot_wider(results_3, names_from = question, values_from = response)
+results_3$year <- class_year
+return(results_3)
+})
+
+results <- bind_rows(results)
+
+
+
+parameter_ids <- data.frame(
+  "parameter" = c("Macroinvertebrate (NTAXA)",
+                  "Macroinvertebrate (ASPT))",
+                     "Phytobenthos (diatoms)"),
+  "parameter_id" = c(3452,3451,3350 )
+)
+
+results <- inner_join(results, parameter_ids,
+                      by = join_by(parameter))
+
+# test <- results[results$parameter == "Macroinvertebrates (ASPT)", ]
+# check <- select(test, year, location_id, Class ) %>% 
+#   pivot_wider(names_from = year, values_from = Class)
+# 
+# check <- check[complete.cases(check),]
+  
+
+
+# For now, let's only keep 3451 (ASPT) parameter results
+# aspt_results <- filter(results_3, parameter == "Macroinvertebrates (ASPT)")
+```
+
+## Compare
+
+Compare against previous classification results.
+
+```{r}
+# Compare against published 2016 classification
+# Probably easier to do this in Spotfire etc.
+# Local files on my machine! -
+# class_2016 <- readr::read_csv(
+#   "C://Users//Tim.Foster//Documents//Projects//2016-aspt-classification.csv"
+# )
+
+class <- readr::read_csv(
+  "C://Users//Tim.Foster//Documents//Projects//water-body-classification.csv"
+)
+
+class <- rename(class, "location_id" = `Contributing Location Code`)
+class$location_id <- as.character(class$location_id)
+
+
+
+test_class <- inner_join(results, class,
+                         by = join_by("location_id" == "location_id",
+                                      "year" == "Classification Year",
+                                      "parameter_id" == "Classification Parameter"))
+
+table(test_class$`Status Description`, test_class$Class)
+test <- select(test_class, EQR, Class, `Status Description`, Result)
+
+
+test_class <- test_class %>%
+  select(location_id, parameter, Class, class_2016) %>%
+  mutate(class_2016 = substr(.$class_2016, 1, 1))
+
+test_class <- filter(test_class, Class != class_2016)
+
+
+```

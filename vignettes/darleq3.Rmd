@@ -186,6 +186,9 @@ assessment_function <- function(data) {
     filter(.data$question == "taxon abundance" |
       .data$question == "Taxon abundance")
 
+  # Trim whitespace in Taxon name to help join.
+  diatom_taxon_abundance$label <-  trimws(diatom_taxon_abundance$label)
+  dares_table$TaxonNameSEPA <-  trimws(dares_table$TaxonNameSEPA)
   # Join to S_TAXON_DARES table using Taxon name.
   diatom_taxonname <- diatom_taxon_abundance %>%
     select(.data$sample_id, .data$label, .data$response, .data$date_taken) %>%
