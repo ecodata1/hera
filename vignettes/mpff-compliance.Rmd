@@ -22,7 +22,7 @@ library(tidyr)
 library(tibble)
 library(magrittr)
 library(testthat)
-library(visNetwork)
+#  library(visNetwork)
 ```
 
 ## Welcome

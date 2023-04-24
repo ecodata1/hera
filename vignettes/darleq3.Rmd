@@ -22,7 +22,6 @@ library(tidyr)
 library(tibble)
 library(magrittr)
 library(testthat)
-library(visNetwork)
 ```
 
 ## Welcome
@@ -127,10 +126,6 @@ assessment_function <- function(data) {
   require(tidyr)
   require(magrittr)
   require(tibble)
-
-  data <- filter(data, question == "Taxon abundance" &
-    parameter == "River Diatoms")
-  data$response <- as.numeric(data$response)
   # Generates prediction based on predictors...
   predictors <- utils::read.csv(system.file("extdat",
     "predictors.csv",
@@ -139,12 +134,22 @@ assessment_function <- function(data) {
   stringsAsFactors = FALSE, check.names = FALSE
   )
   predictors$location_id <- as.character(predictors$location_id)
-  if(!any(names(data) %in% "alkalinity")) {
-  data <- inner_join(data, predictors, by = c("location_id"))
+  if(!any(names(data) %in% "chemistry_site")) {
+  data <- left_join(data, predictors, by = c("location_id"))
   } 
   
-  data$alkalinity[is.na(data$alkalinity)] <- 75
 
+if(!any(names(data) %in% c("alkalinity"))) {
+  message("calculating alklainity...")
+alk <- hera:::mean_alkalinity(data)
+data$alkalinity <- NULL
+data <- inner_join(data, alk, by = join_by("sample_id" == "sample_number"))
+}
+
+    data <- filter(data, question == "Taxon abundance" &
+    parameter == "River Diatoms")
+  data$response <- as.numeric(data$response)
+ data$alkalinity[is.na(data$alkalinity)] <- 75
 
   data$alkalinity <- as.numeric(data$alkalinity)
   # Combine mean alkalinity with other site headers
@@ -190,12 +195,29 @@ assessment_function <- function(data) {
   diatom_taxon_abundance$label <-  trimws(diatom_taxon_abundance$label)
   dares_table$TaxonNameSEPA <-  trimws(dares_table$TaxonNameSEPA)
   # Join to S_TAXON_DARES table using Taxon name.
+  if(any(names(diatom_taxon_abundance) %in% c("taxon_ids"))) {
+      diatom_taxonname <- diatom_taxon_abundance %>%
+    select(.data$location_id,
+           .data$sample_id, 
+           .data$taxon_ids,
+           .data$label,
+           .data$response, 
+           .data$date_taken) %>%
+    inner_join(dares_table[, c("TaxonName", "TaxonId", "TaxonNameSEPA")],
+      by = c("taxon_ids" = "TaxonId")
+    )
+      diatom_taxonname$TaxonId <- diatom_taxonname$taxon_ids
+  } else {
   diatom_taxonname <- diatom_taxon_abundance %>%
-    select(.data$sample_id, .data$label, .data$response, .data$date_taken) %>%
+    select(.data$location_id,
+           .data$sample_id, 
+           .data$label,
+           .data$response, 
+           .data$date_taken) %>%
     inner_join(dares_table[, c("TaxonName", "TaxonId", "TaxonNameSEPA")],
       by = c("label" = "TaxonNameSEPA")
     )
-
+  }
   # Make sure numeric
   diatom_taxonname$response <-
     as.numeric(as.character(diatom_taxonname$response))
@@ -237,6 +259,9 @@ assessment_function <- function(data) {
   header <- data.frame(header)
   header <- header[header$SampleID %in% row.names(diatom_data), ]
   header <- header[!duplicated(header$SampleID), ]
+  row.names(header) <- header$SampleID
+  header$SampleID <- as.character(header$SampleID)
+  header$SAMPLE_DATE <- as.Date(header$SAMPLE_DATE)
   output <- darleq3::calc_Metric(diatom_data, metric = "TDI4")
   output <- darleq3::calc_EQR(output,
     header,
@@ -262,13 +287,23 @@ assessment_function <- function(data) {
     values_to = "response"
   )
     names(location) <- c("location_id", "question", "response")
-  data <- bind_rows(sample, location)
-  data$parameter <- "Phytobenthos (diatoms)"
-  data <-  mutate(data,
+  results <- bind_rows(sample, location)
+  results$parameter <- "Phytobenthos (diatoms)"
+  results <-  mutate(results,
                    question = ifelse(question == "WFDClass",
                                      "Class",
                                      question))
-  return(data)
+  
+  years <- data %>% 
+    mutate("year" = lubridate::year(date_taken)) %>% 
+    filter(parameter == "River Diatoms") %>% 
+    group_by(location_id) %>%
+    summarise("response" = paste(unique(.$year), collapse = ","))
+    
+  years$question <- "Years included"
+  years$parameter <- "Phytobenthos (diatoms)"
+  results <- bind_rows(results, years)
+  return(results)
 }
 ```
 
@@ -278,7 +313,7 @@ The outcome of your assessment.
 
 ```{r output}
 outcome <- assessment_function(input)
-outcome
+ outcome
 ```
 
 ## Check

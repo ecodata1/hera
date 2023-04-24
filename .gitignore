@@ -13,3 +13,4 @@ hera.Rcheck/
 hera*.tar.gz
 hera*.tgz
 vignettes/data-flow_files
+vignettes/data

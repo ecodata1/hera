@@ -4,23 +4,22 @@ filter_samples <- function(data,
                            options = NULL,
                            classification_year_data = TRUE) {
   data <- dplyr::mutate(data, year = lubridate::year(.data$date_taken))
-
   # Create default option data frame if options not provided
   if (is.null(options)) {
     options <- tibble::tibble(
-      seasons = c(list(c("SPR", "AUT")), list(c("SPR", "AUT"))),
+      seasons = c(list(c("SPR", "AUT")), list(c("SPR","SUM", "AUT"))),
       classification_window = c(6, 6),
       min_year = c(1, 1),
       max_year = c(3, 3),
       min_seasons = c(2, 2),
-      max_seasons = c(2, 2),
+      max_seasons = c(2, 3),
       min_samples_per_season = c(1, 1),
       max_samples_per_season = c(1, 1),
       parameter = c("River Family Inverts", "River Diatoms")
     )
   }
   # Add classification year based on input data max year
-  if(is.null(options$classification_year )) {
+  if(!any(names(options) %in% "classification_year")) {
     options$classification_year = unique(max(data$year))
   }
   # Loop through each parameter and apply parameter filters/options
@@ -29,6 +28,10 @@ filter_samples <- function(data,
     data <- dplyr::filter(data, .data$year <= options$classification_year &
       .data$year >= options$classification_year - options$classification_window + 1 &
       .data$parameter %in% options$parameter)
+
+    if(nrow(data) < 1) {
+      return(NULL)
+    }
 
     # Make season
     data <- dplyr::mutate(data, season = season(.data$date_taken,
@@ -47,10 +50,11 @@ filter_samples <- function(data,
 
     sample_order <- dplyr::group_by(
       data, .data$year,
-      .data$season, .data$location_id,
+      .data$season, .data$location_id, .data$analysis_repname
     ) %>%
       dplyr::select(
         .data$sample_id,
+        .data$analysis_repname,
         .data$date_taken,
         .data$year,
         .data$season,
