@@ -41,7 +41,7 @@ editor_options:
 -   Join with 2020 classification? ✓
 -   Sewage fungus override - manual check? ✓
 -   Missing NGR in recovered data?
--   Convert() function does a lot of tweaks to question/REPORTED_NAME/paramter/analysis - can these go in a .csv lookup file? Is paramter the right term?
+-   Convert() function does a lot of tweaks to question/REPORTED_NAME/parameter/analysis - can these go in a .csv lookup file? Is paramter the right term?
 
 ```{r}
 library(hera)
@@ -236,7 +236,7 @@ predictors <- utils::read.csv(system.file("extdat",
    stringsAsFactors = FALSE, check.names = FALSE
    )
    predictors$location_id <- as.character(predictors$location_id)
-
+ predictors <- predictors[predictors$date != "", ]
    # use latest 'version' for each location_id
  predictors <- arrange(predictors, desc(date))
   predictors <- select(predictors,
@@ -310,9 +310,9 @@ RUn 2022 classification
 
 # Issue with NGR out of temp grid 
 # test_data <- data[data$location_id == "134730",] 
-
+write.csv(data, file="vignettes/data/classification_input_data.csv")
 # test_data <- data[data$location_id == "101932",] 
- test <- data[data$location_id == "122748",] 
+ # test <- data[data$location_id == "122748",] 
 results <- map_df(c(2022), function(class_year){
  filtered_data <- data %>%
  mutate(year = lubridate::year(date_taken)) %>%
@@ -321,9 +321,11 @@ results <- map_df(c(2022), function(class_year){
 
  wfd_results <- map_df(split(filtered_data, filtered_data$location_id), function(location) {
   wfd_results <- assess(location,
-                      name = c("DARLEQ3"))
+                      name = c("DARLEQ", "RICT"))
   }, .progress = TRUE)
 })
+
+write.csv(results, file="vignettes/data/raw-classification-results.csv")
 ```
 
 # Filter
