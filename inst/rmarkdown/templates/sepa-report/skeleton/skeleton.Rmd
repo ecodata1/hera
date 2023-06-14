@@ -1,0 +1,118 @@
+---
+title: |
+   <img src="sepa-logo.png" alt="SEPA logo" width="280" align="right"/>
+   Demo Report
+author: "Tim Foster"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    css: styles.css
+  word_document: default
+params:
+  location_id: 8175
+  question: ["WHPT ASPT Abund"]
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+# Don't show R code in output
+knitr::opts_chunk$set(echo = FALSE)
+# Load useful libraries
+library(hera)
+library(tidyverse)
+library(ggmap)
+library(ggrepel)
+```
+
+<hr>
+
+# Introduction
+
+This is a demo report...
+
+# Results
+
+Some results...
+
+```{r data-import, message=FALSE, warning=FALSE}
+
+# Import data
+data <- get_data(
+  location_id = params$location_id
+)
+
+# Add all calculated metrics like DARLEQ2 and ePSI etc
+# data <- assess(data)
+
+# Filter on NEMS or calculated determinands if provided
+data <- filter(data, question %in% c(params$question))
+
+# Select a few columns to display - to check import worked and data looks okay
+selected_data <- select(data, location_id, question, response, date_taken)
+# Format date_taken into more readable format
+selected_data$date_taken <- format(selected_data$date_taken, "%d-%b-%Y")
+# Display the 'head' - in other words, first few lines of data
+knitr::kable(head(selected_data), format = "simple")
+```
+
+# Analysis
+
+#### Determinand Summary
+
+```{r analysis, message=F, fig.height=8, fig.asp=0.8}
+
+# Make line/point plot showing 'date_date' and WHPT ASPT Abund 'value'
+plot <- ggplot(data, aes(x = date_taken, y = response)) +
+  geom_line() +
+  geom_point() +
+  xlab("Date Sampled") +
+  ylab("Value") 
+# +
+  # facet_wrap(vars(location_id, question),
+  #   ncol = 3,
+  #   labeller = label_wrap_gen(width = 25, multi_line = TRUE)
+  # ) # give each 'location' or facet a separate plot and wrap
+# label over multiple lines.
+
+plot
+```
+
+#### Sampling Location Map
+
+
+```{r map, message=F, warning=F, fig.height=4}
+# Select required columns and get unique for each location
+# map_data <- select(
+#   data,
+#   location_id,
+#   latitude,
+#   longitude
+# ) %>%
+#   unique()
+# 
+# # Create map using ggmap and point/scatter plot using ggplot2 libraries.
+# # Note, geom_label_repel prevents overlapping labels.
+# plot <- qmplot(
+#   x = longitude,
+#   y = latitude,
+#   data = map_data,
+#   colour = location
+# ) +
+#   geom_point(aes(x = longitude, y = latitude),
+#     size = 0.5
+#   ) +
+#   geom_label_repel(
+#     data = map_data,
+#     aes(longitude, latitude, label = location_code),
+#     color = "black",
+#     alpha = 0.5,
+#     point.padding = unit(0.3, "lines")
+#   )
+# 
+# plot
+```
+
+# Conclusion
+
+There are a total of `r length(unique(data$location)) # example of "inline" code` sampling locations within this dataset...

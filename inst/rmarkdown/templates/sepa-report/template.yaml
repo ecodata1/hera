@@ -1,0 +1,4 @@
+name: SEPA Report
+description: >
+   Basic SEPA template
+create_dir: TRUE

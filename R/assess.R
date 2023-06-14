@@ -38,8 +38,8 @@ assess <- function(data = NULL, name = NULL, catalogue = NULL) {
       }
       # Check data available for assessment function
       model_data <- model$data[[1]]
-      if (!any(unique(data$parameter) %in%
-        unique(model_data$parameter))) {
+      if (!any(unique(na.omit(data$parameter)) %in%
+        unique(na.omit(model_data$parameter)))) {
         return(NULL) # not the right data for this function  - skip
       }
       assessment_function <- model$assessment_function[[1]]

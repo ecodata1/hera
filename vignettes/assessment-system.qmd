@@ -44,7 +44,7 @@ Return validations errors
 
 ## What we really need
 
-Reference data - All reference datasets
+Reference data - All reference datasets in database...
 
 Predictors - Non-pressure dependent predictors - slope, altitude, geology, lat, long, time of year.
 

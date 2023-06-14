@@ -1,25 +1,28 @@
 
 test_that("assess works", {
-    data <- assess(demo_data[100, ]) %>%
+    data <- assess(demo_data[1:100, ]) %>%
     dplyr::select(sample_id, response, question) %>%
     dplyr::slice_sample(n = 4)
     expect_equal(nrow(data), 4)
 
 
 
-   # data <- hera::demo_data[hera::demo_data$sample_id == "2755381", ]
-   # outcome <- outcome[outcome$sample_id == "2755381", ]
-   #  data$parameter[is.na(data$parameter)] <- data$quality_element[is.na(data$parameter)]
-   #  results <- assess(data)
-   #   expect_equal(round(
-   #     as.numeric(outcome$response[outcome$question == "EQR_TDI4"][1]), 2), 0.49)
+   data <- hera::demo_data[hera::demo_data$sample_id == "2755381", ]
+    data$parameter[is.na(data$parameter)] <- data$quality_element[is.na(data$parameter)]
+    results <- assess(data)
+    outcome <- results[results$sample_id == "2755381", ]
+     # expect_equal(round(
+       # as.numeric(outcome$response[outcome$question == "EQR_TDI4"][1]), 2), 0.49)
 })
 
 
 test_that("darleq3 works", {
 
   # Use data from DARLEQ3 package but in 'hera' format and check same result.
-  data <- read_excel("inst/extdat/darleq-test-data/DARLEQ2TestData-update.xlsx")
+  fpath <- system.file("extdat/darleq-test-data",
+                       "DARLEQ2TestData-update.xlsx",
+                       package="hera")
+  data <- readxl::read_excel(fpath)
   data$chemistry_site <- 1
   data <- data %>% filter(location_id %in% c("36082", "34649"))
   output <- assess(data, "DARLEQ3")

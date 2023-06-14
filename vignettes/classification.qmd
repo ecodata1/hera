@@ -10,38 +10,39 @@ editor_options:
 
 -   Grab all the data ✓
 -   Compare changes in real classification between years?
--   Difficult because sites not always sampled every year. Need a solution- baseline only sites?
+-   Difficult because sites not always sampled every year.
+-   Need a solution.
 -   Compare to changes between new tools and old for single year(s)?
--   Check rict using year average predictors ✓
+-   95% changes in diatom classification? Needs more checking - possibility alkalinity 75 override issues?
+-   Check rict using year average predictors
 -   Tested sample_id = 2755381, slight difference in EQR. Maybe due to difference in Akalinity?
 -   Use tests from sepaData package
 -   Need to use mean_alkalinity( n = 10) to get previously used Alkalinity ✓
 -   Check one site against RICT3 output?
--   Need solution for finding water body IDs for location for invert sites. No contributing location? - Use NMP spreadsheet? ✓
+-   Need solution for finding water body IDs for location for invert sites. No contributing location? - Use NMP spreadsheet?
 -   Check results from darleq2 outputs against NEMS? Run sample through DARLEQ3 and hera?
--   Have a look at suitability codes ✓
+-   Have a look at suitability codes
 -   Have a look at warnings and fails?
 -   Have a look at excluded samples (missing Alk for Diatoms etc)
--   Use dynamic predictive variables ✓
+-   Use dynamic predictive variables
 -   Test one sample from beginning to end??
 -   Test 8175 first? Using unit tests? OKAY! ✓
 -   Unit test for mean_alkalinity
--   Unit test for convert
 -   Unit test for RICT
 -   Unit test for DARLEQ
 -   Get all alkalinity from lims ✓
 -   Get alkalinity from recovered data - all data? ✓
 -   Join lims + recovered alk - 'hera' format? ✓
--   Update sampling point table ✓
+-   Update sampling point table
 -   Join chemistry with Ecology data ✓
 -   Query alkalinity data using alt_site - get mean_alkalinty ✓
 -   Check missing grid_reference from recovered data? Join location table?
--   Add suitability code ✓
--   Classify ✓
--   Join with 2020 classification? ✓
--   Sewage fungus override - manual check? ✓
+-   Add suitability code
+-   Classify
+-   Join with 2020 classification?
+-   Sewage fungus override - manual check?
 -   Missing NGR in recovered data?
--   Convert() function does a lot of tweaks to question/REPORTED_NAME/parameter/analysis - can these go in a .csv lookup file? Is paramter the right term?
+-   Convert() function does a lot of tweaks - can these go in a .csv lookup file?
 
 ```{r}
 library(hera)
@@ -67,6 +68,11 @@ lims_eco <- readr::read_csv(
   "vignettes//data//2023-04-14-lims-data.csv"
 )
 
+# test_eco <- readr::read_csv(
+#   "vignettes//data//2023-04-02-lims-data.csv"
+# )
+# 
+# unique(test_eco$SAMPLING_POINT[!test_eco$SAMPLING_POINT %in% lims_eco$location_id])
 
 ```
 
@@ -207,7 +213,8 @@ alk_data <- NULL
 
 # Filter
 
-Only core surveillance sites to speed up testing and filter out ecology old samples.
+Only core surveillance sites to speed up testing and filter out ecology old
+samples.
 
 ```{r}
 #  data <- data[data$location_id %in% unique(locs$Loc), ]
@@ -236,7 +243,7 @@ predictors <- utils::read.csv(system.file("extdat",
    stringsAsFactors = FALSE, check.names = FALSE
    )
    predictors$location_id <- as.character(predictors$location_id)
- predictors <- predictors[predictors$date != "", ]
+
    # use latest 'version' for each location_id
  predictors <- arrange(predictors, desc(date))
   predictors <- select(predictors,
@@ -260,6 +267,7 @@ predictors <- utils::read.csv(system.file("extdat",
 If alkalinity required calculate.
 
 ```{r, eval=FALSE}
+
 data$alkalinity <- NULL
 Sys.time()
 alkalinity <- hera:::mean_alkalinity(data)
@@ -275,30 +283,6 @@ data <- inner_join(data,
   data <- data[!data$sample_id %in% eco_missing_alk2, ]
 ```
 
-# Review
-
-```{r}
-# data$season <- season(data$date_taken)
-# review <- filtered_data %>%
-#   filter(parameter != "PAC")  %>%
-#   group_by(location_id, parameter) %>% 
-#   summarise(years = length(unique(year))
-#         )
-# 
-# write.csv(review, file = "vignettes/data/review.csv")
-# 
-# 
-# review <- data %>%
-#   filter(parameter != "PAC")  %>%
-#   group_by(location_id, parameter) %>% 
-#   summarise(years = length(unique(year))
-#         )
-
-
-
-
-```
-
 # Classification 2022
 
 RUn 2022 classification
@@ -306,13 +290,13 @@ RUn 2022 classification
 ## Classify
 
 ```{r, message=FALSE}
-# data <- data[!is.na(data$grid_reference), ]
+data <- data[!is.na(data$grid_reference), ]
 
 # Issue with NGR out of temp grid 
 # test_data <- data[data$location_id == "134730",] 
-write.csv(data, file="vignettes/data/classification_input_data.csv")
+
 # test_data <- data[data$location_id == "101932",] 
- # test <- data[data$location_id == "122748",] 
+
 results <- map_df(c(2022), function(class_year){
  filtered_data <- data %>%
  mutate(year = lubridate::year(date_taken)) %>%
@@ -321,12 +305,11 @@ results <- map_df(c(2022), function(class_year){
 
  wfd_results <- map_df(split(filtered_data, filtered_data$location_id), function(location) {
   wfd_results <- assess(location,
-                      name = c("DARLEQ", "RICT"))
+                      name = c("DARLEQ3", "RICT"))
   }, .progress = TRUE)
 })
-
-write.csv(results, file="vignettes/data/raw-classification-results.csv")
 ```
+
 
 # Filter
 
@@ -375,7 +358,6 @@ results_filtered <- results_filtered %>%
 # NMP
 
 Add NMP to get WBIDs?
-
 ```{r}
 
 nmp_diatoms <- readxl::read_xlsx(path =
@@ -394,8 +376,7 @@ nmp <- bind_rows(nmp_diatoms, nmp_inverts)
 # Join NMP
 
 ```{r}
-nmp <- select(nmp,
-              "location_id" = Loc,
+nmp <- select(nmp, "location_id" = Loc,
               "wbid" = WBID,
               analysis,
               "replocs_check" = `CHK REPLOCS`,
@@ -418,10 +399,10 @@ results_filtered <- left_join(results_filtered, all_nmp, by = join_by(location_i
 
 ```
 
+
 # Previous Class
 
 Join 2020 classification results based on WB
-
 ```{r}
 
 aspt_class <- readxl::read_excel(path = 
@@ -454,9 +435,11 @@ table(diatom_test$Class, diatom_test$CONDITION)
 table(invert_test$Class, invert_test$CONDITION)
 ```
 
+
 # Check Years
 
-2022 can include results from with data only from 2019. Only include locations with data from 2021 or 2022.
+2022 can include results from with data only from 2019. Only include locations
+with data from 2021 or 2022.
 
 ```{r}
 results_filtered$`Years included` <- 
@@ -471,7 +454,6 @@ results_filtered <- results_filtered[results_filtered$check == TRUE, ]
 ```
 
 # Select
-
 ```{r}
 results_filtered <- results_filtered %>%  select(
   "Parameter" = parameter,
@@ -505,6 +487,7 @@ results_filtered$wfd_reportable[results_filtered$wfd_reportable == TRUE | result
 
 ```
 
+
 # Save
 
 ```{r}
@@ -514,3 +497,6 @@ write.csv(data, file = "vignettes\\data\\2022-data.csv", row.names = FALSE)
 
 
 ```
+
+
+
