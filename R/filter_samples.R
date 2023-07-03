@@ -46,6 +46,16 @@ filter_samples <- function(data,
       .data$season_count <= options$max_seasons)
 
     # If multiple samples from one season - filter to max_samples_per_season
+    # Samples must having matching field details and analysis results
+    # So analysis_repname is used to check.
+    # For instance, RICT needs field and lab analysis results, they have to be
+    # counted / grouped by season. If for some reason the lab analysis is not completed
+    # need to remove that sample. (or vice versa). SEPA data will have this variable.
+    # However, not all parameter have field info required. So let's create an analysis_repname
+    # variable for this circumstance.
+    if(is.null(data$analysis_repname)) {
+    data$analysis_repname <- data$parameter
+    }
     data <- dplyr::arrange(data, .data$date_taken)
 
     sample_order <- dplyr::group_by(
