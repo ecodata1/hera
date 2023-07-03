@@ -57,17 +57,17 @@ A list of questions required to run the assessment.
 ```{r input}
 
 input <- tibble(
-  location_id = c("206972"),
-  sample_id = c("12345"),
-  date_taken = as.Date(c("2019-11-21")),
-  question = c("Taxon abundance"),
-  response = c("12"),
-  label = c("Baetidae"),
-  parameter = c("River Family Inverts"),
-  type = c("number"),
-  max = NA,
-  min = NA,
-  source = c("sepa_ecology_results")
+  location_id = c("206972","206972"),
+  sample_id = c("12345","12345"),
+  date_taken = as.Date(c("2019-11-21","2019-11-21")),
+  question = c("Taxon abundance","Live abundance"),
+  response = c("12","21"),
+  label = c("Baetidae","Baetidae"),
+  parameter = c("River Family Inverts","BANKSIDE_INVERTS"),
+  type = c("number", "number"),
+  max = c(NA,NA),
+  min = c(NA,NA),
+  source = c("sepa_ecology_results","sepa_ecology_results")
 )
 input
 ```
@@ -88,7 +88,6 @@ assessment_function <- function(data) {
   # require(whpt)
   # require(macroinvertebrateMetrics)
   data$date_taken <- as.character(format.Date(data$date_taken, "%Y/%m/%d"))
-    data <- filter(data, parameter == "River Family Inverts")
   metric_function <- catalogue[catalogue$assessment ==
     "Macroinvertebrate Metrics", 3][[1]]
   output <- metric_function[[1]](data)
