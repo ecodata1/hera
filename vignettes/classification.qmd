@@ -213,8 +213,7 @@ alk_data <- NULL
 
 # Filter
 
-Only core surveillance sites to speed up testing and filter out ecology old
-samples.
+Only core surveillance sites to speed up testing and filter out ecology old samples.
 
 ```{r}
 #  data <- data[data$location_id %in% unique(locs$Loc), ]
@@ -310,7 +309,6 @@ results <- map_df(c(2022), function(class_year){
 })
 ```
 
-
 # Filter
 
 ```{r, message=FALSE}
@@ -358,6 +356,7 @@ results_filtered <- results_filtered %>%
 # NMP
 
 Add NMP to get WBIDs?
+
 ```{r}
 
 nmp_diatoms <- readxl::read_xlsx(path =
@@ -399,10 +398,10 @@ results_filtered <- left_join(results_filtered, all_nmp, by = join_by(location_i
 
 ```
 
-
 # Previous Class
 
 Join 2020 classification results based on WB
+
 ```{r}
 
 aspt_class <- readxl::read_excel(path = 
@@ -435,11 +434,9 @@ table(diatom_test$Class, diatom_test$CONDITION)
 table(invert_test$Class, invert_test$CONDITION)
 ```
 
-
 # Check Years
 
-2022 can include results from with data only from 2019. Only include locations
-with data from 2021 or 2022.
+2022 can include results from with data only from 2019. Only include locations with data from 2021 or 2022.
 
 ```{r}
 results_filtered$`Years included` <- 
@@ -454,6 +451,7 @@ results_filtered <- results_filtered[results_filtered$check == TRUE, ]
 ```
 
 # Select
+
 ```{r}
 results_filtered <- results_filtered %>%  select(
   "Parameter" = parameter,
@@ -487,7 +485,6 @@ results_filtered$wfd_reportable[results_filtered$wfd_reportable == TRUE | result
 
 ```
 
-
 # Save
 
 ```{r}
@@ -497,6 +494,3 @@ write.csv(data, file = "vignettes\\data\\2022-data.csv", row.names = FALSE)
 
 
 ```
-
-
-
