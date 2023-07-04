@@ -49,6 +49,7 @@ Suggests:
     readr,
     readxl,
     rmarkdown,
+    sf,
     slickR,
     tidyverse,
     visNetwork
