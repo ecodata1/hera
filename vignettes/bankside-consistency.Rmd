@@ -13,7 +13,8 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  echo = F
+  echo = FALSE,
+  warning = FALSE
 )
 library(hera)
 library(dplyr)
@@ -47,7 +48,7 @@ description <- tribble(
   "type", "metric"
 )
 
-description
+knitr::kable(description)
 ```
 
 ## Input
@@ -69,7 +70,7 @@ input <- tibble(
   min = c(NA,NA),
   source = c("sepa_ecology_results","sepa_ecology_results")
 )
-input
+knitr::kable(input)
 ```
 
 ## Assessment
@@ -135,7 +136,7 @@ The outcome of your assessment.
 
 ```{r output}
 outcome <- assessment_function(input)
-outcome
+knitr::kable(outcome)
 ```
 
 ## Check
@@ -169,20 +170,26 @@ After **updating the catalogue, rebuild the package**, click on Build \> Install
 
 ## Test
 
-This section tests if this assessment is usable using `assessment` function.
-
+This section tests if this assessment is usable using `assess` function.
+  
+Using demo data:
 ```{r}
 # No need to edit this code
-assess(
+data_out <- assess(
   data = hera::demo_data,
   name = description$response[description$question == "name_short"]
 )
-
-lims_data <- hera:::convert(lims_data)
-assess(
+knitr::kable(head(data_out))
+```
+  
+Using converted data:
+```{r}
+lims_data <- hera:::convert(hera::lims_data)
+lims_out <- assess(
   data = lims_data,
   name = description$response[description$question == "name_short"]
 )
+knitr::kable(head(lims_data))
 ```
 
 ## Launch app
