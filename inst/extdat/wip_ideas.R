@@ -1,3 +1,33 @@
+
+# hera
+
+# Building Environmental Models Together?
+# - expects consistent input and output
+# - framework for defining models
+# - run models
+
+# blether
+# Convert data in to standard format for modelling
+# - linked data format? LD-JSON? Work with GIS data too?
+# - relies on agency / data source specific packages
+# - then converts data to consistent format for modelling
+
+# sepadata
+# Get SEPA data
+# - access sepadata via web services / data
+
+# eadata
+# Get EA data
+# - access to ea web services / data
+
+# sepaverse
+# Tool kit for SEPA R users
+# - Reporting templates
+# Load common packages (tidyverse, hera, blether etc)
+# - models (hera)
+# - data (blether)
+
+
 # Work In Progress ideas for API
 
 library(sepaTools)

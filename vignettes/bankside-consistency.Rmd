@@ -13,7 +13,8 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  echo = F
+  echo = FALSE,
+  warning = FALSE
 )
 library(hera)
 library(dplyr)
@@ -22,7 +23,6 @@ library(tidyr)
 library(tibble)
 library(magrittr)
 library(testthat)
-library(visNetwork)
 ```
 
 ## Welcome
@@ -48,7 +48,7 @@ description <- tribble(
   "type", "metric"
 )
 
-description
+knitr::kable(description)
 ```
 
 ## Input
@@ -58,19 +58,19 @@ A list of questions required to run the assessment.
 ```{r input}
 
 input <- tibble(
-  location_id = c("206972"),
-  sample_id = c("12345"),
-  date_taken = as.Date(c("2019-11-21")),
-  question = c("Taxon abundance"),
-  response = c("12"),
-  label = c("Baetidae"),
-  parameter = c("River Family Inverts"),
-  type = c("number"),
-  max = NA,
-  min = NA,
-  source = c("sepa_ecology_results")
+  location_id = c("206972","206972"),
+  sample_id = c("12345","12345"),
+  date_taken = as.Date(c("2019-11-21","2019-11-21")),
+  question = c("Taxon abundance","Live abundance"),
+  response = c("12","21"),
+  label = c("Baetidae","Baetidae"),
+  parameter = c("River Family Inverts","BANKSIDE_INVERTS"),
+  type = c("number", "number"),
+  max = c(NA,NA),
+  min = c(NA,NA),
+  source = c("sepa_ecology_results","sepa_ecology_results")
 )
-input
+knitr::kable(input)
 ```
 
 ## Assessment
@@ -89,7 +89,6 @@ assessment_function <- function(data) {
   # require(whpt)
   # require(macroinvertebrateMetrics)
   data$date_taken <- as.character(format.Date(data$date_taken, "%Y/%m/%d"))
-    data <- filter(data, parameter == "River Family Inverts")
   metric_function <- catalogue[catalogue$assessment ==
     "Macroinvertebrate Metrics", 3][[1]]
   output <- metric_function[[1]](data)
@@ -137,7 +136,7 @@ The outcome of your assessment.
 
 ```{r output}
 outcome <- assessment_function(input)
-outcome
+knitr::kable(outcome)
 ```
 
 ## Check
@@ -171,20 +170,26 @@ After **updating the catalogue, rebuild the package**, click on Build \> Install
 
 ## Test
 
-This section tests if this assessment is usable using `assessment` function.
-
+This section tests if this assessment is usable using `assess` function.
+  
+Using demo data:
 ```{r}
 # No need to edit this code
-assess(
+data_out <- assess(
   data = hera::demo_data,
   name = description$response[description$question == "name_short"]
 )
-
-lims_data <- hera:::convert(lims_data)
-assess(
+knitr::kable(head(data_out))
+```
+  
+Using converted data:
+```{r}
+lims_data <- hera:::convert(hera::lims_data)
+lims_out <- assess(
   data = lims_data,
   name = description$response[description$question == "name_short"]
 )
+knitr::kable(head(lims_data))
 ```
 
 ## Launch app

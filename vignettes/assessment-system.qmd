@@ -1,0 +1,57 @@
+---
+title: "Assessment System"
+format: html
+editor: visual
+---
+
+## Aim
+
+What we need for regulatory assessments to run.
+
+## Requirements
+
+NMP - locations we expect to RBMP classify
+
+Update replocs we any new location expected to go into RBMP
+
+Check locations have Predictors (dependent on type of analysis) and Chemistry Site
+
+If lacking chemistry site need to find one using GIS. Check site has alkalinity results (DAVE Chemistry?)
+
+If lacking Predictors - find on GIS (RICT layer)
+
+Double-check new predictors are correct.
+
+Add to `predictors.csv` files
+
+LIMS tests - what we collected Vs NMP report
+
+LIMS sample status - what progress
+
+Extract LIMS data
+
+Join with recovered data
+
+Calculate Alkalinity (all samples or last 10 samples).
+
+Filtering rules - seasons etc, windows etc
+
+Location and sample Classify - Predict reference values - DARLEQ3, RICT (Model 1)
+
+Return sample and locaiton results
+
+Return validations errors
+
+## What we really need
+
+Reference data - All reference datasets in database...
+
+Predictors - Non-pressure dependent predictors - slope, altitude, geology, lat, long, time of year.
+
+Model - Predict expected values (under reference conditions / no pressures)
+
+Classify - Expected Vs Observed
+
+Confidence - Sampling error, sample number etc?
+
+Pressures - Identify probability of pressures.

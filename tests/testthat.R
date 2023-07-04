@@ -12,5 +12,6 @@ library(magrittr)
 library(dplyr)
 library(tidyr)
 library(tibble)
+library(readxl)
 
 test_check("hera")

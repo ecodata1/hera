@@ -22,7 +22,7 @@ library(tidyr)
 library(tibble)
 library(magrittr)
 library(testthat)
-library(visNetwork)
+# library(visNetwork)
 ```
 
 ## Welcome
@@ -78,16 +78,29 @@ If applicable, write a function to assess your input data and return an outcome.
 ```{r assessment, message=FALSE, warning=FALSE}
 
 assessment_function <- function(data) {
+ 
   # Calculated some statistic...
   # Note, any non-standard base R library must be call using require().
   require(rict)
   require(macroinvertebrateMetrics)
+  message(unique(data$location_id))
+  # if(unique(data$location_id) == 134152) {
+  #   browser()
+  # }
+  
   # data$date_taken <- as.character(as.Date(data$date_taken, "%Y/%m/%d"))
-
   metric_function <- catalogue[catalogue$assessment ==
     "Macroinvertebrate Metrics", 3][[1]]
   output <- metric_function[[1]](data)
   output <- filter(output, question %in% c("WHPT_ASPT", "WHPT_NTAXA"))
+  
+
+  # Alkalinity ---------
+  # if(!any(names(data) %in% c("alkalinity"))) {
+  #   alk <- hera:::mean_alkalinity(data)
+  #   data$alkalinity <- NULL
+  #   data <- inner_join(data, alk, by = join_by("sample_id" == "sample_number"))
+  # }
   if (!any(names(data) %in% "alkalinity")) {
     predictors <- utils::read.csv(system.file("extdat",
       "predictors.csv",
@@ -106,6 +119,72 @@ assessment_function <- function(data) {
 
     whpt_input <- inner_join(output_location, predict_data, by = "location_id")
   } else {
+    
+    # function to average predictors for each year? See sepaTools package?::
+    final_data <- data
+    final_data <- filter(final_data, analysis_repname ==  "Invert Physical Data")
+    if(nrow(final_data) < 1) {
+      return(NULL)
+    }
+    summarise_data <- select(final_data,
+                             .data$location_id,
+                             .data$sample_id,
+                             .data$year,
+                             .data$question,
+                             .data$response)
+    
+    summarise_data <- map_df(split(summarise_data,
+                                   summarise_data$sample_id), function(sample) {
+          # get a row to add to bottom when mean_depth calcualted
+          row <- sample[1, ]    
+          row$question <- "mean_depth"
+        if(!any(sample$question %in% "mean_depth")) {
+          depths <- filter(sample, question %in% c("River Depth 1",
+                                         "River Depth 2",
+                                         "River Depth 3"))
+          if(nrow(depths) < 1) {
+            # some samples don't have Depths or mean_depth...so return NA
+             row$response <- NA
+          } else {
+          mean_depth <- mean(as.numeric(depths$response), na.rm = TRUE)
+         
+          row$response <- as.character(mean_depth)
+      
+          }
+          sample <- bind_rows(sample, row)
+          return(sample)
+        } else {
+          return(sample)
+        }                          
+    })
+    
+    summarise_data <- summarise_data %>% 
+      filter(question %in% c("sand",
+                             "silt_clay",
+                             "boulders_cobbles",
+                             "pebbles_gravel",
+                             "river_width",
+                             "mean_depth"))
+    summarise_data <- pivot_wider(summarise_data,
+                                  names_from = .data$question,
+                                  values_from = .data$response)
+    summarise_data <- type.convert(summarise_data, as.is = TRUE)
+    summarise_data <- select(summarise_data, -sample_id)
+    summarise_data <- dplyr::group_by(
+      summarise_data,
+      .data$location_id
+    )
+    # Suppress warning because of missing values
+    summarise_data <- suppressWarnings(dplyr::summarise_all(
+      summarise_data,
+      ~ mean(.x, na.rm = TRUE)
+    ))
+     summarise_data$location_id <- as.character(summarise_data$location_id)
+    data <- left_join(data, summarise_data, by = join_by(location_id == location_id))
+    data <- data %>% group_by(location_id) %>% 
+    mutate("alkalinity" = mean(alkalinity, na.rm = TRUE))
+    data <- ungroup(data)
+    
     data <- select(
       data,
       sample_id,
@@ -119,8 +198,8 @@ assessment_function <- function(data) {
       "pebbles_gravel",
       "sand",
       "silt_clay",
-      "northing",
-      "easting",
+      # "northing",
+      # "easting",
       "dist_from_source",
       "altitude",
       "slope",
@@ -136,19 +215,24 @@ assessment_function <- function(data) {
   whpt_input$question[whpt_input$question == "WHPT_NTAXA"] <- "WHPT NTAXA Abund"
   data <- whpt_input
 
-  bias <- 6.21
+  bias <- 1.62
   analysis <- "whpt ntaxa abund"
 
   names(data) <- tolower(names(data))
   data <- data[!is.na(data$river_width), ]
-
+  # if no river width...return NULL
+  check <- FALSE
+     if(nrow(data) < 1) {
+      return(NULL)
+    }
   # Add year  columns
   data$year <- format.Date(data$date_taken, "%Y")
   data$year <- as.integer(data$year)
-  check <- FALSE
   rict_output <- purrr::map(unique(data$location_id), function(location_id) {
+   
     data <- data[data$location_id == location_id, ]
 
+    
     if (!is.null(data$river_width)) {
       if (any(!is.na(data$river_width))) {
         data$river_width <- as.numeric(data$river_width)
@@ -189,7 +273,8 @@ assessment_function <- function(data) {
     data$max_date <- NA
 
     data$response <- as.numeric(as.character(data$response))
-    data <- pivot_wider(data, names_from = .data$question, values_from = .data$response)
+    data <- pivot_wider(data, names_from = .data$question,
+                        values_from = .data$response)
     # Join to template
     rict_template <- function() {
       template <- data.frame(
@@ -327,14 +412,14 @@ assessment_function <- function(data) {
     # Discharge must be numeric to pass validation
     rict_data$Discharge <- as.numeric(rict_data$Discharge)
     rict_data <- data.frame(rict_data, check.names = FALSE)
-    rict_data <- rict_data[rict_data$sample_id != "1582198", ]
-    rict_data <- rict_data[rict_data$sample_id != "1017980", ]
+    # rict_data <- rict_data[rict_data$sample_id != "1582198", ]
+    # rict_data <- rict_data[rict_data$sample_id != "1017980", ]
     if (nrow(rict_data) == 0) {
       return(NULL)
     }
 
-    rict_prediction <- rict::rict_validate(rict_data, stop_if_all_fail = FALSE)
-    if (nrow(rict_prediction$data) == 0) {
+    rict_valid <- rict::rict_validate(rict_data, stop_if_all_fail = FALSE)
+    if (nrow(rict_valid$data) == 0) {
       return(NULL)
     }
 
@@ -342,11 +427,17 @@ assessment_function <- function(data) {
       group_by(SITE, Year) %>%
       select(SITE, Year, contains("_WHPT_")) %>% 
       summarise_all(~ mean(.x, na.rm = TRUE))
-    predictors <- rict_data %>%  select(-Year,-season, -contains("_WHPT_"), -sample_id) %>% unique()
+    predictors <- rict_data %>%  
+      select(-Year,-season, -contains("_WHPT_"), -sample_id) %>%
+      unique()
     multi <- inner_join(rict_multi_year, predictors, by = c("SITE"))
     multi <- data.frame(multi, check.names = FALSE)
+
+    multi_predict <- rict_predict(multi)
+    multi_predict <- select(multi_predict, SITE, SuitCode, SuitText)
+    multi_predict <- unique(multi_predict)
     multi_class <- rict::rict(multi, year_type = "multi")
- 
+    multi_class <- inner_join(multi_class, multi_predict, by = join_by(SITE))
     multi_year_ntaxa <- select(
       multi_class,
       SITE,
@@ -356,7 +447,9 @@ assessment_function <- function(data) {
       "P" = P_NTAXA_spr_aut,
       "B" = B_NTAXA_spr_aut,
       "Class" = mostProb_NTAXA_spr_aut,
-      "EQR" = NTAXA_aver_spr_aut
+      "EQR" = NTAXA_aver_spr_aut,
+      "Suit Code" = SuitCode,
+      "Suit Text" = SuitText
     )
      multi_year_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
      multi_year_aspt <- select(
@@ -368,7 +461,9 @@ assessment_function <- function(data) {
       "P" = P_ASPT_spr_aut,
       "B" = B_ASPT_spr_aut,
       "Class" = mostProb_ASPT_spr_aut,
-      "EQR" = ASPT_aver_spr_aut
+      "EQR" = ASPT_aver_spr_aut,
+      "Suit Code" = SuitCode,
+      "Suit Text" = SuitText
     )
      
       multi_year_aspt$parameter <- "Macroinvertebrates (ASPT)"
@@ -389,8 +484,14 @@ assessment_function <- function(data) {
     multi_year_output <-
       rename(multi_year_output, "location_id" = SITE)
     
+    predict_single <- rict::rict_predict(rict_data)
+    predict_single$sample_id <- rict_data$sample_id
+    single_predict <- select(predict_single, sample_id, SuitCode, SuitText)
+    single_predict <- unique(single_predict)
     rict_output <- rict::rict(rict_data, year_type = "single")
     rict_output$sample_id <- rict_data$sample_id
+    rict_output <- inner_join(rict_output, single_predict, by = join_by(sample_id))
+
     spr_ntaxa <- select(
       rict_output,
       sample_id,
@@ -400,7 +501,9 @@ assessment_function <- function(data) {
       "P" = P_NTAXA_spr,
       "B" = B_NTAXA_spr,
       "Class" = mostProb_NTAXA_spr,
-      "EQR" = NTAXA_eqr_av_spr
+      "EQR" = NTAXA_eqr_av_spr,
+      "Suit Code" = SuitCode,
+      "Suit Text" = SuitText
     )
     spr_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
 
@@ -413,7 +516,9 @@ assessment_function <- function(data) {
       "P" = P_NTAXA_sum,
       "B" = B_NTAXA_sum,
       "Class" = mostProb_NTAXA_sum,
-      "EQR" = NTAXA_eqr_av_sum
+      "EQR" = NTAXA_eqr_av_sum,
+      "Suit Code" = SuitCode,
+      "Suit Text" = SuitText
     )
     sum_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
 
@@ -426,7 +531,9 @@ assessment_function <- function(data) {
       "P" = P_NTAXA_aut,
       "B" = B_NTAXA_aut,
       "Class" = mostProb_NTAXA_aut,
-      "EQR" = NTAXA_eqr_av_aut
+      "EQR" = NTAXA_eqr_av_aut,
+      "Suit Code" = SuitCode,
+      "Suit Text" = SuitText
     )
     aut_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
 
@@ -439,7 +546,9 @@ assessment_function <- function(data) {
       "P" = P_ASPT_aut,
       "B" = B_ASPT_aut,
       "Class" = mostProb_ASPT_aut,
-      "EQR" = ASPT_eqr_av_aut
+      "EQR" = ASPT_eqr_av_aut,
+      "Suit Code" = SuitCode,
+      "Suit Text" = SuitText
     )
     aut_aspt$parameter <- "Macroinvertebrates (ASPT)"
 
@@ -452,7 +561,9 @@ assessment_function <- function(data) {
       "P" = P_ASPT_spr,
       "B" = B_ASPT_spr,
       "Class" = mostProb_ASPT_spr,
-      "EQR" = ASPT_eqr_av_spr
+      "EQR" = ASPT_eqr_av_spr,
+      "Suit Code" = SuitCode,
+      "Suit Text" = SuitText
     )
     spr_aspt$parameter <- "Macroinvertebrates (ASPT)"
 
@@ -465,7 +576,9 @@ assessment_function <- function(data) {
       "P" = P_ASPT_sum,
       "B" = B_ASPT_sum,
       "Class" = mostProb_ASPT_sum,
-      "EQR" = eqr_av_sum_aspt
+      "EQR" = eqr_av_sum_aspt,
+      "Suit Code" = SuitCode,
+      "Suit Text" = SuitText
     )
     sum_aspt$parameter <- "Macroinvertebrates (ASPT)"
     rict_class <- bind_rows(
@@ -488,27 +601,37 @@ assessment_function <- function(data) {
                              rict_data[, c("SITE","sample_id")],
                              by = "sample_id")
     rict_class <- rename(rict_class, "location_id" = SITE)
-
-    rict_prediction <- rict_predict(rict_data)
     rict_aspt <- tibble(
-      "location_id" = rict_prediction$SITE,
+      "location_id" = predict_single$SITE,
       "sample_id" = rict_data$sample_id,
       "question" = "RICT Reference WHPT ASPT",
-      "response" = as.character(rict_prediction$TL2_WHPT_ASPT_AbW_DistFam_spr)
+      "response" = as.character(predict_single$TL2_WHPT_ASPT_AbW_DistFam_spr)
     )
     rict_ntaxa <- tibble(
-      "location_id" = rict_prediction$SITE,
+      "location_id" = predict_single$SITE,
       "sample_id" = rict_data$sample_id,
       "question" = "RICT Rerference WHPT NTAXA",
-      "response" = as.character(rict_prediction$TL2_WHPT_NTAXA_AbW_DistFam_spr)
+      "response" = as.character(predict_single$TL2_WHPT_NTAXA_AbW_DistFam_spr)
     )
-    rict_prediction <- bind_rows(rict_aspt, rict_ntaxa)
-    rict_prediction$parameter <- "RICT Prediction"
-    rict_prediction <- bind_rows(rict_prediction,
+    predict_single <- bind_rows(rict_aspt, rict_ntaxa)
+   predict_single$parameter <- "RICT Prediction"
+    rict_prediction <- bind_rows(predict_single,
                                  rict_class,
                                  multi_year_output)
+    # create row for years included in multi-year
+    row <- rict_prediction[is.na(rict_prediction$sample_id), ]
+    row <- row[1:2, ]
+    row$parameter[1] <- "Macroinvertebrates (ASPT)"
+    row$parameter[2] <- "Macroinvertebrates (NTAXA)"
+    row$question <- "Years included"
+    row$response <- paste(unique(rict_data$Year), collapse = ",")
+    rict_prediction <- bind_rows(rict_prediction, row)
   })
+
   output <- bind_rows(rict_output)
+    if(nrow(output) < 1) {
+    return(NULL)
+  }
   output <- unique(output)
   output <- mutate(output,
                    question = ifelse(question == "M",

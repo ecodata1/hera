@@ -1,0 +1,35 @@
+title {
+  font-size: 24;
+  color: rgb(1, 101, 116);
+  font-weight: bold;
+
+}
+
+title.toc-ignore {
+  font-size: 24;
+  color: rgb(1, 101, 116);
+  font-weight: bold;
+}
+
+h1 {
+  font-size: 16;
+  color: rgb(1, 101, 116);
+  font-weight: bold;
+}
+
+h2 {
+   font-size: 14;
+   color: black;
+   font-weight: bold;
+}
+
+h3 {
+   color: black;
+   font-weight: bold;
+}
+
+hr {
+   background-color: rgb(64, 196, 123);
+   color: rgb(64, 196, 123);
+   height: 2px;
+}

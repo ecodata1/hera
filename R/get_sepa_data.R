@@ -2,6 +2,7 @@
 
 #' @importFrom utils URLencode
 #' @importFrom stats na.omit
+#' @importFrom httr parse_url
 get_sepa_data <- function(location_id,
                           take,
                           date_from,
@@ -148,7 +149,58 @@ get_sepa_data <- function(location_id,
       }
       return(data)
     })
-  } else {
+  }
+  else if (dataset == "chem_analytical_results") {
+    data <- purrr::map_df(location_id, function(id) {
+      stopifnot(!is.null(id))
+      url <- parse_url("http://asb-app-asa01:8267/SEPAL/archive")
+      url$path <- paste(url$path, "analysis-results/chemistry",
+                        sep = "/")
+      site_url <- URLencode(URL = as.character(id), reserved = T)
+      site_query <- paste0("location=", id)
+      url$query <- site_query
+      request <- build_url(url)
+      message(paste0("fetching records...1:5000 for ",
+                     id))
+      data <- jsonlite::fromJSON(request, flatten = TRUE)
+      count <- data$count
+      data <- data[["items"]]
+      data$sign <- as.character(data$sign)
+      data$loq_sign <- as.character(data$loq_sign)
+      offset <- 5000
+      while (count == 5000) {
+        Sys.sleep(0.2)
+        n_offset <- 5000
+        message(paste0("fetching records...", offset +
+                         1, ":", offset + offset, " for ", id))
+        url$query <- paste(site_query, "&offset=", offset,
+                           sep = "")
+        request <- build_url(url)
+        offset_data <- jsonlite::fromJSON(request, flatten = TRUE)
+        count <- offset_data$count
+        offset_data <- offset_data[["items"]]
+        offset <- offset + n_offset
+        # Convert sing/loq_sign to character (appears to be variation in results
+        # between character and logical)
+        offset_data$sign <- as.character(offset_data$sign)
+        data$sign <- as.character(data$sign)
+        offset_data$loq_sign <- as.character(offset_data$loq_sign)
+        data$loq_sign <- as.character(data$loq_sign)
+        data <- bind_rows(data, offset_data)
+      }
+      if (length(data) == 0) {
+        return(NULL)
+      }
+      data <- data[data$determinand_code == 	"200200_2", ]
+      Sys.sleep(0.2)
+      # else {
+      #   data <- convert(data, convert_to = "hera", convert_from = "sepa")
+      #   Sys.sleep(0.1)
+      # }
+      return(data)
+    })
+  }
+  else {
     message(paste0(
       "You provided a `type =` argument of: ", dataset,
       "This didn't match any of the dataset supported e.g. 'locations', 'replocs'...etc"

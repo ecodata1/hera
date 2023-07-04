@@ -41,7 +41,7 @@ description <- tribble(
   ~question, ~response,
   "name_short", "Macroinvertebrate Metrics",
   "name_long", "Freshwater Macroinvertebrate Metrics",
-  "parameter", "River Invertevates",
+  "parameter", "River Invertebrates",
   "status", "prototype",
   "type", "metric"
 )
@@ -73,6 +73,15 @@ input <- tribble(
   "number",
   NA,
   NA,
+  "sepa_ecology_results",
+    "12345",
+  "Live abundance",
+  "12",
+  "Baetidae",
+  "BANKSIDE_INVERTS",
+  "number",
+  NA,
+  NA,
   "sepa_ecology_results"
 )
 input
@@ -90,8 +99,11 @@ assessment_function <- function(data) {
    require(dplyr)
   input <- data
   input$label <- trimws(input$label)
-  input <- dplyr::filter(input, parameter == "River Family Inverts") 
-  input <- dplyr::filter(input, question == "Taxon abundance") 
+  input <- dplyr::filter(input, 
+                         parameter %in% c("River Family Inverts",
+                                          "BANKSIDE_INVERTS"))
+  input <- dplyr::filter(input, question %in% c("Taxon abundance",
+                                                "Live abundance")) 
   input$TAXON <- input$label 
   input <-  dplyr::rename(input,  "SAMPLE_ID" = sample_id)
   input$RESULT <- input$response

@@ -68,7 +68,7 @@ predictors <- summary %>% rename(
 )
 ```
 
-GIS and discharge data
+# GIS and discharge data
 
 ```{r}
 sampling_points <- read_csv("inst/extdat/predictor_raw_data/sampling-points.csv")
