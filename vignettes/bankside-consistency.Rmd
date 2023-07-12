@@ -86,8 +86,8 @@ assessment_function <- function(data) {
   require(tidyr)
   require(magrittr)
   require(tibble)
-  # require(whpt)
-  # require(macroinvertebrateMetrics)
+  require(whpt)
+  require(macroinvertebrateMetrics)
   data$date_taken <- as.character(format.Date(data$date_taken, "%Y/%m/%d"))
   metric_function <- catalogue[catalogue$assessment ==
     "Macroinvertebrate Metrics", 3][[1]]
