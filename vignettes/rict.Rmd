@@ -165,7 +165,7 @@ assessment_function <- function(data) {
                              "pebbles_gravel",
                              "river_width",
                              "mean_depth"))
-    summarise_data <- pivot_wider(summarise_data,
+    summarise_data <- tidyr::pivot_wider(summarise_data,
                                   names_from = .data$question,
                                   values_from = .data$response)
     summarise_data <- type.convert(summarise_data, as.is = TRUE)
@@ -273,7 +273,7 @@ assessment_function <- function(data) {
     data$max_date <- NA
 
     data$response <- as.numeric(as.character(data$response))
-    data <- pivot_wider(data, names_from = .data$question,
+    data <- tidyr::pivot_wider(data, names_from = .data$question,
                         values_from = .data$response)
     # Join to template
     rict_template <- function() {
