@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">hera</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,7 +100,7 @@ required.</p>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                               </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> name_short Macroinvertebrate Metrics           </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> name_long  Freshwater Macroinvertebrate Metrics</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> parameter  River Invertevates                  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> parameter  River Invertebrates                 </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> status     prototype                           </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> type       metric</span></span></code></pre>
 </div>
@@ -108,10 +108,11 @@ required.</p>
 <h2 id="input">Input<a class="anchor" aria-label="anchor" href="#input"></a>
 </h2>
 <p>A list of questions required to run the assessment.</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 9</span></span></span>
+<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 9</span></span></span>
 <span><span class="co">#&gt;   sample_id question        response label    parameter type  max   min   source</span></span>
 <span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 12345     Taxon abundance 12       Baetidae River Fa… numb… <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    sepa_…</span></span></code></pre>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 12345     Taxon abundance 12       Baetidae River Fa… numb… <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    sepa_…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 12345     Live abundance  12       Baetidae BANKSIDE… numb… <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    sepa_…</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="assessment">Assessment<a class="anchor" aria-label="anchor" href="#assessment"></a>
@@ -134,8 +135,8 @@ an outcome. For example, a metric, statistic, prediction etc.</p>
 <h2 id="check">Check<a class="anchor" aria-label="anchor" href="#check"></a>
 </h2>
 <p>Run checks on the assessment.</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 😸</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🎊</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Test passed </span></span>
+<span><span class="co">#&gt; Test passed</span></span></code></pre>
 <table class="table">
 <thead><tr class="header">
 <th align="left">check</th>
@@ -175,6 +176,14 @@ button in the Build pane.</p>
 <code>assessment</code> function.</p>
 <pre><code><span><span class="co">#&gt; Hello from hera, ...work in progress!</span></span>
 <span><span class="co">#&gt; Hello from hera, ...work in progress!</span></span>
+<span><span class="co">#&gt; The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,</span></span>
+<span><span class="co">#&gt; which was just loaded, will retire in October 2023.</span></span>
+<span><span class="co">#&gt; Please refer to R-spatial evolution reports for details, especially</span></span>
+<span><span class="co">#&gt; https://r-spatial.org/r/2023/05/15/evolution4.html.</span></span>
+<span><span class="co">#&gt; It may be desirable to make the sf package available;</span></span>
+<span><span class="co">#&gt; package maintainers should consider adding sf to Suggests:.</span></span>
+<span><span class="co">#&gt; The sp package is now running under evolution status 2</span></span>
+<span><span class="co">#&gt;      (status 2 uses the sf package in place of rgdal)</span></span>
 <span><span class="co">#&gt; Warning in CPL_crs_from_input(x): GDAL Message 1: +init=epsg:XXXX syntax is</span></span>
 <span><span class="co">#&gt; deprecated. It might return a CRS with a non-EPSG compliant axis order.</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 165 × 3</span></span></span>

@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">hera</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -126,6 +126,7 @@ an outcome. For example, a metric, statistic, prediction etc.</p>
 <p>The outcome of your assessment.</p>
 <pre><code><span><span class="co">#&gt; Loading required package: rict</span></span>
 <span><span class="co">#&gt; Loading required package: macroinvertebrateMetrics</span></span>
+<span><span class="co">#&gt; 8175</span></span>
 <span><span class="co">#&gt; Warning in inner_join(output, unique(data[, c("location_id", "sample_id", : Detected an unexpected many-to-many relationship between `x` and `y`.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 2 of `x` matches multiple rows in `y`.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 21 of `y` matches multiple rows in `x`.</span></span>
@@ -258,44 +259,55 @@ an outcome. For example, a metric, statistic, prediction etc.</p>
 <span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
 <span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
 <span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
+<span><span class="co">#&gt; The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,</span></span>
+<span><span class="co">#&gt; which was just loaded, will retire in October 2023.</span></span>
+<span><span class="co">#&gt; Please refer to R-spatial evolution reports for details, especially</span></span>
+<span><span class="co">#&gt; https://r-spatial.org/r/2023/05/15/evolution4.html.</span></span>
+<span><span class="co">#&gt; It may be desirable to make the sf package available;</span></span>
+<span><span class="co">#&gt; package maintainers should consider adding sf to Suggests:.</span></span>
+<span><span class="co">#&gt; The sp package is now running under evolution status 2</span></span>
+<span><span class="co">#&gt;      (status 2 uses the sf package in place of rgdal)</span></span>
+<span><span class="co">#&gt; Success, all validation checks passed!</span></span>
+<span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
+<span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
 <span><span class="co">#&gt; Success, all validation checks passed!</span></span>
 <span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
 <span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
 <span><span class="co">#&gt; Success, all validation checks passed!</span></span>
 <span><span class="co">#&gt; Classifying...</span></span>
+<span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
+<span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
+<span><span class="co">#&gt; Success, all validation checks passed!</span></span>
 <span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
 <span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
 <span><span class="co">#&gt; Success, all validation checks passed!</span></span>
 <span><span class="co">#&gt; Classifying...</span></span>
 <span><span class="co">#&gt; Warning in inner_join(rict_class, rict_data[, c("SITE", "sample_id")], by = "sample_id"): Detected an unexpected many-to-many relationship between `x` and `y`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 113 of `x` matches multiple rows in `y`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 3 of `y` matches multiple rows in `x`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 1 of `x` matches multiple rows in `y`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 2 of `y` matches multiple rows in `x`.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> If a many-to-many relationship is expected, set `relationship =</span></span>
 <span><span class="co">#&gt;   "many-to-many"` to silence this warning.</span></span>
-<span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
-<span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
-<span><span class="co">#&gt; Success, all validation checks passed!</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 523 × 5</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 693 × 5</span></span></span>
 <span><span class="co">#&gt;    location_id sample_id question                 response         parameter    </span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 8175        1101214   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 8175        1250462   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 8175        1419451   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 8175        1457665   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 8175        1564589   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 8175        1672942   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 8175        1800006   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 8175        1912578   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 8175        2031713   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 8175        213268    RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 513 more rows</span></span></span></code></pre>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 8175        1017980   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 8175        1101214   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 8175        1250462   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 8175        1419451   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 8175        1457665   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 8175        1564589   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 8175        1582198   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 8175        1672942   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 8175        1800006   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 8175        1912578   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 683 more rows</span></span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="check">Check<a class="anchor" aria-label="anchor" href="#check"></a>
 </h2>
 <p>Run checks on the assessment.</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🥇</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🥇</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Test passed </span></span>
+<span><span class="co">#&gt; Test passed</span></span></code></pre>
 <table class="table">
 <thead><tr class="header">
 <th align="left">check</th>
@@ -335,6 +347,7 @@ button in the Build pane.</p>
 <code>assessment</code> function.</p>
 <pre><code><span><span class="co">#&gt; Hello from hera, ...work in progress!</span></span>
 <span><span class="co">#&gt; Hello from hera, ...work in progress!</span></span>
+<span><span class="co">#&gt; 8175</span></span>
 <span><span class="co">#&gt; Warning in inner_join(output, unique(data[, c("location_id", "sample_id", : Detected an unexpected many-to-many relationship between `x` and `y`.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 2 of `x` matches multiple rows in `y`.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 21 of `y` matches multiple rows in `x`.</span></span>
@@ -346,33 +359,36 @@ button in the Build pane.</p>
 <span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
 <span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
 <span><span class="co">#&gt; Success, all validation checks passed!</span></span>
+<span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
+<span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
+<span><span class="co">#&gt; Success, all validation checks passed!</span></span>
 <span><span class="co">#&gt; Classifying...</span></span>
+<span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
+<span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
+<span><span class="co">#&gt; Success, all validation checks passed!</span></span>
 <span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
 <span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
 <span><span class="co">#&gt; Success, all validation checks passed!</span></span>
 <span><span class="co">#&gt; Classifying...</span></span>
 <span><span class="co">#&gt; Warning in inner_join(rict_class, rict_data[, c("SITE", "sample_id")], by = "sample_id"): Detected an unexpected many-to-many relationship between `x` and `y`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 113 of `x` matches multiple rows in `y`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 3 of `y` matches multiple rows in `x`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 1 of `x` matches multiple rows in `y`.</span></span>
+<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 2 of `y` matches multiple rows in `x`.</span></span>
 <span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> If a many-to-many relationship is expected, set `relationship =</span></span>
 <span><span class="co">#&gt;   "many-to-many"` to silence this warning.</span></span>
-<span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
-<span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
-<span><span class="co">#&gt; Success, all validation checks passed!</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 523 × 5</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 693 × 5</span></span></span>
 <span><span class="co">#&gt;    location_id sample_id question                 response         parameter    </span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 8175        1101214   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 8175        1250462   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 8175        1419451   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 8175        1457665   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 8175        1564589   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 8175        1672942   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 8175        1800006   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 8175        1912578   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 8175        2031713   RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 8175        213268    RICT Reference WHPT ASPT 6.72224953754603 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 513 more rows</span></span></span></code></pre>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 8175        1017980   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 8175        1101214   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 8175        1250462   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 8175        1419451   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 8175        1457665   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 8175        1564589   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 8175        1582198   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 8175        1672942   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 8175        1800006   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 8175        1912578   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 683 more rows</span></span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="launch-app">Launch app<a class="anchor" aria-label="anchor" href="#launch-app"></a>

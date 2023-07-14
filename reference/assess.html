@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">hera</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -90,118 +90,9 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">assessments</span> <span class="op">&lt;-</span> <span class="fu">assess</span><span class="op">(</span><span class="fu">hera</span><span class="fu">::</span><span class="va"><a href="demo_data.html">demo_data</a></span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Hello from hera, ...work in progress!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Hello from hera, ...work in progress!</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>GDAL Message 1: +init=epsg:XXXX syntax is deprecated. It might return a CRS with a non-EPSG compliant axis order.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: dplyr</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘dplyr’</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:stats’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     filter, lag</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:base’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     intersect, setdiff, setequal, union</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: tidyr</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: magrittr</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘magrittr’</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:tidyr’:</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span>     extract</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: tibble</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"SampleID"` instead of `.data$SampleID`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"location_id"` instead of `.data$location_id`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"date_taken"` instead of `.data$date_taken`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"alkalinity"` instead of `.data$alkalinity`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"sample_id"` instead of `.data$sample_id`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"label"` instead of `.data$label`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"response"` instead of `.data$response`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"TaxonId"` instead of `.data$TaxonId`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"TaxonName"` instead of `.data$TaxonName`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Detected an unexpected many-to-many relationship between `x` and `y`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Row 1 of `x` matches multiple rows in `y`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Row 330 of `y` matches multiple rows in `x`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> If a many-to-many relationship is expected, set `relationship =</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   "many-to-many"` to silence this warning.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: rict</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: macroinvertebrateMetrics</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Detected an unexpected many-to-many relationship between `x` and `y`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Row 2 of `x` matches multiple rows in `y`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Row 21 of `y` matches multiple rows in `x`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> If a many-to-many relationship is expected, set `relationship =</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   "many-to-many"` to silence this warning.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"question"` instead of `.data$question`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"water_body_id"` instead of `.data$water_body_id`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"year"` instead of `.data$year`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"ngr"` instead of `.data$ngr`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"ngr_easting"` instead of `.data$ngr_easting`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"ngr_northing"` instead of `.data$ngr_northing`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"altitude"` instead of `.data$altitude`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"slope"` instead of `.data$slope`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"discharge_category"` instead of `.data$discharge_category`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"dist_from_source"` instead of `.data$dist_from_source`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"river_width"` instead of `.data$river_width`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"mean_depth"` instead of `.data$mean_depth`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"sample_count"` instead of `.data$sample_count`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"samples_used"` instead of `.data$samples_used`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"min_date"` instead of `.data$min_date`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"max_date"` instead of `.data$max_date`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"boulders_cobbles"` instead of `.data$boulders_cobbles`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"pebbles_gravel"` instead of `.data$pebbles_gravel`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"sand"` instead of `.data$sand`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"silt_clay"` instead of `.data$silt_clay`</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `"season"` instead of `.data$season`</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Classifying...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Classifying...</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Detected an unexpected many-to-many relationship between `x` and `y`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Row 113 of `x` matches multiple rows in `y`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Row 3 of `y` matches multiple rows in `x`.</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> If a many-to-many relationship is expected, set `relationship =</span>
-<span class="r-wrn co"><span class="r-pr">#&gt;</span>   "many-to-many"` to silence this warning.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Variables for the 'physical' model detected - applying relevant checks. </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Grid reference values detected for 'GB' - applying relevant checks.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Success, all validation checks passed!</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">assessments</span> <span class="op">&lt;-</span> <span class="fu">assess</span><span class="op">(</span><span class="fu">hera</span><span class="fu">::</span><span class="va"><a href="demo_data.html">demo_data</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>

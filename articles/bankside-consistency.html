@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">hera</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,24 +97,100 @@ invertebrates analysis to check consistency with Water Body Status.</p>
 </h2>
 <p>Basic details about the assessment. Update the ‘response’ values as
 required.</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span></span>
-<span><span class="co">#&gt;   question   response                                                       </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                          </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> name_short Bankside Consistency                                           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> name_long  Rapid Assessment of Bankside Consistency with Water Body Status</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> parameter  River Family Inverts                                           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> status     prototype                                                      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> type       metric</span></span></code></pre>
+<table class="table">
+<colgroup>
+<col width="14%">
+<col width="85%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">question</th>
+<th align="left">response</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">name_short</td>
+<td align="left">Bankside Consistency</td>
+</tr>
+<tr class="even">
+<td align="left">name_long</td>
+<td align="left">Rapid Assessment of Bankside Consistency with Water
+Body Status</td>
+</tr>
+<tr class="odd">
+<td align="left">parameter</td>
+<td align="left">River Family Inverts</td>
+</tr>
+<tr class="even">
+<td align="left">status</td>
+<td align="left">prototype</td>
+</tr>
+<tr class="odd">
+<td align="left">type</td>
+<td align="left">metric</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level2">
 <h2 id="input">Input<a class="anchor" aria-label="anchor" href="#input"></a>
 </h2>
 <p>A list of questions required to run the assessment.</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 11</span></span></span>
-<span><span class="co">#&gt;   location_id sample_id date_taken question response label parameter type  max  </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 206972      12345     2019-11-21 Taxon a… 12       Baet… River Fa… numb… <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: min &lt;lgl&gt;, source &lt;chr&gt;</span></span></span></code></pre>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="9%">
+<col width="8%">
+<col width="8%">
+<col width="12%">
+<col width="7%">
+<col width="7%">
+<col width="16%">
+<col width="5%">
+<col width="3%">
+<col width="3%">
+<col width="16%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">location_id</th>
+<th align="left">sample_id</th>
+<th align="left">date_taken</th>
+<th align="left">question</th>
+<th align="left">response</th>
+<th align="left">label</th>
+<th align="left">parameter</th>
+<th align="left">type</th>
+<th align="left">max</th>
+<th align="left">min</th>
+<th align="left">source</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">206972</td>
+<td align="left">12345</td>
+<td align="left">2019-11-21</td>
+<td align="left">Taxon abundance</td>
+<td align="left">12</td>
+<td align="left">Baetidae</td>
+<td align="left">River Family Inverts</td>
+<td align="left">number</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">sepa_ecology_results</td>
+</tr>
+<tr class="even">
+<td align="left">206972</td>
+<td align="left">12345</td>
+<td align="left">2019-11-21</td>
+<td align="left">Live abundance</td>
+<td align="left">21</td>
+<td align="left">Baetidae</td>
+<td align="left">BANKSIDE_INVERTS</td>
+<td align="left">number</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">sepa_ecology_results</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level2">
 <h2 id="assessment">Assessment<a class="anchor" aria-label="anchor" href="#assessment"></a>
@@ -126,21 +202,62 @@ an outcome. For example, a metric, statistic, prediction etc.</p>
 <h2 id="outcome">Outcome<a class="anchor" aria-label="anchor" href="#outcome"></a>
 </h2>
 <p>The outcome of your assessment.</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span></span>
-<span><span class="co">#&gt;   sample_id question        response                               </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 12345     Reference NTAXA 21.14                                  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 12345     Reference ASPT  7.32                                   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 12345     assessment      Likely problem detected                </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 12345     driver          ntaxa                                  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 12345     action          Urgent discussion required with Ecology</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Loading required package: whpt</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Attaching package: 'whpt'</span></span>
+<span><span class="co">#&gt; The following object is masked from 'package:hera':</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt;     demo_data</span></span>
+<span><span class="co">#&gt; Loading required package: macroinvertebrateMetrics</span></span>
+<span><span class="co">#&gt; The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,</span></span>
+<span><span class="co">#&gt; which was just loaded, will retire in October 2023.</span></span>
+<span><span class="co">#&gt; Please refer to R-spatial evolution reports for details, especially</span></span>
+<span><span class="co">#&gt; https://r-spatial.org/r/2023/05/15/evolution4.html.</span></span>
+<span><span class="co">#&gt; It may be desirable to make the sf package available;</span></span>
+<span><span class="co">#&gt; package maintainers should consider adding sf to Suggests:.</span></span>
+<span><span class="co">#&gt; The sp package is now running under evolution status 2</span></span>
+<span><span class="co">#&gt;      (status 2 uses the sf package in place of rgdal)</span></span></code></pre>
+<table class="table">
+<thead><tr class="header">
+<th align="left">sample_id</th>
+<th align="left">question</th>
+<th align="left">response</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">12345</td>
+<td align="left">Reference NTAXA</td>
+<td align="left">21.14</td>
+</tr>
+<tr class="even">
+<td align="left">12345</td>
+<td align="left">Reference ASPT</td>
+<td align="left">7.32</td>
+</tr>
+<tr class="odd">
+<td align="left">12345</td>
+<td align="left">assessment</td>
+<td align="left">Likely problem detected</td>
+</tr>
+<tr class="even">
+<td align="left">12345</td>
+<td align="left">driver</td>
+<td align="left">ntaxa</td>
+</tr>
+<tr class="odd">
+<td align="left">12345</td>
+<td align="left">action</td>
+<td align="left">Urgent discussion required with Ecology</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level2">
 <h2 id="check">Check<a class="anchor" aria-label="anchor" href="#check"></a>
 </h2>
 <p>Run checks on the assessment.</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🎉</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🎉</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Test passed </span></span>
+<span><span class="co">#&gt; Test passed</span></span></code></pre>
 <table class="table">
 <thead><tr class="header">
 <th align="left">check</th>
@@ -177,43 +294,9 @@ button in the Build pane.</p>
 <h2 id="test">Test<a class="anchor" aria-label="anchor" href="#test"></a>
 </h2>
 <p>This section tests if this assessment is usable using
-<code>assessment</code> function.</p>
-<pre><code><span><span class="co">#&gt; Hello from hera, ...work in progress!</span></span>
-<span><span class="co">#&gt; Hello from hera, ...work in progress!</span></span>
-<span><span class="co">#&gt; Warning in inner_join(output, data[, c("location_id", "sample_id", "date_taken")], : Detected an unexpected many-to-many relationship between `x` and `y`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 1 of `x` matches multiple rows in `y`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 330 of `y` matches multiple rows in `x`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> If a many-to-many relationship is expected, set `relationship =</span></span>
-<span><span class="co">#&gt;   "many-to-many"` to silence this warning.</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 165 × 3</span></span></span>
-<span><span class="co">#&gt;    sample_id question        response</span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 1017980   Reference NTAXA 22.3    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 1101214   Reference NTAXA 22.42   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 1250462   Reference NTAXA 22.68   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 1419451   Reference NTAXA 22.58   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 1457665   Reference NTAXA 22.37   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 1564589   Reference NTAXA 22.68   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 1582198   Reference NTAXA 22.37   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 1672942   Reference NTAXA 22.58   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 1800006   Reference NTAXA 22.56   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 1912578   Reference NTAXA 22.58   </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 155 more rows</span></span></span>
-<span><span class="co">#&gt; Hello from hera, ...work in progress!</span></span>
-<span><span class="co">#&gt; Hello from hera, ...work in progress!</span></span>
-<span><span class="co">#&gt; Warning in inner_join(output, data[, c("location_id", "sample_id", "date_taken")], : Detected an unexpected many-to-many relationship between `x` and `y`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 1 of `x` matches multiple rows in `y`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 1 of `y` matches multiple rows in `x`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> If a many-to-many relationship is expected, set `relationship =</span></span>
-<span><span class="co">#&gt;   "many-to-many"` to silence this warning.</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 3</span></span></span>
-<span><span class="co">#&gt;   sample_id question        response                               </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 30259     Reference NTAXA 21.11                                  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 30259     Reference ASPT  7.35                                   </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 30259     assessment      Likely problem detected                </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 30259     driver          ntaxa                                  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 30259     action          Urgent discussion required with Ecology</span></span></code></pre>
+<code>assess</code> function.</p>
+<p>Using demo data:</p>
+<p>Using converted data:</p>
 </div>
 <div class="section level2">
 <h2 id="launch-app">Launch app<a class="anchor" aria-label="anchor" href="#launch-app"></a>

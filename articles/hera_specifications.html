@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">hera</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Request for Comment: Shared Design Principles for Creating and Deploying Regulatory Methods</h1>
             
-            <h4 data-toc-skip class="date">2023-04-24</h4>
+            <h4 data-toc-skip class="date">2023-07-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ecodata1/hera/blob/HEAD/vignettes/hera_specifications.Rmd" class="external-link"><code>vignettes/hera_specifications.Rmd</code></a></small>
       <div class="d-none name"><code>hera_specifications.Rmd</code></div>
@@ -280,31 +280,21 @@ check, bathing water or discharge assessment. Broadly, any type of
 grading or assessment.</p>
 <p>By default the <code><a href="../reference/assess.html">assess()</a></code> function we run all the
 assessments possible based on the data provided.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assess</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sample_id, question, response) <span class="sc">%&gt;%</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">4</span>) </span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 4 × 3</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  sample_id question        response         </span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>     <span class="er">&lt;</span>chr<span class="sc">&gt;</span>           <span class="er">&lt;</span>chr<span class="sc">&gt;</span>            </span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">919681</span>    OrganicTolerant <span class="fl">76.56</span>            </span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="dv">2031713</span>   N_TDI4          <span class="dv">22</span>               </span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> <span class="dv">3294945</span>   EQR             <span class="fl">0.623015616429529</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="dv">282587</span>    Class           Moderate         </span></code></pre></div>
+<p><code>r data %&gt;%    assess() %&gt;%   select(sample_id, question, response) %&gt;%   slice_sample(n = 4)</code></p>
 <p>Alternatively, we can select a list of specific assessments from the
 <code>catalogue</code> to run as required.</p>
-<pre><code>[1] "DARLEQ3"         "MPFF Compliance"</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assess</span>(<span class="at">name =</span> catalogue<span class="sc">$</span>assessment[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]) <span class="sc">%&gt;%</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sample_id, question, response) <span class="sc">%&gt;%</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">4</span>) </span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 4 × 3</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  sample_id question response          </span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>     <span class="er">&lt;</span>chr<span class="sc">&gt;</span>    <span class="er">&lt;</span>chr<span class="sc">&gt;</span>             </span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">1250462</span>   Planktic <span class="st">"0.64"</span>            </span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="dv">1912578</span>   eTDI4    <span class="st">"53.815511051024"</span> </span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> <span class="dv">2632159</span>   TDI4     <span class="st">"69.3729372937294"</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="dv">2031713</span>   Comments <span class="st">""</span>                </span></code></pre></div>
+<pre><code>[1] "MPFF Compliance"           "Macroinvertebrate Metrics"</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">assess</span>(<span class="at">name =</span> catalogue<span class="sc">$</span>assessment[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>]) <span class="sc">%&gt;%</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(sample_id, question, response) <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">4</span>) </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 4 × 3</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  sample_id question       response        </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>     <span class="er">&lt;</span>chr<span class="sc">&gt;</span>          <span class="er">&lt;</span>chr<span class="sc">&gt;</span>           </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="dv">3294945</span>   EPSI Score TL2 <span class="fl">89.2026964202696</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> <span class="dv">919610</span>    EPSI Score TL2 <span class="fl">98.2880022090294</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> <span class="dv">2828750</span>   WHPT_NTAXA     <span class="dv">14</span>              </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> <span class="dv">1672942</span>   WHPT_SCORE     <span class="fl">74.5</span>            </span></code></pre></div>
 <div class="section level5" number="4.2.2.1">
 <h5 id="assessment-reports">
 <span class="header-section-number">4.2.2.1</span> Assessment
@@ -381,9 +371,7 @@ measures.</p>
 steps. But for developers and researchers it is useful to think about
 classification within this framework of discrete steps. For the majority
 of end users, agency staff or consultants, they can open the GUI
-<code>hera_app()</code> or visit the website directly. However, advanced
-users can use the <code>hera</code> function to wrap all these steps
-together for example <code>hera(hera::demo_data)</code>.</p>
+<code>hera_app()</code> or visit the website directly.</p>
 <p>Furthermore, agencies can integrate these functions into their
 systems using web services. Please see the <a href="https://cloud.opencpu.org/ocpu/apps/ecodata1/hera/info" class="external-link">demo web
 service</a> and <a href="https://www.opencpu.org/api.html" class="external-link">api
@@ -442,10 +430,10 @@ macrophytes and inverts quality elements.</p>
   location_description             date_taken          sample_id quality_element
   &lt;fct&gt;                            &lt;dttm&gt;              &lt;chr&gt;     &lt;chr&gt;          
 1 River Eden @ Kemback Gauging St… 2017-07-20 12:15:00 3256506   Algal_RQB      
-2 River Eden @ Kemback Gauging St… 2011-05-04 13:45:00 1800006   Alien Species  
-3 River Eden @ Kemback Gauging St… 2017-05-17 15:00:00 3201863   Comment        
+2 River Eden @ Kemback Gauging St… 2013-10-09 13:29:00 2355899   Alien Species  
+3 River Eden @ Kemback Gauging St… 2017-09-21 10:00:00 3294945   Comment        
 4 River Eden @ Kemback Gauging St… 2009-04-15 12:54:00 1250462   Diatom Summary 
-5 River Eden @ Kemback Gauging St… 2012-11-08 13:50:00 2141643   Diatom Survey …</code></pre>
+5 River Eden @ Kemback Gauging St… 2014-10-02 12:30:00 2632159   Diatom Survey …</code></pre>
 </div>
 <div class="section level4" number="4.3.3">
 <h4 id="book-keeping-variables">
@@ -503,13 +491,13 @@ interacting with existing datasets and <em>ad hoc</em> data, a third
 column <code>label</code> is useful due to the historic way taxon data
 is usually stored.</p>
 <pre><code># A tibble: 5 × 3
-  question        response  label                
-  &lt;chr&gt;           &lt;chr&gt;     &lt;fct&gt;                
-1 As              2         Meridion circulare   
-2 TDLR            4         Navicula subminuscula
-3 Taxon abundance 2         Navicula subminuscula
-4 As              24        Navicula minuscula   
-5 Taxon name      Tipulidae Tipulidae            </code></pre>
+  question               response label         
+  &lt;chr&gt;                  &lt;chr&gt;    &lt;fct&gt;         
+1 Taxon abundance        1        Hydropsychidae
+2 Taxon abundance        50       Oligochaeta   
+3 BMWP Score             7.0      Rhyacophilidae
+4 TDLR                   3        Nitzschia sp. 
+5 Plant functional group 0        Didymodon     </code></pre>
 </div>
 <div class="section level4" number="4.3.5">
 <h4 id="predictors">
@@ -556,11 +544,11 @@ correct format.</p>
 <p>For instance, here is a prototype function to pull data Environment
 Agency’s data.gov.uk web service and convert to the required
 <code>hera</code> input format.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">environment_agency_data</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">:::</span><span class="fu"><a href="../reference/get_data.html">get_data</a></span><span class="op">(</span>location_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">43378</span>, <span class="fl">92751</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span><span class="va">environment_agency_data</span><span class="op">)</span></span></code></pre></div>
 <p>We can then run this EA data through <code>hera</code>:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">report</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">::</span><span class="fu"><a href="../reference/assess.html">assess</a></span><span class="op">(</span><span class="va">environment_agency_data</span><span class="op">)</span></span>
 <span><span class="va">report</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">date_taken</span>, <span class="va">question</span>, <span class="va">response</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -584,15 +572,15 @@ Tables<a class="anchor" aria-label="anchor" href="#shared-data-tables"></a>
 <span class="header-section-number">4.5.1</span> Models and
 Environmental Standards names<a class="anchor" aria-label="anchor" href="#models-and-environmental-standards-names"></a>
 </h4>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>hera<span class="sc">::</span>catalogue</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 5 × 3</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  assessment                data               assessment_function</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>                     <span class="er">&lt;</span>list<span class="sc">&gt;</span>             <span class="er">&lt;</span>list<span class="sc">&gt;</span>             </span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> DARLEQ3                   <span class="sc">&lt;</span>tibble [<span class="dv">35</span> × <span class="dv">12</span>]<span class="sc">&gt;</span> <span class="er">&lt;</span>fn<span class="sc">&gt;</span>               </span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> MPFF Compliance           <span class="sc">&lt;</span>tibble [<span class="dv">34</span> × <span class="dv">10</span>]<span class="sc">&gt;</span> <span class="er">&lt;</span>fn<span class="sc">&gt;</span>               </span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> Bankside Consistency      <span class="sc">&lt;</span>tibble [<span class="dv">11</span> × <span class="dv">12</span>]<span class="sc">&gt;</span> <span class="er">&lt;</span>fn<span class="sc">&gt;</span>               </span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> Macroinvertebrate Metrics <span class="sc">&lt;</span>tibble [<span class="dv">11</span> × <span class="dv">10</span>]<span class="sc">&gt;</span> <span class="er">&lt;</span>fn<span class="sc">&gt;</span>               </span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> RICT                      <span class="sc">&lt;</span>tibble [<span class="dv">20</span> × <span class="dv">12</span>]<span class="sc">&gt;</span> <span class="er">&lt;</span>fn<span class="sc">&gt;</span>               </span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>hera<span class="sc">::</span>catalogue</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># A tibble: 5 × 3</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  assessment                data               assessment_function</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">&lt;</span>chr<span class="sc">&gt;</span>                     <span class="er">&lt;</span>list<span class="sc">&gt;</span>             <span class="er">&lt;</span>list<span class="sc">&gt;</span>             </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> MPFF Compliance           <span class="sc">&lt;</span>tibble [<span class="dv">34</span> × <span class="dv">10</span>]<span class="sc">&gt;</span> <span class="er">&lt;</span>fn<span class="sc">&gt;</span>               </span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span> Macroinvertebrate Metrics <span class="sc">&lt;</span>tibble [<span class="dv">12</span> × <span class="dv">10</span>]<span class="sc">&gt;</span> <span class="er">&lt;</span>fn<span class="sc">&gt;</span>               </span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span> DARLEQ3                   <span class="sc">&lt;</span>tibble [<span class="dv">36</span> × <span class="dv">12</span>]<span class="sc">&gt;</span> <span class="er">&lt;</span>fn<span class="sc">&gt;</span>               </span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span> RICT                      <span class="sc">&lt;</span>tibble [<span class="dv">26</span> × <span class="dv">12</span>]<span class="sc">&gt;</span> <span class="er">&lt;</span>fn<span class="sc">&gt;</span>               </span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span> Bankside Consistency      <span class="sc">&lt;</span>tibble [<span class="dv">12</span> × <span class="dv">12</span>]<span class="sc">&gt;</span> <span class="er">&lt;</span>fn<span class="sc">&gt;</span>               </span></code></pre></div>
 </div>
 </div>
 <div class="section level3" number="4.6">

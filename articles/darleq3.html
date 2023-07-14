@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">hera</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -157,30 +157,38 @@ Phytobenthos</td>
 <p>If applicable, write a function to assess your input data and return
 an outcome. For example, a metric, statistic, prediction etc.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="va">assessment_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="va">assessment_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/" class="external-link">tibble</a></span><span class="op">)</span></span>
 <span></span>
+<span>  <span class="co"># Get alkalinity predictor if not present...</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"alkalinity"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="co"># predictor table for alkalinity if "chemistry_site" variable</span></span>
+<span>    <span class="va">predictors</span> <span class="op">&lt;-</span> <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdat"</span>,</span>
+<span>        <span class="st">"predictors.csv"</span>,</span>
+<span>        package <span class="op">=</span> <span class="st">"hera"</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>      stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="va">predictors</span><span class="op">$</span><span class="va">location_id</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">predictors</span><span class="op">$</span><span class="va">location_id</span><span class="op">)</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"chemistry_site"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">predictors</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"location_id"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alkalinity"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="st">"calculating alklainity..."</span><span class="op">)</span></span>
+<span>      <span class="va">alk</span> <span class="op">&lt;-</span> <span class="fu">hera</span><span class="fu">:::</span><span class="fu">mean_alkalinity</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
+<span>      <span class="va">data</span><span class="op">$</span><span class="va">alkalinity</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
+<span>      <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">alk</span>, by <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by</a></span><span class="op">(</span><span class="st">"sample_id"</span> <span class="op">==</span> <span class="st">"sample_number"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>  <span class="op">}</span></span>
 <span>  <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">question</span> <span class="op">==</span> <span class="st">"Taxon abundance"</span> <span class="op">&amp;</span></span>
 <span>    <span class="va">parameter</span> <span class="op">==</span> <span class="st">"River Diatoms"</span><span class="op">)</span></span>
 <span>  <span class="va">data</span><span class="op">$</span><span class="va">response</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">response</span><span class="op">)</span></span>
-<span>  <span class="co"># Generates prediction based on predictors...</span></span>
-<span>  <span class="va">predictors</span> <span class="op">&lt;-</span> <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdat"</span>,</span>
-<span>    <span class="st">"predictors.csv"</span>,</span>
-<span>    package <span class="op">=</span> <span class="st">"hera"</span></span>
-<span>  <span class="op">)</span>,</span>
-<span>  stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span>  <span class="op">)</span></span>
-<span>  <span class="va">predictors</span><span class="op">$</span><span class="va">location_id</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">predictors</span><span class="op">$</span><span class="va">location_id</span><span class="op">)</span></span>
-<span>  <span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"alkalinity"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">predictors</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"location_id"</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">}</span> </span>
-<span>  </span>
 <span>  <span class="va">data</span><span class="op">$</span><span class="va">alkalinity</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">alkalinity</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">75</span></span>
-<span></span>
 <span></span>
 <span>  <span class="va">data</span><span class="op">$</span><span class="va">alkalinity</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">alkalinity</span><span class="op">)</span></span>
 <span>  <span class="co"># Combine mean alkalinity with other site headers</span></span>
@@ -223,23 +231,44 @@ an outcome. For example, a metric, statistic, prediction etc.</p>
 <span>      <span class="va">.data</span><span class="op">$</span><span class="va">question</span> <span class="op">==</span> <span class="st">"Taxon abundance"</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="co"># Trim whitespace in Taxon name to help join.</span></span>
-<span>  <span class="va">diatom_taxon_abundance</span><span class="op">$</span><span class="va">label</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/trimws.html" class="external-link">trimws</a></span><span class="op">(</span><span class="va">diatom_taxon_abundance</span><span class="op">$</span><span class="va">label</span><span class="op">)</span></span>
-<span>  <span class="va">dares_table</span><span class="op">$</span><span class="va">TaxonNameSEPA</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/base/trimws.html" class="external-link">trimws</a></span><span class="op">(</span><span class="va">dares_table</span><span class="op">$</span><span class="va">TaxonNameSEPA</span><span class="op">)</span></span>
+<span>  <span class="va">diatom_taxon_abundance</span><span class="op">$</span><span class="va">label</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/trimws.html" class="external-link">trimws</a></span><span class="op">(</span><span class="va">diatom_taxon_abundance</span><span class="op">$</span><span class="va">label</span><span class="op">)</span></span>
+<span>  <span class="va">dares_table</span><span class="op">$</span><span class="va">TaxonNameSEPA</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/trimws.html" class="external-link">trimws</a></span><span class="op">(</span><span class="va">dares_table</span><span class="op">$</span><span class="va">TaxonNameSEPA</span><span class="op">)</span></span>
 <span>  <span class="co"># Join to S_TAXON_DARES table using Taxon name.</span></span>
-<span>  <span class="va">diatom_taxonname</span> <span class="op">&lt;-</span> <span class="va">diatom_taxon_abundance</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">sample_id</span>, <span class="va">.data</span><span class="op">$</span><span class="va">label</span>, <span class="va">.data</span><span class="op">$</span><span class="va">response</span>, <span class="va">.data</span><span class="op">$</span><span class="va">date_taken</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">dares_table</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TaxonName"</span>, <span class="st">"TaxonId"</span>, <span class="st">"TaxonNameSEPA"</span><span class="op">)</span><span class="op">]</span>,</span>
-<span>      by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"label"</span> <span class="op">=</span> <span class="st">"TaxonNameSEPA"</span><span class="op">)</span></span>
-<span>    <span class="op">)</span></span>
-<span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">diatom_taxon_abundance</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"taxon_ids"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">diatom_taxonname</span> <span class="op">&lt;-</span> <span class="va">diatom_taxon_abundance</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>        <span class="va">.data</span><span class="op">$</span><span class="va">location_id</span>,</span>
+<span>        <span class="va">.data</span><span class="op">$</span><span class="va">sample_id</span>,</span>
+<span>        <span class="va">.data</span><span class="op">$</span><span class="va">taxon_ids</span>,</span>
+<span>        <span class="va">.data</span><span class="op">$</span><span class="va">label</span>,</span>
+<span>        <span class="va">.data</span><span class="op">$</span><span class="va">response</span>,</span>
+<span>        <span class="va">.data</span><span class="op">$</span><span class="va">date_taken</span></span>
+<span>      <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">dares_table</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TaxonName"</span>, <span class="st">"TaxonId"</span>, <span class="st">"TaxonNameSEPA"</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>        by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"taxon_ids"</span> <span class="op">=</span> <span class="st">"TaxonId"</span><span class="op">)</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="va">diatom_taxonname</span><span class="op">$</span><span class="va">TaxonId</span> <span class="op">&lt;-</span> <span class="va">diatom_taxonname</span><span class="op">$</span><span class="va">taxon_ids</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="va">diatom_taxonname</span> <span class="op">&lt;-</span> <span class="va">diatom_taxon_abundance</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>        <span class="va">.data</span><span class="op">$</span><span class="va">location_id</span>,</span>
+<span>        <span class="va">.data</span><span class="op">$</span><span class="va">sample_id</span>,</span>
+<span>        <span class="va">.data</span><span class="op">$</span><span class="va">label</span>,</span>
+<span>        <span class="va">.data</span><span class="op">$</span><span class="va">response</span>,</span>
+<span>        <span class="va">.data</span><span class="op">$</span><span class="va">date_taken</span></span>
+<span>      <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">dares_table</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TaxonName"</span>, <span class="st">"TaxonId"</span>, <span class="st">"TaxonNameSEPA"</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>        by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"label"</span> <span class="op">=</span> <span class="st">"TaxonNameSEPA"</span><span class="op">)</span></span>
+<span>      <span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span>  <span class="co"># Make sure numeric</span></span>
 <span>  <span class="va">diatom_taxonname</span><span class="op">$</span><span class="va">response</span> <span class="op">&lt;-</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">diatom_taxonname</span><span class="op">$</span><span class="va">response</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
 <span>  <span class="co"># Sum response if duplicate taxon names entered within a single sample</span></span>
 <span>  <span class="va">diatom_tidied</span> <span class="op">&lt;-</span> <span class="va">diatom_taxonname</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">sample_id</span>, <span class="va">.data</span><span class="op">$</span><span class="va">TaxonId</span>, <span class="va">.data</span><span class="op">$</span><span class="va">label</span>, <span class="va">.data</span><span class="op">$</span><span class="va">date_taken</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>response <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">.data</span><span class="op">$</span><span class="va">response</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span></span>
+<span></span>
 <span>  <span class="co"># Arrange to keep in same order as 'taxon_names' data.frame</span></span>
 <span>  <span class="va">diatom_tidied</span> <span class="op">&lt;-</span> <span class="va">diatom_tidied</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -253,6 +282,7 @@ an outcome. For example, a metric, statistic, prediction etc.</p>
 <span>  <span class="op">)</span></span>
 <span>  <span class="va">diatom_data</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">diatom_data</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
 <span></span>
+<span></span>
 <span>  <span class="co"># Arrange by sampled_date to match order of 'header' data frame.</span></span>
 <span>  <span class="va">diatom_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">diatom_data</span>, <span class="va">.data</span><span class="op">$</span><span class="va">sample_id</span><span class="op">)</span></span>
 <span>  <span class="co"># darleq3 requires row.names equal SAMPLE_NUMBER. Must convert</span></span>
@@ -264,8 +294,10 @@ an outcome. For example, a metric, statistic, prediction etc.</p>
 <span>  <span class="co"># Prepare dataframe of 'taxon_names'  ------------------------------</span></span>
 <span>  <span class="co"># include columns 'TaxonCode','TaxonName'</span></span>
 <span>  <span class="va">taxon_names</span> <span class="op">&lt;-</span> <span class="va">diatom_taxonname</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="st">"TaxonCode"</span> <span class="op">=</span> <span class="va">.data</span><span class="op">$</span><span class="va">TaxonId</span>,</span>
-<span>           <span class="st">"TaxonName"</span> <span class="op">=</span> <span class="va">.data</span><span class="op">$</span><span class="va">TaxonName</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>      <span class="st">"TaxonCode"</span> <span class="op">=</span> <span class="va">.data</span><span class="op">$</span><span class="va">TaxonId</span>,</span>
+<span>      <span class="st">"TaxonName"</span> <span class="op">=</span> <span class="va">.data</span><span class="op">$</span><span class="va">TaxonName</span></span>
+<span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="va">taxon_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">taxon_names</span>, <span class="va">.data</span><span class="op">$</span><span class="va">TaxonName</span><span class="op">)</span></span>
 <span></span>
@@ -273,13 +305,16 @@ an outcome. For example, a metric, statistic, prediction etc.</p>
 <span>  <span class="va">header</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">header</span><span class="op">)</span></span>
 <span>  <span class="va">header</span> <span class="op">&lt;-</span> <span class="va">header</span><span class="op">[</span><span class="va">header</span><span class="op">$</span><span class="va">SampleID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names</a></span><span class="op">(</span><span class="va">diatom_data</span><span class="op">)</span>, <span class="op">]</span></span>
 <span>  <span class="va">header</span> <span class="op">&lt;-</span> <span class="va">header</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/duplicated.html" class="external-link">duplicated</a></span><span class="op">(</span><span class="va">header</span><span class="op">$</span><span class="va">SampleID</span><span class="op">)</span>, <span class="op">]</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names</a></span><span class="op">(</span><span class="va">header</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">header</span><span class="op">$</span><span class="va">SampleID</span></span>
+<span>  <span class="va">header</span><span class="op">$</span><span class="va">SampleID</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">header</span><span class="op">$</span><span class="va">SampleID</span><span class="op">)</span></span>
+<span>  <span class="va">header</span><span class="op">$</span><span class="va">SAMPLE_DATE</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">header</span><span class="op">$</span><span class="va">SAMPLE_DATE</span><span class="op">)</span></span>
 <span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="fu">darleq3</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/darleq3/man/calc_Metric.html" class="external-link">calc_Metric</a></span><span class="op">(</span><span class="va">diatom_data</span>, metric <span class="op">=</span> <span class="st">"TDI4"</span><span class="op">)</span></span>
 <span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="fu">darleq3</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/darleq3/man/calc_EQR.html" class="external-link">calc_EQR</a></span><span class="op">(</span><span class="va">output</span>,</span>
 <span>    <span class="va">header</span>,</span>
 <span>    truncate_EQR <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>    verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>  <span class="op">)</span></span>
-<span> </span>
+<span></span>
 <span>  <span class="va">sample</span> <span class="op">&lt;-</span> <span class="va">output</span><span class="op">$</span><span class="va">EQR</span></span>
 <span>  <span class="va">sample</span> <span class="op">&lt;-</span> <span class="va">sample</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="va">as.character</span><span class="op">)</span></span>
 <span>  <span class="va">sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="va">sample</span>,</span>
@@ -289,22 +324,34 @@ an outcome. For example, a metric, statistic, prediction etc.</p>
 <span>  <span class="op">)</span></span>
 <span>  <span class="va">sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">sample</span>, <span class="op">-</span><span class="va">SAMPLE_DATE</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">sample</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample_id"</span>, <span class="st">"location_id"</span>, <span class="st">"question"</span>, <span class="st">"response"</span><span class="op">)</span></span>
-<span>  </span>
+<span></span>
 <span>  <span class="va">location</span> <span class="op">&lt;-</span> <span class="va">output</span><span class="op">$</span><span class="va">Uncertainty</span></span>
 <span>  <span class="va">location</span> <span class="op">&lt;-</span> <span class="va">location</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="va">as.character</span><span class="op">)</span></span>
-<span>   <span class="va">location</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="va">location</span>,</span>
+<span>  <span class="va">location</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="va">location</span>,</span>
 <span>    cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="va">SiteID</span><span class="op">)</span>,</span>
 <span>    names_to <span class="op">=</span> <span class="st">"question"</span>,</span>
 <span>    values_to <span class="op">=</span> <span class="st">"response"</span></span>
 <span>  <span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">location</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"location_id"</span>, <span class="st">"question"</span>, <span class="st">"response"</span><span class="op">)</span></span>
-<span>  <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">sample</span>, <span class="va">location</span><span class="op">)</span></span>
-<span>  <span class="va">data</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"Phytobenthos (diatoms)"</span></span>
-<span>  <span class="va">data</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">data</span>,</span>
-<span>                   question <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">question</span> <span class="op">==</span> <span class="st">"WFDClass"</span>,</span>
-<span>                                     <span class="st">"Class"</span>,</span>
-<span>                                     <span class="va">question</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">location</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"location_id"</span>, <span class="st">"question"</span>, <span class="st">"response"</span><span class="op">)</span></span>
+<span>  <span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">sample</span>, <span class="va">location</span><span class="op">)</span></span>
+<span>  <span class="va">results</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"Phytobenthos (diatoms)"</span></span>
+<span>  <span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">results</span>,</span>
+<span>    question <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">question</span> <span class="op">==</span> <span class="st">"WFDClass"</span>,</span>
+<span>      <span class="st">"Class"</span>,</span>
+<span>      <span class="va">question</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">years</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="st">"year"</span> <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="va">date_taken</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">parameter</span> <span class="op">==</span> <span class="st">"River Diatoms"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">location_id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span><span class="st">"response"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">.</span><span class="op">$</span><span class="va">year</span><span class="op">)</span>, collapse <span class="op">=</span> <span class="st">","</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">years</span><span class="op">$</span><span class="va">question</span> <span class="op">&lt;-</span> <span class="st">"Years included"</span></span>
+<span>  <span class="va">years</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"Phytobenthos (diatoms)"</span></span>
+<span>  <span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">results</span>, <span class="va">years</span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -356,27 +403,27 @@ an outcome. For example, a metric, statistic, prediction etc.</p>
 <span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
 <span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 28 × 5</span></span></span>
-<span><span class="co">#&gt;    sample_id location_id question        response          parameter            </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 12345     8175        Alkalinity      121.912540106952  Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 12345     8175        lake_TYPE       HA                Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 12345     8175        Total_count     12                Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 12345     8175        Percent_in_TDI4 100               Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 12345     8175        N_TDI4          1                 Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 12345     8175        N2_TDI4         1                 Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 12345     8175        Max_TDI4        100               Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 12345     8175        TDI4            50                Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 12345     8175        eTDI4           53.815511051024   Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 12345     8175        EQR_TDI4        0.866091644841874 Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 18 more rows</span></span></span></code></pre>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 29 × 5</span></span></span>
+<span><span class="co">#&gt;    sample_id location_id question        response         parameter             </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 12345     8175        Alkalinity      121.9125401      Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 12345     8175        lake_TYPE       HA               Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 12345     8175        Total_count     12               Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 12345     8175        Percent_in_TDI4 100              Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 12345     8175        N_TDI4          1                Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 12345     8175        N2_TDI4         1                Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 12345     8175        Max_TDI4        100              Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 12345     8175        TDI4            50               Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 12345     8175        eTDI4           53.8155110499444 Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 12345     8175        EQR_TDI4        0.86609164482163 Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 19 more rows</span></span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="check">Check<a class="anchor" aria-label="anchor" href="#check"></a>
 </h2>
 <p>Run checks on the assessment.</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🌈</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🎊</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; Test passed </span></span>
+<span><span class="co">#&gt; Test passed</span></span></code></pre>
 <table class="table">
 <thead><tr class="header">
 <th align="left">check</th>
@@ -414,22 +461,30 @@ an outcome. For example, a metric, statistic, prediction etc.</p>
 <code>assessment</code> function.</p>
 <pre><code><span><span class="co">#&gt; Hello from hera, ...work in progress!</span></span>
 <span><span class="co">#&gt; Hello from hera, ...work in progress!</span></span>
+<span><span class="co">#&gt; The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,</span></span>
+<span><span class="co">#&gt; which was just loaded, will retire in October 2023.</span></span>
+<span><span class="co">#&gt; Please refer to R-spatial evolution reports for details, especially</span></span>
+<span><span class="co">#&gt; https://r-spatial.org/r/2023/05/15/evolution4.html.</span></span>
+<span><span class="co">#&gt; It may be desirable to make the sf package available;</span></span>
+<span><span class="co">#&gt; package maintainers should consider adding sf to Suggests:.</span></span>
+<span><span class="co">#&gt; The sp package is now running under evolution status 2</span></span>
+<span><span class="co">#&gt;      (status 2 uses the sf package in place of rgdal)</span></span>
 <span><span class="co">#&gt; Warning in CPL_crs_from_input(x): GDAL Message 1: +init=epsg:XXXX syntax is</span></span>
 <span><span class="co">#&gt; deprecated. It might return a CRS with a non-EPSG compliant axis order.</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 236 × 5</span></span></span>
-<span><span class="co">#&gt;    sample_id location_id question        response          parameter            </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 1250462   8175        Alkalinity      121.912540106952  Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 1250462   8175        lake_TYPE       HA                Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 1250462   8175        Total_count     312               Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 1250462   8175        Percent_in_TDI4 99.3589743589744  Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 1250462   8175        N_TDI4          37                Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 1250462   8175        N2_TDI4         11.09             Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 1250462   8175        Max_TDI4        20.51             Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 1250462   8175        TDI4            64.6129032258064  Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 1250462   8175        eTDI4           53.815511051024   Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 1250462   8175        EQR_TDI4        0.612969377026797 Phytobenthos (diatom…</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 226 more rows</span></span></span></code></pre>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 237 × 5</span></span></span>
+<span><span class="co">#&gt;    sample_id location_id question        response         parameter             </span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 1250462   8175        Alkalinity      121.9125401      Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 1250462   8175        lake_TYPE       HA               Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 1250462   8175        Total_count     312              Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 1250462   8175        Percent_in_TDI4 99.3589743589744 Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 1250462   8175        N_TDI4          37               Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 1250462   8175        N2_TDI4         11.09            Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 1250462   8175        Max_TDI4        20.51            Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 1250462   8175        TDI4            64.6129032258064 Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 1250462   8175        eTDI4           53.8155110499444 Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 1250462   8175        EQR_TDI4        0.61296937701247 Phytobenthos (diatoms)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 227 more rows</span></span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="launch-app">Launch app<a class="anchor" aria-label="anchor" href="#launch-app"></a>
