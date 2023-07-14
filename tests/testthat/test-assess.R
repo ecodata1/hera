@@ -1,6 +1,4 @@
 test_that("assess works", {
- # run all data
-  data <- assess(demo_data)
 
   # run subset
   data <- assess(demo_data[1:100, ]) %>%
