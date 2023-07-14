@@ -195,13 +195,12 @@ The 'assessment' stage includes any type of index, test or categorisation of our
   
 By default the `assess()` function we run all the assessments possible based on the data provided.
 
-```{r, echo=TRUE, warning=F, message=F}
+`r
 data %>% 
   assess() %>%
   select(sample_id, question, response) %>%
   slice_sample(n = 4) 
-
-```
+`
 
 Alternatively, we can select a list of specific assessments from the `catalogue` to run as required.
 
@@ -293,9 +292,7 @@ For the most part we don't expect users to go through each of these steps. But
 for developers and researchers it is useful to think about classification within
 this framework of discrete steps. For the majority of end users, agency staff or
 consultants, they can open the GUI `hera_app()` or visit the website directly.
-However, advanced users can use the `hera` function to wrap all these steps
-together for example `hera(hera::demo_data)`.
-  
+
 Furthermore, agencies can integrate these functions into their systems using web
 services. Please see the [demo web
 service](https://cloud.opencpu.org/ocpu/apps/ecodata1/hera/info) and [api

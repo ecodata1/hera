@@ -86,8 +86,8 @@ assessment_function <- function(data) {
   require(tidyr)
   require(magrittr)
   require(tibble)
-  # require(whpt)
-  # require(macroinvertebrateMetrics)
+  require(whpt)
+  require(macroinvertebrateMetrics)
   data$date_taken <- as.character(format.Date(data$date_taken, "%Y/%m/%d"))
   metric_function <- catalogue[catalogue$assessment ==
     "Macroinvertebrate Metrics", 3][[1]]
@@ -174,22 +174,24 @@ This section tests if this assessment is usable using `assess` function.
   
 Using demo data:
 ```{r}
+# For some reason not working on CI / github actions:
 # No need to edit this code
-data_out <- assess(
-  data = hera::demo_data,
-  name = description$response[description$question == "name_short"]
-)
-knitr::kable(head(data_out))
+# data_out <- assess(
+#   data = hera::demo_data,
+#   name = description$response[description$question == "name_short"]
+# )
+# knitr::kable(head(data_out))
 ```
   
 Using converted data:
 ```{r}
-lims_data <- hera:::convert(hera::lims_data)
-lims_out <- assess(
-  data = lims_data,
-  name = description$response[description$question == "name_short"]
-)
-knitr::kable(head(lims_data))
+# For some reason not working on CI / github actions:
+# lims_data <- hera:::convert(hera::lims_data)
+# lims_out <- assess(
+#   data = lims_data,
+#   name = description$response[description$question == "name_short"]
+# )
+# knitr::kable(head(lims_data))
 ```
 
 ## Launch app

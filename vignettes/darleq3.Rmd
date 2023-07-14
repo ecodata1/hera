@@ -35,7 +35,6 @@ This document has been created following the generic [assessment guidance](https
 Basic details about the assessment. Update the 'response' values as required.
 
 ```{r setup}
-
 description <- tribble(
   ~question, ~response,
   "name_short", "DARLEQ3",
@@ -54,47 +53,56 @@ A list of questions required to run the assessment.
 
 ```{r input}
 input <- tibble(
-  question = c("location_id",
-               "sample_id",
-               "date_taken",
-               "Taxon abundance",
-               "parameter",
-               "Alkalinity",
-               "TDI4",
-               "Predicted TDI4"
-              ),
-  response = c( "8175",
-                "1", 
-                "2021-05-21",
-                "12",
-                "45",
-                "River Diatoms",
-                "45",
-                "67"),
+  question = c(
+    "location_id",
+    "sample_id",
+    "date_taken",
+    "Taxon abundance",
+    "parameter",
+    "Alkalinity",
+    "TDI4",
+    "Predicted TDI4"
+  ),
+  response = c(
+    "8175",
+    "1",
+    "2021-05-21",
+    "12",
+    "45",
+    "River Diatoms",
+    "45",
+    "67"
+  ),
   label = c("Gomphonema olivaceum", NA, NA, NA, NA, NA, NA, NA),
   parameter = c(NA, NA, NA, NA, NA, "River Diatoms", NA, NA),
-  data_type = c("character", "character",
-           "character", "number",
-           "number", "character", 
-           "number",  "number"),
+  data_type = c(
+    "character", "character",
+    "character", "number",
+    "number", "character",
+    "number", "number"
+  ),
   max = c(NA, NA, NA, NA, NA, NA, NA, NA),
   min = c(NA, NA, NA, NA, NA, NA, NA, NA),
-  source = c("sepa_ecology_results",
-             "sepa_ecology_results",
-             "sepa_ecology_results",
-             "sepa_ecology_results",
-             "location_attributes",
-             "sepa_ecology_results",
-             "sepa_metric_results",
-             "sepa_metric_results"),
-  question_type = c("reference",
-           "reference",
-           "reference",
-           "observation",
-           "reference",
-           "predictor",
-           "outcome",
-           "outcome")
+  source = c(
+    "sepa_ecology_results",
+    "sepa_ecology_results",
+    "sepa_ecology_results",
+    "sepa_ecology_results",
+    "location_attributes",
+    "sepa_ecology_results",
+    "sepa_metric_results",
+    "sepa_metric_results"
+  ),
+  question_type = c(
+    "reference",
+    "reference",
+    "reference",
+    "observation",
+    "reference",
+    "predictor",
+    "outcome",
+    "outcome"
+  )
 )
 input
 
@@ -120,36 +128,39 @@ input
 If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
 
 ```{r assessment, echo=TRUE}
-
 assessment_function <- function(data) {
   require(dplyr)
   require(tidyr)
   require(magrittr)
   require(tibble)
-  # Generates prediction based on predictors...
-  predictors <- utils::read.csv(system.file("extdat",
-    "predictors.csv",
-    package = "hera"
-  ),
-  stringsAsFactors = FALSE, check.names = FALSE
-  )
-  predictors$location_id <- as.character(predictors$location_id)
-  if(!any(names(data) %in% "chemistry_site")) {
-  data <- left_join(data, predictors, by = c("location_id"))
-  } 
-  
 
-if(!any(names(data) %in% c("alkalinity"))) {
-  message("calculating alklainity...")
-alk <- hera:::mean_alkalinity(data)
-data$alkalinity <- NULL
-data <- inner_join(data, alk, by = join_by("sample_id" == "sample_number"))
-}
+  # Get alkalinity predictor if not present...
+  if (!any(names(data) %in% "alkalinity")) {
+    # predictor table for alkalinity if "chemistry_site" variable
+    predictors <- utils::read.csv(
+      system.file("extdat",
+        "predictors.csv",
+        package = "hera"
+      ),
+      stringsAsFactors = FALSE, check.names = FALSE
+    )
+    predictors$location_id <- as.character(predictors$location_id)
+    if (!any(names(data) %in% "chemistry_site")) {
+      data <- left_join(data, predictors, by = c("location_id"))
+    }
 
-    data <- filter(data, question == "Taxon abundance" &
+
+    if (!any(names(data) %in% c("alkalinity"))) {
+      message("calculating alklainity...")
+      alk <- hera:::mean_alkalinity(data)
+      data$alkalinity <- NULL
+      data <- inner_join(data, alk, by = join_by("sample_id" == "sample_number"))
+    }
+  }
+  data <- filter(data, question == "Taxon abundance" &
     parameter == "River Diatoms")
   data$response <- as.numeric(data$response)
- data$alkalinity[is.na(data$alkalinity)] <- 75
+  data$alkalinity[is.na(data$alkalinity)] <- 75
 
   data$alkalinity <- as.numeric(data$alkalinity)
   # Combine mean alkalinity with other site headers
@@ -192,40 +203,44 @@ data <- inner_join(data, alk, by = join_by("sample_id" == "sample_number"))
       .data$question == "Taxon abundance")
 
   # Trim whitespace in Taxon name to help join.
-  diatom_taxon_abundance$label <-  trimws(diatom_taxon_abundance$label)
-  dares_table$TaxonNameSEPA <-  trimws(dares_table$TaxonNameSEPA)
+  diatom_taxon_abundance$label <- trimws(diatom_taxon_abundance$label)
+  dares_table$TaxonNameSEPA <- trimws(dares_table$TaxonNameSEPA)
   # Join to S_TAXON_DARES table using Taxon name.
-  if(any(names(diatom_taxon_abundance) %in% c("taxon_ids"))) {
-      diatom_taxonname <- diatom_taxon_abundance %>%
-    select(.data$location_id,
-           .data$sample_id, 
-           .data$taxon_ids,
-           .data$label,
-           .data$response, 
-           .data$date_taken) %>%
-    inner_join(dares_table[, c("TaxonName", "TaxonId", "TaxonNameSEPA")],
-      by = c("taxon_ids" = "TaxonId")
-    )
-      diatom_taxonname$TaxonId <- diatom_taxonname$taxon_ids
+  if (any(names(diatom_taxon_abundance) %in% c("taxon_ids"))) {
+    diatom_taxonname <- diatom_taxon_abundance %>%
+      select(
+        .data$location_id,
+        .data$sample_id,
+        .data$taxon_ids,
+        .data$label,
+        .data$response,
+        .data$date_taken
+      ) %>%
+      inner_join(dares_table[, c("TaxonName", "TaxonId", "TaxonNameSEPA")],
+        by = c("taxon_ids" = "TaxonId")
+      )
+    diatom_taxonname$TaxonId <- diatom_taxonname$taxon_ids
   } else {
-  diatom_taxonname <- diatom_taxon_abundance %>%
-    select(.data$location_id,
-           .data$sample_id, 
-           .data$label,
-           .data$response, 
-           .data$date_taken) %>%
-    inner_join(dares_table[, c("TaxonName", "TaxonId", "TaxonNameSEPA")],
-      by = c("label" = "TaxonNameSEPA")
-    )
+    diatom_taxonname <- diatom_taxon_abundance %>%
+      select(
+        .data$location_id,
+        .data$sample_id,
+        .data$label,
+        .data$response,
+        .data$date_taken
+      ) %>%
+      inner_join(dares_table[, c("TaxonName", "TaxonId", "TaxonNameSEPA")],
+        by = c("label" = "TaxonNameSEPA")
+      )
   }
   # Make sure numeric
   diatom_taxonname$response <-
     as.numeric(as.character(diatom_taxonname$response))
-
   # Sum response if duplicate taxon names entered within a single sample
   diatom_tidied <- diatom_taxonname %>%
     group_by(.data$sample_id, .data$TaxonId, .data$label, .data$date_taken) %>%
     summarise(response = sum(.data$response, na.rm = TRUE), .groups = "drop")
+
   # Arrange to keep in same order as 'taxon_names' data.frame
   diatom_tidied <- diatom_tidied %>%
     ungroup() %>%
@@ -239,6 +254,7 @@ data <- inner_join(data, alk, by = join_by("sample_id" == "sample_number"))
   )
   diatom_data[is.na(diatom_data)] <- 0
 
+
   # Arrange by sampled_date to match order of 'header' data frame.
   diatom_data <- arrange(diatom_data, .data$sample_id)
   # darleq3 requires row.names equal SAMPLE_NUMBER. Must convert
@@ -250,8 +266,10 @@ data <- inner_join(data, alk, by = join_by("sample_id" == "sample_number"))
   # Prepare dataframe of 'taxon_names'  ------------------------------
   # include columns 'TaxonCode','TaxonName'
   taxon_names <- diatom_taxonname %>%
-    select("TaxonCode" = .data$TaxonId,
-           "TaxonName" = .data$TaxonName) %>%
+    select(
+      "TaxonCode" = .data$TaxonId,
+      "TaxonName" = .data$TaxonName
+    ) %>%
     unique()
   taxon_names <- arrange(taxon_names, .data$TaxonName)
 
@@ -268,7 +286,7 @@ data <- inner_join(data, alk, by = join_by("sample_id" == "sample_number"))
     truncate_EQR = TRUE,
     verbose = TRUE
   )
- 
+
   sample <- output$EQR
   sample <- sample %>% mutate_all(as.character)
   sample <- pivot_longer(sample,
@@ -278,28 +296,30 @@ data <- inner_join(data, alk, by = join_by("sample_id" == "sample_number"))
   )
   sample <- select(sample, -SAMPLE_DATE)
   names(sample) <- c("sample_id", "location_id", "question", "response")
-  
+
   location <- output$Uncertainty
   location <- location %>% mutate_all(as.character)
-   location <- pivot_longer(location,
+  location <- pivot_longer(location,
     cols = c(-SiteID),
     names_to = "question",
     values_to = "response"
   )
-    names(location) <- c("location_id", "question", "response")
+  names(location) <- c("location_id", "question", "response")
   results <- bind_rows(sample, location)
   results$parameter <- "Phytobenthos (diatoms)"
-  results <-  mutate(results,
-                   question = ifelse(question == "WFDClass",
-                                     "Class",
-                                     question))
-  
-  years <- data %>% 
-    mutate("year" = lubridate::year(date_taken)) %>% 
-    filter(parameter == "River Diatoms") %>% 
+  results <- mutate(results,
+    question = ifelse(question == "WFDClass",
+      "Class",
+      question
+    )
+  )
+
+  years <- data %>%
+    mutate("year" = lubridate::year(date_taken)) %>%
+    filter(parameter == "River Diatoms") %>%
     group_by(location_id) %>%
     summarise("response" = paste(unique(.$year), collapse = ","))
-    
+
   years$question <- "Years included"
   years$parameter <- "Phytobenthos (diatoms)"
   results <- bind_rows(results, years)
@@ -313,7 +333,7 @@ The outcome of your assessment.
 
 ```{r output}
 outcome <- assessment_function(input)
- outcome
+outcome
 ```
 
 ## Check

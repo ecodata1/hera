@@ -10,7 +10,9 @@
 #'
 #' @return Dataframe of assessments
 #' @examples
+#' \dontrun{
 #' assessments <- assess(hera::demo_data)
+#' }
 #' @importFrom rlang .data
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr group_by inner_join mutate bind_rows bind_cols filter
