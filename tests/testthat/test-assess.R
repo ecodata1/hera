@@ -1,9 +1,14 @@
 test_that("assess works", {
+ # run all data
+  data <- assess(demo_data)
+
+  # run subset
   data <- assess(demo_data[1:100, ]) %>%
     dplyr::select(sample_id, response, question) %>%
     dplyr::slice_sample(n = 4)
   expect_equal(nrow(data), 4)
 
+  # Work in progress test from old sepaTools package - needs checking
   data <- hera::demo_data[hera::demo_data$sample_id == "2755381", ]
   data$parameter[is.na(data$parameter)] <- data$quality_element[is.na(data$parameter)]
   results <- assess(data)
