@@ -155,9 +155,9 @@ survey_import <- function(path = NULL) {
 
     fauna <- dplyr::select(fauna,
       .data$sample_id,
-      question = .data$name,
-      response = .data$value,
-      label = 1,
+      "question" = .data$name,
+      "response" = .data$value,
+      "label" = 1,
     )
 
     # Define 'question' for comment, count and MCS responses

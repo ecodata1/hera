@@ -114,7 +114,8 @@ assessment_function <- function(data) {
         "sample_id",
         "date_taken"
       )]),
-      by = "sample_id"
+      by = "sample_id", 
+      relationship = "many-to-many"
     )
 
     whpt_input <- inner_join(output_location, predict_data, by = "location_id")
@@ -127,11 +128,11 @@ assessment_function <- function(data) {
       return(NULL)
     }
     summarise_data <- select(final_data,
-                             .data$location_id,
-                             .data$sample_id,
-                             .data$year,
-                             .data$question,
-                             .data$response)
+                             location_id,
+                             sample_id,
+                             year,
+                             question,
+                             response)
     
     summarise_data <- map_df(split(summarise_data,
                                    summarise_data$sample_id), function(sample) {
@@ -166,13 +167,13 @@ assessment_function <- function(data) {
                              "river_width",
                              "mean_depth"))
     summarise_data <- tidyr::pivot_wider(summarise_data,
-                                  names_from = .data$question,
-                                  values_from = .data$response)
+                                  names_from = question,
+                                  values_from = response)
     summarise_data <- type.convert(summarise_data, as.is = TRUE)
     summarise_data <- select(summarise_data, -sample_id)
     summarise_data <- dplyr::group_by(
       summarise_data,
-      .data$location_id
+      location_id
     )
     # Suppress warning because of missing values
     summarise_data <- suppressWarnings(dplyr::summarise_all(
@@ -245,19 +246,19 @@ assessment_function <- function(data) {
       } else {
         data <- select(
           data,
-          -.data$river_width,
-          -.data$mean_depth,
-          -.data$boulders_cobbles,
-          -.data$pebbles_gravel,
-          -.data$sand,
-          -.data$silt_clay
+          -river_width,
+          -mean_depth,
+          -boulders_cobbles,
+          -pebbles_gravel,
+          -sand,
+          -silt_clay
         )
       }
     }
     # NGR columns
 
     data <- tidyr::separate(data,
-      .data$grid_reference,
+      grid_reference,
       into = c(
         "NGR",
         "NGR_EASTING",
@@ -273,8 +274,8 @@ assessment_function <- function(data) {
     data$max_date <- NA
 
     data$response <- as.numeric(as.character(data$response))
-    data <- tidyr::pivot_wider(data, names_from = .data$question,
-                        values_from = .data$response)
+    data <- tidyr::pivot_wider(data, names_from = question,
+                        values_from = response)
     # Join to template
     rict_template <- function() {
       template <- data.frame(
@@ -328,14 +329,14 @@ assessment_function <- function(data) {
 
     # summarise_data <- dplyr::group_by(
     #   data,
-    #   .data$location_id,
-    #   .data$ngr,
-    #   .data$ngr_easting,
-    #   .data$ngr_northing,
-    #   .data$sample_id,
-    #   .data$season,
-    #   .data$discharge_category,
-    #   .data$water_body_id,
+    #   location_id,
+    #   ngr,
+    #   ngr_easting,
+    #   ngr_northing,
+    #   sample_id,
+    #   season,
+    #   discharge_category,
+    #   water_body_id,
     #   .name_repair = TRUE
     # )
     # Suppress warning because of missing values
@@ -346,37 +347,37 @@ assessment_function <- function(data) {
     # Select
  
     rict_data <- dplyr::select(data,
-      "SITE" = .data$location_id,
-      "Waterbody" = .data$water_body_id,
-      "Year" = .data$year,
-      "NGR" = .data$ngr,
-      "Easting" = .data$ngr_easting,
-      "Northing" = .data$ngr_northing,
-      "Altitude" = .data$altitude,
-      "Slope" = .data$slope,
-      "Discharge" = .data$discharge_category,
-      "Dist_from_Source" = .data$dist_from_source,
-      "Mean_Width" = .data$river_width,
-      "Mean_depth" = .data$mean_depth,
-      "Alkalinity" = .data$alkalinity,
-      "Total_samples" = .data$sample_count,
-      "Samples_used" = .data$samples_used,
-      "Alk_start" = .data$min_date,
-      "Alk_end" = .data$max_date,
-      Boulder_Cobbles = .data$boulders_cobbles,
-      Pebbles_Gravel = .data$pebbles_gravel,
-      Sand = .data$sand,
-      Silt_Clay = .data$silt_clay,
-      "Spr_Season_ID" = .data$season,
+      "SITE" = location_id,
+      "Waterbody" = water_body_id,
+      "Year" = year,
+      "NGR" = ngr,
+      "Easting" = ngr_easting,
+      "Northing" = ngr_northing,
+      "Altitude" = altitude,
+      "Slope" = slope,
+      "Discharge" = discharge_category,
+      "Dist_from_Source" = dist_from_source,
+      "Mean_Width" = river_width,
+      "Mean_depth" = mean_depth,
+      "Alkalinity" = alkalinity,
+      "Total_samples" = sample_count,
+      "Samples_used" = samples_used,
+      "Alk_start" = min_date,
+      "Alk_end" = max_date,
+      Boulder_Cobbles = boulders_cobbles,
+      Pebbles_Gravel = pebbles_gravel,
+      Sand = sand,
+      Silt_Clay = silt_clay,
+      "Spr_Season_ID" = season,
       "Spr_TL2_WHPT_NTaxa (AbW,DistFam)" = "whpt.ntaxa.abund",
       "Spr_TL2_WHPT_ASPT (AbW,DistFam)" = "whpt.aspt.abund",
-      "Sum_Season_ID" = .data$season,
+      "Sum_Season_ID" = season,
       "Sum_TL2_WHPT_NTaxa (AbW,DistFam)" = "whpt.ntaxa.abund",
       "Sum_TL2_WHPT_ASPT (AbW,DistFam)" = "whpt.aspt.abund",
-      "Aut_Season_ID" = .data$season,
+      "Aut_Season_ID" = season,
       "Aut_TL2_WHPT_NTaxa (AbW,DistFam)" = "whpt.ntaxa.abund",
       "Aut_TL2_WHPT_ASPT (AbW,DistFam)" = "whpt.aspt.abund",
-      .data$sample_id,
+      sample_id,
       season = "season"
     )
     # Remove season not used
@@ -599,7 +600,8 @@ assessment_function <- function(data) {
     )
     rict_class <- inner_join(rict_class,
                              rict_data[, c("SITE","sample_id")],
-                             by = "sample_id")
+                             by = "sample_id", 
+                             relationship = "many-to-many")
     rict_class <- rename(rict_class, "location_id" = SITE)
     rict_aspt <- tibble(
       "location_id" = predict_single$SITE,
