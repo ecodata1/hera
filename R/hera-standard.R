@@ -91,13 +91,14 @@ hera_test <- function(description = NULL) {
 
   standard_check <- tibble(
     standard_names = test_that("Correct Standard attributes", {
-      expect_equal(length(description$question[description$question %in% c(
-        "name_short",
-        "parameter",
-        "name_long",
-        "status"
-      )]), 4,
-      info = "Correct Standard attributes"
+      expect_equal(
+        length(description$question[description$question %in% c(
+          "name_short",
+          "parameter",
+          "name_long",
+          "status"
+        )]), 4,
+        info = "Correct Standard attributes"
       )
     }),
     standard_required = test_that("Correct Standard attributes", {

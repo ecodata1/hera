@@ -23,7 +23,6 @@
 #' }
 #'
 survey_import <- function(path = NULL) {
-
   # Survey metadata ------------------------------------------------------------
   # Top level info about the survey for example company, site, licence etc
   cover <- suppressMessages(readxl::read_xlsx(path, sheet = "1. Cover Sheet"))

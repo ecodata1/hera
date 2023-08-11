@@ -38,7 +38,6 @@ This is the Rapid Assessment Technique (RAT) for rsults from bankside invertebra
 Basic details about the assessment. Update the 'response' values as required.
 
 ```{r description}
-
 description <- tribble(
   ~question, ~response,
   "name_short", "Bankside Consistency",
@@ -56,29 +55,35 @@ knitr::kable(description)
 A list of questions required to run the assessment.
 
 ```{r input}
-
 input <- tibble(
-  location_id = c("206972","206972"),
-  sample_id = c("12345","12345"),
-  date_taken = as.Date(c("2019-11-21","2019-11-21")),
-  question = c("Taxon abundance","Live abundance"),
-  response = c("12","21"),
-  label = c("Baetidae","Baetidae"),
-  parameter = c("River Family Inverts","BANKSIDE_INVERTS"),
+  location_id = c("206972", "206972"),
+  sample_id = c("12345", "12345"),
+  date_taken = as.Date(c("2019-11-21", "2019-11-21")),
+  question = c("Taxon abundance", "Live abundance"),
+  response = c("12", "21"),
+  label = c("Baetidae", "Baetidae"),
+  parameter = c("River Family Inverts", "BANKSIDE_INVERTS"),
   type = c("number", "number"),
-  max = c(NA,NA),
-  min = c(NA,NA),
-  source = c("sepa_ecology_results","sepa_ecology_results")
+  max = c(NA, NA),
+  min = c(NA, NA),
+  source = c("sepa_ecology_results", "sepa_ecology_results")
 )
-knitr::kable(input)
+data <- input
+data <- select(data, question, response)
+data <- data[!duplicated(data[, c("question")]), ]
+
+knitr::kable(data)
 ```
 
-## Assessment
+## Assessment {.tabset}
 
 If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
 
-```{r assessment}
+###  <span>&#8203;</span>
 
+### Code
+
+```{r, echo = TRUE, eval = TRUE}
 assessment_function <- function(data) {
   # Some calculated a statistic...
   # Note, any non-standard base R library must be call using require().
@@ -134,16 +139,18 @@ assessment_function <- function(data) {
 
 The outcome of your assessment.
 
-```{r output}
+```{r output, message=FALSE}
 outcome <- assessment_function(input)
-knitr::kable(outcome)
+outcome_table <- select(outcome, question, response)
+outcome_table <- outcome_table[!duplicated(outcome_table[, c("question")]), ]
+knitr::kable(outcome_table)
 ```
 
 ## Check
 
 Run checks on the assessment.
 
-```{r checklist}
+```{r checklist, message=FALSE}
 # No need to edit this code
 # Format description
 standard_format <- hera:::hera_format(description = description)
@@ -156,7 +163,7 @@ knitr::kable(check_list$standard_check)
 
 Update the catalogue of assessments to make them available.
 
-```{r hera_update}
+```{r hera_update, message=FALSE}
 # No need to edit this code
 hera:::update_catalogue(
   description = description,

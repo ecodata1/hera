@@ -30,7 +30,6 @@ library(hera)
 library(darleq3)
 library(rict)
 set.seed(42)
-
 ```
 
 ```{r results="asis", echo=FALSE}
@@ -180,7 +179,7 @@ The `validation()` function will returns the passing data and list of warnings/f
 # install.packages("devtools")
 # devtools::install_github("ecodata1/hera")
 demo_data <- hera::demo_data
-data <- validation(demo_data) 
+data <- validation(demo_data)
 data[5, ]
 ```
 
@@ -209,11 +208,10 @@ catalogue$assessment[1:2]
 ```
 
 ```{r, echo=TRUE, warning=F, message=F}
-data %>% 
+data %>%
   assess(name = catalogue$assessment[1:2]) %>%
   select(sample_id, question, response) %>%
-  slice_sample(n = 4) 
-
+  slice_sample(n = 4)
 ```
 
 #### Assessment Reports
@@ -339,12 +337,11 @@ A small sample demo dataset `demo_data` contains diatoms, macrophytes and
 inverts quality elements.
 
 ```{r}
-hera::demo_data %>%  
-  select(location_description, date_taken, sample_id, quality_element) %>% 
-  group_by(quality_element) %>% 
-  slice_sample() %>% 
+hera::demo_data %>%
+  select(location_description, date_taken, sample_id, quality_element) %>%
+  group_by(quality_element) %>%
+  slice_sample() %>%
   head(5)
-  
 ```
 
 ### Book-keeping variables
@@ -354,9 +351,9 @@ associated with particular samples, locations or WFD methods. And allow results
 to be aggregate at different levels.
 
 ```{r}
-hera::demo_data %>% select(location_id, sample_id, date_taken, quality_element) %>% 
+hera::demo_data %>%
+  select(location_id, sample_id, date_taken, quality_element) %>%
   head(5)
-
 ```
 
 All data passed into hera must have these four variables. For *ad hoc*
@@ -381,16 +378,15 @@ input format.
 
 ```{r}
 demo_data %>% select(question, response)
-
 ```
   
 In theory, this is all that is required. However for ease for interacting with
 existing datasets and *ad hoc* data, a third column `label` is useful due to the historic way taxon data is usually stored.
 
 ```{r}
-demo_data %>% select(question, response, label) %>% 
+demo_data %>%
+  select(question, response, label) %>%
   slice_sample(n = 5)
-
 ```
 
 ### Predictors
@@ -403,7 +399,7 @@ compressed if size becomes an issue. For instance, nested JSON data or
 dataframes in R.
 
 ```{r}
-demo_data %>%  select(`mean_alkalinity`, `grid_reference`, `slope`)
+demo_data %>% select(`mean_alkalinity`, `grid_reference`, `slope`)
 ```
 
 ### Assessments
@@ -648,8 +644,7 @@ Input data for DARLEQ3 tool is a list of dataframes. Here's an example of input
 data format (truncated) and full list of column names
 
 ```{r}
-
-file <- system.file("extdata/DARLEQ2TestData.xlsx", package="darleq3")
+file <- system.file("extdata/DARLEQ2TestData.xlsx", package = "darleq3")
 data <- read_DARLEQ(file, "Rivers TDI Test Data")
 test <- data$diatom_data[1:4, 1:8]
 test$... <- "..."
@@ -662,9 +657,9 @@ Output
 (list of dataframes)
 
 ```{r}
-fn <- system.file("extdata/DARLEQ2TestData.xlsx", package="darleq3")
+fn <- system.file("extdata/DARLEQ2TestData.xlsx", package = "darleq3")
 d <- read_DARLEQ(fn, "Rivers TDI Test Data")
-results <- calc_Metric_EQR(d, metrics=c("TDI4", "TDI5LM"))
+results <- calc_Metric_EQR(d, metrics = c("TDI4", "TDI5LM"))
 head(results$TDI5LM$EQR[, 9:13])
 head(results$TDI5LM$Uncertainty[, 9:13])
 head(results$TDI5LM$Metric)
@@ -687,7 +682,7 @@ Output
 
 ```{r, warning=F, message=F}
 test <- rict(demo_ni_observed_values)
-example <- head(test[1: 6], 4)
+example <- head(test[1:6], 4)
 example$... <- "..."
 example
 names(test)

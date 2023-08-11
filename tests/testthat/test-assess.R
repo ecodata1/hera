@@ -1,5 +1,4 @@
 test_that("assess works", {
-
   # run subset
   data <- assess(demo_data[1:100, ]) %>%
     dplyr::select(sample_id, response, question) %>%
@@ -12,8 +11,9 @@ test_that("assess works", {
   data$parameter[is.na(data$parameter)] <- data$quality_element[is.na(data$parameter)]
   results <- assess(data, "DARLEQ3")
   outcome <- results[results$sample_id == "2755381", ]
-        testthat::expect_equal(round(
-          as.numeric(outcome$response[outcome$question == "EQR_TDI4"][1]), 2), 0.50)
+  testthat::expect_equal(round(
+    as.numeric(outcome$response[outcome$question == "EQR_TDI4"][1]), 2
+  ), 0.50)
 })
 
 

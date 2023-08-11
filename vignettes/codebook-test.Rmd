@@ -18,12 +18,11 @@ knitr::opts_chunk$set(
   warning = TRUE, # show warnings during codebook generation
   message = TRUE, # show messages during codebook generation
   error = TRUE, # do not interrupt codebook generation in case of errors,
-                # usually makes debugging easier, and sometimes half a codebook
-                # is better than none
-  echo = FALSE  # don't show the R code
+  # usually makes debugging easier, and sometimes half a codebook
+  # is better than none
+  echo = FALSE # don't show the R code
 )
 ggplot2::theme_set(ggplot2::theme_bw())
-
 ```
 
 Here, we import data from formr
@@ -49,12 +48,12 @@ can leverage it fully. These functions help fix this.
 library(codebook) # load the package
 # omit the following lines, if your missing values are already properly labelled
 codebook_data <- detect_missing(codebook_data,
-    only_labelled = TRUE, # only labelled values are autodetected as
-                                   # missing
-    negative_values_are_missing = FALSE, # negative values are NOT missing values
-    ninety_nine_problems = TRUE,   # 99/999 are missing values, if they
-                                   # are more than 5 MAD from the median
-    )
+  only_labelled = TRUE, # only labelled values are autodetected as
+  # missing
+  negative_values_are_missing = FALSE, # negative values are NOT missing values
+  ninety_nine_problems = TRUE, # 99/999 are missing values, if they
+  # are more than 5 MAD from the median
+)
 
 # If you are not using formr, the codebook package needs to guess which items
 # form a scale. The following line finds item aggregates with names like this:

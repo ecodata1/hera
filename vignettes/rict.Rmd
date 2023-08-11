@@ -36,7 +36,6 @@ This document has been created following the generic [assessment guidance](https
 Basic details about the assessment. Update the 'response' values as required.
 
 ```{r description}
-
 description <- tribble(
   ~question, ~response,
   "name_short", "RICT",
@@ -46,7 +45,7 @@ description <- tribble(
   "type", "metric"
 )
 
-description
+knitr::kable(description)
 ```
 
 ## Input
@@ -54,7 +53,6 @@ description
 A list of questions required to run the assessment.
 
 ```{r input}
-
 input <- tibble(
   location_id = c("206972"),
   sample_id = c("12345"),
@@ -68,32 +66,30 @@ input <- tibble(
   min = NA,
   source = c("sepa_ecology_results")
 )
-input
+data <- input
+data <- select(data, question, response)
+data <- data[!duplicated(data[, c("question")]), ]
+
+knitr::kable(data)
 ```
 
 ## Assessment
 
 If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
 
-```{r assessment, message=FALSE, warning=FALSE}
-
+```{r assessment, message=FALSE, warning=FALSE, collapse=TRUE, echo=TRUE}
 assessment_function <- function(data) {
- 
   # Calculated some statistic...
   # Note, any non-standard base R library must be call using require().
   require(rict)
   require(macroinvertebrateMetrics)
   message(unique(data$location_id))
-  # if(unique(data$location_id) == 134152) {
-  #   browser()
-  # }
-  
-  # data$date_taken <- as.character(as.Date(data$date_taken, "%Y/%m/%d"))
+
   metric_function <- catalogue[catalogue$assessment ==
     "Macroinvertebrate Metrics", 3][[1]]
   output <- metric_function[[1]](data)
   output <- filter(output, question %in% c("WHPT_ASPT", "WHPT_NTAXA"))
-  
+
 
   # Alkalinity ---------
   # if(!any(names(data) %in% c("alkalinity"))) {
@@ -114,61 +110,68 @@ assessment_function <- function(data) {
         "sample_id",
         "date_taken"
       )]),
-      by = "sample_id", 
+      by = "sample_id",
       relationship = "many-to-many"
     )
 
     whpt_input <- inner_join(output_location, predict_data, by = "location_id")
   } else {
-    
     # function to average predictors for each year? See sepaTools package?::
     final_data <- data
-    final_data <- filter(final_data, analysis_repname ==  "Invert Physical Data")
-    if(nrow(final_data) < 1) {
+    final_data <- filter(final_data, analysis_repname == "Invert Physical Data")
+    if (nrow(final_data) < 1) {
       return(NULL)
     }
-    summarise_data <- select(final_data,
-                             location_id,
-                             sample_id,
-                             year,
-                             question,
-                             response)
-    
-    summarise_data <- map_df(split(summarise_data,
-                                   summarise_data$sample_id), function(sample) {
-          # get a row to add to bottom when mean_depth calcualted
-          row <- sample[1, ]    
-          row$question <- "mean_depth"
-        if(!any(sample$question %in% "mean_depth")) {
-          depths <- filter(sample, question %in% c("River Depth 1",
-                                         "River Depth 2",
-                                         "River Depth 3"))
-          if(nrow(depths) < 1) {
-            # some samples don't have Depths or mean_depth...so return NA
-             row$response <- NA
-          } else {
-          mean_depth <- mean(as.numeric(depths$response), na.rm = TRUE)
-         
-          row$response <- as.character(mean_depth)
-      
-          }
-          sample <- bind_rows(sample, row)
-          return(sample)
+    summarise_data <- select(
+      final_data,
+      location_id,
+      sample_id,
+      year,
+      question,
+      response
+    )
+
+    summarise_data <- map_df(split(
+      summarise_data,
+      summarise_data$sample_id
+    ), function(sample) {
+      # get a row to add to bottom when mean_depth calcualted
+      row <- sample[1, ]
+      row$question <- "mean_depth"
+      if (!any(sample$question %in% "mean_depth")) {
+        depths <- filter(sample, question %in% c(
+          "River Depth 1",
+          "River Depth 2",
+          "River Depth 3"
+        ))
+        if (nrow(depths) < 1) {
+          # some samples don't have Depths or mean_depth...so return NA
+          row$response <- NA
         } else {
-          return(sample)
-        }                          
+          mean_depth <- mean(as.numeric(depths$response), na.rm = TRUE)
+
+          row$response <- as.character(mean_depth)
+        }
+        sample <- bind_rows(sample, row)
+        return(sample)
+      } else {
+        return(sample)
+      }
     })
-    
-    summarise_data <- summarise_data %>% 
-      filter(question %in% c("sand",
-                             "silt_clay",
-                             "boulders_cobbles",
-                             "pebbles_gravel",
-                             "river_width",
-                             "mean_depth"))
+
+    summarise_data <- summarise_data %>%
+      filter(question %in% c(
+        "sand",
+        "silt_clay",
+        "boulders_cobbles",
+        "pebbles_gravel",
+        "river_width",
+        "mean_depth"
+      ))
     summarise_data <- tidyr::pivot_wider(summarise_data,
-                                  names_from = question,
-                                  values_from = response)
+      names_from = question,
+      values_from = response
+    )
     summarise_data <- type.convert(summarise_data, as.is = TRUE)
     summarise_data <- select(summarise_data, -sample_id)
     summarise_data <- dplyr::group_by(
@@ -180,12 +183,13 @@ assessment_function <- function(data) {
       summarise_data,
       ~ mean(.x, na.rm = TRUE)
     ))
-     summarise_data$location_id <- as.character(summarise_data$location_id)
+    summarise_data$location_id <- as.character(summarise_data$location_id)
     data <- left_join(data, summarise_data, by = join_by(location_id == location_id))
-    data <- data %>% group_by(location_id) %>% 
-    mutate("alkalinity" = mean(alkalinity, na.rm = TRUE))
+    data <- data %>%
+      group_by(location_id) %>%
+      mutate("alkalinity" = mean(alkalinity, na.rm = TRUE))
     data <- ungroup(data)
-    
+
     data <- select(
       data,
       sample_id,
@@ -223,17 +227,16 @@ assessment_function <- function(data) {
   data <- data[!is.na(data$river_width), ]
   # if no river width...return NULL
   check <- FALSE
-     if(nrow(data) < 1) {
-      return(NULL)
-    }
+  if (nrow(data) < 1) {
+    return(NULL)
+  }
   # Add year  columns
   data$year <- format.Date(data$date_taken, "%Y")
   data$year <- as.integer(data$year)
   rict_output <- purrr::map(unique(data$location_id), function(location_id) {
-   
     data <- data[data$location_id == location_id, ]
 
-    
+
     if (!is.null(data$river_width)) {
       if (any(!is.na(data$river_width))) {
         data$river_width <- as.numeric(data$river_width)
@@ -274,8 +277,10 @@ assessment_function <- function(data) {
     data$max_date <- NA
 
     data$response <- as.numeric(as.character(data$response))
-    data <- tidyr::pivot_wider(data, names_from = question,
-                        values_from = response)
+    data <- tidyr::pivot_wider(data,
+      names_from = question,
+      values_from = response
+    )
     # Join to template
     rict_template <- function() {
       template <- data.frame(
@@ -345,7 +350,7 @@ assessment_function <- function(data) {
     #   ~ mean(.x, na.rm = TRUE)
     # ))
     # Select
- 
+
     rict_data <- dplyr::select(data,
       "SITE" = location_id,
       "Waterbody" = water_body_id,
@@ -424,12 +429,12 @@ assessment_function <- function(data) {
       return(NULL)
     }
 
-    rict_multi_year <-  rict_data %>%
+    rict_multi_year <- rict_data %>%
       group_by(SITE, Year) %>%
-      select(SITE, Year, contains("_WHPT_")) %>% 
+      select(SITE, Year, contains("_WHPT_")) %>%
       summarise_all(~ mean(.x, na.rm = TRUE))
-    predictors <- rict_data %>%  
-      select(-Year,-season, -contains("_WHPT_"), -sample_id) %>%
+    predictors <- rict_data %>%
+      select(-Year, -season, -contains("_WHPT_"), -sample_id) %>%
       unique()
     multi <- inner_join(rict_multi_year, predictors, by = c("SITE"))
     multi <- data.frame(multi, check.names = FALSE)
@@ -452,8 +457,8 @@ assessment_function <- function(data) {
       "Suit Code" = SuitCode,
       "Suit Text" = SuitText
     )
-     multi_year_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
-     multi_year_aspt <- select(
+    multi_year_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
+    multi_year_aspt <- select(
       multi_class,
       SITE,
       "H" = H_ASPT_spr_aut,
@@ -466,13 +471,13 @@ assessment_function <- function(data) {
       "Suit Code" = SuitCode,
       "Suit Text" = SuitText
     )
-     
-      multi_year_aspt$parameter <- "Macroinvertebrates (ASPT)"
+
+    multi_year_aspt$parameter <- "Macroinvertebrates (ASPT)"
     multi_year_output <- bind_rows(
       multi_year_aspt,
-    multi_year_ntaxa
+      multi_year_ntaxa
     )
-     multi_year_output <- multi_year_output[complete.cases(multi_year_output), ]
+    multi_year_output <- multi_year_output[complete.cases(multi_year_output), ]
     multi_year_output <- mutate_all(multi_year_output, as.character)
     multi_year_output <- pivot_longer(multi_year_output,
       names_to = "question",
@@ -484,7 +489,7 @@ assessment_function <- function(data) {
     #                          by = "sample_id")
     multi_year_output <-
       rename(multi_year_output, "location_id" = SITE)
-    
+
     predict_single <- rict::rict_predict(rict_data)
     predict_single$sample_id <- rict_data$sample_id
     single_predict <- select(predict_single, sample_id, SuitCode, SuitText)
@@ -599,9 +604,10 @@ assessment_function <- function(data) {
       cols = c(-sample_id, -parameter)
     )
     rict_class <- inner_join(rict_class,
-                             rict_data[, c("SITE","sample_id")],
-                             by = "sample_id", 
-                             relationship = "many-to-many")
+      rict_data[, c("SITE", "sample_id")],
+      by = "sample_id",
+      relationship = "many-to-many"
+    )
     rict_class <- rename(rict_class, "location_id" = SITE)
     rict_aspt <- tibble(
       "location_id" = predict_single$SITE,
@@ -616,10 +622,12 @@ assessment_function <- function(data) {
       "response" = as.character(predict_single$TL2_WHPT_NTAXA_AbW_DistFam_spr)
     )
     predict_single <- bind_rows(rict_aspt, rict_ntaxa)
-   predict_single$parameter <- "RICT Prediction"
-    rict_prediction <- bind_rows(predict_single,
-                                 rict_class,
-                                 multi_year_output)
+    predict_single$parameter <- "RICT Prediction"
+    rict_prediction <- bind_rows(
+      predict_single,
+      rict_class,
+      multi_year_output
+    )
     # create row for years included in multi-year
     row <- rict_prediction[is.na(rict_prediction$sample_id), ]
     row <- row[1:2, ]
@@ -631,46 +639,57 @@ assessment_function <- function(data) {
   })
 
   output <- bind_rows(rict_output)
-    if(nrow(output) < 1) {
+  if (nrow(output) < 1) {
     return(NULL)
   }
   output <- unique(output)
   output <- mutate(output,
-                   question = ifelse(question == "M",
-                                     "CoCM",
-                                     question),
-                   question = ifelse(question == "P",
-                                     "CoCP", 
-                                     question),
-                   question = ifelse(question == "B",
-                                     "CoCB",
-                                     question),
-                   question = ifelse(question == "H",
-                                     "CoCH",
-                                     question),
-                   question = ifelse(question == "G",
-                                     "CoCG",
-                                     question))
-  
-  
+    question = ifelse(question == "M",
+      "CoCM",
+      question
+    ),
+    question = ifelse(question == "P",
+      "CoCP",
+      question
+    ),
+    question = ifelse(question == "B",
+      "CoCB",
+      question
+    ),
+    question = ifelse(question == "H",
+      "CoCH",
+      question
+    ),
+    question = ifelse(question == "G",
+      "CoCG",
+      question
+    )
+  )
+
+
   output <- mutate(output,
-                   response = ifelse(response == "H",
-                                     "High",
-                                     response),
-                   response = ifelse(response == "G",
-                                     "Good",
-                                     response),
-                   response = ifelse(response == "M",
-                                     "Moderate",
-                                     response),
-                   response = ifelse(response == "P",
-                                     "Poor",
-                                     response),
-                   response = ifelse(response == "B",
-                                     "Bad",
-                                     response)
-                   )
-  
+    response = ifelse(response == "H",
+      "High",
+      response
+    ),
+    response = ifelse(response == "G",
+      "Good",
+      response
+    ),
+    response = ifelse(response == "M",
+      "Moderate",
+      response
+    ),
+    response = ifelse(response == "P",
+      "Poor",
+      response
+    ),
+    response = ifelse(response == "B",
+      "Bad",
+      response
+    )
+  )
+
   return(output)
 }
 ```
@@ -683,8 +702,10 @@ The outcome of your assessment.
 # demo_data <- get_data(1000)
 # Pretend no alkalinity - force to use supporting table of alkalinity and
 # physical survey results (silt, river_width etc)
-outcome <- assessment_function(demo_data)
-outcome
+outcome <- suppressMessages(suppressWarnings(assessment_function(demo_data)))
+outcome_table <- select(outcome, question, response)
+outcome_table <- outcome_table[!duplicated(outcome_table[, c("question")]), ]
+knitr::kable(outcome_table)
 ```
 
 ## Check
@@ -720,7 +741,7 @@ After **updating the catalogue, rebuild the package**, click on Build > Install 
 
 This section tests if this assessment is usable using `assessment` function.
 
-```{r}
+```{r, results='hide'}
 # No need to edit this code
 assess(
   data = hera::demo_data,

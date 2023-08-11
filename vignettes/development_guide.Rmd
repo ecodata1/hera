@@ -49,15 +49,14 @@ The first piece of information to add is details on what your assessment is call
 
 ```{r description, echo=FALSE}
 description <- tibble(
-  Columns = c("name_short", "name_long", "parameter","status"),
-  Required = c(TRUE, TRUE,TRUE, FALSE),
+  Columns = c("name_short", "name_long", "parameter", "status"),
+  Required = c(TRUE, TRUE, TRUE, FALSE),
   Details = c(
     "Short name for assessment < 26 characters for example an abbrivation like TDI",
     "Long name for assessment",
-              "Parameter or observation method being assessed for example Freshwater Diatoms, River Barriers or Estaurine Fish.",
-              "Required - either: \'prototype\', \'development\',\'on-hold\', \'consultation\','deprecated\' or 'deployed\'"
-            
-             )
+    "Parameter or observation method being assessed for example Freshwater Diatoms, River Barriers or Estaurine Fish.",
+    "Required - either: \'prototype\', \'development\',\'on-hold\', \'consultation\','deprecated\' or 'deployed\'"
+  )
 )
 knitr::kable(description)
 ```
@@ -88,15 +87,15 @@ Create a demo input data.
 
 ```{r input, echo=FALSE}
 input_table <- tibble(
-  Columns = c("sample_id", "question", "response","label", "..."),
-  Required = c(TRUE, TRUE,TRUE, FALSE, FALSE),
+  Columns = c("sample_id", "question", "response", "label", "..."),
+  Required = c(TRUE, TRUE, TRUE, FALSE, FALSE),
   Details = c(
     "Sample ID for example 1234523",
     "Question you have recorded a repsonse too",
     "Example response",
     "Some question also have an associated 'label' for instance Taxon abundance will have a label for the Taxon name - is not required enter NA",
     "..."
-             )
+  )
 )
 knitr::kable(input_table)
 ```
@@ -105,12 +104,12 @@ For example:
 
 ```{r input_example, echo=TRUE}
 input <- tibble(
-  sample_id = c("12345","12345"),
-  question =  c("Taxon abundance","Alkalinity"),
-  response =  c("12","45"),
-  label =  c("Gomphonema olivaceum",NA),
-  parameter =  c("River Diatoms","Chemistry"),
-  type =  c("number", "number"),
+  sample_id = c("12345", "12345"),
+  question = c("Taxon abundance", "Alkalinity"),
+  response = c("12", "45"),
+  label = c("Gomphonema olivaceum", NA),
+  parameter = c("River Diatoms", "Chemistry"),
+  type = c("number", "number"),
   max = c(NA, NA),
   min = c(NA, NA),
   source = c("sepa_ecology_results", "location_attributes")

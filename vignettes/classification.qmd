@@ -71,24 +71,24 @@ lims_eco <- readr::read_csv(
 # test_eco <- readr::read_csv(
 #   "vignettes//data//2023-04-02-lims-data.csv"
 # )
-# 
+#
 # unique(test_eco$SAMPLING_POINT[!test_eco$SAMPLING_POINT %in% lims_eco$location_id])
-
 ```
 
 Use collection date if sampled date not present
 
 ```{r}
 lims_eco$SAMPLED_DATE[is.na(lims_eco$SAMPLED_DATE)] <-
-lims_eco$DUE_DATE[is.na(lims_eco$SAMPLED_DATE)]
+  lims_eco$DUE_DATE[is.na(lims_eco$SAMPLED_DATE)]
 ```
 
 Convert LIMS data into standard data format for hera package
 
 ```{r}
 lims_eco <- hera::convert(lims_eco,
-                      convert_to = "hera",
-                      convert_from = "sepa_lims")
+  convert_to = "hera",
+  convert_from = "sepa_lims"
+)
 ```
 
 ## Chemistry
@@ -102,8 +102,9 @@ lims_chem <- readr::read_csv(
 # test number added.
 lims_chem$TEST_NUMBER <- 1
 lims_chem <- hera::convert(lims_chem,
-                      convert_to = "hera",
-                      convert_from = "sepa_lims")
+  convert_to = "hera",
+  convert_from = "sepa_lims"
+)
 ```
 
 ## Merge
@@ -119,20 +120,19 @@ lims_data <- bind_rows(lims_eco, lims_chem)
 Get Ecology analytical results based on LIMS locations. WARNING this takes 1hr + to run! Better to filter to a few specific locations.
 
 ```{r, eval=FALSE}
-
 recovered_data <- get_data(location_id = unique(lims_eco$location_id))
 
 # chem_test <- get_data(7856, dataset = "chem_analytical_results")
 # recovered_data  <- get_data(location_id = c("398593",   "8207"))
 
 recovered_data$parameter[is.na(recovered_data$parameter)] <-
-recovered_data$analysis_repname[is.na(recovered_data$parameter)]
+  recovered_data$analysis_repname[is.na(recovered_data$parameter)]
 
 recovered_data <- dplyr::filter(recovered_data, parameter %in% c(
   "River Family Inverts",
   "River Diatoms",
-  "Invert Physical Data")
-  )
+  "Invert Physical Data"
+))
 
 write.csv(recovered_data, file = "vignettes//data//2023-04-04-data.csv")
 ```
@@ -140,7 +140,6 @@ write.csv(recovered_data, file = "vignettes//data//2023-04-04-data.csv")
 ## Pre-fetched data
 
 ```{r}
-
 # Recovered data  ----------------------
 eco_data <- readr::read_csv(
   "vignettes//data//2023-04-04-data.csv"
@@ -158,23 +157,23 @@ eco_data$parameter[is.na(eco_data$parameter)] <- eco_data$analysis_repname[is.na
 eco_data <- dplyr::filter(eco_data, parameter %in% c(
   "River Family Inverts",
   "River Diatoms",
-  "SURVEY_INV")
-  )
+  "SURVEY_INV"
+))
 
-eco_data$parameter[eco_data$parameter =="SURVEY_INV"] <-  "River Family Inverts"
+eco_data$parameter[eco_data$parameter == "SURVEY_INV"] <- "River Family Inverts"
 
- eco_data$question[eco_data$question ==
-                         "% Boulders/Cobbles"] <-  "boulders_cobbles"
-    eco_data$question[eco_data$question ==
-                         "% Pebbles/Gravel"] <-  "pebbles_gravel"
-    eco_data$question[eco_data$question ==
-                         "% Sand"] <- "sand"
-    eco_data$question[eco_data$question ==
-                         "% Silt/Clay"] <- "silt_clay"
-    eco_data$question[eco_data$question ==
-                         "River Width (m)"] <- "river_width"
-    eco_data$question[eco_data$question ==
-                         "Mean Depth (cm)"] <- "mean_depth"
+eco_data$question[eco_data$question ==
+  "% Boulders/Cobbles"] <- "boulders_cobbles"
+eco_data$question[eco_data$question ==
+  "% Pebbles/Gravel"] <- "pebbles_gravel"
+eco_data$question[eco_data$question ==
+  "% Sand"] <- "sand"
+eco_data$question[eco_data$question ==
+  "% Silt/Clay"] <- "silt_clay"
+eco_data$question[eco_data$question ==
+  "River Width (m)"] <- "river_width"
+eco_data$question[eco_data$question ==
+  "Mean Depth (cm)"] <- "mean_depth"
 
 
 alk_data <- readr::read_csv(
@@ -187,14 +186,13 @@ eco_data$test_number <- as.character(eco_data$test_number)
 eco_data$location_id <- as.character(eco_data$location_id)
 eco_data$sample_id <- as.character(eco_data$sample_id)
 
- alk_data$units <- as.character(alk_data$units)
- alk_data$response <- as.character(alk_data$response)
- alk_data$test_number <- as.character(alk_data$test_number)
+alk_data$units <- as.character(alk_data$units)
+alk_data$response <- as.character(alk_data$response)
+alk_data$test_number <- as.character(alk_data$test_number)
 alk_data$location_id <- as.character(alk_data$location_id)
- alk_data$sample_id <- as.character(alk_data$sample_id)
+alk_data$sample_id <- as.character(alk_data$sample_id)
 
 recovered_data <- bind_rows(eco_data, alk_data)
-
 ```
 
 # Combine Data
@@ -218,7 +216,7 @@ Only core surveillance sites to speed up testing and filter out ecology old samp
 ```{r}
 #  data <- data[data$location_id %in% unique(locs$Loc), ]
 data$year <- lubridate::year(data$date_taken)
-data <- data %>%  filter(year >= 2017 | parameter == "PAC")
+data <- data %>% filter(year >= 2017 | parameter == "PAC")
 ```
 
 # NMP
@@ -232,33 +230,34 @@ Get RICT predictors.
 ```{r, message=FALSE}
 # Filter data-----------------------------------------------------------------
 # We only want samples that pass our criteria (season, number of samples etc)
-# data <- filter(data, parameter %in% c("River Family Inverts", 
+# data <- filter(data, parameter %in% c("River Family Inverts",
 #                                       "River Diatoms"))
 
-predictors <- utils::read.csv(system.file("extdat",
-     "predictors.csv",
-     package = "hera"
-   ),
-   stringsAsFactors = FALSE, check.names = FALSE
-   )
-   predictors$location_id <- as.character(predictors$location_id)
+predictors <- utils::read.csv(
+  system.file("extdat",
+    "predictors.csv",
+    package = "hera"
+  ),
+  stringsAsFactors = FALSE, check.names = FALSE
+)
+predictors$location_id <- as.character(predictors$location_id)
 
-   # use latest 'version' for each location_id
- predictors <- arrange(predictors, desc(date))
-  predictors <- select(predictors,
-                       alkalinity,
-                       location_id,
-                       grid_reference,
-                       chemistry_site,
-                       altitude,
-                       slope,
-                       discharge_category,
-                       dist_from_source
-                       )
- predictors <- predictors[!duplicated(predictors$location_id), ]
+# use latest 'version' for each location_id
+predictors <- arrange(predictors, desc(date))
+predictors <- select(
+  predictors,
+  alkalinity,
+  location_id,
+  grid_reference,
+  chemistry_site,
+  altitude,
+  slope,
+  discharge_category,
+  dist_from_source
+)
+predictors <- predictors[!duplicated(predictors$location_id), ]
 
- data <- left_join(data, predictors, by = c("location_id"))
-
+data <- left_join(data, predictors, by = c("location_id"))
 ```
 
 # Calculate Alkalinity
@@ -266,20 +265,20 @@ predictors <- utils::read.csv(system.file("extdat",
 If alkalinity required calculate.
 
 ```{r, eval=FALSE}
-
 data$alkalinity <- NULL
 Sys.time()
 alkalinity <- hera:::mean_alkalinity(data)
 Sys.time()
-data <- inner_join(data, 
-                    alkalinity,
-                    by = join_by("sample_id" == "sample_number"))
- eco_missing_alk <- data$sample_id[data$question == "pebbles_gravel" &
-                                     is.na(data$alkalinity)]
- data <- data[!data$sample_id %in% eco_missing_alk, ]
- eco_missing_alk2 <- data$sample_id[data$question == "Taxon name" &
-                                      is.na(data$alkalinity)]
-  data <- data[!data$sample_id %in% eco_missing_alk2, ]
+data <- inner_join(data,
+  alkalinity,
+  by = join_by("sample_id" == "sample_number")
+)
+eco_missing_alk <- data$sample_id[data$question == "pebbles_gravel" &
+  is.na(data$alkalinity)]
+data <- data[!data$sample_id %in% eco_missing_alk, ]
+eco_missing_alk2 <- data$sample_id[data$question == "Taxon name" &
+  is.na(data$alkalinity)]
+data <- data[!data$sample_id %in% eco_missing_alk2, ]
 ```
 
 # Classification 2022
@@ -290,21 +289,28 @@ RUn 2022 classification
 
 ```{r, message=FALSE}
 data <- data[!is.na(data$grid_reference), ]
+data <- data[data$location_id != "4359",]
 
-# Issue with NGR out of temp grid 
-# test_data <- data[data$location_id == "134730",] 
+# Re-run 4359 - data only entered in July 2023!
+# Needs special treatment (results copied and pasted into final classification outputs)
+# data <- data[data$location_id == "4359",]
+# Filter out pre-2019 data because river has recently suffered mine water impact - and want full impact of mine water to be reflected in classification
+# data <- data[year(data$date_taken) > 2019, ]
 
-# test_data <- data[data$location_id == "101932",] 
+# Issue with NGR out of temp grid
+# test_data <- data[data$location_id == "134730",]
+# test_data <- data[data$location_id == "101932",]
 
-results <- map_df(c(2022), function(class_year){
- filtered_data <- data %>%
- mutate(year = lubridate::year(date_taken)) %>%
- filter(year <= class_year) %>%
- hera:::filter_samples(classification_year_data = FALSE)
+results <- map_df(c(2022), function(class_year) {
+  filtered_data <- data %>%
+    mutate(year = lubridate::year(date_taken)) %>%
+    filter(year <= class_year) %>%
+    hera:::filter_samples(classification_year_data = FALSE)
 
- wfd_results <- map_df(split(filtered_data, filtered_data$location_id), function(location) {
-  wfd_results <- assess(location,
-                      name = c("DARLEQ3", "RICT"))
+  wfd_results <- map_df(split(filtered_data, filtered_data$location_id), function(location) {
+    wfd_results <- assess(location,
+      name = c("DARLEQ3", "RICT")
+    )
   }, .progress = TRUE)
 })
 ```
@@ -335,22 +341,27 @@ results_filtered <- filter(
   select(-sample_id)
 
 # Pivot results to make them look nice
-results_filtered <- pivot_wider(results_filtered, 
-                                names_from = question,
-                                values_from = response)
+results_filtered <- pivot_wider(results_filtered,
+  names_from = question,
+  values_from = response
+)
 
 
-results_filtered <- results_filtered %>% 
-  mutate(parameter = ifelse(parameter == "Macroinvertebrates (ASPT)",
-                                     "Macroinvertebrates (ASPT) - Rivers",
-                                     parameter),
-                   parameter = ifelse(parameter == "Macroinvertebrates (NTAXA)",
-                                     "Macroinvertebrates (NTAXA) - Rivers", 
-                                     parameter),
-                   parameter = ifelse(parameter == "Phytobenthos (diatoms)",
-                                     "Phytobenthos (diatoms) - Rivers", 
-                                     parameter))
-
+results_filtered <- results_filtered %>%
+  mutate(
+    parameter = ifelse(parameter == "Macroinvertebrates (ASPT)",
+      "Macroinvertebrates (ASPT) - Rivers",
+      parameter
+    ),
+    parameter = ifelse(parameter == "Macroinvertebrates (NTAXA)",
+      "Macroinvertebrates (NTAXA) - Rivers",
+      parameter
+    ),
+    parameter = ifelse(parameter == "Phytobenthos (diatoms)",
+      "Phytobenthos (diatoms) - Rivers",
+      parameter
+    )
+  )
 ```
 
 # NMP
@@ -358,44 +369,45 @@ results_filtered <- results_filtered %>%
 Add NMP to get WBIDs?
 
 ```{r}
-
-nmp_diatoms <- readxl::read_xlsx(path =
-                                 "vignettes//data//nmp-diatoms-draft-2023.xlsx"
- )
+nmp_diatoms <- readxl::read_xlsx(
+  path =
+    "vignettes//data//nmp-diatoms-draft-2023.xlsx"
+)
 nmp_diatoms$analysis <- "DIATOMS"
 
-nmp_inverts <- readxl::read_xlsx(path =
-                                 "vignettes//data//nmp-inverts-draft-2023.xlsx"
- )
+nmp_inverts <- readxl::read_xlsx(
+  path =
+    "vignettes//data//nmp-inverts-draft-2023.xlsx"
+)
 nmp_inverts$analysis <- "INVERTS"
 nmp <- bind_rows(nmp_diatoms, nmp_inverts)
-
 ```
 
 # Join NMP
 
 ```{r}
-nmp <- select(nmp, "location_id" = Loc,
-              "wbid" = WBID,
-              analysis,
-              "replocs_check" = `CHK REPLOCS`,
-              "mon_purp" = `REG Mon Reason`
-              )
+nmp <- select(nmp,
+  "location_id" = Loc,
+  "wbid" = WBID,
+  analysis,
+  "replocs_check" = `CHK REPLOCS`,
+  "mon_purp" = `REG Mon Reason`
+)
 
-diatoms <- nmp[nmp$analysis == "DIATOMS",]
+diatoms <- nmp[nmp$analysis == "DIATOMS", ]
 diatoms$analysis <- "Phytobenthos (diatoms) - Rivers"
-inverts <- nmp[nmp$analysis == "INVERTS",]
+inverts <- nmp[nmp$analysis == "INVERTS", ]
 aspt <- inverts
 ntaxa <- inverts
 aspt$analysis <- "Macroinvertebrates (ASPT) - Rivers"
-ntaxa$analysis <-  "Macroinvertebrates (NTAXA) - Rivers"
+ntaxa$analysis <- "Macroinvertebrates (NTAXA) - Rivers"
 all_nmp <- bind_rows(aspt, ntaxa, diatoms)
 all_nmp$location_id <- as.character(all_nmp$location_id)
 all_nmp$wbid <- as.character(all_nmp$wbid)
-results_filtered <- left_join(results_filtered, all_nmp, by = join_by(location_id,
-                                                  parameter == analysis))
-
-
+results_filtered <- left_join(results_filtered, all_nmp, by = join_by(
+  location_id,
+  parameter == analysis
+))
 ```
 
 # Previous Class
@@ -403,17 +415,22 @@ results_filtered <- left_join(results_filtered, all_nmp, by = join_by(location_i
 Join 2020 classification results based on WB
 
 ```{r}
-
-aspt_class <- readxl::read_excel(path = 
-   "vignettes//data//aspt-classification-2020.xlsx")
+aspt_class <- readxl::read_excel(
+  path =
+    "vignettes//data//aspt-classification-2020.xlsx"
+)
 aspt_class$parameter <- "Macroinvertebrates (ASPT) - Rivers"
 
-ntaxa_class <- readxl::read_excel(path =
-    "vignettes/data//ntaxa-classification-2020.xlsx")
+ntaxa_class <- readxl::read_excel(
+  path =
+    "vignettes/data//ntaxa-classification-2020.xlsx"
+)
 ntaxa_class$parameter <- "Macroinvertebrates (NTAXA) - Rivers"
 
-diatom_class <- readxl::read_excel(path =
-    "vignettes//data//diatom-classification-2020.xlsx")
+diatom_class <- readxl::read_excel(
+  path =
+    "vignettes//data//diatom-classification-2020.xlsx"
+)
 diatom_class$parameter <- "Phytobenthos (diatoms) - Rivers"
 
 previous_class <- bind_rows(aspt_class, ntaxa_class, diatom_class)
@@ -426,7 +443,7 @@ results_filtered$change[results_filtered$change == FALSE] <- "Y"
 results_filtered$change[results_filtered$change == TRUE] <- "N"
 
 test <- results_filtered[!is.na(results_filtered$change), ]
-test$Class <- dplyr::recode_factor(test$Class,"High" = "High", "Good" = "Good", "Moderate" = "Moderate")
+test$Class <- dplyr::recode_factor(test$Class, "High" = "High", "Good" = "Good", "Moderate" = "Moderate")
 test$CONDITION <- dplyr::recode_factor(test$CONDITION, "High" = "High", "Good" = "Good", "Moderate" = "Moderate")
 diatom_test <- test[test$parameter == "Phytobenthos (diatoms) - Rivers", ]
 invert_test <- test[test$parameter == "Macroinvertebrates (ASPT) - Rivers", ]
@@ -439,13 +456,13 @@ table(invert_test$Class, invert_test$CONDITION)
 2022 can include results from with data only from 2019. Only include locations with data from 2021 or 2022.
 
 ```{r}
-results_filtered$`Years included` <- 
+results_filtered$`Years included` <-
   gsub(",", "&", results_filtered$`Years included`)
-results_filtered$check <- 
+results_filtered$check <-
   grepl("2021", results_filtered$`Years included`)
 
-results_filtered$check[results_filtered$check == FALSE] <- 
-   grepl("2022", results_filtered$`Years included`[results_filtered$check == FALSE])
+results_filtered$check[results_filtered$check == FALSE] <-
+  grepl("2022", results_filtered$`Years included`[results_filtered$check == FALSE])
 
 results_filtered <- results_filtered[results_filtered$check == TRUE, ]
 ```
@@ -453,7 +470,7 @@ results_filtered <- results_filtered[results_filtered$check == TRUE, ]
 # Select
 
 ```{r}
-results_filtered <- results_filtered %>%  select(
+results_filtered <- results_filtered %>% select(
   "Parameter" = parameter,
   "WB ID" = wbid,
   "Location Code" = location_id,
@@ -472,17 +489,13 @@ results_filtered <- results_filtered %>%  select(
   mon_purp,
   replocs_check
 )
-
-
 ```
 
 # Reportable
 
 ```{r}
-
-results_filtered$wfd_reportable <-  grepl("[SM]", results_filtered$mon_purp)
+results_filtered$wfd_reportable <- grepl("[SM]", results_filtered$mon_purp)
 results_filtered$wfd_reportable[results_filtered$wfd_reportable == TRUE | results_filtered$replocs_check == "YES"] <- "TRUE"
-
 ```
 
 # Save
@@ -492,5 +505,5 @@ write.csv(results_filtered, file = "vignettes\\data\\2022-classification.csv", r
 
 write.csv(data, file = "vignettes\\data\\2022-data.csv", row.names = FALSE)
 
-
+# write.csv(results, file = "vignettes\\data\\sample-classification-4359.csv", row.names = FALSE)
 ```

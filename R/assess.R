@@ -20,7 +20,8 @@
 #' @importFrom purrr map
 #' @importFrom whpt whpt_predict
 #' @importFrom darleq3 calc_Metric
-#' @importFrom macroinvertebrateMetrics calcEpsi
+#' @importFrom macroinvertebrateMetrics calc_epsi
+#' @importFrom kraken kraken
 #' @export
 assess <- function(data = NULL, name = NULL, catalogue = NULL) {
   message("Hello from hera, ...work in progress!")

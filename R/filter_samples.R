@@ -7,7 +7,7 @@ filter_samples <- function(data,
   # Create default option data frame if options not provided
   if (is.null(options)) {
     options <- tibble::tibble(
-      seasons = c(list(c("SPR", "AUT")), list(c("SPR","SUM", "AUT"))),
+      seasons = c(list(c("SPR", "AUT")), list(c("SPR", "SUM", "AUT"))),
       classification_window = c(6, 6),
       min_year = c(1, 1),
       max_year = c(3, 3),
@@ -19,8 +19,8 @@ filter_samples <- function(data,
     )
   }
   # Add classification year based on input data max year
-  if(!any(names(options) %in% "classification_year")) {
-    options$classification_year = unique(max(data$year))
+  if (!any(names(options) %in% "classification_year")) {
+    options$classification_year <- unique(max(data$year))
   }
   # Loop through each parameter and apply parameter filters/options
   data_filtered <- purrr::map_df(split(options, options$parameter), function(options) {
@@ -29,7 +29,7 @@ filter_samples <- function(data,
       .data$year >= options$classification_year - options$classification_window + 1 &
       .data$parameter %in% options$parameter)
 
-    if(nrow(data) < 1) {
+    if (nrow(data) < 1) {
       return(NULL)
     }
 
@@ -53,8 +53,8 @@ filter_samples <- function(data,
     # need to remove that sample. (or vice versa). SEPA data will have this variable.
     # However, not all parameter have field info required. So let's create an analysis_repname
     # variable for this circumstance.
-    if(is.null(data$analysis_repname)) {
-    data$analysis_repname <- data$parameter
+    if (is.null(data$analysis_repname)) {
+      data$analysis_repname <- data$parameter
     }
     data <- dplyr::arrange(data, .data$date_taken)
 

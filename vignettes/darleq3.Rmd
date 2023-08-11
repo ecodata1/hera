@@ -120,7 +120,11 @@ input <- tibble(
   min = c(NA, NA),
   source = c("sepa_ecology_results", "location_attributes")
 )
-input
+data <- input
+data <- select(data, question, response)
+data <- data[!duplicated(data[, c("question")]), ]
+
+knitr::kable(data)
 ```
 
 ## Assessment
@@ -333,7 +337,9 @@ The outcome of your assessment.
 
 ```{r output}
 outcome <- assessment_function(input)
-outcome
+outcome_table <- select(outcome, question, response)
+outcome_table <- outcome_table[!duplicated(outcome_table[, c("question")]), ]
+knitr::kable(outcome_table)
 ```
 
 ## Check
