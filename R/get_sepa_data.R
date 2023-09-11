@@ -1,6 +1,7 @@
 #' @importFrom utils URLencode
 #' @importFrom stats na.omit
 #' @importFrom httr parse_url
+#' @importFrom rlang .data
 get_sepa_data <- function(location_id,
                           take,
                           date_from,
@@ -65,12 +66,23 @@ get_sepa_data <- function(location_id,
       return(data)
     })
   } else if (dataset == "locations") {
-    loops <- seq_len(floor(length(location_id) / 50) + 1)
+    loops <- seq_len(floor(length(location_id) / 50))
+    if(length(loops) == 0) {
+      loops <- 1
+    }
     output <- purrr::map_df(loops, function(loop) {
       max <- loop * 50
       min <- max - 49
       id <- location_id[min:max]
-      id <- na.omit(id)
+      id <- id[!is.na(id)]
+      if (length(id) == 0) {
+        return(NULL)
+      }
+
+      message(paste0("Downloading locations: ",
+                     location_id[min],
+                     " - ",
+                     location_id[max]))
       url <- parse_url("https://geospatial.cloudnet.sepa.org.uk/server/rest/services")
       url$path <-
         paste(url$path,
@@ -90,7 +102,24 @@ get_sepa_data <- function(location_id,
       request <- build_url(url)
       geojson <- GET(request, cacert = FALSE) # skip server certificate check
       data <- sf::st_read(geojson, quiet = TRUE)
-      data$hydro_code <- as.character(data$hydro_code)
+      # remove rows with missing columns data
+      if(!any(names(data) %in% "validated")) {
+        return(NULL)
+      }
+      # remove rows with missing data
+      # filter out rows with missing validate data
+      data <- dplyr::filter(data, !is.na(.data$validated))
+      # if remaining rows have latitude not numeric - return NULL
+      if(class(data$latitude) == "character") {
+        return(NULL)
+      }
+      # if data missing needs to be converted to numeric to match other rows
+       data$river_number <- as.numeric(data$river_number)
+       data$hydro_code <- as.numeric(data$hydro_code)
+       data$hydro_distance <- as.numeric(data$hydro_distance)
+       data$catchment_id <- as.numeric(data$catchment_id)
+       # convert to tibble for nice formatting
+      data <- tibble::as_tibble(data)
       Sys.sleep(0.1)
       return(data)
     })

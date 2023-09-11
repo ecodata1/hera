@@ -84,7 +84,6 @@ assessment_function <- function(data) {
   require(rict)
   require(macroinvertebrateMetrics)
   message(unique(data$location_id))
-
   metric_function <- catalogue[catalogue$assessment ==
     "Macroinvertebrate Metrics", 3][[1]]
   output <- metric_function[[1]](data)
@@ -234,9 +233,7 @@ assessment_function <- function(data) {
   data$year <- format.Date(data$date_taken, "%Y")
   data$year <- as.integer(data$year)
   rict_output <- purrr::map(unique(data$location_id), function(location_id) {
-    data <- data[data$location_id == location_id, ]
-
-
+   data <- data[data$location_id == location_id, ]
     if (!is.null(data$river_width)) {
       if (any(!is.na(data$river_width))) {
         data$river_width <- as.numeric(data$river_width)
@@ -438,7 +435,6 @@ assessment_function <- function(data) {
       unique()
     multi <- inner_join(rict_multi_year, predictors, by = c("SITE"))
     multi <- data.frame(multi, check.names = FALSE)
-
     multi_predict <- rict_predict(multi)
     multi_predict <- select(multi_predict, SITE, SuitCode, SuitText)
     multi_predict <- unique(multi_predict)
@@ -490,12 +486,36 @@ assessment_function <- function(data) {
     multi_year_output <-
       rename(multi_year_output, "location_id" = SITE)
 
-    predict_single <- rict::rict_predict(rict_data)
-    predict_single$sample_id <- rict_data$sample_id
-    single_predict <- select(predict_single, sample_id, SuitCode, SuitText)
-    single_predict <- unique(single_predict)
+    predict_single <- rict::rict_predict(rict_data, all_indices = TRUE)
+    # predict_single$sample_id <- rict_data$sample_id
+    
+    sample_season <- select(data, location_id, sample_id, season)
+    sample_season <- unique(sample_season)
+    sample_season$season <- as.numeric(sample_season$season)
+    predict_single <- select(predict_single,
+                             SuitCode, SuitText,
+                             SEASON, SITE,
+                             TL2_08_Group_ARMI_Score,
+                             TL2_08_Group_ARMI_NTaxa,
+                             TL2_WHPT_Score_AbW_DistFam,
+                             TL2_WHPT_NTAXA_AbW_DistFam, 
+                             TL2_WHPT_ASPT_AbW_DistFam)
+    predict_single <- unique(predict_single)
+    predict_single <- inner_join(sample_season, 
+                                 predict_single, 
+                                 by = join_by(season == SEASON,
+                                              location_id == SITE))
+
+    single_predict <- predict_single
+    # single_predict <- select(predict_single, sample_id, SuitCode, SuitText)
+    # single_predict <- unique(single_predict)
     rict_output <- rict::rict(rict_data, year_type = "single")
     rict_output$sample_id <- rict_data$sample_id
+    rict_output <- unique(rict_output)
+
+    rict_output <- rict_output[rict_output$sample_id %in% single_predict$sample_id, ]
+    rict_data <- unique(rict_data)
+
     rict_output <- inner_join(rict_output, single_predict, by = join_by(sample_id))
 
     spr_ntaxa <- select(
@@ -610,18 +630,31 @@ assessment_function <- function(data) {
     )
     rict_class <- rename(rict_class, "location_id" = SITE)
     rict_aspt <- tibble(
-      "location_id" = predict_single$SITE,
+      "location_id" = predict_single$location_id,
       "sample_id" = rict_data$sample_id,
       "question" = "RICT Reference WHPT ASPT",
-      "response" = as.character(predict_single$TL2_WHPT_ASPT_AbW_DistFam_spr)
+      "response" = as.character(predict_single$TL2_WHPT_ASPT_AbW_DistFam)
     )
     rict_ntaxa <- tibble(
-      "location_id" = predict_single$SITE,
+      "location_id" = predict_single$location_id,
       "sample_id" = rict_data$sample_id,
       "question" = "RICT Rerference WHPT NTAXA",
-      "response" = as.character(predict_single$TL2_WHPT_NTAXA_AbW_DistFam_spr)
+      "response" = as.character(predict_single$TL2_WHPT_NTAXA_AbW_DistFam)
     )
-    predict_single <- bind_rows(rict_aspt, rict_ntaxa)
+    rict_river_score <- tibble(
+      "location_id" = predict_single$location_id,
+      "sample_id" = rict_data$sample_id,
+      "question" = "RICT Rerference ARMI Score",
+      "response" = as.character(predict_single$TL2_08_Group_ARMI_Score)
+    )
+      rict_river_ntaxa <- tibble(
+      "location_id" = predict_single$location_id,
+      "sample_id" = rict_data$sample_id,
+      "question" = "RICT Rerference ARMI NTAXA",
+      "response" = as.character(predict_single$TL2_08_Group_ARMI_NTaxa)
+    )
+    
+    predict_single <- bind_rows(rict_aspt, rict_ntaxa, rict_river_score, rict_river_ntaxa)
     predict_single$parameter <- "RICT Prediction"
     rict_prediction <- bind_rows(
       predict_single,
@@ -702,7 +735,7 @@ The outcome of your assessment.
 # demo_data <- get_data(1000)
 # Pretend no alkalinity - force to use supporting table of alkalinity and
 # physical survey results (silt, river_width etc)
-outcome <- suppressMessages(suppressWarnings(assessment_function(demo_data)))
+outcome <- suppressMessages(suppressWarnings(assessment_function(input)))
 outcome_table <- select(outcome, question, response)
 outcome_table <- outcome_table[!duplicated(outcome_table[, c("question")]), ]
 knitr::kable(outcome_table)

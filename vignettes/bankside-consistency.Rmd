@@ -31,7 +31,7 @@ This document has been created following the generic [assessment guidance](https
 
 <!-- Create a new regulatory assessment by updating the code info below, for guidance see https://ecodata1.github.io/hera/articles/development_guide.html  -->
 
-This is the Rapid Assessment Technique (RAT) for rsults from bankside invertebrates analysis to check consistency with Water Body Status.
+This is the Rapid Assessment Technique (RAT) for results from bankside invertebrates analysis to check consistency with Water Body Status.
 
 ## Description
 
