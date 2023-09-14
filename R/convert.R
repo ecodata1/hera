@@ -19,11 +19,11 @@
 #' @importFrom utils read.csv
 #' @return Dataframe in `hera` structure. See `demo_data`
 #' @examples
-#'  data <-
-#' read.csv(system.file("extdat",
-#'                     "demo-data/analysis-results-ecology.csv",
-#'                     package = "hera"
-#' ), check.names = FALSE)
+#' data <-
+#'   read.csv(system.file("extdat",
+#'     "demo-data/analysis-results-ecology.csv",
+#'     package = "hera"
+#'   ), check.names = FALSE)
 #'
 #' r <- convert(data, convert_from = "sepa")
 #'
@@ -44,17 +44,17 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
     # data$`analysis_name`[data$`analysis_repname` == "Invert Physical Data"] <- "Invert Physical Data"
     data$taxon_id <- NA
     data$determinand[data$determinand ==
-                         "% Boulders/Cobbles"] <-  "boulders_cobbles"
+      "% Boulders/Cobbles"] <- "boulders_cobbles"
     data$determinand[data$determinand ==
-                         "% Pebbles/Gravel"] <-  "pebbles_gravel"
+      "% Pebbles/Gravel"] <- "pebbles_gravel"
     data$determinand[data$determinand ==
-                         "% Sand"] <- "sand"
+      "% Sand"] <- "sand"
     data$determinand[data$determinand ==
-                         "% Silt/Clay"] <- "silt_clay"
+      "% Silt/Clay"] <- "silt_clay"
     data$determinand[data$determinand ==
-                         "River Width (m)"] <- "river_width"
+      "River Width (m)"] <- "river_width"
     data$determinand[data$determinand ==
-                         "Mean Depth (cm)"] <- "mean_depth"
+      "Mean Depth (cm)"] <- "mean_depth"
 
 
     data$`nbn_code` <- as.character(data$`nbn_code`)
@@ -94,7 +94,7 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
 
     to_change <- which(names(data) %in% names$sepa_chem[names$hera_latest != ""])
     change_to <- names$hera_latest[names$sepa_chem %in% names(data) &
-                                     names$hera_latest != ""]
+      names$hera_latest != ""]
     names(data)[to_change] <- change_to
     data <- data %>% mutate_all(as.character)
     data$date_taken <- as.Date(data$date_taken)
@@ -114,15 +114,15 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
     data$REPORTED_NAME[data$REPORTED_NAME == "Abundance"] <- "Taxon abundance"
 
     data$REPORTED_NAME[data$REPORTED_NAME ==
-                    "Pebbles/Gravel (2-64mm)"] <- "pebbles_gravel"
+      "Pebbles/Gravel (2-64mm)"] <- "pebbles_gravel"
     data$REPORTED_NAME[data$REPORTED_NAME ==
-                    "Sand (0.06-2mm)" ] <- "sand"
+      "Sand (0.06-2mm)"] <- "sand"
     data$REPORTED_NAME[data$REPORTED_NAME ==
-                    "Silt/Clay (<0.06mm)" ] <- "silt_clay"
+      "Silt/Clay (<0.06mm)"] <- "silt_clay"
     data$REPORTED_NAME[data$REPORTED_NAME ==
-                    "Boulders/Cobbles (>64mm)" ] <- "boulders_cobbles"
-       data$REPORTED_NAME[data$REPORTED_NAME ==
-                    "River Width"] <- "river_width"
+      "Boulders/Cobbles (>64mm)"] <- "boulders_cobbles"
+    data$REPORTED_NAME[data$REPORTED_NAME ==
+      "River Width"] <- "river_width"
 
     # Change column names to match hera standard
     changes <- names[names$sepa_lims != "" & names$hera_latest != "", ]

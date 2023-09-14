@@ -120,7 +120,11 @@ input <- tibble(
   min = c(NA, NA),
   source = c("sepa_ecology_results", "location_attributes")
 )
-input
+data <- input
+data <- select(data, question, response)
+data <- data[!duplicated(data[, c("question")]), ]
+
+knitr::kable(data)
 ```
 
 ## Assessment
@@ -166,13 +170,13 @@ assessment_function <- function(data) {
   # Combine mean alkalinity with other site headers
   header <- data %>%
     mutate(
-      "SampleID" = as.factor(.data$sample_id),
-      "DATE_TAKEN" = as.Date(.data$date_taken, tz = "GB")
+      "SampleID" = as.factor(sample_id),
+      "DATE_TAKEN" = as.Date(date_taken, tz = "GB")
     ) %>%
-    select(.data$SampleID,
-      "SiteID" = .data$location_id,
-      "SAMPLE_DATE" = .data$date_taken,
-      "Alkalinity" = .data$alkalinity
+    select(SampleID,
+      "SiteID" = location_id,
+      "SAMPLE_DATE" = date_taken,
+      "Alkalinity" = alkalinity
     ) %>%
     unique()
 
@@ -187,7 +191,7 @@ assessment_function <- function(data) {
 
   header$SiteID <- as.character(header$SiteID)
   ## Important: Arrange to match order of 'diatom_data' data frame.
-  header <- arrange(header, .data$SampleID)
+  header <- arrange(header, SampleID)
 
   # Prepare dataframe of 'diatom_data' -------------------------------
   # Include columns for each diatom ID (from NEMS Dares table)
@@ -199,8 +203,8 @@ assessment_function <- function(data) {
   dares_table <- darleq3::darleq3_taxa
   # Filter for taxon abundance only
   diatom_taxon_abundance <- data %>%
-    filter(.data$question == "taxon abundance" |
-      .data$question == "Taxon abundance")
+    filter(question == "taxon abundance" |
+      question == "Taxon abundance")
 
   # Trim whitespace in Taxon name to help join.
   diatom_taxon_abundance$label <- trimws(diatom_taxon_abundance$label)
@@ -209,12 +213,12 @@ assessment_function <- function(data) {
   if (any(names(diatom_taxon_abundance) %in% c("taxon_ids"))) {
     diatom_taxonname <- diatom_taxon_abundance %>%
       select(
-        .data$location_id,
-        .data$sample_id,
-        .data$taxon_ids,
-        .data$label,
-        .data$response,
-        .data$date_taken
+        location_id,
+        sample_id,
+        taxon_ids,
+        label,
+        response,
+        date_taken
       ) %>%
       inner_join(dares_table[, c("TaxonName", "TaxonId", "TaxonNameSEPA")],
         by = c("taxon_ids" = "TaxonId")
@@ -223,11 +227,11 @@ assessment_function <- function(data) {
   } else {
     diatom_taxonname <- diatom_taxon_abundance %>%
       select(
-        .data$location_id,
-        .data$sample_id,
-        .data$label,
-        .data$response,
-        .data$date_taken
+        location_id,
+        sample_id,
+        label,
+        response,
+        date_taken
       ) %>%
       inner_join(dares_table[, c("TaxonName", "TaxonId", "TaxonNameSEPA")],
         by = c("label" = "TaxonNameSEPA")
@@ -238,40 +242,40 @@ assessment_function <- function(data) {
     as.numeric(as.character(diatom_taxonname$response))
   # Sum response if duplicate taxon names entered within a single sample
   diatom_tidied <- diatom_taxonname %>%
-    group_by(.data$sample_id, .data$TaxonId, .data$label, .data$date_taken) %>%
-    summarise(response = sum(.data$response, na.rm = TRUE), .groups = "drop")
+    group_by(sample_id, TaxonId, label, date_taken) %>%
+    summarise(response = sum(response, na.rm = TRUE), .groups = "drop")
 
   # Arrange to keep in same order as 'taxon_names' data.frame
   diatom_tidied <- diatom_tidied %>%
     ungroup() %>%
-    arrange(.data$label) %>%
-    select(-.data$label)
+    arrange(label) %>%
+    select(-label)
 
   # DARLEQ3 requires Taxon IDs and responses pivoted into wide format
   diatom_data <- diatom_tidied %>% pivot_wider(
-    names_from = .data$TaxonId,
-    values_from = .data$response,
+    names_from = TaxonId,
+    values_from = response,
   )
   diatom_data[is.na(diatom_data)] <- 0
 
 
   # Arrange by sampled_date to match order of 'header' data frame.
-  diatom_data <- arrange(diatom_data, .data$sample_id)
+  diatom_data <- arrange(diatom_data, sample_id)
   # darleq3 requires row.names equal SAMPLE_NUMBER. Must convert
   # to be data.frame first (row.names deprecated on tibble).
   diatom_data <- data.frame(diatom_data, check.names = FALSE)
   row.names(diatom_data) <- diatom_data$sample_id
-  diatom_data <- select(diatom_data, -.data$sample_id, -.data$date_taken)
+  diatom_data <- select(diatom_data, -sample_id, -date_taken)
 
   # Prepare dataframe of 'taxon_names'  ------------------------------
   # include columns 'TaxonCode','TaxonName'
   taxon_names <- diatom_taxonname %>%
     select(
-      "TaxonCode" = .data$TaxonId,
-      "TaxonName" = .data$TaxonName
+      "TaxonCode" = TaxonId,
+      "TaxonName" = TaxonName
     ) %>%
     unique()
-  taxon_names <- arrange(taxon_names, .data$TaxonName)
+  taxon_names <- arrange(taxon_names, TaxonName)
 
   # Combine dataframes into named list ------------------------
   header <- data.frame(header)
@@ -333,7 +337,9 @@ The outcome of your assessment.
 
 ```{r output}
 outcome <- assessment_function(input)
-outcome
+outcome_table <- select(outcome, question, response)
+outcome_table <- outcome_table[!duplicated(outcome_table[, c("question")]), ]
+knitr::kable(outcome_table)
 ```
 
 ## Check

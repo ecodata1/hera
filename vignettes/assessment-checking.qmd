@@ -73,15 +73,16 @@ Use collection date if sampled date not present
 
 ```{r}
 lims_eco$SAMPLED_DATE[is.na(lims_eco$SAMPLED_DATE)] <-
-lims_eco$DUE_DATE[is.na(lims_eco$SAMPLED_DATE)]
+  lims_eco$DUE_DATE[is.na(lims_eco$SAMPLED_DATE)]
 ```
 
 Convert LIMS data into standard data format for hera package
 
 ```{r}
 lims_eco <- hera::convert(lims_eco,
-                      convert_to = "hera",
-                      convert_from = "sepa_lims")
+  convert_to = "hera",
+  convert_from = "sepa_lims"
+)
 ```
 
 ## Chemistry
@@ -95,8 +96,9 @@ lims_chem <- readr::read_csv(
 # test number added.
 lims_chem$TEST_NUMBER <- 1
 lims_chem <- hera::convert(lims_chem,
-                      convert_to = "hera",
-                      convert_from = "sepa_lims")
+  convert_to = "hera",
+  convert_from = "sepa_lims"
+)
 ```
 
 ## Merge
@@ -112,17 +114,16 @@ lims_data <- bind_rows(lims_eco, lims_chem)
 Get Ecology analytical results based on LIMS locations. WARNING this takes 1hr + to run! Better to filter to a few specific locations.
 
 ```{r, eval=FALSE}
-
 recovered_data <- get_data(location_id = unique(lims_eco$location_id))
 
 eco_data$parameter[is.na(eco_data$parameter)] <-
-eco_data$analysis_repname[is.na(eco_data$parameter)]
+  eco_data$analysis_repname[is.na(eco_data$parameter)]
 
 eco_data <- dplyr::filter(eco_data, parameter %in% c(
   "River Family Inverts",
   "River Diatoms",
-  "Invert Physical Data")
-  )
+  "Invert Physical Data"
+))
 
 write.csv(recovered_data, file = "vignettes//data//2023-04-04-data.csv")
 ```
@@ -130,7 +131,6 @@ write.csv(recovered_data, file = "vignettes//data//2023-04-04-data.csv")
 ## Pre-fetched data
 
 ```{r}
-
 # Recovered data  ----------------------
 eco_data <- readr::read_csv(
   "vignettes//data//2023-04-04-data.csv"
@@ -141,23 +141,23 @@ eco_data$parameter[is.na(eco_data$parameter)] <- eco_data$analysis_repname[is.na
 eco_data <- dplyr::filter(eco_data, parameter %in% c(
   "River Family Inverts",
   "River Diatoms",
-  "SURVEY_INV")
-  )
+  "SURVEY_INV"
+))
 
-eco_data$parameter[eco_data$parameter =="SURVEY_INV"] <-  "River Family Inverts"
+eco_data$parameter[eco_data$parameter == "SURVEY_INV"] <- "River Family Inverts"
 
- eco_data$question[eco_data$question ==
-                         "% Boulders/Cobbles"] <-  "boulders_cobbles"
-    eco_data$question[eco_data$question ==
-                         "% Pebbles/Gravel"] <-  "pebbles_gravel"
-    eco_data$question[eco_data$question ==
-                         "% Sand"] <- "sand"
-    eco_data$question[eco_data$question ==
-                         "% Silt/Clay"] <- "silt_clay"
-    eco_data$question[eco_data$question ==
-                         "River Width (m)"] <- "river_width"
-    eco_data$question[eco_data$question ==
-                         "Mean Depth (cm)"] <- "mean_depth"
+eco_data$question[eco_data$question ==
+  "% Boulders/Cobbles"] <- "boulders_cobbles"
+eco_data$question[eco_data$question ==
+  "% Pebbles/Gravel"] <- "pebbles_gravel"
+eco_data$question[eco_data$question ==
+  "% Sand"] <- "sand"
+eco_data$question[eco_data$question ==
+  "% Silt/Clay"] <- "silt_clay"
+eco_data$question[eco_data$question ==
+  "River Width (m)"] <- "river_width"
+eco_data$question[eco_data$question ==
+  "Mean Depth (cm)"] <- "mean_depth"
 
 
 
@@ -165,16 +165,16 @@ alk_data <- readr::read_csv(
   "vignettes//data//alk-data.csv"
 )
 
-alk_data <-  hera::convert(alk_data, 
-                            convert_to = "hera",
-                            convert_from = "sepa_chem")
+alk_data <- hera::convert(alk_data,
+  convert_to = "hera",
+  convert_from = "sepa_chem"
+)
 eco_data$date_taken <- as.Date(eco_data$date_taken)
 eco_data$determinand_code <- as.character(eco_data$determinand_code)
 eco_data$test_number <- as.character(eco_data$test_number)
 eco_data$location_id <- as.character(eco_data$location_id)
 eco_data$sample_id <- as.character(eco_data$sample_id)
 recovered_data <- bind_rows(eco_data, alk_data)
-
 ```
 
 # Combine Data
@@ -192,9 +192,6 @@ Only core surveillance sites to speed up testing and filter out ecology old samp
 
 ```{r}
 data <- data[data$location_id %in% unique(locs$Loc), ]
-
-
-
 ```
 
 # NMP
@@ -208,31 +205,33 @@ Get RICT predictors.
 ```{r, message=FALSE}
 # Filter data-----------------------------------------------------------------
 # We only want samples that pass our criteria (season, number of samples etc)
-# data <- filter(data, parameter %in% c("River Family Inverts", 
+# data <- filter(data, parameter %in% c("River Family Inverts",
 #                                       "River Diatoms"))
 
-predictors <- utils::read.csv(system.file("extdat",
-     "predictors.csv",
-     package = "hera"
-   ),
-   stringsAsFactors = FALSE, check.names = FALSE
-   )
-   predictors$location_id <- as.character(predictors$location_id)
+predictors <- utils::read.csv(
+  system.file("extdat",
+    "predictors.csv",
+    package = "hera"
+  ),
+  stringsAsFactors = FALSE, check.names = FALSE
+)
+predictors$location_id <- as.character(predictors$location_id)
 
-   # use latest 'version' for each location_id
- predictors <- arrange(predictors, desc(date))
-  predictors <- select(predictors,
-                       alkalinity,
-                       location_id,
-                       grid_reference,
-                       chemistry_site,
-                       altitude,
-                       slope,
-                       discharge_category,
-                       dist_from_source)
- predictors <- predictors[!duplicated(predictors$location_id), ]
- data <- left_join(data, predictors, by = c("location_id"))
-
+# use latest 'version' for each location_id
+predictors <- arrange(predictors, desc(date))
+predictors <- select(
+  predictors,
+  alkalinity,
+  location_id,
+  grid_reference,
+  chemistry_site,
+  altitude,
+  slope,
+  discharge_category,
+  dist_from_source
+)
+predictors <- predictors[!duplicated(predictors$location_id), ]
+data <- left_join(data, predictors, by = c("location_id"))
 ```
 
 # Calculate Alkalinity
@@ -240,20 +239,20 @@ predictors <- utils::read.csv(system.file("extdat",
 If alkalinity required calculate.
 
 ```{r, eval=FALSE}
-
 data$alkalinity <- NULL
 Sys.time()
 alkalinity <- hera:::mean_alkalinity(data)
 Sys.time()
-data <- inner_join(data, 
-                    alkalinity,
-                    by = join_by("sample_id" == "sample_number"))
- eco_missing_alk <- data$sample_id[data$question == "pebbles_gravel" &
-                                     is.na(data$alkalinity)]
- data <- data[!data$sample_id %in% eco_missing_alk, ]
- eco_missing_alk2 <- data$sample_id[data$question == "Taxon name" &
-                                      is.na(data$alkalinity)]
-  data <- data[!data$sample_id %in% eco_missing_alk2, ]
+data <- inner_join(data,
+  alkalinity,
+  by = join_by("sample_id" == "sample_number")
+)
+eco_missing_alk <- data$sample_id[data$question == "pebbles_gravel" &
+  is.na(data$alkalinity)]
+data <- data[!data$sample_id %in% eco_missing_alk, ]
+eco_missing_alk2 <- data$sample_id[data$question == "Taxon name" &
+  is.na(data$alkalinity)]
+data <- data[!data$sample_id %in% eco_missing_alk2, ]
 ```
 
 # Testing
@@ -261,48 +260,47 @@ data <- inner_join(data,
 ## Classify
 
 ```{r, message=FALSE}
-
-#  data <- data[!is.na(data$alkalinity), ] 
+#  data <- data[!is.na(data$alkalinity), ]
 #  filtered_data <- data[data$location_id == "207081", ]
 
 # 2016, 2017, 2018,
-results <- map(c(2017), function(class_year){
-
+results <- map(c(2017), function(class_year) {
   # browser()
   filtered_data <- data %>%
-   # filter(location_id == "121825") %>% 
-  mutate(year = lubridate::year(date_taken)) %>%
-   filter(year <= class_year) %>%
- hera:::filter_samples(classification_year_data = TRUE)
+    # filter(location_id == "121825") %>%
+    mutate(year = lubridate::year(date_taken)) %>%
+    filter(year <= class_year) %>%
+    hera:::filter_samples(classification_year_data = TRUE)
 
- wfd_results <- map_df(split(filtered_data, filtered_data$location_id), function(location) {
-  wfd_results <- assess(location,
-                      name = c("DARLEQ3", "RICT"))
- }, .progress = TRUE)
-# Filter out the predicted values and sample level results. We only want the
-# location level results
-results_3 <- filter(
-  wfd_results,
-  question %in% c(
-    "CoCH",
-    "CoCG",
-    "CoCM",
-    "CoCP",
-    "CoCB",
-    "Class",
-    "EQR",
-    "Suit Code",
-    "Suit Text",
-    "Years included"
-  ),
-  is.na(sample_id)
-) %>%
-  select(-sample_id)
+  wfd_results <- map_df(split(filtered_data, filtered_data$location_id), function(location) {
+    wfd_results <- assess(location,
+      name = c("DARLEQ3", "RICT")
+    )
+  }, .progress = TRUE)
+  # Filter out the predicted values and sample level results. We only want the
+  # location level results
+  results_3 <- filter(
+    wfd_results,
+    question %in% c(
+      "CoCH",
+      "CoCG",
+      "CoCM",
+      "CoCP",
+      "CoCB",
+      "Class",
+      "EQR",
+      "Suit Code",
+      "Suit Text",
+      "Years included"
+    ),
+    is.na(sample_id)
+  ) %>%
+    select(-sample_id)
 
-# Pivot results to make them look nice
-results_3 <- pivot_wider(results_3, names_from = question, values_from = response)
-results_3$year <- class_year
-return(results_3)
+  # Pivot results to make them look nice
+  results_3 <- pivot_wider(results_3, names_from = question, values_from = response)
+  results_3$year <- class_year
+  return(results_3)
 })
 
 results <- bind_rows(results)
@@ -314,14 +312,17 @@ results <- bind_rows(results)
 #  test <- left_join(locs, results, by = join_by(Loc == location_id))
 
 parameter_ids <- data.frame(
-  "parameter" = c("Macroinvertebrates (NTAXA)",
-                  "Macroinvertebrates (ASPT)",
-                     "Phytobenthos (diatoms)"),
-  "parameter_id" = c(3452,3451,3350 )
+  "parameter" = c(
+    "Macroinvertebrates (NTAXA)",
+    "Macroinvertebrates (ASPT)",
+    "Phytobenthos (diatoms)"
+  ),
+  "parameter_id" = c(3452, 3451, 3350)
 )
 
 results <- inner_join(results, parameter_ids,
-                      by = join_by(parameter))
+  by = join_by(parameter)
+)
 ```
 
 # Missing
@@ -339,19 +340,16 @@ locs$Loc %in% data$location_id
 To allow linking locations to water_body_id for testing, get replocs values for parameters and years of interest.
 
 ```{r}
-
-
 # Get data --------------------------------------------------------------------
 # These three steps would be much faster / easier to achieve in Spotfire!
 # 1. Get replocs table for specific year
 replocs <- get_data(
-  year = c(2016,2017,2018),
+  year = c(2016, 2017, 2018),
   dataset = "replocs"
 )
 
 #  3451 invert ASPT
 # glimpse(replocs)
-
 ```
 
 ## Filter Replocs
@@ -365,13 +363,15 @@ Classification parameters:
 ```{r}
 # 2. Filter for specific parameter(s) we want to classify
 replocs <- replocs %>%
-  filter(classification_parameter %in% c(3451,3452,3350)) %>%
-  filter(on_wb == "Y") %>% 
-  select(location_code,
-         water_body_id,
-         year,
-         classification_parameter,
-         on_wb) %>%
+  filter(classification_parameter %in% c(3451, 3452, 3350)) %>%
+  filter(on_wb == "Y") %>%
+  select(
+    location_code,
+    water_body_id,
+    year,
+    classification_parameter,
+    on_wb
+  ) %>%
   unique()
 ```
 
@@ -382,14 +382,16 @@ Add water body id from replocs table to results.
 ```{r}
 wbids <- select(replocs, water_body_id, location_code, year, classification_parameter)
 wbids$location_code <- as.character(wbids$location_code)
- # results$year <- 2018
+# results$year <- 2018
 results <- inner_join(
   results,
-  wbids, by = join_by(location_id == location_code,
-                      year == year, 
-                      parameter_id == classification_parameter))
-  
-
+  wbids,
+  by = join_by(
+    location_id == location_code,
+    year == year,
+    parameter_id == classification_parameter
+  )
+)
 ```
 
 ## Compare
@@ -411,38 +413,45 @@ class <- readr::read_csv(
 test_class <- inner_join(
   results,
   class,
-  by = 
-  join_by("water_body_id" == "Water Body Id",
-          "year" == "Classification Year",
-          "parameter_id" == "Classification Parameter"))
+  by =
+    join_by(
+      "water_body_id" == "Water Body Id",
+      "year" == "Classification Year",
+      "parameter_id" == "Classification Parameter"
+    )
+)
 
 test_class$Class <- dplyr::recode_factor(test_class$Class,
-                                         "High" = "High",
-                                         "Good" = "Good",
-                                         "Moderate" = "Moderate",
-                                         "Poor" = "Poor")
+  "High" = "High",
+  "Good" = "Good",
+  "Moderate" = "Moderate",
+  "Poor" = "Poor"
+)
 test_class$`Status Description` <- dplyr::recode_factor(test_class$`Status Description`,
-                                                        "High" = "High", 
-                                                        "Good" = "Good",
-                                                        "Moderate" = "Moderate",
-                                                         "Poor" = "Poor")
+  "High" = "High",
+  "Good" = "Good",
+  "Moderate" = "Moderate",
+  "Poor" = "Poor"
+)
 
 table(test_class$`Status Description`, unlist(test_class$Class))
 
 aspt <- test_class[test_class$parameter == "Macroinvertebrates (ASPT)", ]
-table(aspt$`Status Description`,  unlist(aspt$Class))
+table(aspt$`Status Description`, unlist(aspt$Class))
 
-table <- table(test_class$`Status Description`,  unlist(test_class$Class))
-test <- select(test_class,
-               location_id, 
-               year,
-               EQR, Class, 
-               `Status Description`,
-               Result,
-               parameter)
- test$EQR <- as.numeric(test$EQR)
- test$EQR <- round(test$EQR, 2)
- test$diff <- test$EQR - test$Result
+table <- table(test_class$`Status Description`, unlist(test_class$Class))
+test <- select(
+  test_class,
+  location_id,
+  year,
+  EQR, Class,
+  `Status Description`,
+  Result,
+  parameter
+)
+test$EQR <- as.numeric(test$EQR)
+test$EQR <- round(test$EQR, 2)
+test$diff <- test$EQR - test$Result
 knitr::kable(test)
 ```
 

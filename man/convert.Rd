@@ -25,11 +25,11 @@ Convert input data into internal `hera` structure. This allows data from
 different sources to be used as input.
 }
 \examples{
- data <-
-read.csv(system.file("extdat",
-                    "demo-data/analysis-results-ecology.csv",
-                    package = "hera"
-), check.names = FALSE)
+data <-
+  read.csv(system.file("extdat",
+    "demo-data/analysis-results-ecology.csv",
+    package = "hera"
+  ), check.names = FALSE)
 
 r <- convert(data, convert_from = "sepa")
 

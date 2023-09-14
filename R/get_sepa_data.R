@@ -1,8 +1,7 @@
-
-
 #' @importFrom utils URLencode
 #' @importFrom stats na.omit
 #' @importFrom httr parse_url
+#' @importFrom rlang .data
 get_sepa_data <- function(location_id,
                           take,
                           date_from,
@@ -67,12 +66,23 @@ get_sepa_data <- function(location_id,
       return(data)
     })
   } else if (dataset == "locations") {
-    loops <- seq_len(floor(length(location_id) / 50) + 1)
+    loops <- seq_len(floor(length(location_id) / 50))
+    if(length(loops) == 0) {
+      loops <- 1
+    }
     output <- purrr::map_df(loops, function(loop) {
       max <- loop * 50
       min <- max - 49
       id <- location_id[min:max]
-      id <- na.omit(id)
+      id <- id[!is.na(id)]
+      if (length(id) == 0) {
+        return(NULL)
+      }
+
+      message(paste0("Downloading locations: ",
+                     location_id[min],
+                     " - ",
+                     location_id[max]))
       url <- parse_url("https://geospatial.cloudnet.sepa.org.uk/server/rest/services")
       url$path <-
         paste(url$path,
@@ -92,7 +102,24 @@ get_sepa_data <- function(location_id,
       request <- build_url(url)
       geojson <- GET(request, cacert = FALSE) # skip server certificate check
       data <- sf::st_read(geojson, quiet = TRUE)
-      data$hydro_code <- as.character(data$hydro_code)
+      # remove rows with missing columns data
+      if(!any(names(data) %in% "validated")) {
+        return(NULL)
+      }
+      # remove rows with missing data
+      # filter out rows with missing validate data
+      data <- dplyr::filter(data, !is.na(.data$validated))
+      # if remaining rows have latitude not numeric - return NULL
+      if(class(data$latitude) == "character") {
+        return(NULL)
+      }
+      # if data missing needs to be converted to numeric to match other rows
+       data$river_number <- as.numeric(data$river_number)
+       data$hydro_code <- as.numeric(data$hydro_code)
+       data$hydro_distance <- as.numeric(data$hydro_distance)
+       data$catchment_id <- as.numeric(data$catchment_id)
+       # convert to tibble for nice formatting
+      data <- tibble::as_tibble(data)
       Sys.sleep(0.1)
       return(data)
     })
@@ -141,7 +168,7 @@ get_sepa_data <- function(location_id,
       }
       # If no data found set to NULL (data could return an empty list at this
       # point)
-      if(length(data) == 0) {
+      if (length(data) == 0) {
         return(NULL)
       } else {
         data <- convert(data, convert_to = "hera", convert_from = "sepa")
@@ -149,19 +176,21 @@ get_sepa_data <- function(location_id,
       }
       return(data)
     })
-  }
-  else if (dataset == "chem_analytical_results") {
+  } else if (dataset == "chem_analytical_results") {
     data <- purrr::map_df(location_id, function(id) {
       stopifnot(!is.null(id))
       url <- parse_url("http://asb-app-asa01:8267/SEPAL/archive")
       url$path <- paste(url$path, "analysis-results/chemistry",
-                        sep = "/")
+        sep = "/"
+      )
       site_url <- URLencode(URL = as.character(id), reserved = T)
       site_query <- paste0("location=", id)
       url$query <- site_query
       request <- build_url(url)
-      message(paste0("fetching records...1:5000 for ",
-                     id))
+      message(paste0(
+        "fetching records...1:5000 for ",
+        id
+      ))
       data <- jsonlite::fromJSON(request, flatten = TRUE)
       count <- data$count
       data <- data[["items"]]
@@ -172,9 +201,10 @@ get_sepa_data <- function(location_id,
         Sys.sleep(0.2)
         n_offset <- 5000
         message(paste0("fetching records...", offset +
-                         1, ":", offset + offset, " for ", id))
+          1, ":", offset + offset, " for ", id))
         url$query <- paste(site_query, "&offset=", offset,
-                           sep = "")
+          sep = ""
+        )
         request <- build_url(url)
         offset_data <- jsonlite::fromJSON(request, flatten = TRUE)
         count <- offset_data$count
@@ -191,7 +221,7 @@ get_sepa_data <- function(location_id,
       if (length(data) == 0) {
         return(NULL)
       }
-      data <- data[data$determinand_code == 	"200200_2", ]
+      data <- data[data$determinand_code == "200200_2", ]
       Sys.sleep(0.2)
       # else {
       #   data <- convert(data, convert_to = "hera", convert_from = "sepa")
@@ -199,8 +229,7 @@ get_sepa_data <- function(location_id,
       # }
       return(data)
     })
-  }
-  else {
+  } else {
     message(paste0(
       "You provided a `type =` argument of: ", dataset,
       "This didn't match any of the dataset supported e.g. 'locations', 'replocs'...etc"

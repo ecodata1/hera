@@ -47,9 +47,7 @@ Suggests:
     Matrix,
     pkgdown,
     readr,
-    readxl,
     rmarkdown,
-    sf,
     slickR,
     tidyverse,
     visNetwork

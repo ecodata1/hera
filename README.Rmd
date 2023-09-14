@@ -59,7 +59,6 @@ Assess some demo data for various environmental risks:
 library(hera)
 data <- assess(hera::demo_data)
 data[1:5, c("sample_id", "parameter", "question", "response")]
-
 ```
 
 Alternatively, you can view the `catalogue` and select which assessments to be
@@ -72,9 +71,12 @@ catalogue
 Then select which assessment(s) you wish to run by name:
 
 ```{r selected, message=FALSE, warning=FALSE}
-assessments <- assess(demo_data, 
-                      name = c("RICT",
-                               "Macroinvertebrate Metrics"))
+assessments <- assess(demo_data,
+  name = c(
+    "RICT",
+    "Macroinvertebrate Metrics"
+  )
+)
 assessments[1:5, c("sample_id", "parameter", "question", "response")]
 ```
 

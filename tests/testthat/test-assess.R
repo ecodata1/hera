@@ -1,18 +1,19 @@
 test_that("assess works", {
-
   # run subset
   data <- assess(demo_data[1:100, ]) %>%
     dplyr::select(sample_id, response, question) %>%
     dplyr::slice_sample(n = 4)
   expect_equal(nrow(data), 4)
 
-  # Work in progress test from old sepaTools package - needs checking
+  # Work in progress test from old sepaTools package - slight difference in EQR
+  # from 0.49 to 0.50 due to change in mean alkalinity used.
   data <- hera::demo_data[hera::demo_data$sample_id == "2755381", ]
   data$parameter[is.na(data$parameter)] <- data$quality_element[is.na(data$parameter)]
-  results <- assess(data)
+  results <- assess(data, "DARLEQ3")
   outcome <- results[results$sample_id == "2755381", ]
-  #      expect_equal(round(
-  #        as.numeric(outcome$response[outcome$question == "EQR_TDI4"][1]), 2), 0.49)
+  testthat::expect_equal(round(
+    as.numeric(outcome$response[outcome$question == "EQR_TDI4"][1]), 2
+  ), 0.50)
 })
 
 

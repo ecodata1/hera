@@ -48,6 +48,9 @@ data <- get_data(
 # Filter on NEMS or calculated determinands if provided
 data <- filter(data, question %in% c(params$question))
 
+# Convert response to numeric
+data$response <- as.numeric(data$response)
+
 # Select a few columns to display - to check import worked and data looks okay
 selected_data <- select(data, location_id, question, response, date_taken)
 # Format date_taken into more readable format

@@ -36,7 +36,6 @@ This document has been created following the generic [assessment guidance](https
 Basic details about the assessment. Update the 'response' values as required.
 
 ```{r description}
-
 description <- tribble(
   ~question, ~response,
   "name_short", "Macroinvertebrate Metrics",
@@ -46,7 +45,7 @@ description <- tribble(
   "type", "metric"
 )
 
-description
+knitr::kable(description)
 ```
 
 ## Input
@@ -54,7 +53,6 @@ description
 A list of questions required to run the assessment.
 
 ```{r input}
-
 input <- tribble(
   ~sample_id,
   ~question,
@@ -74,7 +72,7 @@ input <- tribble(
   NA,
   NA,
   "sepa_ecology_results",
-    "12345",
+  "12345",
   "Live abundance",
   "12",
   "Baetidae",
@@ -84,42 +82,52 @@ input <- tribble(
   NA,
   "sepa_ecology_results"
 )
-input
+
+data <- input
+data <- select(data, question, response)
+data <- data[!duplicated(data[, c("question")]), ]
+
+knitr::kable(data)
 ```
 
 ## Assessment
 
 If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
 
-```{r assessment}
-
+```{r assessment, collapse=TRUE, echo=TRUE}
 assessment_function <- function(data) {
   # Calculated invert metrics...
   # Note, any non-standard base R library must be call using require().
-   require(dplyr)
+  require(dplyr)
+  require(whpt)
   input <- data
   input$label <- trimws(input$label)
-  input <- dplyr::filter(input, 
-                         parameter %in% c("River Family Inverts",
-                                          "BANKSIDE_INVERTS"))
-  input <- dplyr::filter(input, question %in% c("Taxon abundance",
-                                                "Live abundance")) 
-  input$TAXON <- input$label 
-  input <-  dplyr::rename(input,  "SAMPLE_ID" = sample_id)
-  input$RESULT <- input$response
-  input <-  dplyr::select(input, SAMPLE_ID,
-                 TAXON, RESULT)
-  # input <-  dplyr::mutate_all(input, na_if, "")
-  input <- input[complete.cases(input),]
-  input$RESULT <- as.numeric(input$RESULT)
-  epsi <- macroinvertebrateMetrics::calcEpsi(input)
-  whpt <- macroinvertebrateMetrics::calcWhpt(input)
-  whpt$RESULT <- as.character(whpt$RESULT)
-  output <-  dplyr::bind_rows(epsi, whpt)
-  output <-  dplyr::select(output, SAMPLE_ID,
-                   DETERMINAND, RESULT)
+  input <- dplyr::filter(
+    input,
+    parameter %in% c(
+      "River Family Inverts",
+      "BANKSIDE_INVERTS"
+    )
+  )
+  input <- dplyr::filter(input, question %in% c(
+    "Taxon abundance",
+    "Live abundance"
+  ))
+
+  input <- dplyr::select(
+    input, sample_id, question, response, label, parameter
+  )
+
+  output <- macroinvertebrateMetrics::calc_metric(input)
+  # riverfly <- macroinvertebrateMetrics::calc_riverfly(input)
+  
+  # output <- dplyr::bind_rows(whpt, riverfly)
+
+  output <- dplyr::select(
+    output, sample_id, question, response
+
+  )
   names(output) <- c("sample_id", "question", "response")
-  row.names(output) <- NULL
   return(output)
 }
 ```
@@ -132,7 +140,9 @@ The outcome of your assessment.
 # data <- get_data(location_id = 8175)
 # outcome <- assessment_function(data)
 outcome <- assessment_function(input)
-outcome
+outcome_table <- select(outcome, question, response)
+outcome_table <- outcome_table[!duplicated(outcome_table[, c("question")]), ]
+knitr::kable(outcome_table)
 ```
 
 ## Check
@@ -142,7 +152,7 @@ Run checks on the assessment.
 ```{r checklist}
 # No need to edit this code
 # Format description
-standard_format <- hera:::hera_format(description = description) 
+standard_format <- hera:::hera_format(description = description)
 # Check description
 check_list <- hera:::hera_test(description = description)
 knitr::kable(check_list$standard_check)
@@ -168,12 +178,12 @@ After **updating the catalogue, rebuild the package**, click on Build > Install 
 
 This section tests if this assessment is usable using `assessment` function.
 
-```{r}
+```{r, results='hide'}
 # No need to edit this code
-assess(
-  data = hera::demo_data,
-  name = description$response[description$question == "name_short"]
-)
+# assess(
+#   data = hera::demo_data,
+#   name = description$response[description$question == "name_short"]
+# )
 ```
 
 ## Launch app

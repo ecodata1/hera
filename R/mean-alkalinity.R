@@ -1,4 +1,3 @@
-
 mean_alkalinity <- function(data, sample_n = 10) {
   # standardise names case
   names(data) <- toupper(names(data))
@@ -19,57 +18,58 @@ mean_alkalinity <- function(data, sample_n = 10) {
   # Loop through each ecology sample and find matching Alk results --------
   get_alk_diatom <- function(ecology_results, alkalinity_results, sample_n) {
     alk <- purrr::map_df(
-    split(
-      ecology_results,
-     ecology_results$SAMPLE_ID
-    ),
-    function(eco_sample) {
-      # Find matching alk results (less than ecology sampled date) ---------
-      alk_filtered <- alkalinity_results[alkalinity_results$LOCATION_ID ==
-                                           unique(eco_sample$CHEMISTRY_SITE) &
-                                           alkalinity_results$DATE_TAKEN <=
-                                           unique(eco_sample$DATE_TAKEN), ]
+      split(
+        ecology_results,
+        ecology_results$SAMPLE_ID
+      ),
+      function(eco_sample) {
+        # Find matching alk results (less than ecology sampled date) ---------
+        alk_filtered <- alkalinity_results[alkalinity_results$LOCATION_ID ==
+          unique(eco_sample$CHEMISTRY_SITE) &
+          alkalinity_results$DATE_TAKEN <=
+            unique(eco_sample$DATE_TAKEN), ]
 
-      if (sample_n == "all") {
-        sample_n <- length(alk_filtered$RESPONSE[!is.na(alk_filtered$RESPONSE)])
-      }
-      # Average up to last 10 samples
-      alkalinity <- mean(alk_filtered$RESPONSE[1:sample_n], na.rm = T)
-
-      # If no alk samples taken before ecology sampled date, then
-      # average up to 10 chem samples taken after ecology sampled date.
-      if (is.na(alkalinity) | is.nan(alkalinity) | length(alkalinity) == 0) {
-        alkalinity_results <- alkalinity_results[order(alkalinity_results$DATE_TAKEN), ]
-        alk_filtered <-
-          alkalinity_results[alkalinity_results$LOCATION_ID ==
-                               unique(eco_sample$CHEMISTRY_SITE), ]
-        if (sample_n == 0) {
+        if (sample_n == "all") {
           sample_n <- length(alk_filtered$RESPONSE[!is.na(alk_filtered$RESPONSE)])
         }
+        # Average up to last 10 samples
         alkalinity <- mean(alk_filtered$RESPONSE[1:sample_n], na.rm = T)
-      }
 
-      samples_used <- alk_filtered$RESPONSE[!is.na(alk_filtered$RESPONSE)]
-      if (length(samples_used) > sample_n) {
-        samples_used <- sample_n
-      } else {
-        samples_used <- length(samples_used)
-      }
-      mean_result <- data.frame(alkalinity)
-      mean_result <- mean_result %>% dplyr::mutate(
-        sample_number = unique(eco_sample$SAMPLE_ID),
-        sample_count = length(alk_filtered$RESPONSE[!is.na(alk_filtered$RESPONSE)]),
-        samples_used = samples_used,
-        min_date = min(alk_filtered$DATE_TAKEN[1:sample_n], na.rm = T),
-        max_date = max(alk_filtered$DATE_TAKEN[1:sample_n], na.rm = T)
-      )
-      # if no Alkalinity value will be NaN so check are return NA instead
-      mean_result$alkalinity[is.nan(mean_result$alkalinity)] <- NA
-      return(mean_result)
-    },  .progress = TRUE
-  )
+        # If no alk samples taken before ecology sampled date, then
+        # average up to 10 chem samples taken after ecology sampled date.
+        if (is.na(alkalinity) | is.nan(alkalinity) | length(alkalinity) == 0) {
+          alkalinity_results <- alkalinity_results[order(alkalinity_results$DATE_TAKEN), ]
+          alk_filtered <-
+            alkalinity_results[alkalinity_results$LOCATION_ID ==
+              unique(eco_sample$CHEMISTRY_SITE), ]
+          if (sample_n == 0) {
+            sample_n <- length(alk_filtered$RESPONSE[!is.na(alk_filtered$RESPONSE)])
+          }
+          alkalinity <- mean(alk_filtered$RESPONSE[1:sample_n], na.rm = T)
+        }
+
+        samples_used <- alk_filtered$RESPONSE[!is.na(alk_filtered$RESPONSE)]
+        if (length(samples_used) > sample_n) {
+          samples_used <- sample_n
+        } else {
+          samples_used <- length(samples_used)
+        }
+        mean_result <- data.frame(alkalinity)
+        mean_result <- mean_result %>% dplyr::mutate(
+          sample_number = unique(eco_sample$SAMPLE_ID),
+          sample_count = length(alk_filtered$RESPONSE[!is.na(alk_filtered$RESPONSE)]),
+          samples_used = samples_used,
+          min_date = min(alk_filtered$DATE_TAKEN[1:sample_n], na.rm = T),
+          max_date = max(alk_filtered$DATE_TAKEN[1:sample_n], na.rm = T)
+        )
+        # if no Alkalinity value will be NaN so check are return NA instead
+        mean_result$alkalinity[is.nan(mean_result$alkalinity)] <- NA
+        return(mean_result)
+      },
+      .progress = TRUE
+    )
     return(alk)
   }
-  alk <- get_alk_diatom(ecology_results,alkalinity_results,sample_n)
+  alk <- get_alk_diatom(ecology_results, alkalinity_results, sample_n)
   return(alk)
 }
