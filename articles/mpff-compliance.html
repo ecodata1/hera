@@ -499,6 +499,17 @@ required.</p>
 </h2>
 <p>If applicable, write a function to assess your input data and return
 an outcome. For example, a metric, statistic, prediction etc.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">assessment_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">parameter</span> <span class="op">==</span> <span class="st">"MPFF Compliance"</span><span class="op">)</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">results</span> <span class="op">&lt;-</span> <span class="fu">kraken</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/kraken/man/kraken.html" class="external-link">kraken</a></span><span class="op">(</span><span class="va">data</span>, hera_format <span class="op">=</span> <span class="cn">TRUE</span>, loess <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="outcome">Outcome<a class="anchor" aria-label="anchor" href="#outcome"></a>
@@ -546,7 +557,7 @@ returned</td>
 </tr>
 <tr class="even">
 <td align="left">package_date</td>
-<td align="left">2023-07-14</td>
+<td align="left">2023-09-14</td>
 </tr>
 <tr class="odd">
 <td align="left">IQI</td>

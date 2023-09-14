@@ -89,8 +89,9 @@
 <p>This document has been created following the generic <a href="https://ecodata1.github.io/hera/articles/development_guide.html">assessment
 guidance</a>.</p>
 <!-- Create a new regulatory assessment by updating the code info below, for guidance see https://ecodata1.github.io/hera/articles/development_guide.html  -->
-<p>This is the Rapid Assessment Technique (RAT) for rsults from bankside
-invertebrates analysis to check consistency with Water Body Status.</p>
+<p>This is the Rapid Assessment Technique (RAT) for results from
+bankside invertebrates analysis to check consistency with Water Body
+Status.</p>
 </div>
 <div class="section level2">
 <h2 id="description">Description<a class="anchor" aria-label="anchor" href="#description"></a>
@@ -135,117 +136,120 @@ Body Status</td>
 <h2 id="input">Input<a class="anchor" aria-label="anchor" href="#input"></a>
 </h2>
 <p>A list of questions required to run the assessment.</p>
-<table style="width:100%;" class="table">
-<colgroup>
-<col width="9%">
-<col width="8%">
-<col width="8%">
-<col width="12%">
-<col width="7%">
-<col width="7%">
-<col width="16%">
-<col width="5%">
-<col width="3%">
-<col width="3%">
-<col width="16%">
-</colgroup>
+<table class="table">
 <thead><tr class="header">
-<th align="left">location_id</th>
-<th align="left">sample_id</th>
-<th align="left">date_taken</th>
 <th align="left">question</th>
 <th align="left">response</th>
-<th align="left">label</th>
-<th align="left">parameter</th>
-<th align="left">type</th>
-<th align="left">max</th>
-<th align="left">min</th>
-<th align="left">source</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">206972</td>
-<td align="left">12345</td>
-<td align="left">2019-11-21</td>
 <td align="left">Taxon abundance</td>
 <td align="left">12</td>
-<td align="left">Baetidae</td>
-<td align="left">River Family Inverts</td>
-<td align="left">number</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">sepa_ecology_results</td>
 </tr>
 <tr class="even">
-<td align="left">206972</td>
-<td align="left">12345</td>
-<td align="left">2019-11-21</td>
 <td align="left">Live abundance</td>
 <td align="left">21</td>
-<td align="left">Baetidae</td>
-<td align="left">BANKSIDE_INVERTS</td>
-<td align="left">number</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">sepa_ecology_results</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div class="section level2">
-<h2 id="assessment">Assessment<a class="anchor" aria-label="anchor" href="#assessment"></a>
+<div class="section level2 tabset">
+<h2 class="tabset" id="assessment">Assessment<a class="anchor" aria-label="anchor" href="#assessment"></a>
 </h2>
 <p>If applicable, write a function to assess your input data and return
 an outcome. For example, a metric, statistic, prediction etc.</p>
+
+
+<ul class="nav nav-tabs" id="assessment" role="tablist">
+<li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#section" id="section-tab" type="button" role="tab" aria-controls="section" aria-selected="true" class="active nav-link"><span>​</span></button></li>
+<li role="presentation" class="nav-item"><button data-bs-toggle="tab" data-bs-target="#code" id="code-tab" type="button" role="tab" aria-controls="code" aria-selected="false" class="nav-link">Code</button></li>
+</ul>
+<div class="tab-content">
+<div class="active  tab-pane" id="section" role="tabpanel" aria-labelledby="section-tab">
+
+</div>
+<div class="tab-pane" id="code" role="tabpanel" aria-labelledby="code-tab">
+
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">assessment_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="co"># Some calculated a statistic...</span></span>
+<span>  <span class="co"># Note, any non-standard base R library must be call using require().</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/" class="external-link">tibble</a></span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ecodata1/whpt" class="external-link">whpt</a></span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/aquaMetrics/macroinvertebrateMetrics" class="external-link">macroinvertebrateMetrics</a></span><span class="op">)</span></span>
+<span>  <span class="va">data</span><span class="op">$</span><span class="va">date_taken</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">format.Date</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">date_taken</span>, <span class="st">"%Y/%m/%d"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">metric_function</span> <span class="op">&lt;-</span> <span class="va">catalogue</span><span class="op">[</span><span class="va">catalogue</span><span class="op">$</span><span class="va">assessment</span> <span class="op">==</span></span>
+<span>    <span class="st">"Macroinvertebrate Metrics"</span>, <span class="fl">3</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="va">metric_function</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
+<span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">output</span>, <span class="va">question</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WHPT_ASPT"</span>, <span class="st">"WHPT_NTAXA"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">predictors</span> <span class="op">&lt;-</span> <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdat"</span>,</span>
+<span>    <span class="st">"predictors.csv"</span>,</span>
+<span>    package <span class="op">=</span> <span class="st">"whpt"</span></span>
+<span>  <span class="op">)</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>  <span class="va">predictors</span><span class="op">$</span><span class="va">location_id</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">predictors</span><span class="op">$</span><span class="va">location_id</span><span class="op">)</span></span>
+<span>  <span class="va">predict_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">predictors</span>, <span class="va">location_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">location_id</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">output_location</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">output</span>,</span>
+<span>    <span class="va">data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>      <span class="st">"location_id"</span>,</span>
+<span>      <span class="st">"sample_id"</span>,</span>
+<span>      <span class="st">"date_taken"</span></span>
+<span>    <span class="op">)</span><span class="op">]</span>,</span>
+<span>    by <span class="op">=</span> <span class="st">"sample_id"</span></span>
+<span>  <span class="op">)</span></span>
+<span>  <span class="va">output_location</span><span class="op">$</span><span class="va">location_id</span> <span class="op">&lt;-</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">output_location</span><span class="op">$</span><span class="va">location_id</span><span class="op">)</span></span>
+<span>  <span class="va">whpt_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">output_location</span>,</span>
+<span>    <span class="va">predict_data</span>,</span>
+<span>    by <span class="op">=</span> <span class="st">"location_id"</span></span>
+<span>  <span class="op">)</span></span>
+<span>  <span class="va">whpt_input</span><span class="op">$</span><span class="va">question</span><span class="op">[</span><span class="va">whpt_input</span><span class="op">$</span><span class="va">question</span> <span class="op">==</span> <span class="st">"WHPT_ASPT"</span><span class="op">]</span> <span class="op">&lt;-</span></span>
+<span>    <span class="st">"WHPT ASPT Abund"</span></span>
+<span>  <span class="va">whpt_input</span><span class="op">$</span><span class="va">question</span><span class="op">[</span><span class="va">whpt_input</span><span class="op">$</span><span class="va">question</span> <span class="op">==</span> <span class="st">"WHPT_NTAXA"</span><span class="op">]</span> <span class="op">&lt;-</span></span>
+<span>    <span class="st">"WHPT NTAXA Abund"</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">whpt_input</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="va">whpt_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">whpt_input</span><span class="op">)</span></span>
+<span>    <span class="va">whpt_input</span><span class="op">$</span><span class="va">response</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">whpt_input</span><span class="op">$</span><span class="va">response</span><span class="op">)</span></span>
+<span>    <span class="va">consistency_check</span> <span class="op">&lt;-</span> <span class="fu">whpt</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/whpt/man/whpts.html" class="external-link">whpts</a></span><span class="op">(</span><span class="va">whpt_input</span><span class="op">)</span></span>
+<span>    <span class="va">consistency_check</span><span class="op">$</span><span class="va">response</span> <span class="op">&lt;-</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">consistency_check</span><span class="op">$</span><span class="va">response</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">consistency_check</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+</div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="outcome">Outcome<a class="anchor" aria-label="anchor" href="#outcome"></a>
 </h2>
 <p>The outcome of your assessment.</p>
-<pre><code><span><span class="co">#&gt; Loading required package: whpt</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; Attaching package: 'whpt'</span></span>
-<span><span class="co">#&gt; The following object is masked from 'package:hera':</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;     demo_data</span></span>
-<span><span class="co">#&gt; Loading required package: macroinvertebrateMetrics</span></span>
-<span><span class="co">#&gt; The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,</span></span>
-<span><span class="co">#&gt; which was just loaded, will retire in October 2023.</span></span>
-<span><span class="co">#&gt; Please refer to R-spatial evolution reports for details, especially</span></span>
-<span><span class="co">#&gt; https://r-spatial.org/r/2023/05/15/evolution4.html.</span></span>
-<span><span class="co">#&gt; It may be desirable to make the sf package available;</span></span>
-<span><span class="co">#&gt; package maintainers should consider adding sf to Suggests:.</span></span>
-<span><span class="co">#&gt; The sp package is now running under evolution status 2</span></span>
-<span><span class="co">#&gt;      (status 2 uses the sf package in place of rgdal)</span></span></code></pre>
 <table class="table">
 <thead><tr class="header">
-<th align="left">sample_id</th>
 <th align="left">question</th>
 <th align="left">response</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">12345</td>
 <td align="left">Reference NTAXA</td>
 <td align="left">21.14</td>
 </tr>
 <tr class="even">
-<td align="left">12345</td>
 <td align="left">Reference ASPT</td>
 <td align="left">7.32</td>
 </tr>
 <tr class="odd">
-<td align="left">12345</td>
 <td align="left">assessment</td>
 <td align="left">Likely problem detected</td>
 </tr>
 <tr class="even">
-<td align="left">12345</td>
 <td align="left">driver</td>
 <td align="left">ntaxa</td>
 </tr>
 <tr class="odd">
-<td align="left">12345</td>
 <td align="left">action</td>
 <td align="left">Urgent discussion required with Ecology</td>
 </tr>
@@ -283,9 +287,6 @@ an outcome. For example, a metric, statistic, prediction etc.</p>
 <h2 id="update">Update<a class="anchor" aria-label="anchor" href="#update"></a>
 </h2>
 <p>Update the catalogue of assessments to make them available.</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/home/runner/work/hera/hera'</span></span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> Saving <span style="color: #0000BB;">'catalogue'</span> to <span style="color: #0000BB;">'data/catalogue.rda'</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BB0000;">•</span> Document your data (see <span style="color: #0000BB;">'https://r-pkgs.org/data.html'</span>)</span></span></code></pre>
 <p>After <strong>updating the catalogue, rebuild the package</strong>,
 click on Build &gt; Install and Restart menu or ‘Install and Restart’
 button in the Build pane.</p>

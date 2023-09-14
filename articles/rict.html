@@ -95,212 +95,771 @@ guidance</a>.</p>
 </h2>
 <p>Basic details about the assessment. Update the ‘response’ values as
 required.</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 2</span></span></span>
-<span><span class="co">#&gt;   question   response                  </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                     </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> name_short RICT                      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> name_long  RICT                      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> parameter  River Family Invertebrates</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> status     prototype                 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> type       metric</span></span></code></pre>
+<table class="table">
+<thead><tr class="header">
+<th align="left">question</th>
+<th align="left">response</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">name_short</td>
+<td align="left">RICT</td>
+</tr>
+<tr class="even">
+<td align="left">name_long</td>
+<td align="left">RICT</td>
+</tr>
+<tr class="odd">
+<td align="left">parameter</td>
+<td align="left">River Family Invertebrates</td>
+</tr>
+<tr class="even">
+<td align="left">status</td>
+<td align="left">prototype</td>
+</tr>
+<tr class="odd">
+<td align="left">type</td>
+<td align="left">metric</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level2">
 <h2 id="input">Input<a class="anchor" aria-label="anchor" href="#input"></a>
 </h2>
 <p>A list of questions required to run the assessment.</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 11</span></span></span>
-<span><span class="co">#&gt;   location_id sample_id date_taken question response label parameter type  max  </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 206972      12345     2019-11-21 Taxon a… 12       Baet… River Fa… numb… <span style="color: #BB0000;">NA</span>   </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: min &lt;lgl&gt;, source &lt;chr&gt;</span></span></span></code></pre>
+<table class="table">
+<thead><tr class="header">
+<th align="left">question</th>
+<th align="left">response</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="left">Taxon abundance</td>
+<td align="left">12</td>
+</tr></tbody>
+</table>
 </div>
 <div class="section level2">
 <h2 id="assessment">Assessment<a class="anchor" aria-label="anchor" href="#assessment"></a>
 </h2>
 <p>If applicable, write a function to assess your input data and return
 an outcome. For example, a metric, statistic, prediction etc.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">assessment_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="co"># Calculated some statistic...</span></span>
+<span>  <span class="co"># Note, any non-standard base R library must be call using require().</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/aquaMetrics/rict" class="external-link">rict</a></span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://github.com/aquaMetrics/macroinvertebrateMetrics" class="external-link">macroinvertebrateMetrics</a></span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">location_id</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">metric_function</span> <span class="op">&lt;-</span> <span class="va">catalogue</span><span class="op">[</span><span class="va">catalogue</span><span class="op">$</span><span class="va">assessment</span> <span class="op">==</span></span>
+<span>    <span class="st">"Macroinvertebrate Metrics"</span>, <span class="fl">3</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="va">metric_function</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
+<span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">output</span>, <span class="va">question</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WHPT_ASPT"</span>, <span class="st">"WHPT_NTAXA"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span>  <span class="co"># Alkalinity ---------</span></span>
+<span>  <span class="co"># if(!any(names(data) %in% c("alkalinity"))) {</span></span>
+<span>  <span class="co">#   alk &lt;- hera:::mean_alkalinity(data)</span></span>
+<span>  <span class="co">#   data$alkalinity &lt;- NULL</span></span>
+<span>  <span class="co">#   data &lt;- inner_join(data, alk, by = join_by("sample_id" == "sample_number"))</span></span>
+<span>  <span class="co"># }</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"alkalinity"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">predictors</span> <span class="op">&lt;-</span> <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdat"</span>,</span>
+<span>      <span class="st">"predictors.csv"</span>,</span>
+<span>      package <span class="op">=</span> <span class="st">"hera"</span></span>
+<span>    <span class="op">)</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>    <span class="va">predictors</span><span class="op">$</span><span class="va">location_id</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">predictors</span><span class="op">$</span><span class="va">location_id</span><span class="op">)</span></span>
+<span>    <span class="va">predict_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">predictors</span>, <span class="va">location_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">location_id</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">output_location</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">output</span>,</span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>        <span class="st">"location_id"</span>,</span>
+<span>        <span class="st">"sample_id"</span>,</span>
+<span>        <span class="st">"date_taken"</span></span>
+<span>      <span class="op">)</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>      by <span class="op">=</span> <span class="st">"sample_id"</span>,</span>
+<span>      relationship <span class="op">=</span> <span class="st">"many-to-many"</span></span>
+<span>    <span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">whpt_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">output_location</span>, <span class="va">predict_data</span>, by <span class="op">=</span> <span class="st">"location_id"</span><span class="op">)</span></span>
+<span>  <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>    <span class="co"># function to average predictors for each year? See sepaTools package?::</span></span>
+<span>    <span class="va">final_data</span> <span class="op">&lt;-</span> <span class="va">data</span></span>
+<span>    <span class="va">final_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">final_data</span>, <span class="va">analysis_repname</span> <span class="op">==</span> <span class="st">"Invert Physical Data"</span><span class="op">)</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">final_data</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>    <span class="va">summarise_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>      <span class="va">final_data</span>,</span>
+<span>      <span class="va">location_id</span>,</span>
+<span>      <span class="va">sample_id</span>,</span>
+<span>      <span class="va">year</span>,</span>
+<span>      <span class="va">question</span>,</span>
+<span>      <span class="va">response</span></span>
+<span>    <span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">summarise_data</span> <span class="op">&lt;-</span> <span class="fu">map_df</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span></span>
+<span>      <span class="va">summarise_data</span>,</span>
+<span>      <span class="va">summarise_data</span><span class="op">$</span><span class="va">sample_id</span></span>
+<span>    <span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">sample</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="co"># get a row to add to bottom when mean_depth calcualted</span></span>
+<span>      <span class="va">row</span> <span class="op">&lt;-</span> <span class="va">sample</span><span class="op">[</span><span class="fl">1</span>, <span class="op">]</span></span>
+<span>      <span class="va">row</span><span class="op">$</span><span class="va">question</span> <span class="op">&lt;-</span> <span class="st">"mean_depth"</span></span>
+<span>      <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="va">sample</span><span class="op">$</span><span class="va">question</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"mean_depth"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="va">depths</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">sample</span>, <span class="va">question</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>          <span class="st">"River Depth 1"</span>,</span>
+<span>          <span class="st">"River Depth 2"</span>,</span>
+<span>          <span class="st">"River Depth 3"</span></span>
+<span>        <span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">depths</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span>          <span class="co"># some samples don't have Depths or mean_depth...so return NA</span></span>
+<span>          <span class="va">row</span><span class="op">$</span><span class="va">response</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span>        <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>          <span class="va">mean_depth</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">depths</span><span class="op">$</span><span class="va">response</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span>          <span class="va">row</span><span class="op">$</span><span class="va">response</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">mean_depth</span><span class="op">)</span></span>
+<span>        <span class="op">}</span></span>
+<span>        <span class="va">sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">sample</span>, <span class="va">row</span><span class="op">)</span></span>
+<span>        <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">sample</span><span class="op">)</span></span>
+<span>      <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>        <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">sample</span><span class="op">)</span></span>
+<span>      <span class="op">}</span></span>
+<span>    <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">summarise_data</span> <span class="op">&lt;-</span> <span class="va">summarise_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">question</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>        <span class="st">"sand"</span>,</span>
+<span>        <span class="st">"silt_clay"</span>,</span>
+<span>        <span class="st">"boulders_cobbles"</span>,</span>
+<span>        <span class="st">"pebbles_gravel"</span>,</span>
+<span>        <span class="st">"river_width"</span>,</span>
+<span>        <span class="st">"mean_depth"</span></span>
+<span>      <span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">summarise_data</span> <span class="op">&lt;-</span> <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span><span class="va">summarise_data</span>,</span>
+<span>      names_from <span class="op">=</span> <span class="va">question</span>,</span>
+<span>      values_from <span class="op">=</span> <span class="va">response</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="va">summarise_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/type.convert.html" class="external-link">type.convert</a></span><span class="op">(</span><span class="va">summarise_data</span>, as.is <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    <span class="va">summarise_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">summarise_data</span>, <span class="op">-</span><span class="va">sample_id</span><span class="op">)</span></span>
+<span>    <span class="va">summarise_data</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span></span>
+<span>      <span class="va">summarise_data</span>,</span>
+<span>      <span class="va">location_id</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="co"># Suppress warning because of missing values</span></span>
+<span>    <span class="va">summarise_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/warning.html" class="external-link">suppressWarnings</a></span><span class="op">(</span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html" class="external-link">summarise_all</a></span><span class="op">(</span></span>
+<span>      <span class="va">summarise_data</span>,</span>
+<span>      <span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">.x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    <span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">summarise_data</span><span class="op">$</span><span class="va">location_id</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">summarise_data</span><span class="op">$</span><span class="va">location_id</span><span class="op">)</span></span>
+<span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">summarise_data</span>, by <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by</a></span><span class="op">(</span><span class="va">location_id</span> <span class="op">==</span> <span class="va">location_id</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">location_id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="st">"alkalinity"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">alkalinity</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>      <span class="va">data</span>,</span>
+<span>      <span class="va">sample_id</span>,</span>
+<span>      <span class="va">location_id</span>,</span>
+<span>      <span class="va">date_taken</span>,</span>
+<span>      <span class="st">"grid_reference"</span>,</span>
+<span>      <span class="st">"alkalinity"</span>,</span>
+<span>      <span class="st">"river_width"</span>,</span>
+<span>      <span class="st">"mean_depth"</span>,</span>
+<span>      <span class="st">"boulders_cobbles"</span>,</span>
+<span>      <span class="st">"pebbles_gravel"</span>,</span>
+<span>      <span class="st">"sand"</span>,</span>
+<span>      <span class="st">"silt_clay"</span>,</span>
+<span>      <span class="co"># "northing",</span></span>
+<span>      <span class="co"># "easting",</span></span>
+<span>      <span class="st">"dist_from_source"</span>,</span>
+<span>      <span class="st">"altitude"</span>,</span>
+<span>      <span class="st">"slope"</span>,</span>
+<span>      <span class="st">"grid_reference"</span>,</span>
+<span>      <span class="st">"discharge_category"</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="va">whpt_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">output</span>,</span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span>,</span>
+<span>      by <span class="op">=</span> <span class="st">"sample_id"</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  <span class="va">whpt_input</span><span class="op">$</span><span class="va">question</span><span class="op">[</span><span class="va">whpt_input</span><span class="op">$</span><span class="va">question</span> <span class="op">==</span> <span class="st">"WHPT_ASPT"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"WHPT ASPT Abund"</span></span>
+<span>  <span class="va">whpt_input</span><span class="op">$</span><span class="va">question</span><span class="op">[</span><span class="va">whpt_input</span><span class="op">$</span><span class="va">question</span> <span class="op">==</span> <span class="st">"WHPT_NTAXA"</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"WHPT NTAXA Abund"</span></span>
+<span>  <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">whpt_input</span></span>
+<span></span>
+<span>  <span class="va">bias</span> <span class="op">&lt;-</span> <span class="fl">1.62</span></span>
+<span>  <span class="va">analysis</span> <span class="op">&lt;-</span> <span class="st">"whpt ntaxa abund"</span></span>
+<span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">river_width</span><span class="op">)</span>, <span class="op">]</span></span>
+<span>  <span class="co"># if no river width...return NULL</span></span>
+<span>  <span class="va">check</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  <span class="co"># Add year  columns</span></span>
+<span>  <span class="va">data</span><span class="op">$</span><span class="va">year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">format.Date</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">date_taken</span>, <span class="st">"%Y"</span><span class="op">)</span></span>
+<span>  <span class="va">data</span><span class="op">$</span><span class="va">year</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">as.integer</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">year</span><span class="op">)</span></span>
+<span>  <span class="va">rict_output</span> <span class="op">&lt;-</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">location_id</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">location_id</span><span class="op">)</span> <span class="op">{</span></span>
+<span>   <span class="va">data</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">[</span><span class="va">data</span><span class="op">$</span><span class="va">location_id</span> <span class="op">==</span> <span class="va">location_id</span>, <span class="op">]</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">river_width</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">river_width</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="va">data</span><span class="op">$</span><span class="va">river_width</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">river_width</span><span class="op">)</span></span>
+<span>        <span class="va">data</span><span class="op">$</span><span class="va">mean_depth</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">mean_depth</span><span class="op">)</span></span>
+<span>        <span class="va">data</span><span class="op">$</span><span class="va">boulders_cobbles</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">boulders_cobbles</span><span class="op">)</span></span>
+<span>        <span class="va">data</span><span class="op">$</span><span class="va">pebbles_gravel</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">pebbles_gravel</span><span class="op">)</span></span>
+<span>        <span class="va">data</span><span class="op">$</span><span class="va">silt_clay</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">silt_clay</span><span class="op">)</span></span>
+<span>        <span class="va">data</span><span class="op">$</span><span class="va">sand</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">sand</span><span class="op">)</span></span>
+<span>        <span class="va">check</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span>
+<span>      <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span>        <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>          <span class="va">data</span>,</span>
+<span>          <span class="op">-</span><span class="va">river_width</span>,</span>
+<span>          <span class="op">-</span><span class="va">mean_depth</span>,</span>
+<span>          <span class="op">-</span><span class="va">boulders_cobbles</span>,</span>
+<span>          <span class="op">-</span><span class="va">pebbles_gravel</span>,</span>
+<span>          <span class="op">-</span><span class="va">sand</span>,</span>
+<span>          <span class="op">-</span><span class="va">silt_clay</span></span>
+<span>        <span class="op">)</span></span>
+<span>      <span class="op">}</span></span>
+<span>    <span class="op">}</span></span>
+<span>    <span class="co"># NGR columns</span></span>
+<span></span>
+<span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/separate.html" class="external-link">separate</a></span><span class="op">(</span><span class="va">data</span>,</span>
+<span>      <span class="va">grid_reference</span>,</span>
+<span>      into <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>        <span class="st">"NGR"</span>,</span>
+<span>        <span class="st">"NGR_EASTING"</span>,</span>
+<span>        <span class="st">"NGR_NORTHING"</span></span>
+<span>      <span class="op">)</span>,</span>
+<span>      sep <span class="op">=</span> <span class="st">" "</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="co"># needs refactoring - but if no Alk results returned then add blanks/NAs</span></span>
+<span>    <span class="co"># data$alkalinity &lt;- 75</span></span>
+<span>    <span class="va">data</span><span class="op">$</span><span class="va">sample_count</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span>    <span class="va">data</span><span class="op">$</span><span class="va">samples_used</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span>    <span class="va">data</span><span class="op">$</span><span class="va">min_date</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span>    <span class="va">data</span><span class="op">$</span><span class="va">max_date</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span></span>
+<span>    <span class="va">data</span><span class="op">$</span><span class="va">response</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">response</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html" class="external-link">pivot_wider</a></span><span class="op">(</span><span class="va">data</span>,</span>
+<span>      names_from <span class="op">=</span> <span class="va">question</span>,</span>
+<span>      values_from <span class="op">=</span> <span class="va">response</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="co"># Join to template</span></span>
+<span>    <span class="va">rict_template</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="va">template</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>        <span class="st">"LOCATION"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"Waterbody"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"YEAR"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/integer.html" class="external-link">integer</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"NGR"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"EASTING"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"NORTHING"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"S_ALTITUDE"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"S_SLOPE"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"S_DISCHARGE_CAT"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"S_DIST_FROM_SOURCE"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"River Width (m)"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"Mean Depth (cm)"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"Alkalinity"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"% Boulders/Cobbles"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"% Pebbles/Gravel"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"% Sand"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"% Silt/Clay"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"Spr_Season_ID"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"Spr_TL2_WHPT_NTaxa (AbW,DistFam)"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"Spr_TL2_WHPT_ASPT (AbW,DistFam)"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"Sum_Season_ID"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"Sum_TL2_WHPT_NTaxa (AbW,DistFam)"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"Sum_TL2_WHPT_ASPT (AbW,DistFam)"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"Aut_Season_ID"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"Aut_TL2_WHPT_NTaxa (AbW,DistFam)"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        <span class="st">"Aut_TL2_WHPT_ASPT (AbW,DistFam)"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">numeric</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        sample_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>        check.names <span class="op">=</span> <span class="va">check</span></span>
+<span>      <span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span></span>
+<span>    <span class="va">template_nems</span> <span class="op">&lt;-</span> <span class="fu">rict_template</span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">template_nems</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">template_nems</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">data</span><span class="op">$</span><span class="va">easting</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">NGR_EASTING</span><span class="op">)</span></span>
+<span>    <span class="va">data</span><span class="op">$</span><span class="va">northing</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">as.factor</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">NGR_EASTING</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">template_nems</span>, <span class="va">data</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="co"># For each Ecology sample (survey_inv/F_BMWP_SUM) summarise</span></span>
+<span>    <span class="co"># data$location &lt;- paste0(data$location_id, ": ", data$location_description)</span></span>
+<span>    <span class="va">data</span><span class="op">$</span><span class="va">water_body_id</span> <span class="op">&lt;-</span> <span class="fl">3100</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">data</span>, check.names <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">data</span><span class="op">$</span><span class="va">date_taken</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">date_taken</span><span class="op">)</span></span>
+<span>    <span class="va">data</span><span class="op">$</span><span class="va">season</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/season.html">season</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">date_taken</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="co"># summarise_data &lt;- dplyr::group_by(</span></span>
+<span>    <span class="co">#   data,</span></span>
+<span>    <span class="co">#   location_id,</span></span>
+<span>    <span class="co">#   ngr,</span></span>
+<span>    <span class="co">#   ngr_easting,</span></span>
+<span>    <span class="co">#   ngr_northing,</span></span>
+<span>    <span class="co">#   sample_id,</span></span>
+<span>    <span class="co">#   season,</span></span>
+<span>    <span class="co">#   discharge_category,</span></span>
+<span>    <span class="co">#   water_body_id,</span></span>
+<span>    <span class="co">#   .name_repair = TRUE</span></span>
+<span>    <span class="co"># )</span></span>
+<span>    <span class="co"># Suppress warning because of missing values</span></span>
+<span>    <span class="co"># summarise_data &lt;- suppressWarnings(dplyr::summarise_all(</span></span>
+<span>    <span class="co">#   summarise_data,</span></span>
+<span>    <span class="co">#   ~ mean(.x, na.rm = TRUE)</span></span>
+<span>    <span class="co"># ))</span></span>
+<span>    <span class="co"># Select</span></span>
+<span></span>
+<span>    <span class="va">rict_data</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">data</span>,</span>
+<span>      <span class="st">"SITE"</span> <span class="op">=</span> <span class="va">location_id</span>,</span>
+<span>      <span class="st">"Waterbody"</span> <span class="op">=</span> <span class="va">water_body_id</span>,</span>
+<span>      <span class="st">"Year"</span> <span class="op">=</span> <span class="va">year</span>,</span>
+<span>      <span class="st">"NGR"</span> <span class="op">=</span> <span class="va">ngr</span>,</span>
+<span>      <span class="st">"Easting"</span> <span class="op">=</span> <span class="va">ngr_easting</span>,</span>
+<span>      <span class="st">"Northing"</span> <span class="op">=</span> <span class="va">ngr_northing</span>,</span>
+<span>      <span class="st">"Altitude"</span> <span class="op">=</span> <span class="va">altitude</span>,</span>
+<span>      <span class="st">"Slope"</span> <span class="op">=</span> <span class="va">slope</span>,</span>
+<span>      <span class="st">"Discharge"</span> <span class="op">=</span> <span class="va">discharge_category</span>,</span>
+<span>      <span class="st">"Dist_from_Source"</span> <span class="op">=</span> <span class="va">dist_from_source</span>,</span>
+<span>      <span class="st">"Mean_Width"</span> <span class="op">=</span> <span class="va">river_width</span>,</span>
+<span>      <span class="st">"Mean_depth"</span> <span class="op">=</span> <span class="va">mean_depth</span>,</span>
+<span>      <span class="st">"Alkalinity"</span> <span class="op">=</span> <span class="va">alkalinity</span>,</span>
+<span>      <span class="st">"Total_samples"</span> <span class="op">=</span> <span class="va">sample_count</span>,</span>
+<span>      <span class="st">"Samples_used"</span> <span class="op">=</span> <span class="va">samples_used</span>,</span>
+<span>      <span class="st">"Alk_start"</span> <span class="op">=</span> <span class="va">min_date</span>,</span>
+<span>      <span class="st">"Alk_end"</span> <span class="op">=</span> <span class="va">max_date</span>,</span>
+<span>      Boulder_Cobbles <span class="op">=</span> <span class="va">boulders_cobbles</span>,</span>
+<span>      Pebbles_Gravel <span class="op">=</span> <span class="va">pebbles_gravel</span>,</span>
+<span>      Sand <span class="op">=</span> <span class="va">sand</span>,</span>
+<span>      Silt_Clay <span class="op">=</span> <span class="va">silt_clay</span>,</span>
+<span>      <span class="st">"Spr_Season_ID"</span> <span class="op">=</span> <span class="va">season</span>,</span>
+<span>      <span class="st">"Spr_TL2_WHPT_NTaxa (AbW,DistFam)"</span> <span class="op">=</span> <span class="st">"whpt.ntaxa.abund"</span>,</span>
+<span>      <span class="st">"Spr_TL2_WHPT_ASPT (AbW,DistFam)"</span> <span class="op">=</span> <span class="st">"whpt.aspt.abund"</span>,</span>
+<span>      <span class="st">"Sum_Season_ID"</span> <span class="op">=</span> <span class="va">season</span>,</span>
+<span>      <span class="st">"Sum_TL2_WHPT_NTaxa (AbW,DistFam)"</span> <span class="op">=</span> <span class="st">"whpt.ntaxa.abund"</span>,</span>
+<span>      <span class="st">"Sum_TL2_WHPT_ASPT (AbW,DistFam)"</span> <span class="op">=</span> <span class="st">"whpt.aspt.abund"</span>,</span>
+<span>      <span class="st">"Aut_Season_ID"</span> <span class="op">=</span> <span class="va">season</span>,</span>
+<span>      <span class="st">"Aut_TL2_WHPT_NTaxa (AbW,DistFam)"</span> <span class="op">=</span> <span class="st">"whpt.ntaxa.abund"</span>,</span>
+<span>      <span class="st">"Aut_TL2_WHPT_ASPT (AbW,DistFam)"</span> <span class="op">=</span> <span class="st">"whpt.aspt.abund"</span>,</span>
+<span>      <span class="va">sample_id</span>,</span>
+<span>      season <span class="op">=</span> <span class="st">"season"</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="co"># Remove season not used</span></span>
+<span></span>
+<span>    <span class="va">cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"Sum_|Spr_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">rict_data</span><span class="op">)</span>, perl <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    <span class="va">rict_data</span><span class="op">[</span><span class="va">rict_data</span><span class="op">$</span><span class="va">season</span> <span class="op">==</span> <span class="fl">3</span>, <span class="va">cols</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span></span>
+<span>    <span class="va">cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"Spr_|Aut_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">rict_data</span><span class="op">)</span>, perl <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    <span class="va">rict_data</span><span class="op">[</span><span class="va">rict_data</span><span class="op">$</span><span class="va">season</span> <span class="op">==</span> <span class="fl">2</span>, <span class="va">cols</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span></span>
+<span>    <span class="va">cols</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"Sum_|Aut_"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">rict_data</span><span class="op">)</span>, perl <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    <span class="va">rict_data</span><span class="op">[</span><span class="va">rict_data</span><span class="op">$</span><span class="va">season</span> <span class="op">==</span> <span class="fl">1</span>, <span class="va">cols</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span></span>
+<span>    <span class="co"># Add season id when required</span></span>
+<span>    <span class="va">rict_data</span><span class="op">$</span><span class="va">Spr_Season_ID</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span>    <span class="va">rict_data</span><span class="op">$</span><span class="va">Sum_Season_ID</span> <span class="op">&lt;-</span> <span class="fl">2</span></span>
+<span>    <span class="va">rict_data</span><span class="op">$</span><span class="va">Aut_Season_ID</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
+<span>    <span class="co"># Bias where required</span></span>
+<span>    <span class="va">rict_data</span><span class="op">$</span><span class="va">SPR_NTAXA_BIAS</span> <span class="op">&lt;-</span> <span class="va">bias</span></span>
+<span>    <span class="va">rict_data</span><span class="op">$</span><span class="va">SUM_NTAXA_BIAS</span> <span class="op">&lt;-</span> <span class="va">bias</span></span>
+<span>    <span class="va">rict_data</span><span class="op">$</span><span class="va">AUT_NTAXA_BIAS</span> <span class="op">&lt;-</span> <span class="va">bias</span></span>
+<span></span>
+<span>    <span class="va">rict_data</span><span class="op">$</span><span class="va">VELOCITY</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span>    <span class="va">rict_data</span><span class="op">$</span><span class="va">HARDNESS</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span>    <span class="va">rict_data</span><span class="op">$</span><span class="va">CALCIUM</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span>    <span class="va">rict_data</span><span class="op">$</span><span class="va">CONDUCTIVITY</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span>    <span class="co"># Replace NANs</span></span>
+<span>    <span class="va">is.nan.data.frame</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">cbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">is.nan</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>    <span class="va">rict_data</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/is.finite.html" class="external-link">is.nan</a></span><span class="op">(</span><span class="va">rict_data</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span></span>
+<span>    <span class="co"># Discharge must be numeric to pass validation</span></span>
+<span>    <span class="va">rict_data</span><span class="op">$</span><span class="va">Discharge</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">rict_data</span><span class="op">$</span><span class="va">Discharge</span><span class="op">)</span></span>
+<span>    <span class="va">rict_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">rict_data</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>    <span class="co"># rict_data &lt;- rict_data[rict_data$sample_id != "1582198", ]</span></span>
+<span>    <span class="co"># rict_data &lt;- rict_data[rict_data$sample_id != "1017980", ]</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">rict_data</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span></span>
+<span>    <span class="va">rict_valid</span> <span class="op">&lt;-</span> <span class="fu">rict</span><span class="fu">::</span><span class="fu"><a href="https://aquametrics.github.io/rict/reference/rict_validate.html" class="external-link">rict_validate</a></span><span class="op">(</span><span class="va">rict_data</span>, stop_if_all_fail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">rict_valid</span><span class="op">$</span><span class="va">data</span><span class="op">)</span> <span class="op">==</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span></span>
+<span>    <span class="va">rict_multi_year</span> <span class="op">&lt;-</span> <span class="va">rict_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">SITE</span>, <span class="va">Year</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">SITE</span>, <span class="va">Year</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"_WHPT_"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise_all.html" class="external-link">summarise_all</a></span><span class="op">(</span><span class="op">~</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">.x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">predictors</span> <span class="op">&lt;-</span> <span class="va">rict_data</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">Year</span>, <span class="op">-</span><span class="va">season</span>, <span class="op">-</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"_WHPT_"</span><span class="op">)</span>, <span class="op">-</span><span class="va">sample_id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>    <span class="va">multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">rict_multi_year</span>, <span class="va">predictors</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SITE"</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">multi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">multi</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span>    <span class="va">multi_predict</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://aquametrics.github.io/rict/reference/rict_predict.html" class="external-link">rict_predict</a></span><span class="op">(</span><span class="va">multi</span><span class="op">)</span></span>
+<span>    <span class="va">multi_predict</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">multi_predict</span>, <span class="va">SITE</span>, <span class="va">SuitCode</span>, <span class="va">SuitText</span><span class="op">)</span></span>
+<span>    <span class="va">multi_predict</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">multi_predict</span><span class="op">)</span></span>
+<span>    <span class="va">multi_class</span> <span class="op">&lt;-</span> <span class="fu">rict</span><span class="fu">::</span><span class="fu"><a href="https://aquametrics.github.io/rict/reference/rict.html" class="external-link">rict</a></span><span class="op">(</span><span class="va">multi</span>, year_type <span class="op">=</span> <span class="st">"multi"</span><span class="op">)</span></span>
+<span>    <span class="va">multi_class</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">multi_class</span>, <span class="va">multi_predict</span>, by <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by</a></span><span class="op">(</span><span class="va">SITE</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="va">multi_year_ntaxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>      <span class="va">multi_class</span>,</span>
+<span>      <span class="va">SITE</span>,</span>
+<span>      <span class="st">"H"</span> <span class="op">=</span> <span class="va">H_NTAXA_spr_aut</span>,</span>
+<span>      <span class="st">"G"</span> <span class="op">=</span> <span class="va">G_NTAXA_spr_aut</span>,</span>
+<span>      <span class="st">"M"</span> <span class="op">=</span> <span class="va">M_NTAXA_spr_aut</span>,</span>
+<span>      <span class="st">"P"</span> <span class="op">=</span> <span class="va">P_NTAXA_spr_aut</span>,</span>
+<span>      <span class="st">"B"</span> <span class="op">=</span> <span class="va">B_NTAXA_spr_aut</span>,</span>
+<span>      <span class="st">"Class"</span> <span class="op">=</span> <span class="va">mostProb_NTAXA_spr_aut</span>,</span>
+<span>      <span class="st">"EQR"</span> <span class="op">=</span> <span class="va">NTAXA_aver_spr_aut</span>,</span>
+<span>      <span class="st">"Suit Code"</span> <span class="op">=</span> <span class="va">SuitCode</span>,</span>
+<span>      <span class="st">"Suit Text"</span> <span class="op">=</span> <span class="va">SuitText</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="va">multi_year_ntaxa</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"Macroinvertebrates (NTAXA)"</span></span>
+<span>    <span class="va">multi_year_aspt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>      <span class="va">multi_class</span>,</span>
+<span>      <span class="va">SITE</span>,</span>
+<span>      <span class="st">"H"</span> <span class="op">=</span> <span class="va">H_ASPT_spr_aut</span>,</span>
+<span>      <span class="st">"G"</span> <span class="op">=</span> <span class="va">G_ASPT_spr_aut</span>,</span>
+<span>      <span class="st">"M"</span> <span class="op">=</span> <span class="va">M_ASPT_spr_aut</span>,</span>
+<span>      <span class="st">"P"</span> <span class="op">=</span> <span class="va">P_ASPT_spr_aut</span>,</span>
+<span>      <span class="st">"B"</span> <span class="op">=</span> <span class="va">B_ASPT_spr_aut</span>,</span>
+<span>      <span class="st">"Class"</span> <span class="op">=</span> <span class="va">mostProb_ASPT_spr_aut</span>,</span>
+<span>      <span class="st">"EQR"</span> <span class="op">=</span> <span class="va">ASPT_aver_spr_aut</span>,</span>
+<span>      <span class="st">"Suit Code"</span> <span class="op">=</span> <span class="va">SuitCode</span>,</span>
+<span>      <span class="st">"Suit Text"</span> <span class="op">=</span> <span class="va">SuitText</span></span>
+<span>    <span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">multi_year_aspt</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"Macroinvertebrates (ASPT)"</span></span>
+<span>    <span class="va">multi_year_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span></span>
+<span>      <span class="va">multi_year_aspt</span>,</span>
+<span>      <span class="va">multi_year_ntaxa</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="va">multi_year_output</span> <span class="op">&lt;-</span> <span class="va">multi_year_output</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/stats/complete.cases.html" class="external-link">complete.cases</a></span><span class="op">(</span><span class="va">multi_year_output</span><span class="op">)</span>, <span class="op">]</span></span>
+<span>    <span class="va">multi_year_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="va">multi_year_output</span>, <span class="va">as.character</span><span class="op">)</span></span>
+<span>    <span class="va">multi_year_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="va">multi_year_output</span>,</span>
+<span>      names_to <span class="op">=</span> <span class="st">"question"</span>,</span>
+<span>      values_to <span class="op">=</span> <span class="st">"response"</span>,</span>
+<span>      cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="va">parameter</span>, <span class="op">-</span><span class="va">SITE</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="co"># rict_class &lt;- inner_join(rict_class,</span></span>
+<span>    <span class="co">#                          rict_data[, c("SITE","sample_id")],</span></span>
+<span>    <span class="co">#                          by = "sample_id")</span></span>
+<span>    <span class="va">multi_year_output</span> <span class="op">&lt;-</span></span>
+<span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="va">multi_year_output</span>, <span class="st">"location_id"</span> <span class="op">=</span> <span class="va">SITE</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">predict_single</span> <span class="op">&lt;-</span> <span class="fu">rict</span><span class="fu">::</span><span class="fu"><a href="https://aquametrics.github.io/rict/reference/rict_predict.html" class="external-link">rict_predict</a></span><span class="op">(</span><span class="va">rict_data</span>, all_indices <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    <span class="co"># predict_single$sample_id &lt;- rict_data$sample_id</span></span>
+<span>    </span>
+<span>    <span class="va">sample_season</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">location_id</span>, <span class="va">sample_id</span>, <span class="va">season</span><span class="op">)</span></span>
+<span>    <span class="va">sample_season</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">sample_season</span><span class="op">)</span></span>
+<span>    <span class="va">sample_season</span><span class="op">$</span><span class="va">season</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">sample_season</span><span class="op">$</span><span class="va">season</span><span class="op">)</span></span>
+<span>    <span class="va">predict_single</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">predict_single</span>,</span>
+<span>                             <span class="va">SuitCode</span>, <span class="va">SuitText</span>,</span>
+<span>                             <span class="va">SEASON</span>, <span class="va">SITE</span>,</span>
+<span>                             <span class="va">TL2_08_Group_ARMI_Score</span>,</span>
+<span>                             <span class="va">TL2_08_Group_ARMI_NTaxa</span>,</span>
+<span>                             <span class="va">TL2_WHPT_Score_AbW_DistFam</span>,</span>
+<span>                             <span class="va">TL2_WHPT_NTAXA_AbW_DistFam</span>, </span>
+<span>                             <span class="va">TL2_WHPT_ASPT_AbW_DistFam</span><span class="op">)</span></span>
+<span>    <span class="va">predict_single</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">predict_single</span><span class="op">)</span></span>
+<span>    <span class="va">predict_single</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">sample_season</span>, </span>
+<span>                                 <span class="va">predict_single</span>, </span>
+<span>                                 by <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by</a></span><span class="op">(</span><span class="va">season</span> <span class="op">==</span> <span class="va">SEASON</span>,</span>
+<span>                                              <span class="va">location_id</span> <span class="op">==</span> <span class="va">SITE</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">single_predict</span> <span class="op">&lt;-</span> <span class="va">predict_single</span></span>
+<span>    <span class="co"># single_predict &lt;- select(predict_single, sample_id, SuitCode, SuitText)</span></span>
+<span>    <span class="co"># single_predict &lt;- unique(single_predict)</span></span>
+<span>    <span class="va">rict_output</span> <span class="op">&lt;-</span> <span class="fu">rict</span><span class="fu">::</span><span class="fu"><a href="https://aquametrics.github.io/rict/reference/rict.html" class="external-link">rict</a></span><span class="op">(</span><span class="va">rict_data</span>, year_type <span class="op">=</span> <span class="st">"single"</span><span class="op">)</span></span>
+<span>    <span class="va">rict_output</span><span class="op">$</span><span class="va">sample_id</span> <span class="op">&lt;-</span> <span class="va">rict_data</span><span class="op">$</span><span class="va">sample_id</span></span>
+<span>    <span class="va">rict_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">rict_output</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">rict_output</span> <span class="op">&lt;-</span> <span class="va">rict_output</span><span class="op">[</span><span class="va">rict_output</span><span class="op">$</span><span class="va">sample_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">single_predict</span><span class="op">$</span><span class="va">sample_id</span>, <span class="op">]</span></span>
+<span>    <span class="va">rict_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">rict_data</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">rict_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">rict_output</span>, <span class="va">single_predict</span>, by <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by</a></span><span class="op">(</span><span class="va">sample_id</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">spr_ntaxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>      <span class="va">rict_output</span>,</span>
+<span>      <span class="va">sample_id</span>,</span>
+<span>      <span class="st">"H"</span> <span class="op">=</span> <span class="va">H_NTAXA_spr</span>,</span>
+<span>      <span class="st">"G"</span> <span class="op">=</span> <span class="va">G_NTAXA_spr</span>,</span>
+<span>      <span class="st">"M"</span> <span class="op">=</span> <span class="va">M_NTAXA_spr</span>,</span>
+<span>      <span class="st">"P"</span> <span class="op">=</span> <span class="va">P_NTAXA_spr</span>,</span>
+<span>      <span class="st">"B"</span> <span class="op">=</span> <span class="va">B_NTAXA_spr</span>,</span>
+<span>      <span class="st">"Class"</span> <span class="op">=</span> <span class="va">mostProb_NTAXA_spr</span>,</span>
+<span>      <span class="st">"EQR"</span> <span class="op">=</span> <span class="va">NTAXA_eqr_av_spr</span>,</span>
+<span>      <span class="st">"Suit Code"</span> <span class="op">=</span> <span class="va">SuitCode</span>,</span>
+<span>      <span class="st">"Suit Text"</span> <span class="op">=</span> <span class="va">SuitText</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="va">spr_ntaxa</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"Macroinvertebrates (NTAXA)"</span></span>
+<span></span>
+<span>    <span class="va">sum_ntaxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>      <span class="va">rict_output</span>,</span>
+<span>      <span class="va">sample_id</span>,</span>
+<span>      <span class="st">"H"</span> <span class="op">=</span> <span class="va">H_NTAXA_sum</span>,</span>
+<span>      <span class="st">"G"</span> <span class="op">=</span> <span class="va">G_NTAXA_sum</span>,</span>
+<span>      <span class="st">"M"</span> <span class="op">=</span> <span class="va">M_NTAXA_sum</span>,</span>
+<span>      <span class="st">"P"</span> <span class="op">=</span> <span class="va">P_NTAXA_sum</span>,</span>
+<span>      <span class="st">"B"</span> <span class="op">=</span> <span class="va">B_NTAXA_sum</span>,</span>
+<span>      <span class="st">"Class"</span> <span class="op">=</span> <span class="va">mostProb_NTAXA_sum</span>,</span>
+<span>      <span class="st">"EQR"</span> <span class="op">=</span> <span class="va">NTAXA_eqr_av_sum</span>,</span>
+<span>      <span class="st">"Suit Code"</span> <span class="op">=</span> <span class="va">SuitCode</span>,</span>
+<span>      <span class="st">"Suit Text"</span> <span class="op">=</span> <span class="va">SuitText</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="va">sum_ntaxa</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"Macroinvertebrates (NTAXA)"</span></span>
+<span></span>
+<span>    <span class="va">aut_ntaxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>      <span class="va">rict_output</span>,</span>
+<span>      <span class="va">sample_id</span>,</span>
+<span>      <span class="st">"H"</span> <span class="op">=</span> <span class="va">H_NTAXA_aut</span>,</span>
+<span>      <span class="st">"G"</span> <span class="op">=</span> <span class="va">G_NTAXA_aut</span>,</span>
+<span>      <span class="st">"M"</span> <span class="op">=</span> <span class="va">M_NTAXA_aut</span>,</span>
+<span>      <span class="st">"P"</span> <span class="op">=</span> <span class="va">P_NTAXA_aut</span>,</span>
+<span>      <span class="st">"B"</span> <span class="op">=</span> <span class="va">B_NTAXA_aut</span>,</span>
+<span>      <span class="st">"Class"</span> <span class="op">=</span> <span class="va">mostProb_NTAXA_aut</span>,</span>
+<span>      <span class="st">"EQR"</span> <span class="op">=</span> <span class="va">NTAXA_eqr_av_aut</span>,</span>
+<span>      <span class="st">"Suit Code"</span> <span class="op">=</span> <span class="va">SuitCode</span>,</span>
+<span>      <span class="st">"Suit Text"</span> <span class="op">=</span> <span class="va">SuitText</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="va">aut_ntaxa</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"Macroinvertebrates (NTAXA)"</span></span>
+<span></span>
+<span>    <span class="va">aut_aspt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>      <span class="va">rict_output</span>,</span>
+<span>      <span class="va">sample_id</span>,</span>
+<span>      <span class="st">"H"</span> <span class="op">=</span> <span class="va">H_ASPT_aut</span>,</span>
+<span>      <span class="st">"G"</span> <span class="op">=</span> <span class="va">G_ASPT_aut</span>,</span>
+<span>      <span class="st">"M"</span> <span class="op">=</span> <span class="va">M_ASPT_aut</span>,</span>
+<span>      <span class="st">"P"</span> <span class="op">=</span> <span class="va">P_ASPT_aut</span>,</span>
+<span>      <span class="st">"B"</span> <span class="op">=</span> <span class="va">B_ASPT_aut</span>,</span>
+<span>      <span class="st">"Class"</span> <span class="op">=</span> <span class="va">mostProb_ASPT_aut</span>,</span>
+<span>      <span class="st">"EQR"</span> <span class="op">=</span> <span class="va">ASPT_eqr_av_aut</span>,</span>
+<span>      <span class="st">"Suit Code"</span> <span class="op">=</span> <span class="va">SuitCode</span>,</span>
+<span>      <span class="st">"Suit Text"</span> <span class="op">=</span> <span class="va">SuitText</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="va">aut_aspt</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"Macroinvertebrates (ASPT)"</span></span>
+<span></span>
+<span>    <span class="va">spr_aspt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>      <span class="va">rict_output</span>,</span>
+<span>      <span class="va">sample_id</span>,</span>
+<span>      <span class="st">"H"</span> <span class="op">=</span> <span class="va">H_ASPT_spr</span>,</span>
+<span>      <span class="st">"G"</span> <span class="op">=</span> <span class="va">G_ASPT_spr</span>,</span>
+<span>      <span class="st">"M"</span> <span class="op">=</span> <span class="va">M_ASPT_spr</span>,</span>
+<span>      <span class="st">"P"</span> <span class="op">=</span> <span class="va">P_ASPT_spr</span>,</span>
+<span>      <span class="st">"B"</span> <span class="op">=</span> <span class="va">B_ASPT_spr</span>,</span>
+<span>      <span class="st">"Class"</span> <span class="op">=</span> <span class="va">mostProb_ASPT_spr</span>,</span>
+<span>      <span class="st">"EQR"</span> <span class="op">=</span> <span class="va">ASPT_eqr_av_spr</span>,</span>
+<span>      <span class="st">"Suit Code"</span> <span class="op">=</span> <span class="va">SuitCode</span>,</span>
+<span>      <span class="st">"Suit Text"</span> <span class="op">=</span> <span class="va">SuitText</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="va">spr_aspt</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"Macroinvertebrates (ASPT)"</span></span>
+<span></span>
+<span>    <span class="va">sum_aspt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
+<span>      <span class="va">rict_output</span>,</span>
+<span>      <span class="va">sample_id</span>,</span>
+<span>      <span class="st">"H"</span> <span class="op">=</span> <span class="va">H_ASPT_sum</span>,</span>
+<span>      <span class="st">"G"</span> <span class="op">=</span> <span class="va">G_ASPT_sum</span>,</span>
+<span>      <span class="st">"M"</span> <span class="op">=</span> <span class="va">M_ASPT_sum</span>,</span>
+<span>      <span class="st">"P"</span> <span class="op">=</span> <span class="va">P_ASPT_sum</span>,</span>
+<span>      <span class="st">"B"</span> <span class="op">=</span> <span class="va">B_ASPT_sum</span>,</span>
+<span>      <span class="st">"Class"</span> <span class="op">=</span> <span class="va">mostProb_ASPT_sum</span>,</span>
+<span>      <span class="st">"EQR"</span> <span class="op">=</span> <span class="va">eqr_av_sum_aspt</span>,</span>
+<span>      <span class="st">"Suit Code"</span> <span class="op">=</span> <span class="va">SuitCode</span>,</span>
+<span>      <span class="st">"Suit Text"</span> <span class="op">=</span> <span class="va">SuitText</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="va">sum_aspt</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"Macroinvertebrates (ASPT)"</span></span>
+<span>    <span class="va">rict_class</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span></span>
+<span>      <span class="va">spr_aspt</span>,</span>
+<span>      <span class="va">sum_aspt</span>,</span>
+<span>      <span class="va">aut_aspt</span>,</span>
+<span>      <span class="va">spr_ntaxa</span>,</span>
+<span>      <span class="va">sum_ntaxa</span>,</span>
+<span>      <span class="va">aut_ntaxa</span></span>
+<span>    <span class="op">)</span></span>
+<span></span>
+<span>    <span class="va">rict_class</span> <span class="op">&lt;-</span> <span class="va">rict_class</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/stats/complete.cases.html" class="external-link">complete.cases</a></span><span class="op">(</span><span class="va">rict_class</span><span class="op">)</span>, <span class="op">]</span></span>
+<span>    <span class="va">rict_class</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="va">rict_class</span>, <span class="va">as.character</span><span class="op">)</span></span>
+<span>    <span class="va">rict_class</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="va">rict_class</span>,</span>
+<span>      names_to <span class="op">=</span> <span class="st">"question"</span>,</span>
+<span>      values_to <span class="op">=</span> <span class="st">"response"</span>,</span>
+<span>      cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="va">sample_id</span>, <span class="op">-</span><span class="va">parameter</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="va">rict_class</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">rict_class</span>,</span>
+<span>      <span class="va">rict_data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SITE"</span>, <span class="st">"sample_id"</span><span class="op">)</span><span class="op">]</span>,</span>
+<span>      by <span class="op">=</span> <span class="st">"sample_id"</span>,</span>
+<span>      relationship <span class="op">=</span> <span class="st">"many-to-many"</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="va">rict_class</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename</a></span><span class="op">(</span><span class="va">rict_class</span>, <span class="st">"location_id"</span> <span class="op">=</span> <span class="va">SITE</span><span class="op">)</span></span>
+<span>    <span class="va">rict_aspt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>      <span class="st">"location_id"</span> <span class="op">=</span> <span class="va">predict_single</span><span class="op">$</span><span class="va">location_id</span>,</span>
+<span>      <span class="st">"sample_id"</span> <span class="op">=</span> <span class="va">rict_data</span><span class="op">$</span><span class="va">sample_id</span>,</span>
+<span>      <span class="st">"question"</span> <span class="op">=</span> <span class="st">"RICT Reference WHPT ASPT"</span>,</span>
+<span>      <span class="st">"response"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">predict_single</span><span class="op">$</span><span class="va">TL2_WHPT_ASPT_AbW_DistFam</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="va">rict_ntaxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>      <span class="st">"location_id"</span> <span class="op">=</span> <span class="va">predict_single</span><span class="op">$</span><span class="va">location_id</span>,</span>
+<span>      <span class="st">"sample_id"</span> <span class="op">=</span> <span class="va">rict_data</span><span class="op">$</span><span class="va">sample_id</span>,</span>
+<span>      <span class="st">"question"</span> <span class="op">=</span> <span class="st">"RICT Rerference WHPT NTAXA"</span>,</span>
+<span>      <span class="st">"response"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">predict_single</span><span class="op">$</span><span class="va">TL2_WHPT_NTAXA_AbW_DistFam</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="va">rict_river_score</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>      <span class="st">"location_id"</span> <span class="op">=</span> <span class="va">predict_single</span><span class="op">$</span><span class="va">location_id</span>,</span>
+<span>      <span class="st">"sample_id"</span> <span class="op">=</span> <span class="va">rict_data</span><span class="op">$</span><span class="va">sample_id</span>,</span>
+<span>      <span class="st">"question"</span> <span class="op">=</span> <span class="st">"RICT Rerference ARMI Score"</span>,</span>
+<span>      <span class="st">"response"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">predict_single</span><span class="op">$</span><span class="va">TL2_08_Group_ARMI_Score</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>      <span class="va">rict_river_ntaxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
+<span>      <span class="st">"location_id"</span> <span class="op">=</span> <span class="va">predict_single</span><span class="op">$</span><span class="va">location_id</span>,</span>
+<span>      <span class="st">"sample_id"</span> <span class="op">=</span> <span class="va">rict_data</span><span class="op">$</span><span class="va">sample_id</span>,</span>
+<span>      <span class="st">"question"</span> <span class="op">=</span> <span class="st">"RICT Rerference ARMI NTAXA"</span>,</span>
+<span>      <span class="st">"response"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">predict_single</span><span class="op">$</span><span class="va">TL2_08_Group_ARMI_NTaxa</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>    </span>
+<span>    <span class="va">predict_single</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">rict_aspt</span>, <span class="va">rict_ntaxa</span>, <span class="va">rict_river_score</span>, <span class="va">rict_river_ntaxa</span><span class="op">)</span></span>
+<span>    <span class="va">predict_single</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"RICT Prediction"</span></span>
+<span>    <span class="va">rict_prediction</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span></span>
+<span>      <span class="va">predict_single</span>,</span>
+<span>      <span class="va">rict_class</span>,</span>
+<span>      <span class="va">multi_year_output</span></span>
+<span>    <span class="op">)</span></span>
+<span>    <span class="co"># create row for years included in multi-year</span></span>
+<span>    <span class="va">row</span> <span class="op">&lt;-</span> <span class="va">rict_prediction</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">rict_prediction</span><span class="op">$</span><span class="va">sample_id</span><span class="op">)</span>, <span class="op">]</span></span>
+<span>    <span class="va">row</span> <span class="op">&lt;-</span> <span class="va">row</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="op">]</span></span>
+<span>    <span class="va">row</span><span class="op">$</span><span class="va">parameter</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"Macroinvertebrates (ASPT)"</span></span>
+<span>    <span class="va">row</span><span class="op">$</span><span class="va">parameter</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"Macroinvertebrates (NTAXA)"</span></span>
+<span>    <span class="va">row</span><span class="op">$</span><span class="va">question</span> <span class="op">&lt;-</span> <span class="st">"Years included"</span></span>
+<span>    <span class="va">row</span><span class="op">$</span><span class="va">response</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">rict_data</span><span class="op">$</span><span class="va">Year</span><span class="op">)</span>, collapse <span class="op">=</span> <span class="st">","</span><span class="op">)</span></span>
+<span>    <span class="va">rict_prediction</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">rict_prediction</span>, <span class="va">row</span><span class="op">)</span></span>
+<span>  <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span><span class="va">rict_output</span><span class="op">)</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span></span>
+<span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">output</span>,</span>
+<span>    question <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">question</span> <span class="op">==</span> <span class="st">"M"</span>,</span>
+<span>      <span class="st">"CoCM"</span>,</span>
+<span>      <span class="va">question</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    question <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">question</span> <span class="op">==</span> <span class="st">"P"</span>,</span>
+<span>      <span class="st">"CoCP"</span>,</span>
+<span>      <span class="va">question</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    question <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">question</span> <span class="op">==</span> <span class="st">"B"</span>,</span>
+<span>      <span class="st">"CoCB"</span>,</span>
+<span>      <span class="va">question</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    question <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">question</span> <span class="op">==</span> <span class="st">"H"</span>,</span>
+<span>      <span class="st">"CoCH"</span>,</span>
+<span>      <span class="va">question</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    question <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">question</span> <span class="op">==</span> <span class="st">"G"</span>,</span>
+<span>      <span class="st">"CoCG"</span>,</span>
+<span>      <span class="va">question</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span></span>
+<span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="va">output</span>,</span>
+<span>    response <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">response</span> <span class="op">==</span> <span class="st">"H"</span>,</span>
+<span>      <span class="st">"High"</span>,</span>
+<span>      <span class="va">response</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    response <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">response</span> <span class="op">==</span> <span class="st">"G"</span>,</span>
+<span>      <span class="st">"Good"</span>,</span>
+<span>      <span class="va">response</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    response <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">response</span> <span class="op">==</span> <span class="st">"M"</span>,</span>
+<span>      <span class="st">"Moderate"</span>,</span>
+<span>      <span class="va">response</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    response <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">response</span> <span class="op">==</span> <span class="st">"P"</span>,</span>
+<span>      <span class="st">"Poor"</span>,</span>
+<span>      <span class="va">response</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    response <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="va">response</span> <span class="op">==</span> <span class="st">"B"</span>,</span>
+<span>      <span class="st">"Bad"</span>,</span>
+<span>      <span class="va">response</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="outcome">Outcome<a class="anchor" aria-label="anchor" href="#outcome"></a>
 </h2>
 <p>The outcome of your assessment.</p>
-<pre><code><span><span class="co">#&gt; Loading required package: rict</span></span>
-<span><span class="co">#&gt; Loading required package: macroinvertebrateMetrics</span></span>
-<span><span class="co">#&gt; 8175</span></span>
-<span><span class="co">#&gt; Warning in inner_join(output, unique(data[, c("location_id", "sample_id", : Detected an unexpected many-to-many relationship between `x` and `y`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 2 of `x` matches multiple rows in `y`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 21 of `y` matches multiple rows in `x`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> If a many-to-many relationship is expected, set `relationship =</span></span>
-<span><span class="co">#&gt;   "many-to-many"` to silence this warning.</span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"question"` instead of `.data$question`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"response"` instead of `.data$response`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"location_id"` instead of `.data$location_id`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"water_body_id"` instead of `.data$water_body_id`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"year"` instead of `.data$year`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"ngr"` instead of `.data$ngr`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"ngr_easting"` instead of `.data$ngr_easting`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"ngr_northing"` instead of `.data$ngr_northing`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"altitude"` instead of `.data$altitude`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"slope"` instead of `.data$slope`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"discharge_category"` instead of `.data$discharge_category`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"dist_from_source"` instead of `.data$dist_from_source`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"river_width"` instead of `.data$river_width`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"mean_depth"` instead of `.data$mean_depth`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"alkalinity"` instead of `.data$alkalinity`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"sample_count"` instead of `.data$sample_count`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"samples_used"` instead of `.data$samples_used`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"min_date"` instead of `.data$min_date`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"max_date"` instead of `.data$max_date`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"boulders_cobbles"` instead of `.data$boulders_cobbles`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"pebbles_gravel"` instead of `.data$pebbles_gravel`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"sand"` instead of `.data$sand`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"silt_clay"` instead of `.data$silt_clay`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"season"` instead of `.data$season`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Warning: Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `"sample_id"` instead of `.data$sample_id`</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span>
-<span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
-<span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
-<span><span class="co">#&gt; The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,</span></span>
-<span><span class="co">#&gt; which was just loaded, will retire in October 2023.</span></span>
-<span><span class="co">#&gt; Please refer to R-spatial evolution reports for details, especially</span></span>
-<span><span class="co">#&gt; https://r-spatial.org/r/2023/05/15/evolution4.html.</span></span>
-<span><span class="co">#&gt; It may be desirable to make the sf package available;</span></span>
-<span><span class="co">#&gt; package maintainers should consider adding sf to Suggests:.</span></span>
-<span><span class="co">#&gt; The sp package is now running under evolution status 2</span></span>
-<span><span class="co">#&gt;      (status 2 uses the sf package in place of rgdal)</span></span>
-<span><span class="co">#&gt; Success, all validation checks passed!</span></span>
-<span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
-<span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
-<span><span class="co">#&gt; Success, all validation checks passed!</span></span>
-<span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
-<span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
-<span><span class="co">#&gt; Success, all validation checks passed!</span></span>
-<span><span class="co">#&gt; Classifying...</span></span>
-<span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
-<span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
-<span><span class="co">#&gt; Success, all validation checks passed!</span></span>
-<span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
-<span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
-<span><span class="co">#&gt; Success, all validation checks passed!</span></span>
-<span><span class="co">#&gt; Classifying...</span></span>
-<span><span class="co">#&gt; Warning in inner_join(rict_class, rict_data[, c("SITE", "sample_id")], by = "sample_id"): Detected an unexpected many-to-many relationship between `x` and `y`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 1 of `x` matches multiple rows in `y`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 2 of `y` matches multiple rows in `x`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> If a many-to-many relationship is expected, set `relationship =</span></span>
-<span><span class="co">#&gt;   "many-to-many"` to silence this warning.</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 693 × 5</span></span></span>
-<span><span class="co">#&gt;    location_id sample_id question                 response         parameter    </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 8175        1017980   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 8175        1101214   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 8175        1250462   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 8175        1419451   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 8175        1457665   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 8175        1564589   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 8175        1582198   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 8175        1672942   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 8175        1800006   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 8175        1912578   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 683 more rows</span></span></span></code></pre>
+<table class="table">
+<thead><tr class="header">
+<th align="left">question</th>
+<th align="left">response</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">RICT Reference WHPT ASPT</td>
+<td align="left">6.70423763296175</td>
+</tr>
+<tr class="even">
+<td align="left">RICT Rerference WHPT NTAXA</td>
+<td align="left">23.3958436732449</td>
+</tr>
+<tr class="odd">
+<td align="left">RICT Rerference ARMI Score</td>
+<td align="left">13.5271425604722</td>
+</tr>
+<tr class="even">
+<td align="left">RICT Rerference ARMI NTAXA</td>
+<td align="left">5.82390315155402</td>
+</tr>
+<tr class="odd">
+<td align="left">CoCH</td>
+<td align="left">22.83</td>
+</tr>
+<tr class="even">
+<td align="left">CoCG</td>
+<td align="left">30.05</td>
+</tr>
+<tr class="odd">
+<td align="left">CoCM</td>
+<td align="left">31.64</td>
+</tr>
+<tr class="even">
+<td align="left">CoCP</td>
+<td align="left">10.48</td>
+</tr>
+<tr class="odd">
+<td align="left">CoCB</td>
+<td align="left">4.99</td>
+</tr>
+<tr class="even">
+<td align="left">Class</td>
+<td align="left">Moderate</td>
+</tr>
+<tr class="odd">
+<td align="left">EQR</td>
+<td align="left">0.868839670474072</td>
+</tr>
+<tr class="even">
+<td align="left">Suit Code</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">Suit Text</td>
+<td align="left">&gt;5%</td>
+</tr>
+<tr class="even">
+<td align="left">Years included</td>
+<td align="left">2019</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level2">
 <h2 id="check">Check<a class="anchor" aria-label="anchor" href="#check"></a>
@@ -348,11 +907,6 @@ button in the Build pane.</p>
 <pre><code><span><span class="co">#&gt; Hello from hera, ...work in progress!</span></span>
 <span><span class="co">#&gt; Hello from hera, ...work in progress!</span></span>
 <span><span class="co">#&gt; 8175</span></span>
-<span><span class="co">#&gt; Warning in inner_join(output, unique(data[, c("location_id", "sample_id", : Detected an unexpected many-to-many relationship between `x` and `y`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 2 of `x` matches multiple rows in `y`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 21 of `y` matches multiple rows in `x`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> If a many-to-many relationship is expected, set `relationship =</span></span>
-<span><span class="co">#&gt;   "many-to-many"` to silence this warning.</span></span>
 <span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
 <span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
 <span><span class="co">#&gt; Success, all validation checks passed!</span></span>
@@ -366,29 +920,12 @@ button in the Build pane.</p>
 <span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
 <span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
 <span><span class="co">#&gt; Success, all validation checks passed!</span></span>
+<span><span class="co">#&gt; Warning in data.frame(..., check.names = FALSE): row names were found from a</span></span>
+<span><span class="co">#&gt; short variable and have been discarded</span></span>
 <span><span class="co">#&gt; Variables for the 'physical' model detected - applying relevant checks.</span></span>
 <span><span class="co">#&gt; Grid reference values detected for 'GB' - applying relevant checks.</span></span>
 <span><span class="co">#&gt; Success, all validation checks passed!</span></span>
-<span><span class="co">#&gt; Classifying...</span></span>
-<span><span class="co">#&gt; Warning in inner_join(rict_class, rict_data[, c("SITE", "sample_id")], by = "sample_id"): Detected an unexpected many-to-many relationship between `x` and `y`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 1 of `x` matches multiple rows in `y`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Row 2 of `y` matches multiple rows in `x`.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> If a many-to-many relationship is expected, set `relationship =</span></span>
-<span><span class="co">#&gt;   "many-to-many"` to silence this warning.</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 693 × 5</span></span></span>
-<span><span class="co">#&gt;    location_id sample_id question                 response         parameter    </span></span>
-<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 8175        1017980   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 8175        1101214   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 8175        1250462   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 8175        1419451   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 8175        1457665   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 8175        1564589   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 8175        1582198   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 8175        1672942   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 8175        1800006   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 8175        1912578   RICT Reference WHPT ASPT 6.72224953754937 RICT Predict…</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 683 more rows</span></span></span></code></pre>
+<span><span class="co">#&gt; Classifying...</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="launch-app">Launch app<a class="anchor" aria-label="anchor" href="#launch-app"></a>

@@ -74,7 +74,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Development Guide</h1>
             
-            <h4 data-toc-skip class="date">2023-07-14</h4>
+            <h4 data-toc-skip class="date">2023-09-14</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ecodata1/hera/blob/HEAD/vignettes/development_guide.Rmd" class="external-link"><code>vignettes/development_guide.Rmd</code></a></small>
       <div class="d-none name"><code>development_guide.Rmd</code></div>
@@ -222,12 +222,12 @@ required enter NA</td>
 <p>For example:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span></span>
-<span>  sample_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"12345"</span>,<span class="st">"12345"</span><span class="op">)</span>,</span>
-<span>  question <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Taxon abundance"</span>,<span class="st">"Alkalinity"</span><span class="op">)</span>,</span>
-<span>  response <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"12"</span>,<span class="st">"45"</span><span class="op">)</span>,</span>
-<span>  label <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Gomphonema olivaceum"</span>,<span class="cn">NA</span><span class="op">)</span>,</span>
-<span>  parameter <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"River Diatoms"</span>,<span class="st">"Chemistry"</span><span class="op">)</span>,</span>
-<span>  type <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"number"</span>, <span class="st">"number"</span><span class="op">)</span>,</span>
+<span>  sample_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"12345"</span>, <span class="st">"12345"</span><span class="op">)</span>,</span>
+<span>  question <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Taxon abundance"</span>, <span class="st">"Alkalinity"</span><span class="op">)</span>,</span>
+<span>  response <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"12"</span>, <span class="st">"45"</span><span class="op">)</span>,</span>
+<span>  label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Gomphonema olivaceum"</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
+<span>  parameter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"River Diatoms"</span>, <span class="st">"Chemistry"</span><span class="op">)</span>,</span>
+<span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"number"</span>, <span class="st">"number"</span><span class="op">)</span>,</span>
 <span>  max <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
 <span>  min <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">NA</span><span class="op">)</span>,</span>
 <span>  source <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sepa_ecology_results"</span>, <span class="st">"location_attributes"</span><span class="op">)</span></span>

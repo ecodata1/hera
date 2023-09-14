@@ -88,12 +88,20 @@
 <span>  warning <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># show warnings during codebook generation</span></span>
 <span>  message <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># show messages during codebook generation</span></span>
 <span>  error <span class="op">=</span> <span class="cn">TRUE</span>, <span class="co"># do not interrupt codebook generation in case of errors,</span></span>
-<span>                <span class="co"># usually makes debugging easier, and sometimes half a codebook</span></span>
-<span>                <span class="co"># is better than none</span></span>
-<span>  echo <span class="op">=</span> <span class="cn">FALSE</span>  <span class="co"># don't show the R code</span></span>
+<span>  <span class="co"># usually makes debugging easier, and sometimes half a codebook</span></span>
+<span>  <span class="co"># is better than none</span></span>
+<span>  echo <span class="op">=</span> <span class="cn">FALSE</span> <span class="co"># don't show the R code</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme_get.html" class="external-link">theme_set</a></span><span class="op">(</span><span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html" class="external-link">theme_bw</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Here, we import data from formr</p>
+<pre><code><span><span class="co">## The legacy packages maptools, rgdal, and rgeos, underpinning the sp package,</span></span>
+<span><span class="co">## which was just loaded, will retire in October 2023.</span></span>
+<span><span class="co">## Please refer to R-spatial evolution reports for details, especially</span></span>
+<span><span class="co">## https://r-spatial.org/r/2023/05/15/evolution4.html.</span></span>
+<span><span class="co">## It may be desirable to make the sf package available;</span></span>
+<span><span class="co">## package maintainers should consider adding sf to Suggests:.</span></span>
+<span><span class="co">## The sp package is now running under evolution status 2</span></span>
+<span><span class="co">##      (status 2 uses the sf package in place of rgdal)</span></span></code></pre>
 <p>But we can also import data from e.g. an SPSS file.</p>
 <p>Sometimes, the metadata is not set up in such a way that codebook can
 leverage it fully. These functions help fix this.</p>

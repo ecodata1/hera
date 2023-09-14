@@ -93,11 +93,11 @@ info system.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span> <span class="va">data</span> <span class="op">&lt;-</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdat"</span>,</span></span>
-<span class="r-in"><span>                    <span class="st">"demo-data/analysis-results-ecology.csv"</span>,</span></span>
-<span class="r-in"><span>                    package <span class="op">=</span> <span class="st">"hera"</span></span></span>
-<span class="r-in"><span><span class="op">)</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">data</span> <span class="op">&lt;-</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdat"</span>,</span></span>
+<span class="r-in"><span>    <span class="st">"demo-data/analysis-results-ecology.csv"</span>,</span></span>
+<span class="r-in"><span>    package <span class="op">=</span> <span class="st">"hera"</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">r</span> <span class="op">&lt;-</span> <span class="fu">convert</span><span class="op">(</span><span class="va">data</span>, convert_from <span class="op">=</span> <span class="st">"sepa"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
