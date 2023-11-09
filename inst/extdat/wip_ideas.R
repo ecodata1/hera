@@ -1,31 +1,47 @@
+# sepaverse
+
+# Tool kit for SEPA R users
+# - impress Reporting templates (separate package?)
+# Load common packages (tidyverse, tidymodels etc)
+# - models (hera)
+# - standardise data (blether)
+# - get data (eadata, sepadata)
 
 # hera
 
 # Building Environmental Models Together?
 # - expects consistent input and output
 # - framework for defining models
-# - run models
+# - assess functions
+# Runs models:
+# - darleq3,
+# - rict,
+# - macroinvertebratesMetrics
+# - bankside consistency
+# - kraken
+# - fcs2 + leafpacs, cpet, lamm?
+# Run classification?
+# - single sample EQRs
+# - running mean EQR (6 year)?
 
 # blether
+
 # Convert data in to standard format for modelling
 # - linked data format? LD-JSON? Work with GIS data too?
 # - relies on agency / data source specific packages
 # - then converts data to consistent format for modelling
 
 # sepadata
+
 # Get SEPA data
 # - access sepadata via web services / data
 
 # eadata
+
 # Get EA data
 # - access to ea web services / data
 
-# sepaverse
-# Tool kit for SEPA R users
-# - Reporting templates
-# Load common packages (tidyverse, hera, blether etc)
-# - models (hera)
-# - data (blether)
+
 
 
 # Work In Progress ideas for API
@@ -39,7 +55,7 @@ library(ranger)
 
 # data
 data <-
-  import_data(
+  get_data(
     start_date = "01-JAN-2015",
     end_date = "01-JAN-2020",
     determinand = "Suspended Solid",
