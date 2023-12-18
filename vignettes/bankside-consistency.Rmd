@@ -43,7 +43,7 @@ description <- tribble(
   "name_short", "Bankside Consistency",
   "name_long", "Rapid Assessment of Bankside Consistency with Water Body Status",
   "parameter", "River Family Inverts",
-  "status", "prototype",
+  "status", "testing",
   "type", "metric"
 )
 
@@ -94,6 +94,7 @@ assessment_function <- function(data) {
   require(whpt)
   require(macroinvertebrateMetrics)
   data$date_taken <- as.character(format.Date(data$date_taken, "%Y/%m/%d"))
+  catalogue <- hera::catalogue
   metric_function <- catalogue[catalogue$assessment ==
     "Macroinvertebrate Metrics", 3][[1]]
   output <- metric_function[[1]](data)
@@ -110,7 +111,8 @@ assessment_function <- function(data) {
       "sample_id",
       "date_taken"
     )],
-    by = "sample_id"
+    by = "sample_id",
+    relationship = "many-to-many"
   )
   output_location$location_id <-
     as.character(output_location$location_id)
@@ -131,6 +133,59 @@ assessment_function <- function(data) {
     consistency_check$response <-
       as.character(consistency_check$response)
   }
+
+report <- tidyr::pivot_wider(consistency_check, names_from = question, values_from = response)
+vars <- c("location_id", "location_description", "sample_id", "date_taken")
+location_ids <- dplyr::select(data, any_of(vars)) %>%  unique()
+location_ids$season <- hera:::season(location_ids$date_taken, output = "shortname")
+report <- inner_join(report, location_ids, by = join_by(sample_id))
+
+new_predictors <- read.csv(
+  system.file("extdat", "predictors.csv", package = "whpt"),
+  check.names = FALSE)
+
+report <- dplyr::inner_join(report, new_predictors, by = join_by(location_id))
+
+whpt_wide <- tidyr::pivot_wider(output, names_from = question, values_from = response)
+report <- dplyr::inner_join(report, whpt_wide, by = join_by(sample_id))
+
+vars <- c(
+"water body sampled",
+"sample_id", 
+"date_taken",
+"location_id",
+"location_description",
+"season",
+"Reference NTAXA",
+"Reference ASPT", 
+"assessment",
+"driver", 
+"WHPT_NTAXA",
+"WHPT_ASPT",
+"Typical ASPT Class",
+"Typical NTAXA Class",
+"Reported WHPT Class Year"
+)
+
+
+report <- dplyr::select(report, any_of(vars))
+vars <- c(
+"season",
+"Reference NTAXA",
+"Reference ASPT", 
+"assessment",
+"driver", 
+"WHPT_NTAXA",
+"WHPT_ASPT",
+"Typical ASPT Class",
+"Typical NTAXA Class",
+"Reported WHPT Class Year",
+"water body sampled"
+)
+report$`water body sampled` <- as.character(report$`water body sampled`)
+consistency_check <- pivot_longer(report, cols = all_of(vars), names_to = "question", values_to = "response")
+ consistency_check$date_taken <- as.Date(consistency_check$date_taken)
+  consistency_check$parameter <- "Bankside Consistency"
   return(consistency_check)
 }
 ```

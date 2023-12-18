@@ -48,13 +48,13 @@ validation <- function(data = NULL) {
     data$year <- year(data$date_taken)
   }
   if (any(names(data) %in% "result_id")) {
-    data <- data %>% select(-.data$result_id)
+    data <- data %>% select(-"result_id")
   }
   if (any(names(data) %in% "analysis_name")) {
-    data <- data %>% select(-.data$analysis_name)
+    data <- data %>% select(-"analysis_name")
   }
   if (any(names(data) %in% "units")) {
-    data <- data %>% select(-.data$units)
+    data <- data %>% select(-"units")
   }
 
   return(data)

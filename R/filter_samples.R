@@ -63,12 +63,12 @@ filter_samples <- function(data,
       .data$season, .data$location_id, .data$analysis_repname
     ) %>%
       dplyr::select(
-        .data$sample_id,
-        .data$analysis_repname,
-        .data$date_taken,
-        .data$year,
-        .data$season,
-        .data$location_id
+        "sample_id",
+        "analysis_repname",
+        "date_taken",
+        "year",
+        "season",
+        "location_id"
       ) %>%
       unique() %>%
       dplyr::mutate(
@@ -89,7 +89,7 @@ filter_samples <- function(data,
 
     # Filter max number of years
     years <- dplyr::ungroup(data) %>%
-      dplyr::select(.data$location_id, .data$year) %>%
+      dplyr::select("location_id", "year") %>%
       unique() %>%
       dplyr::arrange(-year) %>%
       dplyr::group_by(.data$location_id) %>%

@@ -123,11 +123,11 @@ assessment_function <- function(data) {
     }
     summarise_data <- select(
       final_data,
-      location_id,
-      sample_id,
-      year,
-      question,
-      response
+      "location_id",
+      "sample_id",
+      "year",
+      "question",
+      "response"
     )
 
     summarise_data <- map_df(split(
@@ -172,7 +172,7 @@ assessment_function <- function(data) {
       values_from = response
     )
     summarise_data <- type.convert(summarise_data, as.is = TRUE)
-    summarise_data <- select(summarise_data, -sample_id)
+    summarise_data <- select(summarise_data, -"sample_id")
     summarise_data <- dplyr::group_by(
       summarise_data,
       location_id
@@ -191,9 +191,9 @@ assessment_function <- function(data) {
 
     data <- select(
       data,
-      sample_id,
-      location_id,
-      date_taken,
+      "sample_id",
+      "location_id",
+      "date_taken",
       "grid_reference",
       "alkalinity",
       "river_width",
@@ -246,12 +246,12 @@ assessment_function <- function(data) {
       } else {
         data <- select(
           data,
-          -river_width,
-          -mean_depth,
-          -boulders_cobbles,
-          -pebbles_gravel,
-          -sand,
-          -silt_clay
+          -"river_width",
+          -"mean_depth",
+          -"boulders_cobbles",
+          -"pebbles_gravel",
+          -"sand",
+          -"silt_clay"
         )
       }
     }
@@ -349,38 +349,38 @@ assessment_function <- function(data) {
     # Select
 
     rict_data <- dplyr::select(data,
-      "SITE" = location_id,
-      "Waterbody" = water_body_id,
-      "Year" = year,
-      "NGR" = ngr,
-      "Easting" = ngr_easting,
-      "Northing" = ngr_northing,
-      "Altitude" = altitude,
-      "Slope" = slope,
-      "Discharge" = discharge_category,
-      "Dist_from_Source" = dist_from_source,
-      "Mean_Width" = river_width,
-      "Mean_depth" = mean_depth,
-      "Alkalinity" = alkalinity,
-      "Total_samples" = sample_count,
-      "Samples_used" = samples_used,
-      "Alk_start" = min_date,
-      "Alk_end" = max_date,
-      Boulder_Cobbles = boulders_cobbles,
-      Pebbles_Gravel = pebbles_gravel,
-      Sand = sand,
-      Silt_Clay = silt_clay,
-      "Spr_Season_ID" = season,
+      "SITE" = "location_id",
+      "Waterbody" = "water_body_id",
+      "Year" = "year",
+      "NGR" = "ngr",
+      "Easting" = "ngr_easting",
+      "Northing" = "ngr_northing",
+      "Altitude" = "altitude",
+      "Slope" = "slope",
+      "Discharge" = "discharge_category",
+      "Dist_from_Source" = "dist_from_source",
+      "Mean_Width" = "river_width",
+      "Mean_depth" = "mean_depth",
+      "Alkalinity" = "alkalinity",
+      "Total_samples" = "sample_count",
+      "Samples_used" = "samples_used",
+      "Alk_start" = "min_date",
+      "Alk_end" = "max_date",
+      "Boulder_Cobbles" = "boulders_cobbles",
+      "Pebbles_Gravel" = "pebbles_gravel",
+      "Sand" = "sand",
+      "Silt_Clay" = "silt_clay",
+      "Spr_Season_ID" = "season",
       "Spr_TL2_WHPT_NTaxa (AbW,DistFam)" = "whpt.ntaxa.abund",
       "Spr_TL2_WHPT_ASPT (AbW,DistFam)" = "whpt.aspt.abund",
-      "Sum_Season_ID" = season,
+      "Sum_Season_ID" = "season",
       "Sum_TL2_WHPT_NTaxa (AbW,DistFam)" = "whpt.ntaxa.abund",
       "Sum_TL2_WHPT_ASPT (AbW,DistFam)" = "whpt.aspt.abund",
-      "Aut_Season_ID" = season,
+      "Aut_Season_ID" = "season",
       "Aut_TL2_WHPT_NTaxa (AbW,DistFam)" = "whpt.ntaxa.abund",
       "Aut_TL2_WHPT_ASPT (AbW,DistFam)" = "whpt.aspt.abund",
-      sample_id,
-      season = "season"
+      "sample_id",
+      "season" = "season"
     )
     # Remove season not used
 
@@ -428,44 +428,44 @@ assessment_function <- function(data) {
 
     rict_multi_year <- rict_data %>%
       group_by(SITE, Year) %>%
-      select(SITE, Year, contains("_WHPT_")) %>%
+      select("SITE", "Year", contains("_WHPT_")) %>%
       summarise_all(~ mean(.x, na.rm = TRUE))
     predictors <- rict_data %>%
-      select(-Year, -season, -contains("_WHPT_"), -sample_id) %>%
+      select(-"Year", -"season", -contains("_WHPT_"), -"sample_id") %>%
       unique()
     multi <- inner_join(rict_multi_year, predictors, by = c("SITE"))
     multi <- data.frame(multi, check.names = FALSE)
     multi_predict <- rict_predict(multi)
-    multi_predict <- select(multi_predict, SITE, SuitCode, SuitText)
+    multi_predict <- select(multi_predict, "SITE", "SuitCode", "SuitText")
     multi_predict <- unique(multi_predict)
     multi_class <- rict::rict(multi, year_type = "multi")
     multi_class <- inner_join(multi_class, multi_predict, by = join_by(SITE))
     multi_year_ntaxa <- select(
       multi_class,
-      SITE,
-      "H" = H_NTAXA_spr_aut,
-      "G" = G_NTAXA_spr_aut,
-      "M" = M_NTAXA_spr_aut,
-      "P" = P_NTAXA_spr_aut,
-      "B" = B_NTAXA_spr_aut,
-      "Class" = mostProb_NTAXA_spr_aut,
-      "EQR" = NTAXA_aver_spr_aut,
-      "Suit Code" = SuitCode,
-      "Suit Text" = SuitText
+      "SITE",
+      "H" = "H_NTAXA_spr_aut",
+      "G" = "G_NTAXA_spr_aut",
+      "M" = "M_NTAXA_spr_aut",
+      "P" = "P_NTAXA_spr_aut",
+      "B" = "B_NTAXA_spr_aut",
+      "Class" = "mostProb_NTAXA_spr_aut",
+      "EQR" = "NTAXA_aver_spr_aut",
+      "Suit Code" = "SuitCode",
+      "Suit Text" = "SuitText"
     )
     multi_year_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
     multi_year_aspt <- select(
       multi_class,
-      SITE,
-      "H" = H_ASPT_spr_aut,
-      "G" = G_ASPT_spr_aut,
-      "M" = M_ASPT_spr_aut,
-      "P" = P_ASPT_spr_aut,
-      "B" = B_ASPT_spr_aut,
-      "Class" = mostProb_ASPT_spr_aut,
-      "EQR" = ASPT_aver_spr_aut,
-      "Suit Code" = SuitCode,
-      "Suit Text" = SuitText
+      "SITE",
+      "H" = "H_ASPT_spr_aut",
+      "G" = "G_ASPT_spr_aut",
+      "M" = "M_ASPT_spr_aut",
+      "P" = "P_ASPT_spr_aut",
+      "B" = "B_ASPT_spr_aut",
+      "Class" = "mostProb_ASPT_spr_aut",
+      "EQR" = "ASPT_aver_spr_aut",
+      "Suit Code" = "SuitCode",
+      "Suit Text" = "SuitText"
     )
 
     multi_year_aspt$parameter <- "Macroinvertebrates (ASPT)"
@@ -489,17 +489,17 @@ assessment_function <- function(data) {
     predict_single <- rict::rict_predict(rict_data, all_indices = TRUE)
     # predict_single$sample_id <- rict_data$sample_id
     
-    sample_season <- select(data, location_id, sample_id, season)
+    sample_season <- select(data, "location_id", "sample_id", "season")
     sample_season <- unique(sample_season)
     sample_season$season <- as.numeric(sample_season$season)
     predict_single <- select(predict_single,
-                             SuitCode, SuitText,
-                             SEASON, SITE,
-                             TL2_08_Group_ARMI_Score,
-                             TL2_08_Group_ARMI_NTaxa,
-                             TL2_WHPT_Score_AbW_DistFam,
-                             TL2_WHPT_NTAXA_AbW_DistFam, 
-                             TL2_WHPT_ASPT_AbW_DistFam)
+                             "SuitCode", "SuitText",
+                             "SEASON", "SITE",
+                             "TL2_08_Group_ARMI_Score",
+                             "TL2_08_Group_ARMI_NTaxa",
+                             "TL2_WHPT_Score_AbW_DistFam",
+                             "TL2_WHPT_NTAXA_AbW_DistFam", 
+                             "TL2_WHPT_ASPT_AbW_DistFam")
     predict_single <- unique(predict_single)
     predict_single <- inner_join(sample_season, 
                                  predict_single, 
@@ -520,91 +520,91 @@ assessment_function <- function(data) {
 
     spr_ntaxa <- select(
       rict_output,
-      sample_id,
-      "H" = H_NTAXA_spr,
-      "G" = G_NTAXA_spr,
-      "M" = M_NTAXA_spr,
-      "P" = P_NTAXA_spr,
-      "B" = B_NTAXA_spr,
-      "Class" = mostProb_NTAXA_spr,
-      "EQR" = NTAXA_eqr_av_spr,
-      "Suit Code" = SuitCode,
-      "Suit Text" = SuitText
+      "sample_id",
+      "H" = "H_NTAXA_spr",
+      "G" = "G_NTAXA_spr",
+      "M" = "M_NTAXA_spr",
+      "P" = "P_NTAXA_spr",
+      "B" = "B_NTAXA_spr",
+      "Class" = "mostProb_NTAXA_spr",
+      "EQR" = "NTAXA_eqr_av_spr",
+      "Suit Code" = "SuitCode",
+      "Suit Text" = "SuitText"
     )
     spr_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
 
     sum_ntaxa <- select(
       rict_output,
-      sample_id,
-      "H" = H_NTAXA_sum,
-      "G" = G_NTAXA_sum,
-      "M" = M_NTAXA_sum,
-      "P" = P_NTAXA_sum,
-      "B" = B_NTAXA_sum,
-      "Class" = mostProb_NTAXA_sum,
-      "EQR" = NTAXA_eqr_av_sum,
-      "Suit Code" = SuitCode,
-      "Suit Text" = SuitText
+      "sample_id",
+      "H" = "H_NTAXA_sum",
+      "G" = "G_NTAXA_sum",
+      "M" = "M_NTAXA_sum",
+      "P" = "P_NTAXA_sum",
+      "B" = "B_NTAXA_sum",
+      "Class" = "mostProb_NTAXA_sum",
+      "EQR" = "NTAXA_eqr_av_sum",
+      "Suit Code" = "SuitCode",
+      "Suit Text" = "SuitText"
     )
     sum_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
 
     aut_ntaxa <- select(
       rict_output,
-      sample_id,
-      "H" = H_NTAXA_aut,
-      "G" = G_NTAXA_aut,
-      "M" = M_NTAXA_aut,
-      "P" = P_NTAXA_aut,
-      "B" = B_NTAXA_aut,
-      "Class" = mostProb_NTAXA_aut,
-      "EQR" = NTAXA_eqr_av_aut,
-      "Suit Code" = SuitCode,
-      "Suit Text" = SuitText
+      "sample_id",
+      "H" = "H_NTAXA_aut",
+      "G" = "G_NTAXA_aut",
+      "M" = "M_NTAXA_aut",
+      "P" = "P_NTAXA_aut",
+      "B" = "B_NTAXA_aut",
+      "Class" = "mostProb_NTAXA_aut",
+      "EQR" = "NTAXA_eqr_av_aut",
+      "Suit Code" = "SuitCode",
+      "Suit Text" = "SuitText"
     )
     aut_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
 
     aut_aspt <- select(
       rict_output,
-      sample_id,
-      "H" = H_ASPT_aut,
-      "G" = G_ASPT_aut,
-      "M" = M_ASPT_aut,
-      "P" = P_ASPT_aut,
-      "B" = B_ASPT_aut,
-      "Class" = mostProb_ASPT_aut,
-      "EQR" = ASPT_eqr_av_aut,
-      "Suit Code" = SuitCode,
-      "Suit Text" = SuitText
+      "sample_id",
+      "H" = "H_ASPT_aut",
+      "G" = "G_ASPT_aut",
+      "M" = "M_ASPT_aut",
+      "P" = "P_ASPT_aut",
+      "B" = "B_ASPT_aut",
+      "Class" = "mostProb_ASPT_aut",
+      "EQR" = "ASPT_eqr_av_aut",
+      "Suit Code" = "SuitCode",
+      "Suit Text" = "SuitText"
     )
     aut_aspt$parameter <- "Macroinvertebrates (ASPT)"
 
     spr_aspt <- select(
       rict_output,
-      sample_id,
-      "H" = H_ASPT_spr,
-      "G" = G_ASPT_spr,
-      "M" = M_ASPT_spr,
-      "P" = P_ASPT_spr,
-      "B" = B_ASPT_spr,
-      "Class" = mostProb_ASPT_spr,
-      "EQR" = ASPT_eqr_av_spr,
-      "Suit Code" = SuitCode,
-      "Suit Text" = SuitText
+      "sample_id",
+      "H" = "H_ASPT_spr",
+      "G" = "G_ASPT_spr",
+      "M" = "M_ASPT_spr",
+      "P" = "P_ASPT_spr",
+      "B" = "B_ASPT_spr",
+      "Class" = "mostProb_ASPT_spr",
+      "EQR" = "ASPT_eqr_av_spr",
+      "Suit Code" = "SuitCode",
+      "Suit Text" = "SuitText"
     )
     spr_aspt$parameter <- "Macroinvertebrates (ASPT)"
 
     sum_aspt <- select(
       rict_output,
-      sample_id,
-      "H" = H_ASPT_sum,
-      "G" = G_ASPT_sum,
-      "M" = M_ASPT_sum,
-      "P" = P_ASPT_sum,
-      "B" = B_ASPT_sum,
-      "Class" = mostProb_ASPT_sum,
-      "EQR" = eqr_av_sum_aspt,
-      "Suit Code" = SuitCode,
-      "Suit Text" = SuitText
+      "sample_id",
+      "H" = "H_ASPT_sum",
+      "G" = "G_ASPT_sum",
+      "M" = "M_ASPT_sum",
+      "P" = "P_ASPT_sum",
+      "B" = "B_ASPT_sum",
+      "Class" = "mostProb_ASPT_sum",
+      "EQR" = "eqr_av_sum_aspt",
+      "Suit Code" = "SuitCode",
+      "Suit Text" = "SuitText"
     )
     sum_aspt$parameter <- "Macroinvertebrates (ASPT)"
     rict_class <- bind_rows(

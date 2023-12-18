@@ -30,8 +30,8 @@ get_ea_data <- function(location_id, take, date_from, date_to) {
 
   site_info <- get_site_info(site_id = site)
   site_info_wide <- tidyr::pivot_wider(site_info,
-    names_from = .data$properties.property_label,
-    values_from = .data$properties.value
+    names_from = "properties.property_label",
+    values_from = "properties.value"
   )
 
   site_info_wide$location_description <- site_info_wide$label
@@ -51,7 +51,7 @@ get_ea_data <- function(location_id, take, date_from, date_to) {
   })
   data$sample_id <- unlist(sample_id)
 
-  data$grid_reference <- en_to_os(select(data, .data$easting, .data$northing))
+  data$grid_reference <- en_to_os(select(data, "easting", "northing"))
   data$grid_reference <- paste0(
     substr(data$grid_reference, 1, 2),
     " ",
@@ -68,32 +68,31 @@ get_ea_data <- function(location_id, take, date_from, date_to) {
     data$taxonRank == "Family"] <- "River Family Inverts"
   data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpMetricsObservation"] <- "River Macrophytes"
   data$parameter[data$observation_type == "http://environment.data.gov.uk/ecology/def/bio/RiverMacpTaxaObservation"] <- "River Macrophytes"
-
   data <- data %>% dplyr::rename(
-    "question" = .data$label.y,
-    "response" = .data$simple_result,
-    "date_taken" = .data$date,
-    "location_id" = .data$site_id,
-    "latitude" = .data$lat,
-    "longitude" = .data$long,
-    "water_body_id" = .data$`WFD Waterbody ID`,
-    "water_body_type" = .data$`Waterbody Type`,
-    "water_body" = .data$`Water Body`,
-    "dist_from_source" = .data$`Distance from Source`,
-    "source_altitude" = .data$`Source Altitude`,
-    "label" = .data$pref_label,
-    "units" = .data$property_id
+    "question" = "label.y",
+    "response" = "simple_result",
+    "date_taken" = "date",
+    "location_id" = "site_id",
+    "latitude" = "lat",
+    "longitude" = "long",
+    # "water_body_id" = "WFD Waterbody ID",
+    "water_body_type" = "Waterbody Type",
+    "water_body" = "Water Body",
+    # "dist_from_source" = "Distance from Source",
+    # "source_altitude" = "Source Altitude",
+     "label" = "pref_label",
+    "units" = "property_id"
   )
   # Not all locations have these attributes:
   if (!is.null(data$Sand)) {
     data <- data %>% dplyr::rename(
-      "river_width" = .data$Width,
-      "mean_depth" = .data$Depth,
-      "boulders_cobbles" = .data$`Boulders/Cobbles`,
-      "pebbles_gravel" = .data$`Pebbles/Gravel`,
-      "sand" = .data$Sand,
-      "silt_clay" = .data$`Silt/Clay`,
-      "discharge_category" = .data$Discharge,
+      "river_width" = "Width",
+      "mean_depth" = "Depth",
+      "boulders_cobbles" = "Boulders/Cobbles",
+      "pebbles_gravel" = "Pebbles/Gravel",
+      "sand" = "Sand",
+      "silt_clay" = "Silt/Clay",
+      "discharge_category" = "Discharge",
     )
   }
   data$question[grep("-percentageCoverBand", data$result_id)] <-

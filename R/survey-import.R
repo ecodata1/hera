@@ -67,9 +67,9 @@ survey_import <- function(path = NULL) {
     names(sample_long) <- c("question", "sample_id", "response")
     sample_long <- dplyr::select(
       sample_long,
-      .data$sample_id,
-      .data$question,
-      .data$response
+      "sample_id",
+      "question",
+      "response"
     )
     return(sample_long)
   })
@@ -77,10 +77,11 @@ survey_import <- function(path = NULL) {
   samples$project_id <- project_id
   meta <- dplyr::bind_rows(survey, samples)
   meta <- dplyr::select(
-    meta, .data$project_id,
-    .data$sample_id,
-    .data$question,
-    .data$response
+    meta,
+    "project_id",
+    "sample_id",
+    "question",
+    "response"
   )
 
   # PSA, Chemistry, meta data sheets - 'data' sheets. --------------------------
@@ -98,13 +99,13 @@ survey_import <- function(path = NULL) {
     t1_data <- suppressMessages(readxl::read_xlsx(path, sheet = data_sheet))
     names(t1_data) <- as.character(t1_data[2, ])
     t1_data <- t1_data[3:nrow(t1_data), ]
-    t1_data <- dplyr::select(t1_data, -.data$`NA`)
+    t1_data <- dplyr::select(t1_data, -"NA")
     t1_data <- tidyr::pivot_longer(t1_data,
       cols = c(2:ncol(t1_data)),
       names_to = "sample_id",
       values_to = "response"
     )
-    t1_data <- dplyr::select(t1_data, .data$sample_id, question = 1, .data$response)
+    t1_data <- dplyr::select(t1_data, "sample_id", question = 1, "response")
     t1_data <- dplyr::filter(t1_data, !is.na(question))
     t1_data <- dplyr::filter(t1_data, question != "Notes:")
     t1_data$project_id <- project_id
@@ -135,10 +136,10 @@ survey_import <- function(path = NULL) {
     )
     replicates$project_id <- project_id
     replicates <- dplyr::select(replicates,
-      .data$project_id,
-      .data$sample_id,
-      question = .data$`...3`,
-      .data$response
+      "project_id",
+      "sample_id",
+      question = "...3",
+      "response"
     )
 
     # Format taxonomic info
@@ -153,9 +154,9 @@ survey_import <- function(path = NULL) {
     )
 
     fauna <- dplyr::select(fauna,
-      .data$sample_id,
-      "question" = .data$name,
-      "response" = .data$value,
+      "sample_id",
+      "question" = "name",
+      "response" = "value",
       "label" = 1,
     )
 
