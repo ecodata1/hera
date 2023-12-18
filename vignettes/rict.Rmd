@@ -83,6 +83,7 @@ assessment_function <- function(data) {
   # Note, any non-standard base R library must be call using require().
   require(rict)
   require(macroinvertebrateMetrics)
+  require(dplyr)
   message(unique(data$location_id))
   metric_function <- catalogue[catalogue$assessment ==
     "Macroinvertebrate Metrics", 3][[1]]
