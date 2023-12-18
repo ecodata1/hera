@@ -28,8 +28,8 @@ ead <- function(site_id) {
   site <- unique(obs$site_id)
   site_info <- eadata::get_site_info(site_id = site)
   site_info_wide <- pivot_wider(site_info,
-    names_from = .data$properties.property_label,
-    values_from = .data$properties.value
+    names_from = "properties.property_label",
+    values_from = "properties.value"
   )
 
   data <- inner_join(obs, site_info_wide, by = c("site_id" = "site_id"))
@@ -96,28 +96,28 @@ ead <- function(site_id) {
 
 
   data <- data %>% select(
-    .data$location_id,
-    .data$location_description,
-    .data$sample_id,
-    .data$date_taken,
-    .data$season,
-    .data$quality_element,
-    .data$question,
-    .data$response,
-    .data$pref_label,
-    .data$latitude,
-    .data$longitude,
-    .data$grid_reference,
-    .data$Alkalinity,
-    .data$river.width..m.,
-    .data$mean.depth..cm.,
-    .data$x..boulders.cobbles,
-    .data$x..pebbles.gravel,
-    .data$x..sand,
-    .data$x..silt.clay,
-    .data$result_id,
-    .data$northing,
-    .data$easting
+    "location_id",
+    "location_description",
+    "sample_id",
+    "date_taken",
+    "season",
+    "quality_element",
+    "question",
+    "response",
+    "pref_label",
+    "latitude",
+    "longitude",
+    "grid_reference",
+    "Alkalinity",
+    "river.width..m.",
+    "mean.depth..cm.",
+    "x..boulders.cobbles",
+    "x..pebbles.gravel",
+    "x..sand",
+    "x..silt.clay",
+    "result_id",
+    "northing",
+    "easting"
   )
 
   data <- data %>% rename(taxon = .data$pref_label, alkalinity = .data$Alkalinity)

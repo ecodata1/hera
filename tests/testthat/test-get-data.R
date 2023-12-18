@@ -6,6 +6,6 @@ test_that("SEPA get_data works", {
 
 test_that("SEPA get_data works", {
   data <- get_data(location_id = 1000, source = "ea", take = 100)
-  expect_equal(ncol(data), 33)
+  expect_equal(ncol(data), 31)
   expect_equal(nrow(data), 100)
 })

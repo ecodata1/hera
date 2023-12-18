@@ -94,6 +94,7 @@ assessment_function <- function(data) {
   require(whpt)
   require(macroinvertebrateMetrics)
   data$date_taken <- as.character(format.Date(data$date_taken, "%Y/%m/%d"))
+  catalogue <- hera::catalogue
   metric_function <- catalogue[catalogue$assessment ==
     "Macroinvertebrate Metrics", 3][[1]]
   output <- metric_function[[1]](data)
@@ -110,7 +111,8 @@ assessment_function <- function(data) {
       "sample_id",
       "date_taken"
     )],
-    by = "sample_id"
+    by = "sample_id",
+    relationship = "many-to-many"
   )
   output_location$location_id <-
     as.character(output_location$location_id)
@@ -181,7 +183,7 @@ vars <- c(
 "water body sampled"
 )
 report$`water body sampled` <- as.character(report$`water body sampled`)
-consistency_check <- pivot_longer(report, cols = vars, names_to = "question", values_to = "response")
+consistency_check <- pivot_longer(report, cols = all_of(vars), names_to = "question", values_to = "response")
  consistency_check$date_taken <- as.Date(consistency_check$date_taken)
   consistency_check$parameter <- "Bankside Consistency"
   return(consistency_check)

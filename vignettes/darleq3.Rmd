@@ -173,10 +173,10 @@ assessment_function <- function(data) {
       "SampleID" = as.factor(sample_id),
       "DATE_TAKEN" = as.Date(date_taken, tz = "GB")
     ) %>%
-    select(SampleID,
-      "SiteID" = location_id,
-      "SAMPLE_DATE" = date_taken,
-      "Alkalinity" = alkalinity
+    select("SampleID",
+      "SiteID" = "location_id",
+      "SAMPLE_DATE" = "date_taken",
+      "Alkalinity" = "alkalinity"
     ) %>%
     unique()
 
@@ -213,12 +213,12 @@ assessment_function <- function(data) {
   if (any(names(diatom_taxon_abundance) %in% c("taxon_ids"))) {
     diatom_taxonname <- diatom_taxon_abundance %>%
       select(
-        location_id,
-        sample_id,
-        taxon_ids,
-        label,
-        response,
-        date_taken
+        "location_id",
+        "sample_id",
+        "taxon_ids",
+        "label",
+        "response",
+        "date_taken"
       ) %>%
       inner_join(dares_table[, c("TaxonName", "TaxonId", "TaxonNameSEPA")],
         by = c("taxon_ids" = "TaxonId")
@@ -227,11 +227,11 @@ assessment_function <- function(data) {
   } else {
     diatom_taxonname <- diatom_taxon_abundance %>%
       select(
-        location_id,
-        sample_id,
-        label,
-        response,
-        date_taken
+        "location_id",
+        "sample_id",
+        "label",
+        "response",
+        "date_taken"
       ) %>%
       inner_join(dares_table[, c("TaxonName", "TaxonId", "TaxonNameSEPA")],
         by = c("label" = "TaxonNameSEPA")
@@ -249,7 +249,7 @@ assessment_function <- function(data) {
   diatom_tidied <- diatom_tidied %>%
     ungroup() %>%
     arrange(label) %>%
-    select(-label)
+    select(-"label")
 
   # DARLEQ3 requires Taxon IDs and responses pivoted into wide format
   diatom_data <- diatom_tidied %>% pivot_wider(
@@ -265,14 +265,14 @@ assessment_function <- function(data) {
   # to be data.frame first (row.names deprecated on tibble).
   diatom_data <- data.frame(diatom_data, check.names = FALSE)
   row.names(diatom_data) <- diatom_data$sample_id
-  diatom_data <- select(diatom_data, -sample_id, -date_taken)
+  diatom_data <- select(diatom_data, -"sample_id", -"date_taken")
 
   # Prepare dataframe of 'taxon_names'  ------------------------------
   # include columns 'TaxonCode','TaxonName'
   taxon_names <- diatom_taxonname %>%
     select(
-      "TaxonCode" = TaxonId,
-      "TaxonName" = TaxonName
+      "TaxonCode" = "TaxonId",
+      "TaxonName" = "TaxonName"
     ) %>%
     unique()
   taxon_names <- arrange(taxon_names, TaxonName)
@@ -298,7 +298,7 @@ assessment_function <- function(data) {
     names_to = "question",
     values_to = "response"
   )
-  sample <- select(sample, -SAMPLE_DATE)
+  sample <- select(sample, -"SAMPLE_DATE")
   names(sample) <- c("sample_id", "location_id", "question", "response")
 
   location <- output$Uncertainty
@@ -337,7 +337,7 @@ The outcome of your assessment.
 
 ```{r output}
 outcome <- assessment_function(input)
-outcome_table <- select(outcome, question, response)
+outcome_table <- select(outcome, "question", "response")
 outcome_table <- outcome_table[!duplicated(outcome_table[, c("question")]), ]
 knitr::kable(outcome_table)
 ```

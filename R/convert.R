@@ -68,15 +68,15 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
       data$taxon_id[!is.na(data$`maitland_code`)] <-
         data$`maitland_code`[!is.na(data$`maitland_code`)]
       data <- data %>% select(
-        -.data$`maitland_code`
+        -"maitland_code"
       )
     }
     data$taxon_id[!is.na(data$`whitton_code`)] <-
       data$`whitton_code`[!is.na(data$`whitton_code`)]
     data$taxon_id[data$taxon_id == ""] <- NA
     data <- data %>% select(
-      -.data$`whitton_code`,
-      -.data$`nbn_code`
+      -"whitton_code",
+      -"nbn_code"
     )
     names(data) <- gsub(" ", "_", names(data))
     to_change <- which(names(data) %in% names$sepa_view[names$hera_latest != ""])

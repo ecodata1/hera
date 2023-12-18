@@ -66,20 +66,20 @@ get_bulk_data <- function() {
   data$date_taken <- as.Date(data$date_taken, "%Y-%m-%d")
 
   data <- data %>% select(
-    .data$location_id,
-    .data$sample_id,
-    .data$date_taken,
-    .data$rmni,
-    .data$rn_a_taxa,
-    .data$n_rfg,
-    .data$rfa_pc,
-    .data$alkalinity,
-    .data$source_altitude,
-    .data$dist_from_source,
-    .data$slope,
-    .data$water_body_id,
-    .data$grid_reference,
-    .data$location_description
+    "location_id",
+    "sample_id",
+    "date_taken",
+    "rmni",
+    "rn_a_taxa",
+    "n_rfg",
+    "rfa_pc",
+    "alkalinity",
+    "source_altitude",
+    "dist_from_source",
+    "slope",
+    "water_body_id",
+    "grid_reference",
+    "location_description"
   )
 
   data$parameter <- "River Macrophytes"
