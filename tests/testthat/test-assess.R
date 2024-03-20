@@ -51,3 +51,36 @@ test_that("darleq3 works", {
     sort(as.numeric(output$response[output$question == "EQR_TDI4"]))
   )
 })
+
+test_that("bankside consistency works", {
+  data <- hera::demo_data
+  data <- data[data$sample_id == 3201863, ]
+  output <- assess(data, "Bankside Consistency")
+  # Test against pre-calculated results
+  testthat::expect_equal(output$response, c(
+    "SPR",
+    "22.56",
+    "6.94",
+    "As expected",
+    "neither",
+    "14",
+    "4.97142857142857",
+    "Moderate",
+    "Good",
+    "2017",
+    "6200"
+  ))
+})
+
+
+
+test_that("Macroinvertebrate Metrics works", {
+  data <- hera::demo_data
+  data <- data[data$sample_id == 3201863, ]
+  output <- assess(data, "Macroinvertebrate Metrics")
+  # test on pre-calculated results
+  testthat::expect_equal(
+    as.character(round(as.numeric(output$response[14:16]), 2)),
+    c("69.6", "4.97", "14")
+  )
+})

@@ -114,12 +114,16 @@ assessment_function <- function(data) {
     "Taxon abundance",
     "Live abundance"
   ))
-
+  input <- ungroup(input)
   input <- dplyr::select(
     input, "sample_id", "question", "response", "label", "parameter"
   )
-
+  if(nrow(input) > 0) {
   output <- macroinvertebrateMetrics::calc_metric(input)
+  }
+  else {
+    return(NULL)
+  }
   # riverfly <- macroinvertebrateMetrics::calc_riverfly(input)
   
   # output <- dplyr::bind_rows(whpt, riverfly)

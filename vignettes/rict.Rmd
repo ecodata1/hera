@@ -88,7 +88,10 @@ assessment_function <- function(data) {
   metric_function <- catalogue[catalogue$assessment ==
     "Macroinvertebrate Metrics", 3][[1]]
   output <- metric_function[[1]](data)
-  output <- filter(output, question %in% c("WHPT_ASPT", "WHPT_NTAXA"))
+  if(is.null(output)) {
+    return(NULL)
+  }
+  output <- dplyr::filter(output, question %in% c("WHPT_ASPT", "WHPT_NTAXA"))
 
 
   # Alkalinity ---------

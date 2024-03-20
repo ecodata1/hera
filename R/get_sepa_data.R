@@ -218,7 +218,7 @@ get_sepa_data <- function(location_id,
         data$loq_sign <- as.character(data$loq_sign)
         data <- bind_rows(data, offset_data)
       }
-      if (length(data) == 0) {
+      if (length(data) == 0 | length(data$loq_sign) == 0) {
         return(NULL)
       }
       data <- data[data$determinand_code == "200200_2", ]
