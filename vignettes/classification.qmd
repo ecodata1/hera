@@ -44,6 +44,12 @@ editor_options:
 -   Missing NGR in recovered data?
 -   Convert() function does a lot of tweaks - can these go in a .csv lookup file?
 
+library(hera)
+
+library(tidyverse)
+
+library(arrow)
+
 ```{r}
 library(hera)
 library(tidyverse)
@@ -67,8 +73,23 @@ Open files of pre-fetched data from LIMS. Data was downloaded from LIMS using 'R
 ```{r}
 
  lims_eco <- readr::read_csv(
-  "vignettes//data//2024-03-18-lims-data.csv"
+  "vignettes//data//2024-03-21-lims-data.csv"
  )
+ 
+ lims_eco <- filter(lims_eco, ANALYSIS %in% c("PAC", "RIVER_DIATOMS", "FW_INVERTS_FIELD", "MTL_TL5","MTL_TL4", "LAB_INVERTS"))
+ 
+ # Remove family level results if MTL present
+ check <- lims_eco %>%  select(ANALYSIS, ORIGINAL_SAMPLE) %>% 
+   distinct() %>% 
+   filter(ANALYSIS %in% c("MTL_TL5","MTL_TL4", "LAB_INVERTS")) %>% 
+   group_by(ORIGINAL_SAMPLE) %>% 
+   summarise(n = n()) %>% filter(n > 1)
+ remove <- lims_eco %>%
+   filter(ORIGINAL_SAMPLE %in% check$ORIGINAL_SAMPLE &
+            ANALYSIS == "LAB_INVERTS")
+ lims_eco <- lims_eco %>%  filter(!SAMPLE_NUMBER %in% unique(remove$SAMPLE_NUMBER))
+ 
+ 
 #test_lims <- lims_eco[lims_eco$SAMPLING_POINT == "3798", ]
 # test_eco <- readr::read_csv(
 #   "vignettes//data//2023-04-02-lims-data.csv"
@@ -225,6 +246,17 @@ loq_sign
 
 alk_data <- hera::convert(alk_results_sep_19, convert_from = "sepa_chem", convert_to = "hera")
 
+predictors <- utils::read.csv(
+  system.file("extdat",
+    "predictors.csv",
+    package = "hera"
+  ),
+  stringsAsFactors = FALSE, check.names = FALSE
+)
+predictors$location_id <- as.character(predictors$location_id)
+
+alk_data <- filter(alk_data, location_id %in% unique(predictors$chemistry_site))
+
 # alk_data <- readr::read_csv(
 #   "vignettes//data//alk-data.csv"
 # )
@@ -291,6 +323,7 @@ predictors <- utils::read.csv(
 )
 predictors$location_id <- as.character(predictors$location_id)
 
+predictors$date <-  as.Date(predictors$date)
 # use latest 'version' for each location_id
 predictors <- arrange(predictors, desc(date))
 predictors <- select(
@@ -314,36 +347,119 @@ predictors <- NULL
 
 If alkalinity required calculate.
 
+\# what sites with chemistry site but no alkalinity data?
+
+missing_alk \<- data\[!is.na(data\$chemistry_site) &
+
+is.na(data\$alkalinity) &
+
+data\$analysis_repname %in% unique( data\$analysis_repname)
+
+, \]
+
+missing_alk \<- missing_alk\[missing_alk\$analysis_repname %in% c("Diatom Taxa", "Invert Taxa Family Lab", "RIVER_DIATOMS" , "LAB_INVERTS" ),\]
+
 ```{r, eval=FALSE}
+# to reduce data size, only use chem data that is needed for ecology sites
+taxa_data <- data[data$parameter != "PAC", ]
+chem_data <- data[data$parameter == "PAC", ]
+chem_data <- chem_data[chem_data$location_id %in% unique(taxa_data$chemistry_site), ]
+data <- bind_rows(taxa_data, chem_data)
+taxa_data <- NULL
+chem_data <- NULL
+alk_results_sep_19 <- NULL
+
+# write.csv(data,"vignettes//data//2024-03-13-data.csv", row.names = FALSE)
+
+# data <- read.csv("vignettes//data//2024-03-13-data.csv")
+# Remove non-required columns as large datasets will make mean_alkalinity
+# function crash!
+# data <- dplyr::select(data,
+# -location_description,
+# -national_grid_reference ,
+# -easting,
+# -northing,
+# -latitude,
+# -longitude,
+# -media,
+# -grid_reference
+# )
+
 data$alkalinity <- NULL
-Sys.time()
+
+# 29971
+# data$chemistry_site[data$location_id == "545141"] <- "8131"
+# test_data <- data[data$location_id %in% c("545141","8131"),]
+# write.csv(data,"vignettes//data//data-no-alk.csv", row.names = FALSE)
+# data <- read.csv("vignettes//data//data-no-alk.csv")
 alkalinity <- hera:::mean_alkalinity(data)
-Sys.time()
-data <- inner_join(data,
+
+# write.csv(alkalinity,"vignettes//data//alkalinity.csv", row.names = FALSE)
+# alkalinity <- read.csv("vignettes//data//alkalinity.csv")
+# alkalinity <- distinct(alkalinity)
+# alkalinity <- alkalinity[!is.na(alkalinity$alkalinity), ]
+
+# Remove none ecology data
+data <- data[!is.na(data$location_id), ]
+data <- data[data$parameter %in% c("River Family Inverts",
+                                   "River Diatoms"), ]
+
+
+#alkalinity$sample_number <- as.numeric(alkalinity$sample_number)
+data <- left_join(data,
   alkalinity,
   by = join_by("sample_id" == "sample_number")
 )
+
+# what sites with chemistry site but no alkalinity data?
+missing_alk <- data[
+                      is.na(data$alkalinity)  , ]
+missing_alk <- missing_alk[missing_alk$analysis_repname %in% c("Diatom Taxa"
+, "Invert Taxa Family Lab",  "RIVER_DIATOMS"    ,      "LAB_INVERTS" 
+)
+    ,]
+
+
+missing_gis <- data[data$analysis_repname %in%
+                      c("LAB_INVERTS") &
+                    is.na(data$discharge_category), ]
+       missing_gis[, c("location_id",
+                       "location_description")] %>% unique()              
+
+       
+      # 601273 473430 533036   1613    613
 #test_data <- data[data$location_id == "3798",]
 #test_data <- data[data$location_id == "10116", ]
+
+# remove parent samples that only have field data (and therefore alk not calculated)
 eco_missing_alk <- data$sample_id[data$question == "pebbles_gravel" &
   is.na(data$alkalinity)]
 data <- data[!data$sample_id %in% eco_missing_alk, ]
-eco_missing_alk2 <- data$sample_id[data$question == "Taxon name" &
-  is.na(data$alkalinity)]
-data <- data[!data$sample_id %in% eco_missing_alk2, ]
+
+# Some samples taken before Sept 2019 don't have alkalinity, but these sites haven't been sampled since Sept 2019 - so therefore these samples can be removed
+eco_missing_alk2 <- data[data$question == "Taxon name" &
+  is.na(data$alkalinity), ]
+eco_missing_alk2$location_id %>%  unique()
+
+data <- data[!data$sample_id %in% unique(eco_missing_alk2$sample_id), ]
+
 #test_data <- data[data$location_id == "10116", ]
 ```
 
 # Classification 2023
 
-RUn 2023 classification
+Run 2023 classification
 
 ## Classify
 
 ```{r, message=FALSE}
- write.csv(data,"vignettes//data//2024-03-13-data.csv", row.names = FALSE)
-data <- read.csv("vignettes//data//2024-03-18-data.csv")
+# write.csv(data,"vignettes//data//2024-03-18-data.csv", row.names = FALSE)
+# data <- read.csv("vignettes//data//2024-03-18-data.csv")
 data <- data[!is.na(data$grid_reference), ]
+
+test_data <- data[is.na(data$grid_reference), ]
+# 350436
+
 data <- data[data$grid_reference != "", ]
 # data <- data[data$location_id != "4359",]
 # 
@@ -387,7 +503,7 @@ results <- map_df(c(2021,2022,2023), function(class_year) {
   filter_data <- inner_join(data,
                             ids, by = join_by(sample_id, parameter))
   #filter_data <- data[data$sample_id %in% ids, ]
-  # filter_data <- filter_data[filter_data$location_id == "3798",]
+  # filter_data <- filter_data[filter_data$location_id == "110106",]
   filtered_data <- filter_data %>%
     filter(year <= class_year) %>%
     hera:::filter_samples(classification_year_data = TRUE)
@@ -395,7 +511,7 @@ results <- map_df(c(2021,2022,2023), function(class_year) {
 
   wfd_results <- map_df(split(filtered_data, filtered_data$location_id), function(location) {
     wfd_result <- assess(location,
-      name = c("RICT", "DARLEQ3")
+      name = c("RICT","DARLEQ3")
     )
 
   }, .progress = TRUE)
@@ -491,7 +607,7 @@ ntaxa <- inverts
 aspt$analysis <- "Macroinvertebrates (ASPT) - Rivers"
 ntaxa$analysis <- "Macroinvertebrates (NTAXA) - Rivers"
 all_nmp <- bind_rows(aspt, ntaxa, diatoms)
-all_nmp$location_id <- as.character(all_nmp$location_id)
+# all_nmp$location_id <- as.character(all_nmp$location_id)
 all_nmp$wbid <- as.character(all_nmp$wbid)
 results_filtered <- left_join(results_filtered, all_nmp, by = join_by(
   location_id,
@@ -548,7 +664,7 @@ results_filtered$change[results_filtered$change == TRUE] <- "N"
 
 test <- results_filtered[!is.na(results_filtered$change), ]
 
-test$Class <- dplyr::recode_factor(unlist(test$Class), "High" = "High", "Good" = "Good", "Moderate" = "Moderate")
+test$Class <- dplyr::recode_factor(test$Class, "High" = "High", "Good" = "Good", "Moderate" = "Moderate")
 test$CONDITION <- dplyr::recode_factor(test$Condition, "High" = "High", "Good" = "Good", "Moderate" = "Moderate")
 diatom_test <- test[test$parameter == "Phytobenthos (diatoms) - Rivers", ]
 invert_test <- test[test$parameter == "Macroinvertebrates (ASPT) - Rivers", ]
@@ -645,8 +761,12 @@ results_filtered$wfd_reportable[results_filtered$wfd_reportable == TRUE | result
 
 # Save
 
+write.csv(results_filtered, file = "vignettes\\\\data\\\\2023-classification.csv", row.names = FALSE)
+
 ```{r}
 # write.csv(results_filtered, file = "vignettes\\data\\2023-classification.csv", row.names = FALSE)
+
+# write.csv(results, file = "vignettes\\data\\sample-classification-2024.csv", row.names = FALSE)
 
 write.csv(results_filtered, file = "vignettes\\data\\2023-classification-diatoms.csv", row.names = FALSE)
 

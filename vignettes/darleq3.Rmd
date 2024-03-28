@@ -137,7 +137,6 @@ assessment_function <- function(data) {
   require(tidyr)
   require(magrittr)
   require(tibble)
-
   # Get alkalinity predictor if not present...
   if (!any(names(data) %in% "alkalinity")) {
     # predictor table for alkalinity if "chemistry_site" variable
@@ -149,8 +148,11 @@ assessment_function <- function(data) {
       stringsAsFactors = FALSE, check.names = FALSE
     )
     predictors$location_id <- as.character(predictors$location_id)
+     predictors$date <- as.Date(predictors$date)
+    predictors <- arrange(predictors, dplyr::desc(date))
     if (!any(names(data) %in% "chemistry_site")) {
-      data <- left_join(data, predictors, by = c("location_id"))
+      data <- left_join(data, predictors, by = c("location_id"), 
+                        multiple = "first")
     }
 
 

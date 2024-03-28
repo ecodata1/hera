@@ -107,6 +107,9 @@ assessment_function <- function(data) {
     ), check.names = FALSE)
     predictors$location_id <- as.character(predictors$location_id)
     predict_data <- filter(predictors, location_id %in% unique(data$location_id))
+    predict_data$date <- as.Date(predict_data$date)
+    predict_data <- arrange(predict_data, dplyr::desc(date))
+    
     output_location <- inner_join(output,
       unique(data[, c(
         "location_id",
@@ -117,7 +120,7 @@ assessment_function <- function(data) {
       relationship = "many-to-many"
     )
 
-    whpt_input <- inner_join(output_location, predict_data, by = "location_id")
+    whpt_input <- inner_join(output_location, predict_data, by = "location_id", multiple = "first")
   } else {
     # function to average predictors for each year? See sepaTools package?::
     final_data <- data

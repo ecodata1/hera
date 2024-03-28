@@ -12,15 +12,15 @@ mean_alkalinity <- function(data, sample_n = 10) {
   # Convert RESULT to numeric (not using VALUE to allow backward compatibility
   # with alkalininty query used in NEMS for TDI3 - DIAT_R_SUM)
   alkalinity_results$RESPONSE <- as.numeric(alkalinity_results$RESPONSE)
-  # If less then 0, set to 1. - Alkalinity can very rarely be negative!
-  alkalinity_results$RESPONSE[alkalinity_results$RESPONSE < 0] <- 1
+  # If less than or equal to 0, set to 1. - Alkalinity can very rarely be negative!
+  alkalinity_results$RESPONSE[alkalinity_results$RESPONSE <= 0] <- 1
   alkalinity_results$RESPONSE <- as.numeric(alkalinity_results$RESPONSE)
   # Loop through each ecology sample and find matching Alk results --------
   get_alk_diatom <- function(ecology_results, alkalinity_results, sample_n) {
     alk <- purrr::map_df(
       split(
         ecology_results,
-        ecology_results$SAMPLE_ID
+       ecology_results$SAMPLE_ID
       ),
       function(eco_sample) {
         # Find matching alk results (less than ecology sampled date) ---------
@@ -64,6 +64,9 @@ mean_alkalinity <- function(data, sample_n = 10) {
         )
         # if no Alkalinity value will be NaN so check are return NA instead
         mean_result$alkalinity[is.nan(mean_result$alkalinity)] <- NA
+        if(is.na(mean_result$alkalinity)) {
+          return(NULL)
+        }
         return(mean_result)
       },
       .progress = TRUE
