@@ -87,7 +87,9 @@ assessment_function <- function(data) {
   message(unique(data$location_id))
   metric_function <- catalogue[catalogue$assessment ==
     "Macroinvertebrate Metrics", 3][[1]]
-  output <- metric_function[[1]](data)
+  input_data <- data
+  input_data$location_id <- NULL
+  output <- metric_function[[1]](input_data)
   if(is.null(output)) {
     return(NULL)
   }
@@ -427,7 +429,6 @@ assessment_function <- function(data) {
     if (nrow(rict_data) == 0) {
       return(NULL)
     }
-
     rict_valid <- rict::rict_validate(rict_data, stop_if_all_fail = FALSE)
     if (nrow(rict_valid$data) == 0) {
       return(NULL)
