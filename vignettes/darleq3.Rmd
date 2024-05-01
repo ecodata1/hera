@@ -286,7 +286,7 @@ assessment_function <- function(data) {
   row.names(header) <- header$SampleID
   header$SampleID <- as.character(header$SampleID)
   header$SAMPLE_DATE <- as.Date(header$SAMPLE_DATE)
-  output <- darleq3::calc_Metric(diatom_data, metric = "TDI4")
+  output <- darleq3::calc_Metric(diatom_data, metric = "TDI5LM")
   output <- darleq3::calc_EQR(output,
     header,
     truncate_EQR = TRUE,
