@@ -204,12 +204,15 @@ data %>%
 Alternatively, we can select a list of specific assessments from the `catalogue` to run as required.
 
 ```{r}
-catalogue$assessment[1:2]
+catalogue %>% filter(assessment %in% 
+                       c("Macroinvertebrate Metrics",
+                         "DARLEQ3")) %>%
+  select(assessment)
 ```
 
 ```{r, echo=TRUE, warning=F, message=F}
 data %>%
-  assess(name = catalogue$assessment[1:2]) %>%
+  assess(name = c("Macroinvertebrate Metrics","DARLEQ3")) %>%
   select(sample_id, question, response) %>%
   slice_sample(n = 4)
 ```
