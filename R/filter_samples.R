@@ -7,12 +7,12 @@ filter_samples <- function(data,
   # Create default option data frame if options not provided
   if (is.null(class_options)) {
     class_options <- tibble::tibble(
-      seasons = c(list(c("SPR", "AUT")), list(c("SPR", "SUM", "AUT"))),
+      seasons = c(list(c("SPR", "AUT")), list(c("SPR", "AUT"))),
       classification_window = c(6, 6),
       min_year = c(1, 1),
       max_year = c(3, 3),
       min_seasons = c(2, 2),
-      max_seasons = c(2, 3),
+      max_seasons = c(2, 2),
       min_samples_per_season = c(1, 1),
       max_samples_per_season = c(1, 1),
       parameter = c("River Family Inverts", "River Diatoms")
