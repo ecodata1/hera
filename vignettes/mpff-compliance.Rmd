@@ -71,7 +71,7 @@ knitr::kable(data)
 If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
 
 ```{r assessment, message=FALSE, warning=FALSE, collapse=TRUE, echo=TRUE}
-assessment_function <- function(data) {
+assessment_function <- function(data, ...) {
   data <- dplyr::filter(data, parameter == "MPFF Compliance")
   if (nrow(data) > 0) {
     results <- kraken::kraken(data, hera_format = TRUE, loess = TRUE)

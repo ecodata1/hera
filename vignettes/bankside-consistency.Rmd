@@ -84,7 +84,7 @@ If applicable, write a function to assess your input data and return an outcome.
 ### Code
 
 ```{r, echo = TRUE, eval = TRUE}
-assessment_function <- function(data) {
+assessment_function <- function(data, ...) {
   # Some calculated a statistic...
   # Note, any non-standard base R library must be call using require().
   require(dplyr)

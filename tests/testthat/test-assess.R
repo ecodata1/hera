@@ -9,7 +9,7 @@ test_that("assess works", {
   # from 0.49 to 0.50 due to change in mean alkalinity used.
   data <- hera::demo_data[hera::demo_data$sample_id == "2755381", ]
   data$parameter[is.na(data$parameter)] <- data$quality_element[is.na(data$parameter)]
-  results <- assess(data, "DARLEQ3")
+  results <- assess(data, "DARLEQ3", metric = "TDI4")
   outcome <- results[results$sample_id == "2755381", ]
   testthat::expect_equal(round(
     as.numeric(outcome$response[outcome$question == "EQR_TDI4"][1]), 2
@@ -27,7 +27,7 @@ test_that("darleq3 works", {
   # data$chemistry_site <- 1 # 242 + 408
   data$location_id <- as.character(data$location_id)
   data <- data %>% filter(location_id %in% c("36082", "34649"))
-  output <- assess(data, "DARLEQ3")
+  output <- assess(data, "DARLEQ3", metric = "TDI4")
   fn <- system.file("extdata/DARLEQ2TestData.xlsx", package = "darleq3")
   d <- darleq3::read_DARLEQ(fn, "Rivers TDI Test Data")
   diatom_data <- d$diatom_data

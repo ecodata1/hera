@@ -132,7 +132,7 @@ knitr::kable(data)
 If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
 
 ```{r assessment, echo=TRUE}
-assessment_function <- function(data) {
+assessment_function <- function(data, metric = "TDI5LM") {
   require(dplyr)
   require(tidyr)
   require(magrittr)
@@ -286,7 +286,7 @@ assessment_function <- function(data) {
   row.names(header) <- header$SampleID
   header$SampleID <- as.character(header$SampleID)
   header$SAMPLE_DATE <- as.Date(header$SAMPLE_DATE)
-  output <- darleq3::calc_Metric(diatom_data, metric = "TDI5LM")
+  output <- darleq3::calc_Metric(diatom_data, metric)
   output <- darleq3::calc_EQR(output,
     header,
     truncate_EQR = TRUE,

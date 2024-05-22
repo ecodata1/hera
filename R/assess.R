@@ -4,9 +4,10 @@
 #' @details
 #' \code{assess()} assess
 #'
-#' @param data Dataframe of variables in hera inter-change format
-#' @param catalogue Dataframe of model_dataframe see `catalogue`
-#' @param name Name of the assessment to be used
+#' @param data Dataframe of variables in hera inter-change format.
+#' @param catalogue Dataframe of model_dataframe see `catalogue`.
+#' @param name Name of the assessment to be used.
+#' @param ... Other arguments passed on to methods.
 #'
 #' @return Dataframe of assessments
 #' @examples
@@ -23,7 +24,7 @@
 #' @importFrom macroinvertebrateMetrics calc_epsi
 #' @importFrom kraken kraken
 #' @export
-assess <- function(data = NULL, name = NULL, catalogue = NULL) {
+assess <- function(data = NULL, name = NULL, catalogue = NULL, ...) {
   message("Hello from hera, ...work in progress!")
   data <- validation(data)
   if (is.null(catalogue)) {
@@ -46,7 +47,7 @@ assess <- function(data = NULL, name = NULL, catalogue = NULL) {
         return(NULL) # not the right data for this function  - skip
       }
       assessment_function <- model$assessment_function[[1]]
-      data <- assessment_function(data)
+      data <- assessment_function(data, ...)
       data$response <- as.character(data$response)
       return(data)
     }

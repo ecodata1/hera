@@ -511,7 +511,7 @@ results <- map_df(c(2021,2022,2023), function(class_year) {
     message(unique(location$location_id))
     wfd_result <- assess(location,
       name = c(
-      #  "DARLEQ3",
+        "DARLEQ3",
         "RICT"
         )
     )

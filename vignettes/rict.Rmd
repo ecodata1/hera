@@ -78,7 +78,7 @@ knitr::kable(data)
 If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
 
 ```{r assessment, message=FALSE, warning=FALSE, collapse=TRUE, echo=TRUE}
-assessment_function <- function(data) {
+assessment_function <- function(data, ...) {
   # Calculated some statistic...
   # Note, any non-standard base R library must be call using require().
   require(rict)
@@ -337,6 +337,7 @@ assessment_function <- function(data) {
 
     data$date_taken <- as.Date(data$date_taken)
     data$season <- season(data$date_taken)
+    data <- dplyr::filter(data, season != 4)
 
     # summarise_data <- dplyr::group_by(
     #   data,
@@ -433,7 +434,6 @@ assessment_function <- function(data) {
     if (nrow(rict_valid$data) == 0) {
       return(NULL)
     }
-
     rict_multi_year <- rict_data %>%
       group_by(SITE, Year) %>%
       select("SITE", "Year", contains("_WHPT_")) %>%
@@ -517,8 +517,17 @@ assessment_function <- function(data) {
     single_predict <- predict_single
     # single_predict <- select(predict_single, sample_id, SuitCode, SuitText)
     # single_predict <- unique(single_predict)
+    # ISSUE - rict_output is not in same 'sample' order as rict_data input!
+    # try running data using sample_id as SITE. Then later join location using
+    # sample_id
+    rict_data$location_id <- rict_data$SITE
+    rict_data$SITE <- rict_data$sample_id
     rict_output <- rict::rict(rict_data, year_type = "single")
-    rict_output$sample_id <- rict_data$sample_id
+    # Hot fix...try to arrange by year ascending to match output? Works(maybe!).
+    # rict_data <- arrange(rict_data, Year)
+    rict_output <- inner_join(rict_output, sample_season, by = join_by(SITE == sample_id))
+    rict_output$sample_id <- rict_output$SITE
+    rict_output$SITE <- rict_output$location_id
     rict_output <- unique(rict_output)
 
     rict_output <- rict_output[rict_output$sample_id %in% single_predict$sample_id, ]
@@ -632,32 +641,32 @@ assessment_function <- function(data) {
       cols = c(-sample_id, -parameter)
     )
     rict_class <- inner_join(rict_class,
-      rict_data[, c("SITE", "sample_id")],
+      rict_data[, c("location_id", "sample_id")],
       by = "sample_id",
       relationship = "many-to-many"
     )
-    rict_class <- rename(rict_class, "location_id" = SITE)
+   #rict_class <- rename(rict_class, "location_id" = SITE)
     rict_aspt <- tibble(
       "location_id" = predict_single$location_id,
-      "sample_id" = rict_data$sample_id,
+      "sample_id" = predict_single$sample_id,
       "question" = "RICT Reference WHPT ASPT",
       "response" = as.character(predict_single$TL2_WHPT_ASPT_AbW_DistFam)
     )
     rict_ntaxa <- tibble(
       "location_id" = predict_single$location_id,
-      "sample_id" = rict_data$sample_id,
+      "sample_id" = predict_single$sample_id,
       "question" = "RICT Rerference WHPT NTAXA",
       "response" = as.character(predict_single$TL2_WHPT_NTAXA_AbW_DistFam)
     )
     rict_river_score <- tibble(
       "location_id" = predict_single$location_id,
-      "sample_id" = rict_data$sample_id,
+      "sample_id" = predict_single$sample_id,
       "question" = "RICT Rerference ARMI Score",
       "response" = as.character(predict_single$TL2_08_Group_ARMI_Score)
     )
       rict_river_ntaxa <- tibble(
       "location_id" = predict_single$location_id,
-      "sample_id" = rict_data$sample_id,
+      "sample_id" = predict_single$sample_id,
       "question" = "RICT Rerference ARMI NTAXA",
       "response" = as.character(predict_single$TL2_08_Group_ARMI_NTaxa)
     )
@@ -761,6 +770,7 @@ standard_format <- hera:::hera_format(description = description)
 check_list <- hera:::hera_test(description = description)
 knitr::kable(check_list$standard_check)
 ```
+
 
 ## Update
 
