@@ -65,7 +65,7 @@ jobs:
 
       - name: "install old package for 4.02"
         if: matrix.config.r == '4.0.2'
-        run: install.packages('https://cran.r-project.org/src/contrib/Archive/Matrix/Matrix_1.6-5.tar.gz', repos = NULL)
+        run: install.packages('https://cran.r-project.org/src/contrib/Archive/MatrixModels/MatrixModels_0.5-1.tar.gz', repos = NULL)
         shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
