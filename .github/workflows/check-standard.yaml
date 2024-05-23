@@ -63,7 +63,12 @@ jobs:
         if: runner.os == 'Linux'
         run: sudo apt install libgdal-dev libproj-dev libgeos-dev libudunits2-dev
 
-      - name: "install old package for 4.02"
+      - name: "install old matrix package for 4.02"
+        if: matrix.config.r == '4.0.2'
+        run: install.packages('https://cran.r-project.org/src/contrib/Archive/Matrix/Matrix_1.6-5.tar.gz', repos = NULL)
+        shell: Rscript {0}
+
+      - name: "install old matrixmodel package for 4.02"
         if: matrix.config.r == '4.0.2'
         run: install.packages('https://cran.r-project.org/src/contrib/Archive/MatrixModels/MatrixModels_0.5-1.tar.gz', repos = NULL)
         shell: Rscript {0}
