@@ -413,12 +413,17 @@ missing_gis <- data[data$analysis_repname %in%
        missing_gis[, c("location_id",
                        "location_description")] %>% unique()              
 
-       
-       
-      # 601273 473430 533036   1613    613
-#test_data <- data[data$location_id == "3798",]
-#test_data <- data[data$location_id == "10116", ]
 
+# Some samples have field data from recovered data but lab data from LIMS.
+# Based on date and location can we link these? 
+# Currently, field data without matching sample_id with lab data is removed.
+# So, we need to give the matching field and lab data the same sample_id before this happens.
+same_date <- data %>% 
+  filter(parameter == "River Family Inverts") %>% 
+  summarise(sample_id = unique(sample_id), n = length(unique(sample_id)), .by = c(location_id, date_taken)) %>% 
+  filter(n > 1)
+
+              
 # remove parent samples that only have field data (and therefore alk not calculated)
 eco_missing_alk <- data$sample_id[data$question == "pebbles_gravel" &
   is.na(data$alkalinity)]

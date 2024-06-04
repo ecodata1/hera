@@ -143,7 +143,7 @@ assessment_function <- function(data, ...) {
       summarise_data,
       summarise_data$sample_id
     ), function(sample) {
-      # get a row to add to bottom when mean_depth calcualted
+      # get a row to add to bottom when mean_depth calculated
       row <- sample[1, ]
       row$question <- "mean_depth"
       if (!any(sample$question %in% "mean_depth")) {

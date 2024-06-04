@@ -44,7 +44,6 @@ Suggests:
     devtools,
     kableExtra,
     knitr,
-    Matrix,
     pkgdown,
     readr,
     rmarkdown,
