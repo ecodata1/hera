@@ -43,9 +43,8 @@ lims_eco <- readr::read_csv(
   "vignettes//data//2024-06-11-lims-data.csv"
 )
 
-# lims_eco <- filter(lims_eco, TEMPLATE == "SCHED")
-lims_eco <- filter(lims_eco, !MONITORING_PURPOSE %in%
-  "ENVIRONMENTAL_EVENT")
+lims_eco <- filter(lims_eco, TEMPLATE != "FORMAL")
+lims_eco <- filter(lims_eco, MONITORING_PURPOSE != "ENVIRONMENTAL_EVENT")
 
 lims_eco <- filter(lims_eco, ANALYSIS %in% c(
   "PAC",
@@ -306,6 +305,7 @@ alk_results_sep_19 <- NULL
 # )
 
 data$alkalinity <- NULL
+
 
 # 29971
 # data$chemistry_site[data$location_id == "545141"] <- "8131"
