@@ -8,13 +8,43 @@ editor: visual
 
 What we need for regulatory assessments to run.
 
-## Requirements
+## Questions
+
+### Location
+
+Unqiue location(s) available to classify? Sampling Point table
 
 NMP - locations we expect to RBMP classify
 
 Update replocs we any new location expected to go into RBMP
 
-Check locations have Predictors (dependent on type of analysis) and Chemistry Site
+### Sample
+
+Are classifiable tests available? Yes/No
+
+### WFD classification snapshot
+
+Number of previous samples?
+
+Number of previous samples excluding samples collected close together by date?
+
+Start Date?
+
+End Date?
+
+Year included?
+
+WFD requirements met?
+
+### Predictors
+
+Required predictors available? Yes/No
+
+Check locations have Predictors (dependent on type of analysis)
+
+If predictors not available return
+
+Chemistry Site
 
 If lacking chemistry site need to find one using GIS. Check site has alkalinity results (DAVE Chemistry?)
 

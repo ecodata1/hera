@@ -8,149 +8,119 @@ editor_options:
 
 # TODO
 
--   Grab all the data ✓
--   Compare changes in real classification between years?
--   Difficult because sites not always sampled every year.
--   Need a solution.
--   Compare to changes between new tools and old for single year(s)?
--   95% changes in diatom classification? Needs more checking - possibility alkalinity 75 override issues?
--   Check rict using year average predictors
--   Tested sample_id = 2755381, slight difference in EQR. Maybe due to difference in Akalinity?
--   Use tests from sepaData package
--   Need to use mean_alkalinity( n = 10) to get previously used Alkalinity ✓
--   Check one site against RICT3 output?
--   Need solution for finding water body IDs for location for invert sites. No contributing location? - Use NMP spreadsheet?
--   Check results from darleq2 outputs against NEMS? Run sample through DARLEQ3 and hera?
--   Have a look at suitability codes
--   Have a look at warnings and fails?
--   Have a look at excluded samples (missing Alk for Diatoms etc)
--   Use dynamic predictive variables
--   Test one sample from beginning to end??
+-   Grab all Ecology + Chemistry (alk) data (LIMS + Archived) ✓
+-   Join lims + recovered alk - 'hera' format? ✓
+-   Use dynamic/recent observed predictive variables ✓
 -   Test 8175 first? Using unit tests? OKAY! ✓
 -   Unit test for mean_alkalinity
 -   Unit test for RICT
 -   Unit test for DARLEQ
--   Get all alkalinity from lims ✓
--   Get alkalinity from recovered data - all data? ✓
--   Join lims + recovered alk - 'hera' format? ✓
--   Update sampling point table
--   Join chemistry with Ecology data ✓
+-   Update sampling point table, now called 'predictors.csv' ✓
+-   Use grid reference from predictors.csv (grid reference for RICT can be different to actual grid reference).
 -   Query alkalinity data using alt_site - get mean_alkalinty ✓
--   Check missing grid_reference from recovered data? Join location table?
--   Add suitability code
--   Classify
--   Join with 2020 classification?
--   Sewage fungus override - manual check?
--   Missing NGR in recovered data?
+-   Add suitability code ✓
+-   Classify ✓
+-   Join with previous classification ✓
+-   Sewage fungus override - manual check - see bacteria-tufts.rmd ✓
+-   Missing NGR in recovered data - NGR now coming from predictors.csv?
 -   Convert() function does a lot of tweaks - can these go in a .csv lookup file?
 
 ```{r}
 library(hera)
 library(tidyverse)
-```
-
-# Test Locations
-
-Only surveillance sites for speed of testing.
-
-```{r}
-locs <- read.csv("vignettes//data//invert-surv-locs-subset.csv")
+library(arrow)
+library(readxl)
 ```
 
 # LIMS Data
 
-Open files of pre-fetched data from LIMS. Data was downloaded from LIMS using 'RESULTS' query. Additionally, test \> test number and sample \> collection date (DUE DATE) columns were added for data processing reasons.
+Open files of pre-fetched data from LIMS (provided by LIMS Admin). Data provided by LIMS Admin needs test \> test number column. Test number is used to uniquely identify/join taxa and abundance values in the convert() function.
 
 ## Ecology
 
 ```{r}
 lims_eco <- readr::read_csv(
-  "vignettes//data//2023-04-14-lims-data.csv"
+  "vignettes//data//2024-06-11-lims-data.csv"
 )
 
-# test_eco <- readr::read_csv(
-#   "vignettes//data//2023-04-02-lims-data.csv"
-# )
-#
-# unique(test_eco$SAMPLING_POINT[!test_eco$SAMPLING_POINT %in% lims_eco$location_id])
+lims_eco <- filter(lims_eco, TEMPLATE != "FORMAL")
+lims_eco <- filter(lims_eco, MONITORING_PURPOSE != "ENVIRONMENTAL_EVENT")
+
+lims_eco <- filter(lims_eco, ANALYSIS %in% c(
+  "PAC",
+  "RIVER_DIATOMS",
+  "FW_INVERTS_FIELD",
+  "MTL_TL5",
+  "MTL_TL4",
+  "LAB_INVERTS"
+))
+
+# Remove family level results if MTL present
+check <- lims_eco %>%
+  select(ANALYSIS, ORIGINAL_SAMPLE) %>%
+  distinct() %>%
+  filter(ANALYSIS %in% c("MTL_TL5", "MTL_TL4", "LAB_INVERTS")) %>%
+  group_by(ORIGINAL_SAMPLE) %>%
+  summarise(n = n()) %>%
+  filter(n > 1)
+
+remove <- lims_eco %>%
+  filter(ORIGINAL_SAMPLE %in% check$ORIGINAL_SAMPLE &
+    ANALYSIS == "LAB_INVERTS")
+
+lims_eco <- lims_eco %>% filter(!SAMPLE_NUMBER %in% unique(remove$SAMPLE_NUMBER))
+ 
+
 ```
 
-Use collection date if sampled date not present
+Change some column names that are different in LIMS export versus the expected
+output in LIMS Data explorer output.
 
 ```{r}
-lims_eco$SAMPLED_DATE[is.na(lims_eco$SAMPLED_DATE)] <-
-  lims_eco$DUE_DATE[is.na(lims_eco$SAMPLED_DATE)]
+
+# Need to rename columns from LIMS extract to match expected names for the convert() function below
+lims_eco$REPORTED_NAME <-  lims_eco$DETERMINAND_NAME
+lims_eco$FORMATTED_ENTRY <-  lims_eco$RESULT
+lims_eco$DESCRIPTION <- lims_eco$SAMPLING_POINT_DESCRIPTION
+lims_eco$SAMPLE_NUMBER <- lims_eco$ORIGINAL_SAMPLE
 ```
 
-Convert LIMS data into standard data format for hera package
+Convert LIMS data into standard data format for hera package so metrics etc can be calculated.
 
 ```{r}
 lims_eco <- hera::convert(lims_eco,
   convert_to = "hera",
   convert_from = "sepa_lims"
 )
-```
 
-## Chemistry
-
-```{r}
-lims_chem <- readr::read_csv(
-  "vignettes//data//chem-lims-data.csv"
-)
-
-# Need a test number for convert() function but not used for chemistry so dummy
-# test number added.
-lims_chem$TEST_NUMBER <- 1
-lims_chem <- hera::convert(lims_chem,
-  convert_to = "hera",
-  convert_from = "sepa_lims"
-)
 ```
 
 ## Merge
 
 ```{r}
-lims_data <- bind_rows(lims_eco, lims_chem)
+
+lims_data <- lims_eco
 ```
 
 # Recovered data
-
-## Query
-
-Get Ecology analytical results based on LIMS locations. WARNING this takes 1hr + to run! Better to filter to a few specific locations.
-
-```{r, eval=FALSE}
-recovered_data <- get_data(location_id = unique(lims_eco$location_id))
-
-# chem_test <- get_data(7856, dataset = "chem_analytical_results")
-# recovered_data  <- get_data(location_id = c("398593",   "8207"))
-
-recovered_data$parameter[is.na(recovered_data$parameter)] <-
-  recovered_data$analysis_repname[is.na(recovered_data$parameter)]
-
-recovered_data <- dplyr::filter(recovered_data, parameter %in% c(
-  "River Family Inverts",
-  "River Diatoms",
-  "Invert Physical Data"
-))
-
-write.csv(recovered_data, file = "vignettes//data//2023-04-04-data.csv")
-```
 
 ## Pre-fetched data
 
 ```{r}
 # Recovered data  ----------------------
-eco_data <- readr::read_csv(
-  "vignettes//data//2023-04-04-data.csv"
-)
 
-new_eco_data <- readr::read_csv(
-  "vignettes//data//2023-04-14-data.csv"
-)
+ds <- open_dataset("C:/Users/Tim.Foster/Documents/r-projects/data/all_data_clean_public.arrow", 
+                   format =  "arrow")
 
+eco_data <-  ds %>%
+  filter(parameter %in% c(
+  "River Family Inverts",
+  "River Diatoms",
+  "SURVEY_INV"))  %>%
+  collect()
 
-eco_data <- bind_rows(eco_data, new_eco_data)
+# Sometimes you know, there's just duplicate results (but not results numbers). Need better way to deal with these (possibly will remove from 'tidied' archived data)? There's about 12 duplicate results - none of which have any impact if removed. 
+eco_data <- unique(eco_data)
 
 eco_data$parameter[is.na(eco_data$parameter)] <- eco_data$analysis_repname[is.na(eco_data$parameter)]
 
@@ -175,13 +145,52 @@ eco_data$question[eco_data$question ==
 eco_data$question[eco_data$question ==
   "Mean Depth (cm)"] <- "mean_depth"
 
+# alk_predictor_sites <- hera::get_data(predictors$chemistry_site, dataset = "chem_analytical_results")
 
-alk_data <- readr::read_csv(
-  "vignettes//data//alk-data.csv"
+# Get all chem alk data pre sept 2019
+alk_results_sep_19 <- readxl::read_excel("vignettes/data/ALK_RESULTS_CHEM_SEP19.xlsx")
+
+alk_results_sep_19$DATE_TAKEN <- substr(alk_results_sep_19$DATE_TAKEN, 1,10)
+alk_results_sep_19$DATE_TAKEN <- as.Date(alk_results_sep_19$DATE_TAKEN)
+
+names(alk_results_sep_19) <- tolower(names(alk_results_sep_19))
+alk_results_sep_19 <- select(alk_results_sep_19,
+location_code,
+media,
+date_taken,
+sample_no,
+test_number,
+purpose,
+wfd_purpose,
+determinand_code,
+determinand,
+result,
+units_code,
+sign,
+loq_result,
+loq_sign
 )
 
+
+alk_data <- hera::convert(alk_results_sep_19, convert_from = "sepa_chem", convert_to = "hera")
+
+predictors <- utils::read.csv(
+  system.file("extdat",
+    "predictors.csv",
+    package = "hera"
+  ),
+  stringsAsFactors = FALSE, check.names = FALSE
+)
+predictors$location_id <- as.character(predictors$location_id)
+
+alk_data <- filter(alk_data, location_id %in% unique(predictors$chemistry_site))
+
+# alk_data <- readr::read_csv(
+#   "vignettes//data//alk-data.csv"
+# )
+
 eco_data$date_taken <- as.Date(eco_data$date_taken)
-eco_data$determinand_code <- as.character(eco_data$determinand_code)
+# eco_data$determinand_code <- as.character(eco_data$determinand_code)
 eco_data$test_number <- as.character(eco_data$test_number)
 eco_data$location_id <- as.character(eco_data$location_id)
 eco_data$sample_id <- as.character(eco_data$sample_id)
@@ -216,7 +225,7 @@ Only core surveillance sites to speed up testing and filter out ecology old samp
 ```{r}
 #  data <- data[data$location_id %in% unique(locs$Loc), ]
 data$year <- lubridate::year(data$date_taken)
-data <- data %>% filter(year >= 2017 | parameter == "PAC")
+data <- data %>% filter(year >= 2016 | parameter == "PAC")
 ```
 
 # NMP
@@ -242,6 +251,7 @@ predictors <- utils::read.csv(
 )
 predictors$location_id <- as.character(predictors$location_id)
 
+predictors$date <-  as.Date(predictors$date)
 # use latest 'version' for each location_id
 predictors <- arrange(predictors, desc(date))
 predictors <- select(
@@ -258,6 +268,7 @@ predictors <- select(
 predictors <- predictors[!duplicated(predictors$location_id), ]
 
 data <- left_join(data, predictors, by = c("location_id"))
+predictors <- NULL
 ```
 
 # Calculate Alkalinity
@@ -265,31 +276,155 @@ data <- left_join(data, predictors, by = c("location_id"))
 If alkalinity required calculate.
 
 ```{r, eval=FALSE}
+# to reduce data size, only use chem data that is needed for ecology sites
+taxa_data <- data[data$parameter != "PAC", ]
+chem_data <- data[data$parameter == "PAC", ]
+chem_data <- chem_data[chem_data$location_id %in% unique(taxa_data$chemistry_site), ]
+data <- bind_rows(taxa_data, chem_data)
+taxa_data <- NULL
+chem_data <- NULL
+alk_results_sep_19 <- NULL
+
+# write.csv(data,"vignettes//data//2024-07-05-data.csv", row.names = FALSE)
+
+# data <- read.csv("vignettes//data///2024-07-05-data.csv")
+# data <- read.csv("vignettes//data///2024-06-03-data.csv")
+# data <- read.csv("vignettes//data///2024-03-18-data.csv")
+# data <- read.csv("vignettes//data///2024-03-13-data.csv")
+# Remove non-required columns as large datasets will make mean_alkalinity
+# function crash!
+# data <- dplyr::select(data,
+# -location_description,
+# -national_grid_reference ,
+# -easting,
+# -northing,
+# -latitude,
+# -longitude,
+# -media,
+# -grid_reference
+# )
+
 data$alkalinity <- NULL
-Sys.time()
+
+
+# 29971
+# data$chemistry_site[data$location_id == "545141"] <- "8131"
+# test_data <- data[data$location_id %in% c("545141","8131"),]
+# write.csv(data,"vignettes//data//data-no-alk.csv", row.names = FALSE)
+# data <- read.csv("vignettes//data//data-no-alk.csv")
 alkalinity <- hera:::mean_alkalinity(data)
-Sys.time()
-data <- inner_join(data,
+
+# write.csv(alkalinity,"vignettes//data//2024-07-05-alkalinity.csv", row.names = FALSE)
+# alkalinity <- read.csv("vignettes//data//2024-07-05-alkalinity.csv")
+# alkalinity <- read.csv("vignettes//data//alkalinity.csv")
+# alkalinity <- distinct(alkalinity)
+# alkalinity <- alkalinity[!is.na(alkalinity$alkalinity), ]
+
+# Remove none ecology data
+data <- data[!is.na(data$location_id), ]
+data <- data[data$parameter %in% c("River Family Inverts",
+                                   "River Diatoms"), ]
+
+
+#alkalinity$sample_number <- as.numeric(alkalinity$sample_number)
+data <- left_join(data,
   alkalinity,
   by = join_by("sample_id" == "sample_number")
 )
+
+# what sites with chemistry site but no alkalinity data?
+missing_alk <- data[
+                      is.na(data$alkalinity)  , ]
+missing_alk <- missing_alk[missing_alk$analysis_repname %in% c("Diatom Taxa"
+, "Invert Taxa Family Lab",  "RIVER_DIATOMS"    ,      "LAB_INVERTS" 
+)
+    ,]
+unique(missing_alk[missing_alk$year > 2019, c("location_id", "location_description", "chemistry_site", "sample_id")])
+
+missing_gis <- data[data$analysis_repname %in%
+                      c("LAB_INVERTS") &
+                    is.na(data$discharge_category), ]
+       missing_gis[, c("location_id",
+                       "location_description")] %>% unique()              
+
+
+# Some samples have field data from recovered data but lab data from LIMS.
+# Based on date and location can we link these? 
+# Currently, field data without matching sample_id with lab data is removed.
+# So, we need to give the matching field and lab data the same sample_id before this happens.
+same_date <- data %>% 
+  filter(parameter == "River Family Inverts") %>% 
+  summarise(sample_id = unique(sample_id), n = length(unique(sample_id)), .by = c(location_id, date_taken)) %>% 
+  filter(n > 1)
+
+              
+# remove parent samples that only have field data (and therefore alk not calculated)
 eco_missing_alk <- data$sample_id[data$question == "pebbles_gravel" &
   is.na(data$alkalinity)]
 data <- data[!data$sample_id %in% eco_missing_alk, ]
-eco_missing_alk2 <- data$sample_id[data$question == "Taxon name" &
-  is.na(data$alkalinity)]
-data <- data[!data$sample_id %in% eco_missing_alk2, ]
+
+# Some samples taken before Sept 2019 don't have alkalinity, but these sites haven't been sampled since Sept 2019 - so therefore these samples can be removed
+eco_missing_alk2 <- data[data$question == "Taxon name" &
+  is.na(data$alkalinity), ]
+eco_missing_alk2$location_id %>%  unique()
+
+data <- data[!data$sample_id %in% unique(eco_missing_alk2$sample_id), ]
+
+#test_data <- data[data$location_id == "10116", ]
 ```
 
-# Classification 2022
+# Classification 2023
 
-RUn 2022 classification
+Run 2023 classification
 
 ## Classify
 
 ```{r, message=FALSE}
+# write.csv(data,"vignettes//data//2024-03-18-data-v2.csv", row.names = FALSE)
+# write.csv(data,"vignettes//data//2024-07-05-data-v2.csv", row.names = FALSE)
+# data <- read.csv("vignettes//data//2024-07-05-data-v2.csv")
+# data <- read.csv("vignettes//data//2024-03-18-data-v2.csv")
+# data <- read.csv("vignettes//data//2024-03-18-data.csv")
+
 data <- data[!is.na(data$grid_reference), ]
-data <- data[data$location_id != "4359",]
+data <- data[!is.na(data$grid_reference), ]
+data <- data[data$grid_reference != "", ]
+
+# Use location average alkalinity (for testing):
+# test <- data %>% group_by(location_id) %>% 
+#   mutate("avg_alk" = mean(alkalinity))
+# predictors$loc_alkalinity <- predictors$alkalinity
+# predictors$location_id <- as.integer(predictors$location_id)
+# test$location_id <- as.integer(test$location_id)
+# predictors <- predictors %>% filter(!is.na(alkalinity))
+# predictors <- predictors[!duplicated(predictors$location_id), ]
+# predictors_alk <- predictors %>% select(location_id, loc_alkalinity)
+# test <- inner_join(test, predictors_alk, by = join_by(location_id))
+# check <- test %>% select(location_id, loc_alkalinity, avg_alk) %>% 
+#   distinct()
+# ggplot(check, aes(loc_alkalinity, avg_alk)) + geom_point()
+# data <- test
+# data <- ungroup(data)
+# data$alkalinity <- data$loc_alkalinity
+
+# Remove invert field survey if no matching invert sample
+# data <- data %>%  filter(location_id == 134491)
+field_only <- data %>%  
+  filter(data$analysis_repname %in% c("Invert Physical Data",
+         "LAB_INVERTS",
+         "MTL_TL5",               
+         "MTL_TL4")) %>% 
+  select(sample_id, analysis_repname) %>% 
+  distinct() %>% 
+  group_by(sample_id) %>% 
+  mutate(length = n()) %>% 
+  filter(analysis_repname == "Invert Physical Data", length == 1 )
+
+data <- data %>% 
+  left_join(field_only,
+            by = join_by(sample_id,
+                        analysis_repname)) %>% 
+  filter(is.na(length))
 
 # Re-run 4359 - data only entered in July 2023!
 # Needs special treatment (results copied and pasted into final classification outputs)
@@ -297,20 +432,35 @@ data <- data[data$location_id != "4359",]
 # Filter out pre-2019 data because river has recently suffered mine water impact - and want full impact of mine water to be reflected in classification
 # data <- data[year(data$date_taken) > 2019, ]
 
-# Issue with NGR out of temp grid
-# test_data <- data[data$location_id == "134730",]
-# test_data <- data[data$location_id == "101932",]
-
-results <- map_df(c(2022), function(class_year) {
-  filtered_data <- data %>%
-    mutate(year = lubridate::year(date_taken)) %>%
+# data <- mutate(data, date_taken = lubridate::dmy(date_taken))
+data <- mutate(data, year = lubridate::year(date_taken))
+data <- data[data$year < 2024, ]
+ data <- dplyr::group_by(data, location_id, parameter) %>%
+        dplyr::mutate(max_year = max(year))
+ data <- ungroup(data)
+ #data <- test_data
+results <- map_df(c(2021,2022,2023), function(class_year) {
+  ids <- unique(data[data$max_year == class_year, c("sample_id", "parameter")])
+  filter_data <- inner_join(data,
+                            ids, by = join_by(sample_id, parameter))
+ 
+  filtered_data <- filter_data %>%
     filter(year <= class_year) %>%
     hera:::filter_samples(classification_year_data = FALSE)
+    
 
   wfd_results <- map_df(split(filtered_data, filtered_data$location_id), function(location) {
-    wfd_results <- assess(location,
-      name = c("DARLEQ3", "RICT")
+    message(unique(location$location_id))
+      if(unique(location$location_id) == "5982") {
+    browser()
+    }
+    wfd_result <- assess(location,
+      name = c(
+        "DARLEQ3",
+        "RICT"
+        )
     )
+
   }, .progress = TRUE)
 })
 ```
@@ -320,6 +470,13 @@ results <- map_df(c(2022), function(class_year) {
 ```{r, message=FALSE}
 # Filter out the predicted values and sample level results. We only want the
 # location level results
+results <- results[!is.na(results$location_id), ]
+
+# write.csv(results, file = "vignettes\\data\\sample-classification-2023-final-v2.csv", row.names = FALSE)
+# write.csv(results, file = "vignettes\\data\\sample-classification-2023-final.csv", row.names = FALSE)
+# results <- read.csv(file = "vignettes\\data\\sample-classification-2023-final.csv")
+
+results$location_id <- as.character(results$location_id)
 
 results_filtered <- filter(
   results,
@@ -373,6 +530,11 @@ nmp_diatoms <- readxl::read_xlsx(
   path =
     "vignettes//data//nmp-diatoms-draft-2023.xlsx"
 )
+
+# Fix issue with duplicates in NMP
+nmp_diatoms <- nmp_diatoms[!duplicated(nmp_diatoms$Loc), ] 
+
+
 nmp_diatoms$analysis <- "DIATOMS"
 
 nmp_inverts <- readxl::read_xlsx(
@@ -391,7 +553,9 @@ nmp <- select(nmp,
   "wbid" = WBID,
   analysis,
   "replocs_check" = `CHK REPLOCS`,
-  "mon_purp" = `REG Mon Reason`
+  "mon_purp" = `REG Mon Reason`,
+  DESC,
+  `Local office`
 )
 
 diatoms <- nmp[nmp$analysis == "DIATOMS", ]
@@ -402,7 +566,7 @@ ntaxa <- inverts
 aspt$analysis <- "Macroinvertebrates (ASPT) - Rivers"
 ntaxa$analysis <- "Macroinvertebrates (NTAXA) - Rivers"
 all_nmp <- bind_rows(aspt, ntaxa, diatoms)
-all_nmp$location_id <- as.character(all_nmp$location_id)
+ all_nmp$location_id <- as.character(all_nmp$location_id)
 all_nmp$wbid <- as.character(all_nmp$wbid)
 results_filtered <- left_join(results_filtered, all_nmp, by = join_by(
   location_id,
@@ -417,43 +581,60 @@ Join 2020 classification results based on WB
 ```{r}
 aspt_class <- readxl::read_excel(
   path =
-    "vignettes//data//aspt-classification-2020.xlsx"
+    "vignettes//data//aspt-classification-2022.xlsx"
 )
 aspt_class$parameter <- "Macroinvertebrates (ASPT) - Rivers"
 
 ntaxa_class <- readxl::read_excel(
   path =
-    "vignettes/data//ntaxa-classification-2020.xlsx"
+    "vignettes/data//ntaxa-classification-2022.xlsx"
 )
 ntaxa_class$parameter <- "Macroinvertebrates (NTAXA) - Rivers"
 
 diatom_class <- readxl::read_excel(
   path =
-    "vignettes//data//diatom-classification-2020.xlsx"
+    "vignettes//data//diatom-classification-2022.xlsx"
 )
 diatom_class$parameter <- "Phytobenthos (diatoms) - Rivers"
 
 previous_class <- bind_rows(aspt_class, ntaxa_class, diatom_class)
 
-previous_class$WBID <- as.character(previous_class$WBID)
-results_filtered <- left_join(results_filtered, previous_class, by = join_by(wbid == WBID, parameter == parameter))
+previous_class$ID <- as.character(previous_class$ID)
+results_filtered <- left_join(results_filtered, previous_class, by = join_by(wbid == ID, parameter == parameter))
 
-results_filtered$change <- results_filtered$Class == results_filtered$CONDITION
+# aspt_ntaxa_2022 <- 
+#   read.csv("vignettes/data//aspt-ntaxa-classification-2022.csv")
+# diatoms_2022 <-
+# read.csv("vignettes/data//diatoms-classification-2022.csv")
+# #"WBID"      "WB_NAME"   "CONDITION" "parameter"
+# class_2022 <- bind_rows(aspt_ntaxa_2022, diatoms_2022)
+# 
+# class_2022$WB.ID <- as.character(class_2022$WB.ID)
+# class_2022 <- select(class_2022, WB.ID, "parameter" =Parameter, "CONDITION" = Class)
+# results_filtered <- left_join(results_filtered, class_2022, by = join_by(wbid == WB.ID, parameter == parameter))
+# results_filtered$`2022 Class`[is.na(results_filtered$`2022 Class`)] <- "No"
+# results_filtered$`2022 Class`[results_filtered$`2022 Class` != "No"] <- "Yes"
+
+
+
+results_filtered$change <- results_filtered$Class == results_filtered$Condition
 results_filtered$change[results_filtered$change == FALSE] <- "Y"
 results_filtered$change[results_filtered$change == TRUE] <- "N"
 
 test <- results_filtered[!is.na(results_filtered$change), ]
+
 test$Class <- dplyr::recode_factor(test$Class, "High" = "High", "Good" = "Good", "Moderate" = "Moderate")
-test$CONDITION <- dplyr::recode_factor(test$CONDITION, "High" = "High", "Good" = "Good", "Moderate" = "Moderate")
+test$CONDITION <- dplyr::recode_factor(test$Condition, "High" = "High", "Good" = "Good", "Moderate" = "Moderate")
 diatom_test <- test[test$parameter == "Phytobenthos (diatoms) - Rivers", ]
 invert_test <- test[test$parameter == "Macroinvertebrates (ASPT) - Rivers", ]
-table(diatom_test$Class, diatom_test$CONDITION)
-table(invert_test$Class, invert_test$CONDITION)
+
+table(diatom_test$Class, diatom_test$Condition)
+table(invert_test$Class, invert_test$Condition)
 ```
 
 # Check Years
 
-2022 can include results from with data only from 2019. Only include locations with data from 2021 or 2022.
+2022 can include results from with data only from 2019. Only include locations with data from 2021 or 2022 or 2023.
 
 ```{r}
 results_filtered$`Years included` <-
@@ -463,6 +644,9 @@ results_filtered$check <-
 
 results_filtered$check[results_filtered$check == FALSE] <-
   grepl("2022", results_filtered$`Years included`[results_filtered$check == FALSE])
+
+results_filtered$check[results_filtered$check == FALSE] <-
+  grepl("2023", results_filtered$`Years included`[results_filtered$check == FALSE])
 
 results_filtered <- results_filtered[results_filtered$check == TRUE, ]
 ```
@@ -485,25 +669,137 @@ results_filtered <- results_filtered %>% select(
   `Years included`,
   `Suit Code`,
   `Suit Text`,
-  "Previous class" = CONDITION,
-  mon_purp,
-  replocs_check
+  "Previous class" = Condition,
+  mon_purp
 )
+```
+
+Classified in 2022 classification
+
+```{r}
+# aspt_ntaxa_2022 <- 
+#   read.csv("vignettes/data//aspt-ntaxa-classification-2022.csv")
+# diatoms_2022 <-
+# read.csv("vignettes/data//diatoms-classification-2022.csv")
+# #"WBID"      "WB_NAME"   "CONDITION" "parameter"
+# class_2022 <- bind_rows(aspt_ntaxa_2022, diatoms_2022)
+# 
+# class_2022$WB.ID <- as.character(class_2022$WB.ID)
+# class_2022 <- select(class_2022, WB.ID, Parameter, "2022 Class" = Class)
+# results_filtered <- left_join(results_filtered, class_2022, by = join_by(`WB ID` == WB.ID, Parameter == Parameter))
+# results_filtered$`2022 Class`[is.na(results_filtered$`2022 Class`)] <- "No"
+# results_filtered$`2022 Class`[results_filtered$`2022 Class` != "No"] <- "Yes"
+
+```
+
+Max CoC
+
+```{r}
+results_filtered$CoCH <- as.numeric(results_filtered$CoCH)
+results_filtered$CoCG <- as.numeric(results_filtered$CoCG)
+results_filtered$CoCM <- as.numeric(results_filtered$CoCM)
+results_filtered$CoCP <- as.numeric(results_filtered$CoCP)
+results_filtered$CoCB <- as.numeric(results_filtered$CoCB)
+
+results_filtered$class_CoC <- pmax(results_filtered$CoCH,
+                                 results_filtered$CoCG,
+                                  results_filtered$CoCM,
+                                  results_filtered$CoCP,
+                                  results_filtered$CoCB
+                                 )
+
+```
+
+# Teams info
+
+Add context info for checking
+
+```{r}
+
+sample_points_teams <- read_excel("vignettes/data/231013-sample-points-catchment-teams.xlsx")
+
+sample_points_teams <- sample_points_teams %>% 
+  select("Location Code" = sampling_p,
+          "EP Team" = team_name, 
+          "catchment" = catchment_,
+           "Sampling Point Description" = sampling_1)
+
+sample_points_teams$`Location Code` <- as.character(sample_points_teams$`Location Code`)
+results_filtered <-  left_join(results_filtered, sample_points_teams, by = join_by(`Location Code`))
+ 
+
 ```
 
 # Reportable
 
+What's reportable?
+
 ```{r}
-results_filtered$wfd_reportable <- grepl("[SM]", results_filtered$mon_purp)
-results_filtered$wfd_reportable[results_filtered$wfd_reportable == TRUE | results_filtered$replocs_check == "YES"] <- "TRUE"
+# 2022
+# results_filtered$wfd_reportable <- grepl("[SM]", results_filtered$mon_purp)
+# results_filtered$wfd_reportable[results_filtered$wfd_reportable == TRUE |
+# results_filtered$replocs_check == "YES"] <- "TRUE"
+
+# 2023
+# Use replocs? If on replocs then use.
+replocs <- read.csv("vignettes//data//replocs-2023-final.csv")
+  
+results_filtered$lookup[results_filtered$Parameter == "Macroinvertebrates (ASPT) - Rivers" | results_filtered$Parameter == "Macroinvertebrates (NTAXA) - Rivers"] <- "Macro-invertebrates (WHPT)"
+
+results_filtered$lookup[results_filtered$Parameter == "Phytobenthos (diatoms) - Rivers"] <- "Phytobenthos (diatoms)"
+
+replocs$LOCATION_CODE <- as.character(replocs$LOCATION_CODE)
+
+replocs <- select(replocs, LOCATION_CODE, CLASSIFICATION_PARAMETER_DESC, ON_WB)
+
+results_filtered <- left_join(results_filtered, replocs, by = join_by(
+  lookup == CLASSIFICATION_PARAMETER_DESC,
+ `Location Code` ==  LOCATION_CODE))
+
+results_filtered <- select(results_filtered, -lookup)
+
+reportable <- results_filtered %>% filter(ON_WB == "Y")
+
+diatoms_reportable <- reportable %>% filter(Parameter == "Phytobenthos (diatoms) - Rivers")
+
+inverts_reportable <- reportable %>% filter(str_detect(Parameter, "invert"))
+
+table(diatoms_reportable$Class, diatoms_reportable$`Previous class`)
+
+table(inverts_reportable$Class, inverts_reportable$`Previous class`)
+
 ```
 
 # Save
 
 ```{r}
-write.csv(results_filtered, file = "vignettes\\data\\2022-classification.csv", row.names = FALSE)
+ write.csv(results_filtered, 
+           file = "vignettes\\data\\2023-classification-final-v2.csv", 
+           row.names = FALSE)
 
-write.csv(data, file = "vignettes\\data\\2022-data.csv", row.names = FALSE)
+write.csv(diatoms_reportable, 
+          file = "vignettes\\data\\2023-classification-diatoms-final-v2.csv", 
+          row.names = FALSE)
 
-# write.csv(results, file = "vignettes\\data\\sample-classification-4359.csv", row.names = FALSE)
+write.csv(inverts_reportable, 
+          file = "vignettes\\data\\2023-classification-inverts-final-v2.csv", 
+          row.names = FALSE)
+
+# write.csv(data, file = "vignettes\\data\\2023-data-final-v2.csv", row.names = FALSE)
+
+sample_info <- select(data, sample_id, date_taken, year) %>%
+  distinct() %>%
+  filter(year > 2016)
+sample_test <- group_by(sample_info, sample_id) %>%
+  mutate(n = n())
+sample_info <- mutate(sample_info, sample_id = as.character(sample_id))
+sample_info$sample_id <- as.character(sample_info$sample_id)
+results$sample_id <- as.character(results$sample_id)
+results_sample <- left_join(results,
+  sample_info,
+  by = join_by(sample_id), multiple = "first"
+)
+
+write.csv(results_sample, file = "vignettes\\data\\sample-classification-2023-final-v2.csv", row.names = FALSE)
+
 ```

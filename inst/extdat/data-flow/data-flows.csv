@@ -1,0 +1,9 @@
+assessment,group,label,level,color,shape,from,to
+LIMS,data_source,LIMS,1,blue,database,LIMS,Spotfire
+WISKI,data_source,WISKI,1,blue,database,,
+Sharepoint,data_source,Sharepoint,1,blue,box,,
+One Drive,data_source,One Drive,1,blue,box,,
+Github,data_source,Github,1,blue,database,,
+ESRI GIS,data_source,ESRI GIS,1,blue,database,,
+Spotfire,data_layer,Spotfire,2,blue,database,,
+Sample Status,data_layer,Sample Status,2,blue,box,LIMS,Sample Status

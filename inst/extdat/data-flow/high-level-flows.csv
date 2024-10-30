@@ -4,10 +4,13 @@ visual survey,question,video imagery,2,red,ellipse,video imagery,habitat assessm
 visual survey,output,habitat assessment,3,green,box,,
 Benthic Marine eDNA,data_source,data store,1,blue,database,data store,DNA reads
 Benthic Marine eDNA,question,DNA reads,2,red,ellipse,DNA reads,IQI assessment
-Benthic Marine eDNA,output,IQI assessment,3,green,box,DNA reads,IQI assessment
-LIMS assessments,data_source,LIMS,1,blue,database,,
-LIMS assessments,question,lab results,2,red,ellipse,,
+Benthic Marine eDNA,output,IQI assessment,3,green,box,,
+LIMS assessments,data_source,LIMS database,1,blue,database,LIMS database,lab results
+LIMS assessments,question,lab results,2,red,ellipse,lab results,LIMS assessments
 LIMS assessments,output,LIMS assessments,3,green,box,,
+Data Loggers,data_source,WHISKI database,1,blue,database,WHISKI database,Water level
+Data Loggers,question,Water level,2,red,ellipse,Water level,Wetland water level review?
+Data Loggers,output,Wetland water level review?,3,green,box,,
 Reg Photos,,,,,,,
 Remote sensing,,,,,,,
 Data Loggers,,,,,,,

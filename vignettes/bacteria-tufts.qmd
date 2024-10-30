@@ -1,0 +1,129 @@
+---
+title: "bacteria_tufts"
+format: html
+editor: visual
+---
+
+**Work in progress**
+
+This could become an assessment and add to `catalogue` in future.
+
+## Data
+
+```{r}
+library(tidyverse)
+library(hera)
+ lims_eco <- readr::read_csv(
+  "data\\2024-06-11-lims-data.csv"
+ )
+ 
+lims_eco$REPORTED_NAME <-  lims_eco$DETERMINAND_NAME
+lims_eco$FORMATTED_ENTRY <-  lims_eco$RESULT
+lims_eco$DESCRIPTION <- lims_eco$SAMPLING_POINT_DESCRIPTION
+lims_eco$SAMPLE_NUMBER <- lims_eco$ORIGINAL_SAMPLE     
+ 
+ lims_eco <- hera::convert(lims_eco,
+  convert_to = "hera",
+  convert_from = "sepa_lims"
+)
+```
+
+## Classify bacteria tufts
+
+```{r}
+tufts <- filter(lims_eco, parameter == "SEWAGE_FUNGUS")
+
+
+# https://assets.publishing.service.gov.uk/media/5a7c2d65ed915d7d70d1d131/LIT_8165_d0e5a8.pdf
+# Coverage
+# Density
+#         Occasional Widespread Extensive
+# Trace   Moderate   Moderate   Poor
+# Thin    Moderate   Poor       Poor
+# Thick   Poor       Poor       Bad
+# Massive Poor       Bad        Bad
+
+sewage_fungus <- function(data) {
+  purrr::map_df(split(data, data$sample_id), function(sample) {
+    if (nrow(sample) < 2) {
+      return(NULL)
+    } else {
+      sample <- dplyr::arrange(sample, question)
+      sample$combined <- paste(sample$response, collapse = " ")
+      row <- sample[1, ] # grab a row to use as template for tufts classification
+      row <- dplyr::mutate(row,
+        "question" = "Bacterial Tuft Class",
+        "parameter" = "Bacterial Tuft"
+      )
+      row <- dplyr::mutate(row, "response" = dplyr::case_when(
+        combined == "<30% Trace" ~ "Moderate",
+        combined == "30-60% Trace" ~ "Moderate",
+        combined == ">60% Trace" ~ "Poor",
+        combined == "<30% Thin" ~ "Moderate",
+        combined == "30-60% Thin" ~ "Poor",
+        combined == ">60% Thin" ~ "Poor",
+        combined == "<30% Thick" ~ "Poor",
+        combined == "30-60% Thick" ~ "Poor",
+        combined == ">60% Thick" ~ "Poor",
+        combined == "<30% Massive" ~ "Poor",
+        combined == "30-60% Massive" ~ "Bad",
+        combined == ">60% Massive" ~ "Bad"
+      ))
+
+      sample <- dplyr::bind_rows(sample, row)
+      sample$combined <- NULL
+      return(sample)
+    }
+  })
+}
+tufts <- sewage_fungus(tufts)
+
+
+```
+
+
+## Find failing sites
+
+```{r}
+
+diatoms <- read.csv(file = "data\\2023-classification-diatoms-final.csv",  check.names = FALSE)
+diatoms <- filter(diatoms, `Location Code` %in% unique(tufts$location_id))
+diatoms <- filter(diatoms, Class %in% c("Moderate", "Poor", "Bad"))
+                
+```
+
+Compare against diatoms & macrophyte results?
+
+```{r}
+
+tufts <- filter(tufts, `question` == "Bacterial Tuft Class")
+diatoms$`Location Code` <- as.character(diatoms$`Location Code`)
+test <- left_join(diatoms, tufts, by = join_by(`Location Code` == `location_id`))
+test <- select(test, "Location Code", "response", "Class", "sample_id", "date_taken")
+
+test <- mutate(test, bacterial_status = case_when(
+  response == "High" ~ "1",
+  response == "Good" ~ "2",
+  response == "Moderate" ~ "3",
+  response == "Poor" ~ "4",
+  response == "Bad" ~ "5"
+))
+
+test <- mutate(test, diatom_status = case_when(
+  Class == "High" ~ "1",
+  Class == "Good" ~ "2",
+  Class == "Moderate" ~ "3",
+  Class == "Poor" ~ "4",
+  Class == "Bad" ~ "5"
+))
+
+test <- filter(test, bacterial_status > diatom_status)
+test <- rename(test, bacterial_class = response)
+test <- rename(test, diatom_class = Class)
+
+write.csv(test, "bacterial_tufts_overrides.csv")
+```
+
+
+
+

@@ -95,7 +95,7 @@ knitr::kable(data)
 If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
 
 ```{r assessment, collapse=TRUE, echo=TRUE}
-assessment_function <- function(data) {
+assessment_function <- function(data, ...) {
   # Calculated invert metrics...
   # Note, any non-standard base R library must be call using require().
   require(dplyr)
@@ -114,12 +114,16 @@ assessment_function <- function(data) {
     "Taxon abundance",
     "Live abundance"
   ))
-
+   if(nrow(input) < 1) {
+     return(NULL)
+   }
+  input <- ungroup(input)
   input <- dplyr::select(
     input, "sample_id", "question", "response", "label", "parameter"
   )
 
   output <- macroinvertebrateMetrics::calc_metric(input)
+
   # riverfly <- macroinvertebrateMetrics::calc_riverfly(input)
   
   # output <- dplyr::bind_rows(whpt, riverfly)
