@@ -2,10 +2,28 @@ mean_alkalinity <- function(data, sample_n = 10) {
   # standardise names case
   names(data) <- toupper(names(data))
   # Filter out chemistry
-  ecology_results <- data[data$PARAMETER != "PAC" & data$QUESTION == "Taxon abundance", ]
+  ecology_results <- data[data$PARAMETER != "PAC" &
+    data$QUESTION == "Taxon abundance", ]
+  # only requiresd columns to save memory
+  ecology_results <- ecology_results[, c(
+    "SAMPLE_ID",
+    "CHEMISTRY_SITE",
+    "DATE_TAKEN"
+  )]
   # Filter out  Chemistry results in descending date order so 10 most
   # recent samples will be selected
   alkalinity_results <- data[data$PARAMETER == "PAC", ]
+  alkalinity_results <- data[data$QUESTION %in% c("Alkalinity",
+                                                  "Alk as CaCO3 (mg/L)"), ]
+  alkalinity_results$RESPONSE <- gsub("<|>", "", alkalinity_results$RESPONSE)
+  # only required columns to save memory
+  alkalinity_results <- alkalinity_results[, c(
+    "SAMPLE_ID",
+    "LOCATION_ID",
+    "RESPONSE",
+    "DATE_TAKEN"
+  )]
+
   alkalinity_results$DATE_TAKEN <- as.Date(alkalinity_results$DATE_TAKEN)
   alkalinity_results <-
     alkalinity_results[order(dplyr::desc(alkalinity_results$DATE_TAKEN)), ]
@@ -20,7 +38,7 @@ mean_alkalinity <- function(data, sample_n = 10) {
     alk <- purrr::map_df(
       split(
         ecology_results,
-       ecology_results$SAMPLE_ID
+        ecology_results$SAMPLE_ID
       ),
       function(eco_sample) {
         # Find matching alk results (less than ecology sampled date) ---------
@@ -64,7 +82,7 @@ mean_alkalinity <- function(data, sample_n = 10) {
         )
         # if no Alkalinity value will be NaN so check are return NA instead
         mean_result$alkalinity[is.nan(mean_result$alkalinity)] <- NA
-        if(is.na(mean_result$alkalinity)) {
+        if (is.na(mean_result$alkalinity)) {
           return(NULL)
         }
         return(mean_result)
