@@ -2,21 +2,24 @@
 # library(hera)
 # library(purrr)
 # data <- read.csv("C:/Users/Tim.Foster/OneDrive - Scottish Environment Protection Agency/Reports/Classification-tool/2023-classification/2023-data-final.csv")
-# data2 <- data %>% filter(location_id %in% c(3490,
-#                         3402,
-#                         3798,
-#                         4411,
-#                         5982,
-#                         8507,
-#                         14058,
-#                         129912,
-#                         135238,
-#                         200630,
-#                         301972,
-#                         338805,
-#                         487596,
-#                         488482,
-#                         545147)
+# data2 <- data %>% filter(location_id %in% c(
+#                           320571
+#                         # 3490,
+#                         # 3402,
+#                         # 3798,
+#                         # 4411,
+#                         # 5982,
+#                         # 8507,
+#                         # 14058,
+#                         # 129912,
+#                         # 135238,
+#                         # 200630,
+#                         # 301972,
+#                         # 338805,
+#                         # 487596,
+#                         # 488482,
+#                         # 545147
+#                         )
 # )
 #
 # data2$location_id <- as.character(data2$location_id)
@@ -26,6 +29,7 @@
 # # data2$sample_id <- as.integer(data2$sample_id)
 #
 # convert_rict <- function(data) {
+#   browser()
 #   require(macroinvertebrateMetrics)
 #   require(dplyr)
 #   message(unique(data$location_id))
@@ -399,7 +403,8 @@
 # }
 #
 #
-# results <- map_df(c(2021,2022,2023), function(class_year) {
+# results <- map_df(c(2017), function(class_year) {
+#   browser()
 #   ids <- unique(data2[data2$max_year == class_year, c("sample_id", "parameter")])
 #   filter_data <- inner_join(data2,
 #                             ids, by = join_by(sample_id, parameter))
@@ -423,7 +428,8 @@
 #     wfd_result <- convert_rict(location)
 #
 #   }, .progress = TRUE)
+#
 # })
 #
 # # input_data <- convert_rict(filtered_data)
-# # write.csv(results, "rict-input-final.csv", row.names = FALSE)
+# # # write.csv(results, "rict-input-final.csv", row.names = FALSE)

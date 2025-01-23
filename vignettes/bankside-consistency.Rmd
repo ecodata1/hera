@@ -35,7 +35,7 @@ This is the Rapid Assessment Technique (RAT) for results from bankside invertebr
 
 ## Description
 
-Basic details about the assessment. Update the 'response' values as required.
+Basic details about the assessment.
 
 ```{r description}
 description <- tribble(
@@ -75,13 +75,13 @@ data <- data[!duplicated(data[, c("question")]), ]
 knitr::kable(data)
 ```
 
-## Assessment {.tabset}
+## Assessment
 
-If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
+Function code used to run the metric.
 
-###  <span>&#8203;</span>
+<details>
+  <summary>Code</summary>
 
-### Code
 
 ```{r, echo = TRUE, eval = TRUE}
 assessment_function <- function(data, ...) {
@@ -206,6 +206,8 @@ consistency_check <- pivot_longer(report, cols = all_of(vars), names_to = "quest
   return(consistency_check)
 }
 ```
+
+</details>
 
 ## Outcome
 

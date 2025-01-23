@@ -49,7 +49,7 @@ knitr::kable(description)
 
 ## Input
 
-A list of questions required to run the assessment.
+A list of questions required to run the assessment. Optional 'alkalinity' column can be included to provide a pre-calculated mean alkalinity. If 'alkalinity' column not included, alkalinity will be calculated from rows with 'alkalinity' question using the response column value.
 
 ```{r input}
 input <- tibble(
@@ -129,7 +129,10 @@ knitr::kable(data)
 
 ## Assessment
 
-If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
+Function code used to assess your input data and return an outcome. 
+  
+<details>
+  <summary>Code</summary>
 
 ```{r assessment, echo=TRUE}
 assessment_function <- function(data, metric = "TDI5LM") {
@@ -151,7 +154,7 @@ assessment_function <- function(data, metric = "TDI5LM") {
      predictors$date <- as.Date(predictors$date)
     predictors <- arrange(predictors, dplyr::desc(date))
     if (!any(names(data) %in% "chemistry_site")) {
-      data <- left_join(data, predictors, by = c("location_id"), 
+      data <- left_join(data, predictors, by = c("location_id"),
                         multiple = "first")
     }
 
@@ -332,6 +335,8 @@ assessment_function <- function(data, metric = "TDI5LM") {
   return(results)
 }
 ```
+
+</details>
 
 ## Outcome
 

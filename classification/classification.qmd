@@ -34,13 +34,13 @@ library(readxl)
 
 # LIMS Data
 
-Open files of pre-fetched data from LIMS (provided by LIMS Admin). Data provided by LIMS Admin needs test \> test number column. Test number is used to uniquely identify/join taxa and abundance values in the convert() function.
+Open files of pre-fetched data from LIMS (provided by LIMS Admin). Data provided by LIMS Admin needs 'test number' column. Test number is used to uniquely identify/join taxa and abundance values in the convert() function.
 
 ## Ecology
 
 ```{r}
 lims_eco <- readr::read_csv(
-  "vignettes//data//2024-06-11-lims-data.csv"
+  "vignettes//data//2024-09-26-lims-data.csv"
 )
 
 lims_eco <- filter(lims_eco, TEMPLATE != "FORMAL")
@@ -304,14 +304,15 @@ alk_results_sep_19 <- NULL
 # -grid_reference
 # )
 
+
 data$alkalinity <- NULL
 
+# Chem  203097 Ecol : 350332
 
-# 29971
-# data$chemistry_site[data$location_id == "545141"] <- "8131"
-# test_data <- data[data$location_id %in% c("545141","8131"),]
+
 # write.csv(data,"vignettes//data//data-no-alk.csv", row.names = FALSE)
 # data <- read.csv("vignettes//data//data-no-alk.csv")
+
 alkalinity <- hera:::mean_alkalinity(data)
 
 # write.csv(alkalinity,"vignettes//data//2024-07-05-alkalinity.csv", row.names = FALSE)
@@ -434,12 +435,12 @@ data <- data %>%
 
 # data <- mutate(data, date_taken = lubridate::dmy(date_taken))
 data <- mutate(data, year = lubridate::year(date_taken))
-data <- data[data$year < 2024, ]
+data <- data[data$year < 2025, ]
  data <- dplyr::group_by(data, location_id, parameter) %>%
         dplyr::mutate(max_year = max(year))
  data <- ungroup(data)
  #data <- test_data
-results <- map_df(c(2021,2022,2023), function(class_year) {
+results <- map_df(c(2024), function(class_year) {
   ids <- unique(data[data$max_year == class_year, c("sample_id", "parameter")])
   filter_data <- inner_join(data,
                             ids, by = join_by(sample_id, parameter))
