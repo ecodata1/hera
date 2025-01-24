@@ -25,6 +25,14 @@ library(shiny)
 
 # Vocabulary
 
+```{r}
+  hera::catalogue$data
+
+
+```
+
+
+
 
 ```{r html, echo=FALSE, message=FALSE, warning=FALSE}
 vocab <- read_csv(system.file("extdat",

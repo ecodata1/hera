@@ -1,7 +1,7 @@
 Package: hera
 Type: Package
 Title: Building Environmental Models Together
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: 
     person(given = "Tim",
            family = "Foster",
@@ -58,7 +58,7 @@ Remotes:
     aquaMetrics/rict,
     ecodata1/whpt
 VignetteBuilder: knitr
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2
 Depends: 
     R (>= 4.2)
 Config/testthat/edition: 3
