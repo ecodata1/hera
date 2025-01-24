@@ -1,90 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://ecodata1.github.io/hera/404.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/articles/bankside-consistency.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/articles/codebook-test.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/articles/darleq3.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/articles/data_dictionary.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/articles/deployment_guide.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/articles/development_guide.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/articles/hera_assessments.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/articles/hera_specifications.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/articles/macroinvertebrate-metrics.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/articles/mpff-compliance.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/articles/rict.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/index.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/reference/assess.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/reference/catalogue.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/reference/combine.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/reference/convert.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/reference/demo_data.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/reference/get_bulk_data.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/reference/get_data.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/reference/launch_app.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/reference/lims_data.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/reference/questions.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/reference/season.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/reference/survey_import.html</loc>
-  </url>
-  <url>
-    <loc>https://ecodata1.github.io/hera/reference/validation.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://ecodata1.github.io/hera/404.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/articles/bankside-consistency.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/articles/darleq3.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/articles/deployment_guide.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/articles/development_guide.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/articles/hera_assessments.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/articles/hera_specifications.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/articles/index.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/articles/macroinvertebrate-metrics.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/articles/mpff-compliance.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/articles/rict.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/authors.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/index.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/reference/assess.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/reference/catalogue.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/reference/combine.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/reference/convert.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/reference/demo_data.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/reference/get_bulk_data.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/reference/get_data.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/reference/index.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/reference/launch_app.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/reference/lims_data.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/reference/questions.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/reference/season.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/reference/survey_import.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/reference/validation.html</loc></url>
 </urlset>
+
