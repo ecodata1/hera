@@ -13,13 +13,13 @@ TRUE,TRUE,TRUE,,,national_grid_reference,,,,,national_grid_reference,grid_refere
 ,TRUE,,,,hydro_distance,,,,,hydro_distance,
 ,TRUE,,,,hydro_code,,,,,hydro_code,
 ,TRUE,,,,local_authority,,,,,local_authority,
-,TRUE,,,,media,media,,,,media,
+,TRUE,,,,media,media,SAMPLE_MEDIA,,,media,media
 TRUE,TRUE,TRUE,,Sampling Time,date_taken,date_taken,SAMPLED_DATE,date,phenomenonTimeSamplingDate,date_taken,date_taken
 ,TRUE,,,,sampler_id,,,,,sampler_id,
 ,TRUE,,,,sample_number,sample_no,SAMPLE_NUMBER,,,sample_number,sample_id
 ,TRUE,,,,test_number,test_number,,,,test_number,
 ,TRUE,,,,comments,,,,,comments,
-,TRUE,,,,purpose,purpose,,,,purpose,
+,TRUE,,,,purpose,purpose,TEMPLATE,,,purpose,purpose
 ,TRUE,,,,wfd_purpose,wfd_purpose,,,,wfd_purpose,
 ,TRUE,,,,analysis_name,,ANALYSIS,obs_type,,analysis_name,parameter
 ,TRUE,,,,analysis_repname,,,,,analysis_repname,

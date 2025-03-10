@@ -3,7 +3,10 @@
 # library(purrr)
 # data <- read.csv("C:/Users/Tim.Foster/OneDrive - Scottish Environment Protection Agency/Reports/Classification-tool/2023-classification/2023-data-final.csv")
 # data2 <- data %>% filter(location_id %in% c(
-#                           320571
+#   300379,
+#   488482,
+#   487596
+#   #300379
 #                         # 3490,
 #                         # 3402,
 #                         # 3798,
@@ -403,7 +406,7 @@
 # }
 #
 #
-# results <- map_df(c(2017), function(class_year) {
+# results <- map_df(c(2024), function(class_year) {
 #   browser()
 #   ids <- unique(data2[data2$max_year == class_year, c("sample_id", "parameter")])
 #   filter_data <- inner_join(data2,
@@ -430,6 +433,6 @@
 #   }, .progress = TRUE)
 #
 # })
-#
-# # input_data <- convert_rict(filtered_data)
+
+# input_data <- convert_rict(filtered_data)
 # # # write.csv(results, "rict-input-final.csv", row.names = FALSE)

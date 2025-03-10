@@ -39,12 +39,26 @@ Open files of pre-fetched data from LIMS (provided by LIMS Admin). Data provided
 ## Ecology
 
 ```{r}
-lims_eco <- readr::read_csv(
-  "vignettes//data//2024-09-26-lims-data.csv"
+# lims_eco <- readr::read_csv(
+#   "vignettes//data//2024-09-26-lims-data.csv"
+# )
+
+user <- Sys.info()["user"]
+path <- paste0(
+  "C:/Users/",
+  user,
+  "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/latest-lims-data.csv"
 )
 
+
+lims_eco <- readr::read_csv(
+ path
+)
+
+
+
 lims_eco <- filter(lims_eco, TEMPLATE != "FORMAL")
-lims_eco <- filter(lims_eco, MONITORING_PURPOSE != "ENVIRONMENTAL_EVENT")
+# lims_eco <- filter(lims_eco, MONITORING_PURPOSE != "ENVIRONMENTAL_EVENT")
 
 lims_eco <- filter(lims_eco, ANALYSIS %in% c(
   "PAC",
@@ -73,14 +87,13 @@ lims_eco <- lims_eco %>% filter(!SAMPLE_NUMBER %in% unique(remove$SAMPLE_NUMBER)
 
 ```
 
-Change some column names that are different in LIMS export versus the expected
-output in LIMS Data explorer output.
+Change some column names that are different in LIMS export versus the expected output in LIMS Data explorer output.
 
 ```{r}
 
 # Need to rename columns from LIMS extract to match expected names for the convert() function below
 lims_eco$REPORTED_NAME <-  lims_eco$DETERMINAND_NAME
-lims_eco$FORMATTED_ENTRY <-  lims_eco$RESULT
+# lims_eco$FORMATTED_ENTRY <-  lims_eco$RESULT
 lims_eco$DESCRIPTION <- lims_eco$SAMPLING_POINT_DESCRIPTION
 lims_eco$SAMPLE_NUMBER <- lims_eco$ORIGINAL_SAMPLE
 ```
@@ -120,7 +133,7 @@ eco_data <-  ds %>%
   collect()
 
 # Sometimes you know, there's just duplicate results (but not results numbers). Need better way to deal with these (possibly will remove from 'tidied' archived data)? There's about 12 duplicate results - none of which have any impact if removed. 
-eco_data <- unique(eco_data)
+eco_data <- distinct(eco_data)
 
 eco_data$parameter[is.na(eco_data$parameter)] <- eco_data$analysis_repname[is.na(eco_data$parameter)]
 
@@ -444,7 +457,7 @@ results <- map_df(c(2024), function(class_year) {
   ids <- unique(data[data$max_year == class_year, c("sample_id", "parameter")])
   filter_data <- inner_join(data,
                             ids, by = join_by(sample_id, parameter))
- 
+    
   filtered_data <- filter_data %>%
     filter(year <= class_year) %>%
     hera:::filter_samples(classification_year_data = FALSE)

@@ -104,7 +104,7 @@ assessment_function <- function(data, ...) {
     package = "whpt"
   ), check.names = FALSE)
 
-  # Downgrade Typical class for testing worst-case scenario
+# Downgrade Typical class for testing worst-case scenario
 #   predictors$`Typical ASPT Class`[predictors$`Typical ASPT Class` == "Poor"] <- "Bad"
 #     predictors$`Typical ASPT Class`[predictors$`Typical ASPT Class` == "Moderate"] <- "Poor"
 #       predictors$`Typical ASPT Class`[predictors$`Typical ASPT Class` == "Good"] <- "Moderate"

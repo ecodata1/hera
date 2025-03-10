@@ -124,6 +124,62 @@ get_sepa_data <- function(location_id,
       return(data)
     })
     return(output)
+  } else if (dataset == "sampling_points") {
+    loops <- seq_len(floor(length(location_id) / 50))
+    if(length(loops) == 0) {
+      loops <- 1
+    }
+    output <- purrr::map_df(loops, function(loop) {
+      max <- loop * 50
+      min <- max - 49
+      id <- location_id[min:max]
+      id <- id[!is.na(id)]
+      if (length(id) == 0) {
+        return(NULL)
+      }
+
+      message(paste0("Downloading locations: ",
+                     location_id[min],
+                     " - ",
+                     location_id[max]))
+      url <- parse_url("https://geospatial.cloudnet.sepa.org.uk/server/rest/services")
+      url$path <-
+        paste(url$path,
+              "Sampling_points/MapServer/0/query",
+              sep = "/"
+        )
+      url$query <- list(
+        where = paste0(
+          "sampling_point IN (",
+          paste(id, collapse = ",", sep = ""),
+          ")"
+        ),
+        outFields = "*",
+        returnGeometry = "false",
+        f = "geojson"
+      )
+      request <- build_url(url)
+      geojson <- GET(request, cacert = FALSE) # skip server certificate check
+      data <- sf::st_read(geojson, quiet = TRUE)
+      # remove rows with missing columns data
+      # if(!any(names(data) %in% "validated")) {
+      #   return(NULL)
+      # }
+      # remove rows with missing data
+      # filter out rows with missing validate data
+      # data <- dplyr::filter(data, !is.na(.data$validated))
+      # if remaining rows have latitude not numeric - return NULL
+      # if(class(data$latitude) == "character") {
+      #   return(NULL)
+      # }
+      # if data missing needs to be converted to numeric to match other rows
+
+      # convert to tibble for nice formatting
+      data <- tibble::as_tibble(data)
+      Sys.sleep(0.1)
+      return(data)
+    })
+    return(output)
   } else if (dataset == "analytical_results") {
     # Analysis result query -----------------------------------------------------
     data <- purrr::map_df(location_id, function(id) {

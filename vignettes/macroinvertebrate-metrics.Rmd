@@ -129,10 +129,10 @@ assessment_function <- function(data, ...) {
   # output <- dplyr::bind_rows(whpt, riverfly)
 
   output <- dplyr::select(
-    output, "sample_id", "question", "response"
+    output, "sample_id", "question", "response","parameter"
 
   )
-  names(output) <- c("sample_id", "question", "response")
+  names(output) <- c("sample_id", "question", "response","parameter")
   return(output)
 }
 ```
