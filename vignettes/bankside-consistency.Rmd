@@ -79,10 +79,6 @@ knitr::kable(data)
 
 Function code used to run the metric.
 
-<details>
-  <summary>Code</summary>
-
-
 ```{r, echo = TRUE, eval = TRUE}
 assessment_function <- function(data, ...) {
   # Some calculated a statistic...
@@ -100,7 +96,7 @@ assessment_function <- function(data, ...) {
   output <- metric_function[[1]](data)
   output <- filter(output, question %in% c("WHPT_ASPT", "WHPT_NTAXA"))
   predictors <- utils::read.csv(system.file("extdat",
-    "predictors.csv",
+    "gis-predictors.csv",
     package = "whpt"
   ), check.names = FALSE)
 
@@ -206,8 +202,6 @@ consistency_check <- pivot_longer(report, cols = all_of(vars), names_to = "quest
   return(consistency_check)
 }
 ```
-
-</details>
 
 ## Outcome
 
