@@ -19,8 +19,8 @@
 #'   \item{TEMPLATE}{TEMPLATE}
 #'   \item{SAMPLED_BY}{SAMPLED_BY}
 #'   \item{REPORTABLE}{REPORTABLE}
-#'   \item{FORMULATION}{FORMULATION}
 #'   \item{TEST_NUMBER}{TEST_NUMBER}
+#'   \item{SAMPLE_MEDIA}{Sample media}
 #' }
 #' @source Agency sampling data
 "lims_data"
