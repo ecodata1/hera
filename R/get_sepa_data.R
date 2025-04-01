@@ -66,10 +66,7 @@ get_sepa_data <- function(location_id,
       return(data)
     })
   } else if (dataset == "locations") {
-    loops <- seq_len(floor(length(location_id) / 50))
-    if(length(loops) == 0) {
-      loops <- 1
-    }
+    loops <- seq_len(floor(length(location_id) / 50) + 1)
     output <- purrr::map_df(loops, function(loop) {
       max <- loop * 50
       min <- max - 49
@@ -125,12 +122,10 @@ get_sepa_data <- function(location_id,
     })
     return(output)
   } else if (dataset == "sampling_points") {
-    loops <- seq_len(floor(length(location_id) / 50))
-    if(length(loops) == 0) {
-      loops <- 1
-    }
+    loops <- seq_len(floor(length(location_id) / 50) + 1)
     output <- purrr::map_df(loops, function(loop) {
       max <- loop * 50
+
       min <- max - 49
       id <- location_id[min:max]
       id <- id[!is.na(id)]
