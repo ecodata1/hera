@@ -21,8 +21,8 @@ A data frame with 42 rows and 16 variables:
   \item{TEMPLATE}{TEMPLATE}
   \item{SAMPLED_BY}{SAMPLED_BY}
   \item{REPORTABLE}{REPORTABLE}
-  \item{FORMULATION}{FORMULATION}
   \item{TEST_NUMBER}{TEST_NUMBER}
+  \item{SAMPLE_MEDIA}{Sample media}
 }
 }
 \source{
