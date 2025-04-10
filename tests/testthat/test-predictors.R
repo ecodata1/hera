@@ -32,7 +32,7 @@ test_that("Date formatting", {
 
   # Check date format is correct YYYY-MM-DD
   date_errors <- predictors[
-    !grepl("[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]",
+    !grepl("[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-9][0-9]",
     predictors$date),
     ]
   testthat::expect_equal(nrow(date_errors), expected = 0)
@@ -61,7 +61,7 @@ test_that("Chemistry site formatting", {
 
   # Check for no missing chemistry sites
   # chemistry_errors <- predictors[is.na(predictors$chemistry_site), ]
-  # testthat::expect_equal(nrow(date_errors), expected = 0)
+  # testthat::expect_equal(nrow(chemistry_errors), expected = 0)
 
 })
 
