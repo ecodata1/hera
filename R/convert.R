@@ -102,7 +102,12 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
   }
 
   if (convert_to == "hera" & convert_from == "sepa_lims") {
-    data$SAMPLED_DATE <- as.Date(data$SAMPLED_DATE, format = "%d/%m/%Y")
+    data$SAMPLED_DATE <- as.Date(data$SAMPLED_DATE, format = "%m/%d/%Y")
+
+    if(length(data$SAMPLED_DATE[is.na(data$SAMPLED_DATE)]) > 0) {
+      stop("Error with date conversion - check date format")
+    }
+
     data$SAMPLED_DATE <- format.Date(data$SAMPLED_DATE, "%Y-%m-%d")
     # Add a label column for taxon name rows
     labels <- data %>%
@@ -137,6 +142,9 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
     data$parameter[data$parameter == "MTL_TL5"] <- "River Family Inverts"
     data$parameter[data$parameter == "FW_INVERTS_FIELD"] <- "River Family Inverts"
     data$analysis_repname[data$analysis_repname == "FW_INVERTS_FIELD"] <- "Invert Physical Data"
+    data$parameter[data$parameter == "INVERTS_FIELD"] <- "River Family Inverts"
+    data$analysis_repname[data$analysis_repname == "INVERTS_FIELD"] <- "Invert Physical Data"
+
     return(data)
   } else {
     message(paste("No conversion rules created for", convert_to, "/", convert_from))
