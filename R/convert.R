@@ -102,7 +102,7 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
   }
 
   if (convert_to == "hera" & convert_from == "sepa_lims") {
-    data$SAMPLED_DATE <- as.Date(data$SAMPLED_DATE, format = "%m/%d/%Y")
+    data$SAMPLED_DATE <- as.Date(data$SAMPLED_DATE, format = "%d-%B-%Y")
 
     if(length(data$SAMPLED_DATE[is.na(data$SAMPLED_DATE)]) > 0) {
       stop("Error with date conversion - check date format")
