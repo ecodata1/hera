@@ -562,24 +562,24 @@ path <- paste0(
   user,
   "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/readiness.csv"
 )
-
-readiness <- read.csv(file = path, 
-                      stringsAsFactors = FALSE, 
-                      check.names = FALSE)
-
-
-readiness <- readiness %>%   filter(`Analysis Type` %in% c("INVERTS", "DIATOMS"))
-
-readiness <- select(readiness, nmp_wbid,
-                    `Sampling Point`,
-                    `Analysis Type`,
-                    `REG Mon Purps (combined)`,
-                    `LOCAL OFFICE`) %>%  
-  distinct() %>% 
-  filter(!is.na(nmp_wbid))
-
-readiness <- readiness %>% 
-  pivot_wider(names_from = `Analysis Type`, values_from = `REG Mon Purps (combined)`)
+# 
+# readiness <- read.csv(file = path, 
+#                       stringsAsFactors = FALSE, 
+#                       check.names = FALSE)
+# 
+# 
+# readiness <- readiness %>%   filter(`Analysis Type` %in% c("INVERTS", "DIATOMS"))
+# 
+# readiness <- select(readiness, nmp_wbid,
+#                     `Sampling Point`,
+#                     `Analysis Type`,
+#                     `REG Mon Purps (combined)`,
+#                     `LOCAL OFFICE`) %>%  
+#   distinct() %>% 
+#   filter(!is.na(nmp_wbid))
+# 
+# readiness <- readiness %>% 
+#   pivot_wider(names_from = `Analysis Type`, values_from = `REG Mon Purps (combined)`)
 
 
 # remove duplicates (incorrect wbid / sampling point combination from NMP)
