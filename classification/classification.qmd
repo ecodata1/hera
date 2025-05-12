@@ -8,22 +8,11 @@ editor_options:
 
 # TODO
 
--   Grab all Ecology + Chemistry (alk) data (LIMS + Archived) ✓
--   Join lims + recovered alk - 'hera' format? ✓
--   Use dynamic/recent observed predictive variables ✓
--   Test 8175 first? Using unit tests? OKAY! ✓
+-   Convert() function does a lot of tweaks - can these go in a .csv lookup file?
 -   Unit test for mean_alkalinity
 -   Unit test for RICT
 -   Unit test for DARLEQ
--   Update sampling point table, now called 'predictors.csv' ✓
--   Use grid reference from predictors.csv (grid reference for RICT can be different to actual grid reference).
--   Query alkalinity data using alt_site - get mean_alkalinty ✓
--   Add suitability code ✓
--   Classify ✓
--   Join with previous classification ✓
--   Sewage fungus override - manual check - see bacteria-tufts.rmd ✓
--   Missing NGR in recovered data - NGR now coming from predictors.csv? ✓
--   Convert() function does a lot of tweaks - can these go in a .csv lookup file?
+-   List where data is saved from previous years and combine into single dataset?
 
 ```{r}
 # devtools::install_github("ecodata1/hera")
@@ -46,7 +35,6 @@ path <- paste0(
   user,
   "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/latest-lims-data.csv"
 )
-
 
 lims_eco <- readr::read_csv(
   path
@@ -81,13 +69,15 @@ remove <- lims_eco %>%
 
 rm(check)
 
-lims_eco <- lims_eco %>% filter(!SAMPLE_NUMBER %in% unique(remove$SAMPLE_NUMBER))
+lims_eco <- lims_eco %>% 
+  filter(!SAMPLE_NUMBER %in% unique(remove$SAMPLE_NUMBER))
 ```
 
 Change some column names that are different in LIMS export versus the expected output in LIMS Data explorer output.
 
 ```{r}
-# Need to rename columns from LIMS extract to match expected names for the convert() function below
+# Need to rename columns from LIMS extract to match expected names for the
+# convert() function below
 # lims_eco$REPORTED_NAME <-  lims_eco$DETERMINAND_NAME
 # lims_eco$FORMATTED_ENTRY <-  lims_eco$RESULT
 # lims_eco$DESCRIPTION <- lims_eco$SAMPLING_POINT_DESCRIPTION
@@ -110,8 +100,6 @@ lims_data <- lims_eco
 ```
 
 # Recovered data
-
-## Pre-fetched data
 
 ```{r}
 # Recovered data  ----------------------
@@ -140,7 +128,8 @@ eco_data <- ds %>%
 # impact if removed.
 eco_data <- distinct(eco_data)
 
-eco_data$parameter[is.na(eco_data$parameter)] <- eco_data$analysis_repname[is.na(eco_data$parameter)]
+eco_data$parameter[is.na(eco_data$parameter)] <- 
+  eco_data$analysis_repname[is.na(eco_data$parameter)]
 
 eco_data <- dplyr::filter(eco_data, parameter %in% c(
   "River Family Inverts",
@@ -198,6 +187,7 @@ alk_data <- hera::convert(alk_results_sep_19,
                           convert_from = "sepa_chem",
                           convert_to = "hera")
 
+
 predictors <- utils::read.csv(
   system.file("extdat",
     "predictors.csv",
@@ -239,23 +229,14 @@ samples.
 
 ```{r}
 data$year <- lubridate::year(data$date_taken)
-data <- data %>% filter(year >= 2019 | parameter == "PAC")
+data <- data %>% filter(year >= 2016 | parameter == "PAC")
 ```
 
 # Predictors
 
-Get RICT predictors.
+Filter RICT predictors.
 
 ```{r, message=FALSE}
-predictors <- utils::read.csv(
-  system.file("extdat",
-    "predictors.csv",
-    package = "hera"
-  ),
-  stringsAsFactors = FALSE, check.names = FALSE
-)
-predictors$location_id <- as.character(predictors$location_id)
-
 predictors$date <- as.Date(predictors$date)
 # use latest 'version' for each location_id
 predictors <- arrange(predictors, desc(date))
@@ -281,7 +262,7 @@ rm(predictors)
 
 If alkalinity required calculate.
 
-```{r, eval=FALSE}
+```{r}
 # to reduce data size, only use chem data that is needed for ecology sites
 taxa_data <- data[data$parameter != "PAC", ]
 chem_data <- data[data$parameter == "PAC", ]
@@ -314,8 +295,6 @@ data <- data[data$parameter %in% c(
   "River Diatoms"
 ), ]
 
-
-# alkalinity$sample_number <- as.numeric(alkalinity$sample_number)
 data <- left_join(data,
   alkalinity,
   by = join_by("sample_id" == "sample_number")
@@ -329,12 +308,13 @@ missing_alk <- missing_alk[missing_alk$analysis_repname %in% c(
   "Diatom Taxa",
   "Invert Taxa Family Lab", "RIVER_DIATOMS", "LAB_INVERTS"
 ), ]
-unique(missing_alk[missing_alk$year > 2019, c(
+miss_alk_test <- unique(missing_alk[missing_alk$year > 2019, c(
   "location_id",
   "location_description",
-  "chemistry_site",
-  "sample_id"
+  "chemistry_site"
 )])
+
+miss_alk_test <- filter(miss_alk_test, !is.na(chemistry_site))
 
 missing_gis <- data[data$analysis_repname %in%
   c("LAB_INVERTS") &
@@ -419,6 +399,9 @@ data <- dplyr::group_by(data, location_id, parameter) %>%
   dplyr::mutate(max_year = max(year))
 data <- ungroup(data)
 
+# only planned ecology samples (adhoc chemistry samples used for alkalinity
+# average to agree with historic procedure)
+data <- filter(data, purpose %in% c("SCHED", "Planned"))
 # In case 'data' variable gets written over by other scripts
 test_data <- data
 results <- map_df(c(2019, 2020, 2021, 2022, 2023, 2024), function(class_year) {
@@ -438,7 +421,7 @@ results <- map_df(c(2019, 2020, 2021, 2022, 2023, 2024), function(class_year) {
       message(unique(location$location_id))
       wfd_result <- assess(location,
         name = c(
-          "DARLEQ3",
+          "DARLEQ3",  
           "RICT"
         )
       )
@@ -455,9 +438,14 @@ results <- map_df(c(2019, 2020, 2021, 2022, 2023, 2024), function(class_year) {
 # location level results
 results <- results[!is.na(results$location_id), ]
 
-# write.csv(results, file = "vignettes\\data\\sample-classification-2023-final-v2.csv", row.names = FALSE)
-# write.csv(results, file = "vignettes\\data\\sample-classification-2023-final.csv", row.names = FALSE)
-# results <- read.csv(file = "vignettes\\data\\sample-classification-2023-final.csv")
+# write.csv(results,
+# file = "vignettes\\data\\sample-classification-2023-final-v2.csv",
+# row.names = FALSE)
+# write.csv(results,
+# file = "vignettes\\data\\sample-classification-2023-final.csv",
+# row.names = FALSE)
+# results <-
+# read.csv(file = "vignettes\\data\\sample-classification-2023-final.csv")
 
 results$location_id <- as.character(results$location_id)
 
@@ -502,6 +490,7 @@ results_filtered <- results_filtered %>%
       parameter
     )
   )
+
 ```
 
 # NMP
@@ -573,6 +562,59 @@ Join 2023 classification results based on WB
 
 ```{r}
 user <- Sys.info()["user"]
+path <- paste0(
+  "C:/Users/",
+  user,
+  "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/readiness.csv"
+)
+
+readiness <- read.csv(file = path, 
+                      stringsAsFactors = FALSE, 
+                      check.names = FALSE)
+
+
+readiness <- readiness %>%   filter(`Analysis Type` %in% c("INVERTS", "DIATOMS"))
+
+readiness <- select(readiness, nmp_wbid,
+                    `Sampling Point`,
+                    `Analysis Type`,
+                    `REG Mon Purps (combined)`,
+                    `LOCAL OFFICE`) %>%  
+  distinct() %>% 
+  filter(!is.na(nmp_wbid))
+# 
+# readiness <- readiness %>% 
+#   pivot_wider(names_from = `Analysis Type`, values_from = `REG Mon Purps (combined)`)
+# 
+
+# remove duplicates (incorrect wbid / sampling point combination from NMP)
+select(readiness, nmp_wbid, `Sampling Point`) %>% 
+    distinct() %>% 
+group_by(`Sampling Point`) %>% 
+  mutate(n_count = n()) %>%  filter(n_count > 1)
+
+
+readiness <- filter(readiness, 
+                    `Sampling Point` != 121293 &
+                      nmp_wbid != 10145)
+
+
+readiness <- filter(readiness, 
+                    `Sampling Point` != 302505 &
+                      nmp_wbid != 3202)
+
+# replace wbid with NMP wbid
+readiness$nmp_wbid <- as.character(readiness$nmp_wbid)
+readiness$`Sampling Point` <- as.character(readiness$`Sampling Point`)
+results_filtered <- left_join(results_filtered,
+  readiness,
+  by = join_by(
+    location_id == `Sampling Point`
+  )
+)
+
+results_filtered$wbid <- results_filtered$nmp_wbid
+
 path <- paste0(
   "C:/Users/",
   user,
@@ -698,6 +740,9 @@ results_filtered$class_CoC <- pmax(
   results_filtered$CoCP,
   results_filtered$CoCB
 )
+
+
+results_filtered <- unique(results_filtered)
 ```
 
 # Reportable

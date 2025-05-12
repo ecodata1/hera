@@ -13,14 +13,26 @@ This could become an assessment and add to `catalogue` in future.
 ```{r}
 library(tidyverse)
 library(hera)
- lims_eco <- readr::read_csv(
-  "data\\2024-06-11-lims-data.csv"
- )
- 
-lims_eco$REPORTED_NAME <-  lims_eco$DETERMINAND_NAME
-lims_eco$FORMATTED_ENTRY <-  lims_eco$RESULT
-lims_eco$DESCRIPTION <- lims_eco$SAMPLING_POINT_DESCRIPTION
-lims_eco$SAMPLE_NUMBER <- lims_eco$ORIGINAL_SAMPLE     
+user <- Sys.info()["user"]
+path <- paste0(
+  "C:/Users/",
+  user,
+  "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/latest-lims-data.csv"
+)
+
+lims_eco <- readr::read_csv(
+  path
+)
+lims_eco$HAS_FLAGS...16 <- NULL
+lims_eco$HAS_FLAGS...20 <- NULL
+
+
+ # lims_eco <- readr::read_csv(
+ #  "data\\2024-06-11-lims-data.csv"
+ # )
+ # 
+lims_eco$SAMPLE_NUMBER <- lims_eco$ORIGINAL_SAMPLE  
+lims_eco <- filter(lims_eco, ANALYSIS == "SEWAGE_FUNGUS")
  
  lims_eco <- hera::convert(lims_eco,
   convert_to = "hera",
@@ -81,7 +93,6 @@ tufts <- sewage_fungus(tufts)
 
 ```
 
-
 ## Find failing sites
 
 ```{r}
@@ -123,7 +134,3 @@ test <- rename(test, diatom_class = Class)
 
 write.csv(test, "bacterial_tufts_overrides.csv")
 ```
-
-
-
-
