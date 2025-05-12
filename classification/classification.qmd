@@ -229,7 +229,7 @@ samples.
 
 ```{r}
 data$year <- lubridate::year(data$date_taken)
-data <- data %>% filter(year >= 2019 | parameter == "PAC")
+data <- data %>% filter(year >= 2016 | parameter == "PAC")
 ```
 
 # Predictors
@@ -308,12 +308,13 @@ missing_alk <- missing_alk[missing_alk$analysis_repname %in% c(
   "Diatom Taxa",
   "Invert Taxa Family Lab", "RIVER_DIATOMS", "LAB_INVERTS"
 ), ]
-unique(missing_alk[missing_alk$year > 2019, c(
+miss_alk_test <- unique(missing_alk[missing_alk$year > 2019, c(
   "location_id",
   "location_description",
-  "chemistry_site",
-  "sample_id"
+  "chemistry_site"
 )])
+
+miss_alk_test <- filter(miss_alk_test, !is.na(chemistry_site))
 
 missing_gis <- data[data$analysis_repname %in%
   c("LAB_INVERTS") &
@@ -398,6 +399,9 @@ data <- dplyr::group_by(data, location_id, parameter) %>%
   dplyr::mutate(max_year = max(year))
 data <- ungroup(data)
 
+# only planned ecology samples (adhoc chemistry samples used for alkalinity
+# average to agree with historic procedure)
+data <- filter(data, purpose %in% c("SCHED", "Planned"))
 # In case 'data' variable gets written over by other scripts
 test_data <- data
 results <- map_df(c(2019, 2020, 2021, 2022, 2023, 2024), function(class_year) {
@@ -417,7 +421,7 @@ results <- map_df(c(2019, 2020, 2021, 2022, 2023, 2024), function(class_year) {
       message(unique(location$location_id))
       wfd_result <- assess(location,
         name = c(
-          "DARLEQ3",
+          "DARLEQ3",  
           "RICT"
         )
       )
@@ -486,6 +490,7 @@ results_filtered <- results_filtered %>%
       parameter
     )
   )
+
 ```
 
 # NMP
@@ -562,25 +567,25 @@ path <- paste0(
   user,
   "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/readiness.csv"
 )
-# 
-# readiness <- read.csv(file = path, 
-#                       stringsAsFactors = FALSE, 
-#                       check.names = FALSE)
-# 
-# 
-# readiness <- readiness %>%   filter(`Analysis Type` %in% c("INVERTS", "DIATOMS"))
-# 
-# readiness <- select(readiness, nmp_wbid,
-#                     `Sampling Point`,
-#                     `Analysis Type`,
-#                     `REG Mon Purps (combined)`,
-#                     `LOCAL OFFICE`) %>%  
-#   distinct() %>% 
-#   filter(!is.na(nmp_wbid))
+
+readiness <- read.csv(file = path, 
+                      stringsAsFactors = FALSE, 
+                      check.names = FALSE)
+
+
+readiness <- readiness %>%   filter(`Analysis Type` %in% c("INVERTS", "DIATOMS"))
+
+readiness <- select(readiness, nmp_wbid,
+                    `Sampling Point`,
+                    `Analysis Type`,
+                    `REG Mon Purps (combined)`,
+                    `LOCAL OFFICE`) %>%  
+  distinct() %>% 
+  filter(!is.na(nmp_wbid))
 # 
 # readiness <- readiness %>% 
 #   pivot_wider(names_from = `Analysis Type`, values_from = `REG Mon Purps (combined)`)
-
+# 
 
 # remove duplicates (incorrect wbid / sampling point combination from NMP)
 select(readiness, nmp_wbid, `Sampling Point`) %>% 
@@ -735,6 +740,9 @@ results_filtered$class_CoC <- pmax(
   results_filtered$CoCP,
   results_filtered$CoCB
 )
+
+
+results_filtered <- unique(results_filtered)
 ```
 
 # Reportable
