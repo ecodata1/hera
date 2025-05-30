@@ -47,25 +47,28 @@ lims_eco <- filter(lims_eco, TEMPLATE != "FORMAL")
 lims_eco <- filter(lims_eco, ANALYSIS %in% c(
   "PAC",
   "RIVER_DIATOMS",
+  "DIATOMS",
   "FW_INVERTS_FIELD",
   "INVERTS_FIELD",
   "MTL_TL5",
   "MTL_TL4",
-  "LAB_INVERTS"
+  "LAB_INVERTS",
+  "INVERTS_TL2",
+  "INVERTS_TL5"
 ))
 
 # Remove family level results if MTL present
 check <- lims_eco %>%
   select(ANALYSIS, ORIGINAL_SAMPLE) %>%
   distinct() %>%
-  filter(ANALYSIS %in% c("MTL_TL5", "MTL_TL4", "LAB_INVERTS")) %>%
+  filter(ANALYSIS %in% c("MTL_TL5", "MTL_TL4", "LAB_INVERTS","INVERTS_TL2","INVERTS_TL5")) %>%
   group_by(ORIGINAL_SAMPLE) %>%
   summarise(n = n()) %>%
   filter(n > 1)
 
 remove <- lims_eco %>%
   filter(ORIGINAL_SAMPLE %in% check$ORIGINAL_SAMPLE &
-    ANALYSIS == "LAB_INVERTS")
+    ANALYSIS %in% c("LAB_INVERTS","INVERTS_TL2"))
 
 rm(check)
 
@@ -304,8 +307,8 @@ missing_alk <- data[
   is.na(data$alkalinity),
 ]
 missing_alk <- missing_alk[missing_alk$analysis_repname %in% c(
-  "Diatom Taxa",
-  "Invert Taxa Family Lab", "RIVER_DIATOMS", "LAB_INVERTS"
+  "Diatom Taxa","DIATOMS",
+  "Invert Taxa Family Lab", "RIVER_DIATOMS", "LAB_INVERTS","INVERTS_TL2"
 ), ]
 miss_alk_test <- unique(missing_alk[missing_alk$year > 2019, c(
   "location_id",
@@ -316,7 +319,7 @@ miss_alk_test <- unique(missing_alk[missing_alk$year > 2019, c(
 miss_alk_test <- filter(miss_alk_test, !is.na(chemistry_site))
 
 missing_gis <- data[data$analysis_repname %in%
-  c("LAB_INVERTS") &
+  c("LAB_INVERTS","INVERTS_TL2") &
   is.na(data$discharge_category), ]
 missing_gis[, c(
   "location_id",
@@ -374,8 +377,10 @@ field_only <- data %>%
   filter(data$analysis_repname %in% c(
     "Invert Physical Data",
     "LAB_INVERTS",
+    "INVERTS_TL2",
     "MTL_TL5",
-    "MTL_TL4"
+    "MTL_TL4",
+    "INVERTS_TL5"
   )) %>%
   select(sample_id, analysis_repname) %>%
   distinct() %>%
