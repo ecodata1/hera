@@ -224,8 +224,7 @@ rm(recovered_data, eco_data, lims_data, lims_eco, alk_data)
 
 # Filter
 
-Only core surveillance sites to speed up testing and filter out ecology old
-samples.
+Only core surveillance sites to speed up testing and filter out ecology old samples.
 
 ```{r}
 data$year <- lubridate::year(data$date_taken)
