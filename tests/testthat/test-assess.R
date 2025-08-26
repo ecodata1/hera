@@ -96,7 +96,10 @@ test_that("MPFF Compliance works", {
     niter = 10)
   # test on pre-calculated results
   testthat::expect_equal(
-  round(output$response[grepl("area_95_confidence", output$question)], 0),
+  round(
+    as.numeric(
+      output$response[grepl("area_95_confidence", output$question)], 0)
+    ),
   round(89594.9653487682,0)
   )
 })
