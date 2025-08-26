@@ -18,7 +18,10 @@
 #' @importFrom purrr map
 #' @export
 validation <- function(data = NULL) {
-  message("Hello from hera, ...work in progress!")
+
+  if (nrow(data) < 1) {
+    return(NULL)
+  }
 
   if (any(names(data) %in% "sample_id")) {
     data$sample_id <- as.character(data$sample_id)

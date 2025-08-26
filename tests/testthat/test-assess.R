@@ -84,3 +84,22 @@ test_that("Macroinvertebrate Metrics works", {
     c("69.6", "4.97", "14")
   )
 })
+
+test_that("MPFF Compliance works", {
+  data <- kraken::demo_iqi
+  data$parameter <- "MPFF Compliance"
+  output <- assess(
+    data,
+    "MPFF Compliance",
+    hera_format = FALSE,
+    loess = TRUE,
+    niter = 10)
+  # test on pre-calculated results
+  testthat::expect_equal(
+  round(
+    as.numeric(
+      output$response[grepl("area_95_confidence", output$question)], 0)
+    ),
+  round(89594.9653487682,0)
+  )
+})
