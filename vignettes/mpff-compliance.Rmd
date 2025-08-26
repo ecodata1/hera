@@ -72,13 +72,12 @@ If applicable, write a function to assess your input data and return an outcome.
 
 ```{r assessment, message=FALSE, warning=FALSE, collapse=TRUE, echo=TRUE}
 assessment_function <- function(data, ...) {
-  data <- dplyr::filter(data, parameter == "MPFF Compliance")
-  if (nrow(data) > 0) {
-    results <- kraken::kraken(data, hera_format = TRUE, loess = TRUE)
+  args <- list(...)
+  if (length(args) > 0) {
+    results <- kraken::kraken(data, ...)
   } else {
-    return(NULL)
+    results <- kraken::kraken(data, hera_format = TRUE)
   }
-
   return(results)
 }
 ```
@@ -88,7 +87,11 @@ assessment_function <- function(data, ...) {
 The outcome of your assessment.
 
 ```{r output, message=FALSE, warning=FALSE}
-outcome <- assessment_function(input)
+outcome <- assessment_function(
+  input,
+  hera_format = TRUE, 
+  niter = 10, 
+  loess = TRUE)
 outcome_table <- select(outcome, question, response)
 outcome_table <- outcome_table[!duplicated(outcome_table[, c("question")]), ]
 knitr::kable(outcome_table)
