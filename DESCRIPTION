@@ -47,7 +47,6 @@ Suggests:
     pkgdown,
     readr,
     rmarkdown,
-    slickR,
     tidyverse,
     visNetwork
 Remotes:

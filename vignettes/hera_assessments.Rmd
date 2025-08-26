@@ -18,7 +18,6 @@ library(purrr)
 library(tidyr)
 library(magrittr)
 library(kableExtra)
-library(slickR)
 library(visNetwork)
 ```
 
@@ -30,12 +29,12 @@ data <- filter(data, question == "name_short")
 
 dt_url <- paste0(gsub(" ", "-", tolower(trimws(data$response))), ".html")
 
-slickR::slickR(
-  list.files("images", full.names = TRUE, pattern = "png"),
-  objLinks = dt_url[1:2],
-  height = 200,
-  width = "95%"
-)
+# slickR::slickR(
+#   list.files("images", full.names = TRUE, pattern = "png"),
+#   objLinks = dt_url[1:2],
+#   height = 200,
+#   width = "95%"
+# )
 ```
 
   
@@ -54,14 +53,17 @@ data %>%
   kable_styling(bootstrap_options = c("hover", "condensed"))
 ```
 
-## Reports
+## Outputs
 
 ```{r reports, echo=FALSE, warning=FALSE}
-# reports <- catalogue$reports %>%
-#   bind_rows() %>%
-#   unique()
-# kable(reports, format = "html", escape = FALSE) %>%
-#   kable_styling(bootstrap_options = c("hover", "condensed"))
+reports <- catalogue$data %>%
+  bind_rows() %>%
+  filter(output == TRUE) %>% 
+  select(parameter, question) %>% 
+  unique()
+  
+kable(reports, format = "html", escape = FALSE) %>%
+  kable_styling(bootstrap_options = c("hover", "condensed"))
 ```
 
 ## Dependencies
