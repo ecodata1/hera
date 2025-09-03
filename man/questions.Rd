@@ -13,5 +13,7 @@ dataframe
 Return list of questions and assessments from the catalogue
 }
 \examples{
+\dontrun{
 questions <- questions()
+}
 }

@@ -38,7 +38,7 @@ only.}
 Data frame
 }
 \description{
-Import data from web services and convert into standard format for `hera`
+Import data from web services and convert into standard format for hera
 regulatory assessment tool.
 }
 \examples{

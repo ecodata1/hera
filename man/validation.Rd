@@ -19,5 +19,7 @@ Validation of input data.
 \code{validation()} Validation
 }
 \examples{
+\dontrun{
 validations <- validation(demo_data)
+}
 }

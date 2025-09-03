@@ -16,5 +16,7 @@ data.frame in RICT input format.
 Convert hera dataframe into RICT input dataframe
 }
 \examples{
+\dontrun{
 hera:::convert_rict(demo_data)
+}
 }

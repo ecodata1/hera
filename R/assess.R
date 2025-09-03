@@ -37,12 +37,10 @@
 #' @importFrom kraken kraken
 #' @export
 assess <- function(data = NULL, name = NULL, catalogue = NULL, ...) {
-  message("Hello from hera, ...work in progress!")
   data <- validation(data)
   if (is.null(catalogue)) {
     catalogue <- hera::catalogue
   }
-
   catalogue <- filter_assessment(model = catalogue, name = name)
 
   assessments <- purrr::map_df(
@@ -62,7 +60,7 @@ assess <- function(data = NULL, name = NULL, catalogue = NULL, ...) {
       data <- assessment_function(data, ...)
       data$response <- as.character(data$response)
       return(data)
-    }
+    }, .progress = TRUE
   )
 
   assessments <- as_tibble(assessments)

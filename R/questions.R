@@ -6,7 +6,9 @@
 #' @export
 #' @importFrom rlang .data
 #' @examples
+#' \dontrun{
 #' questions <- questions()
+#' }
 questions <- function() {
   data <- unnest(hera::catalogue, data)
   data <- data[data$output == FALSE & !is.na(data$output), ]

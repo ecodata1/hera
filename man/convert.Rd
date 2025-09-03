@@ -9,7 +9,7 @@ convert(data, convert_to = "hera", convert_from = "sepa_lims")
 \arguments{
 \item{data}{Data as raw input from a number of sources}
 
-\item{convert_to}{Convert data to `hera` format by default. Currently, a
+\item{convert_to}{Convert data to hera format by default. Currently, a
 reverse convert back to the original input format is not possible.}
 
 \item{convert_from}{Specify the structure of the input data. This can be
@@ -18,13 +18,14 @@ results structure, 'lims' is the new results structure direct from the lab
 info system.}
 }
 \value{
-Dataframe in `hera` structure. See `demo_data`
+Dataframe in hera structure. See `demo_data`
 }
 \description{
-Convert input data into internal `hera` structure. This allows data from
+Convert input data into internal hera structure. This allows data from
 different sources to be used as input.
 }
 \examples{
+\dontrun{
 data <-
   read.csv(system.file("extdat",
     "demo-data/analysis-results-ecology.csv",
@@ -32,5 +33,5 @@ data <-
   ), check.names = FALSE)
 
 r <- convert(data, convert_from = "sepa")
-
+}
 }

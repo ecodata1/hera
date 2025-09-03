@@ -1,6 +1,6 @@
 #' Get data
 #'
-#' Import data from web services and convert into standard format for `hera`
+#' Import data from web services and convert into standard format for hera
 #' regulatory assessment tool.
 #'
 #' @param location_id Unique ID of location.
