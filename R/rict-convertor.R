@@ -7,7 +7,9 @@
 #' @return data.frame in RICT input format.
 #'
 #' @examples
+#' \dontrun{
 #' hera:::convert_rict(demo_data)
+#' }
 convert_rict <- function(data) {
   require(macroinvertebrateMetrics)
   require(dplyr)

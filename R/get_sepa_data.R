@@ -83,7 +83,7 @@ get_sepa_data <- function(location_id,
       url <- parse_url("https://geospatial.cloudnet.sepa.org.uk/server/rest/services")
       url$path <-
         paste(url$path,
-          "Hosted/All_Locations_22_12_2020_snapshot/FeatureServer/162/query",
+          "All_Locations_22_12_2020_snapshot/FeatureServer/162/query",
           sep = "/"
         )
       url$query <- list(
@@ -140,7 +140,7 @@ get_sepa_data <- function(location_id,
       url <- parse_url("https://geospatial.cloudnet.sepa.org.uk/server/rest/services")
       url$path <-
         paste(url$path,
-              "Sampling_points/MapServer/0/query",
+              "Sampling_points/MapServer/1/query",
               sep = "/"
         )
       url$query <- list(

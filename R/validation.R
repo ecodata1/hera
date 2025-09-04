@@ -8,7 +8,9 @@
 #'
 #' @return Dataframe of validation messages
 #' @examples
+#' \dontrun{
 #' validations <- validation(demo_data)
+#' }
 #' @importFrom rlang .data
 #' @importFrom tibble tibble
 #' @importFrom dplyr group_by inner_join mutate select
