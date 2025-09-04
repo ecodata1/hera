@@ -32,6 +32,7 @@ Agency sampling data
 lims_data
 }
 \description{
-Example dataset of raw LIMS data
+A dataset containing raw ecology data from Lab Info System. This can be
+converted to standard hera format by hera::convert(lims_data)
 }
 \keyword{datasets}

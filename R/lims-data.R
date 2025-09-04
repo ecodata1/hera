@@ -1,7 +1,7 @@
 #' Example dataset of raw LIMS data
-#
-# A dataset containing raw ecology data from Lab Info System. This can be
-# converted to standard hera format by hera::convert(lims_data)
+#'
+#' A dataset containing raw ecology data from Lab Info System. This can be
+#' converted to standard hera format by hera::convert(lims_data)
 #'
 #' @format A data frame with 42 rows and 16 variables:
 #' \describe{

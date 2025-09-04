@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 ```
 
 # hera
-<img src='https://raw.githubusercontent.com/ecodata1/hera/main/man/figures/heraverse_logo_2.png' align="right" width="300" />
+<img src='https://raw.githubusercontent.com/ecodata1/hera/main/man/figures/heraverse_logo_2.png' align="right" width="300" alt="Collage of hex logos for hera and related packages"  />
 
 <!-- badges: start -->
 [![Codecov test coverage](https://codecov.io/gh/ecodata1/hera/branch/master/graph/badge.svg)](https://codecov.io/gh/ecodata1/hera?branch=master)
