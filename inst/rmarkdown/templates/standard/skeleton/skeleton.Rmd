@@ -94,7 +94,7 @@ Function code used to run this assessment.
 
 ```{r assessment}
 assessment_function <- function(data) {
-  # Note, any non-standard base R library must be call using require().
+  # Note, any non-standard base R library must be called using require().
   # require(dplyr)
   # require(tidyr)
   # require(magrittr)

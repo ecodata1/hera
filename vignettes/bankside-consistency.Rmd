@@ -57,8 +57,8 @@ A list of questions required to run the assessment.
 ```{r input}
 input <- tibble(
   location_id = c("206972", "206972"),
-  sample_id = c("12345", "12345"),
-  date_taken = as.Date(c("2019-11-21", "2019-11-21")),
+  sample_id = c("12345", "54321"),
+  date_taken = as.Date(c("2019-11-21", "2025-11-21")),
   question = c("Taxon abundance", "Live abundance"),
   response = c("12", "21"),
   label = c("Baetidae", "Baetidae"),
@@ -95,7 +95,7 @@ Function code used to run this assessment.
 ```{r, echo = TRUE, eval = TRUE}
 assessment_function <- function(data, ...) {
   # Some calculated a statistic...
-  # Note, any non-standard base R library must be call using require().
+  # Note, any non-standard base R library must be called using require().
   require(dplyr)
   require(tidyr)
   require(magrittr)
@@ -192,7 +192,6 @@ vars <- c(
 "Reported WHPT Class Year"
 )
 
-
 report <- dplyr::select(report, any_of(vars))
 vars <- c(
 "season",
@@ -263,7 +262,7 @@ After **updating the catalogue, rebuild the package**, click on Build \> Install
 
 This section tests if this assessment is usable using `assess()` function.
 
-```{r}
+```{r test}
 # No need to edit this code
 assess(
   data = hera::demo_data,
