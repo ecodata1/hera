@@ -123,18 +123,42 @@ Body Status</td>
 </h2>
 <p>A list of questions required to run the assessment.</p>
 <table class="table">
+<colgroup>
+<col width="13%">
+<col width="11%">
+<col width="12%">
+<col width="18%">
+<col width="10%">
+<col width="10%">
+<col width="23%">
+</colgroup>
 <thead><tr class="header">
+<th align="left">location_id</th>
+<th align="left">sample_id</th>
+<th align="left">date_taken</th>
 <th align="left">question</th>
 <th align="left">response</th>
+<th align="left">label</th>
+<th align="left">parameter</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
+<td align="left">206972</td>
+<td align="left">12345</td>
+<td align="left">2019-11-21</td>
 <td align="left">Taxon abundance</td>
 <td align="left">12</td>
+<td align="left">Baetidae</td>
+<td align="left">River Family Inverts</td>
 </tr>
 <tr class="even">
+<td align="left">206972</td>
+<td align="left">54321</td>
+<td align="left">2025-11-21</td>
 <td align="left">Live abundance</td>
 <td align="left">21</td>
+<td align="left">Baetidae</td>
+<td align="left">BANKSIDE_INVERTS</td>
 </tr>
 </tbody>
 </table>
@@ -142,13 +166,13 @@ Body Status</td>
 <div class="section level2">
 <h2 id="assessment">Assessment<a class="anchor" aria-label="anchor" href="#assessment"></a>
 </h2>
-<p>Function code used to run the metric.</p>
+<p>Function code used to run this assessment.</p>
 <details><summary>
 Code
 </summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">assessment_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># Some calculated a statistic...</span></span>
-<span>  <span class="co"># Note, any non-standard base R library must be call using require().</span></span>
+<span>  <span class="co"># Note, any non-standard base R library must be called using require().</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
@@ -162,11 +186,11 @@ Code
 <span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="va">metric_function</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">output</span>, <span class="va">question</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WHPT_ASPT"</span>, <span class="st">"WHPT_NTAXA"</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">predictors</span> <span class="op">&lt;-</span> <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdat"</span>,</span>
-<span>    <span class="st">"predictors.csv"</span>,</span>
+<span>    <span class="st">"gis-predictors.csv"</span>,</span>
 <span>    package <span class="op">=</span> <span class="st">"whpt"</span></span>
 <span>  <span class="op">)</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="co"># Downgrade Typical class for testing worst-case scenario</span></span>
+<span><span class="co"># Downgrade Typical class for testing worst-case scenario</span></span>
 <span><span class="co">#   predictors$`Typical ASPT Class`[predictors$`Typical ASPT Class` == "Poor"] &lt;- "Bad"</span></span>
 <span><span class="co">#     predictors$`Typical ASPT Class`[predictors$`Typical ASPT Class` == "Moderate"] &lt;- "Poor"</span></span>
 <span><span class="co">#       predictors$`Typical ASPT Class`[predictors$`Typical ASPT Class` == "Good"] &lt;- "Moderate"</span></span>
@@ -219,7 +243,7 @@ Code
 <span><span class="va">report</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">report</span>, <span class="va">location_ids</span>, by <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by</a></span><span class="op">(</span><span class="va">sample_id</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">new_predictors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdat"</span>, <span class="st">"predictors.csv"</span>, package <span class="op">=</span> <span class="st">"whpt"</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdat"</span>, <span class="st">"gis-predictors.csv"</span>, package <span class="op">=</span> <span class="st">"whpt"</span><span class="op">)</span>,</span>
 <span>  check.names <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">report</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">report</span>, <span class="va">new_predictors</span>, by <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by</a></span><span class="op">(</span><span class="va">location_id</span><span class="op">)</span><span class="op">)</span></span>
@@ -244,7 +268,6 @@ Code
 <span><span class="st">"Typical NTAXA Class"</span>,</span>
 <span><span class="st">"Reported WHPT Class Year"</span></span>
 <span><span class="op">)</span></span>
-<span></span>
 <span></span>
 <span><span class="va">report</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">report</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">any_of</a></span><span class="op">(</span><span class="va">vars</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
@@ -365,9 +388,7 @@ button in the Build pane.</p>
 <h2 id="test">Test<a class="anchor" aria-label="anchor" href="#test"></a>
 </h2>
 <p>This section tests if this assessment is usable using
-<code>assess</code> function.</p>
-<p>Using demo data:</p>
-<p>Using converted data:</p>
+<code><a href="../reference/assess.html">assess()</a></code> function.</p>
 </div>
 <div class="section level2">
 <h2 id="launch-app">Launch app<a class="anchor" aria-label="anchor" href="#launch-app"></a>
@@ -386,7 +407,7 @@ assessment.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>

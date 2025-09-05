@@ -1,7 +1,8 @@
 pandoc: 3.1.11
-pkgdown: 2.1.1
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
+  bacteria-tufts: bacteria-tufts.html
   bankside-consistency: bankside-consistency.html
   darleq3: darleq3.html
   deployment_guide: deployment_guide.html
@@ -11,7 +12,7 @@ articles:
   macroinvertebrate-metrics: macroinvertebrate-metrics.html
   mpff-compliance: mpff-compliance.html
   rict: rict.html
-last_built: 2025-01-24T10:20Z
+last_built: 2025-09-05T16:07Z
 urls:
   reference: https://ecodata1.github.io/hera/reference
   article: https://ecodata1.github.io/hera/articles

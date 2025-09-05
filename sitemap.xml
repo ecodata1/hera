@@ -1,5 +1,6 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://ecodata1.github.io/hera/404.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/articles/bacteria-tufts.html</loc></url>
 <url><loc>https://ecodata1.github.io/hera/articles/bankside-consistency.html</loc></url>
 <url><loc>https://ecodata1.github.io/hera/articles/darleq3.html</loc></url>
 <url><loc>https://ecodata1.github.io/hera/articles/deployment_guide.html</loc></url>
@@ -16,6 +17,7 @@
 <url><loc>https://ecodata1.github.io/hera/reference/catalogue.html</loc></url>
 <url><loc>https://ecodata1.github.io/hera/reference/combine.html</loc></url>
 <url><loc>https://ecodata1.github.io/hera/reference/convert.html</loc></url>
+<url><loc>https://ecodata1.github.io/hera/reference/convert_rict.html</loc></url>
 <url><loc>https://ecodata1.github.io/hera/reference/demo_data.html</loc></url>
 <url><loc>https://ecodata1.github.io/hera/reference/get_bulk_data.html</loc></url>
 <url><loc>https://ecodata1.github.io/hera/reference/get_data.html</loc></url>

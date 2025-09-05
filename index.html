@@ -60,12 +60,16 @@
   <main id="main" class="col-md-9"><div class="section level1">
 <div class="page-header"><h1 id="hera">hera<a class="anchor" aria-label="anchor" href="#hera"></a>
 </h1></div>
-<p><img src="https://raw.githubusercontent.com/ecodata1/hera/main/man/figures/heraverse_logo_2.png" align="right" width="300"></p>
+<p><img src="https://raw.githubusercontent.com/ecodata1/hera/main/man/figures/heraverse_logo_2.png" align="right" width="300" alt="Collage of hex logos for hera and related packages"></p>
 <!-- badges: start -->
 
 <p>WORK IN PROGRESS</p>
-<p>Hera is a prototype package to explore the future of regulatory environmental modelling. The package outlines possible approaches to creating a shared research platform for building, testing and deploying models used to assess environmental risk for regulatory purposes. See <a href="https://ecodata1.github.io/hera/articles/hera_specifications.html">Request for comment</a> paper for an outline and broad technical specifications.</p>
-<p>Hera is envisaged as an opinionated collections of R packages designed for sharing environmental models. All packages share an underlying design, grammar and data structures. This allows the separation of the concerns between data, models, post-modelling steps and visualisation. Allowing greater collaboration and sharing of methods and tools.</p>
+<p>Hera is a prototype package to explore the future of regulatory environmental modelling. The package outlines approaches to creating a shared research platform for building, testing and deploying models used to assess environmental risk for regulatory purposes. See <a href="https://ecodata1.github.io/hera/articles/hera_specifications.html">Request for comment</a> paper for an outline and broad technical specifications.</p>
+<p>Hera is envisaged as an opinionated collections of R packages designed for sharing environmental models. All packages share an underlying design, grammar and data structure. This allows the separation of concerns between data, models, post-modelling and visualisation. Allowing greater collaboration and sharing of methods and tools.</p>
+<p><a href="https://en.wikipedia.org/wiki/Heraclitus" class="external-link">Heraclitus</a>:</p>
+<blockquote>
+<p>You Cannot Step Into the Same River Twice</p>
+</blockquote>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -88,42 +92,51 @@
 <span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/assess.html">assess</a></span><span class="op">(</span><span class="fu">hera</span><span class="fu">::</span><span class="va"><a href="reference/demo_data.html">demo_data</a></span><span class="op">)</span></span>
 <span><span class="va">data</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample_id"</span>, <span class="st">"parameter"</span>, <span class="st">"question"</span>, <span class="st">"response"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt; # A tibble: 5 × 4</span></span>
-<span><span class="co">#&gt;   sample_id parameter question           response                         </span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;              &lt;chr&gt;                            </span></span>
-<span><span class="co">#&gt; 1 1017980   &lt;NA&gt;      EPSI Score TL2     97.2877525074163                 </span></span>
-<span><span class="co">#&gt; 2 1017980   &lt;NA&gt;      EPSI Condition TL2 Minimally sedimented/unsedimented</span></span>
-<span><span class="co">#&gt; 3 1101214   &lt;NA&gt;      EPSI Score TL2     94.6979865771812                 </span></span>
-<span><span class="co">#&gt; 4 1101214   &lt;NA&gt;      EPSI Condition TL2 Minimally sedimented/unsedimented</span></span>
-<span><span class="co">#&gt; 5 1250462   &lt;NA&gt;      EPSI Score TL2     97.8168378529374</span></span></code></pre></div>
+<span><span class="co">#&gt;   sample_id parameter            question     response</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;                &lt;chr&gt;        &lt;chr&gt;   </span></span>
+<span><span class="co">#&gt; 1 1672942   River Family Inverts sample_score 0       </span></span>
+<span><span class="co">#&gt; 2 1672942   River Family Inverts ntaxa        1       </span></span>
+<span><span class="co">#&gt; 3 1672942   River Family Inverts wfd_awic     0       </span></span>
+<span><span class="co">#&gt; 4 1800006   River Family Inverts sample_score 0       </span></span>
+<span><span class="co">#&gt; 5 1800006   River Family Inverts ntaxa        1</span></span></code></pre></div>
 <p>Alternatively, you can view the <code>catalogue</code> and select which assessments to be run.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">catalogue</span></span>
-<span><span class="co">#&gt; # A tibble: 4 × 3</span></span>
+<span><span class="co">#&gt; # A tibble: 5 × 3</span></span>
 <span><span class="co">#&gt;   assessment                data               assessment_function</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;                     &lt;list&gt;             &lt;list&gt;             </span></span>
-<span><span class="co">#&gt; 1 Macroinvertebrate Metrics &lt;tibble [11 × 10]&gt; &lt;fn&gt;               </span></span>
-<span><span class="co">#&gt; 2 DARLEQ3                   &lt;tibble [35 × 12]&gt; &lt;fn&gt;               </span></span>
-<span><span class="co">#&gt; 3 Bankside Consistency      &lt;tibble [11 × 12]&gt; &lt;fn&gt;               </span></span>
-<span><span class="co">#&gt; 4 RICT                      &lt;tibble [20 × 12]&gt; &lt;fn&gt;</span></span></code></pre></div>
+<span><span class="co">#&gt; 1 MPFF Compliance           &lt;tibble [34 × 10]&gt; &lt;fn&gt;               </span></span>
+<span><span class="co">#&gt; 2 Macroinvertebrate Metrics &lt;tibble [22 × 10]&gt; &lt;fn&gt;               </span></span>
+<span><span class="co">#&gt; 3 DARLEQ3                   &lt;tibble [36 × 12]&gt; &lt;fn&gt;               </span></span>
+<span><span class="co">#&gt; 4 Bankside Consistency      &lt;tibble [29 × 12]&gt; &lt;fn&gt;               </span></span>
+<span><span class="co">#&gt; 5 RICT                      &lt;tibble [30 × 12]&gt; &lt;fn&gt;</span></span></code></pre></div>
 <p>Then select which assessment(s) you wish to run by name:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">assessments</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/assess.html">assess</a></span><span class="op">(</span><span class="va">demo_data</span>, </span>
-<span>                      name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"RICT"</span>,</span>
-<span>                               <span class="st">"Macroinvertebrate Metrics"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">assessments</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/assess.html">assess</a></span><span class="op">(</span><span class="va">demo_data</span>,</span>
+<span>  name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>    <span class="st">"RICT"</span>,</span>
+<span>    <span class="st">"Macroinvertebrate Metrics"</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span><span class="va">assessments</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample_id"</span>, <span class="st">"parameter"</span>, <span class="st">"question"</span>, <span class="st">"response"</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="co">#&gt; # A tibble: 5 × 4</span></span>
-<span><span class="co">#&gt;   sample_id parameter question           response                         </span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;              &lt;chr&gt;                            </span></span>
-<span><span class="co">#&gt; 1 1017980   &lt;NA&gt;      EPSI Score TL2     97.2877525074163                 </span></span>
-<span><span class="co">#&gt; 2 1017980   &lt;NA&gt;      EPSI Condition TL2 Minimally sedimented/unsedimented</span></span>
-<span><span class="co">#&gt; 3 1101214   &lt;NA&gt;      EPSI Score TL2     94.6979865771812                 </span></span>
-<span><span class="co">#&gt; 4 1101214   &lt;NA&gt;      EPSI Condition TL2 Minimally sedimented/unsedimented</span></span>
-<span><span class="co">#&gt; 5 1250462   &lt;NA&gt;      EPSI Score TL2     97.8168378529374</span></span></code></pre></div>
+<span><span class="co">#&gt;   sample_id parameter            question     response</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;                &lt;chr&gt;        &lt;chr&gt;   </span></span>
+<span><span class="co">#&gt; 1 1672942   River Family Inverts sample_score 0       </span></span>
+<span><span class="co">#&gt; 2 1672942   River Family Inverts ntaxa        1       </span></span>
+<span><span class="co">#&gt; 3 1672942   River Family Inverts wfd_awic     0       </span></span>
+<span><span class="co">#&gt; 4 1800006   River Family Inverts sample_score 0       </span></span>
+<span><span class="co">#&gt; 5 1800006   River Family Inverts ntaxa        1</span></span></code></pre></div>
+<p>Heraclitus:</p>
+<blockquote>
+<p>Everything flows</p>
+</blockquote>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
+<li><a href="https://cloud.r-project.org/package=hera" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/ecodata1/hera/" class="external-link">Browse source code</a></li>
 <li><a href="https://github.com/ecodata1/hera/issues" class="external-link">Report a bug</a></li>
 </ul>
@@ -147,7 +160,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Tim Foster <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Tim Foster <br><small class="roles"> Author, maintainer </small>   </li>
 </ul>
 </div>
 
@@ -168,7 +181,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>

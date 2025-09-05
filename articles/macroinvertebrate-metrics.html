@@ -80,8 +80,7 @@ guidance</a>.</p>
 <div class="section level2">
 <h2 id="description">Description<a class="anchor" aria-label="anchor" href="#description"></a>
 </h2>
-<p>Basic details about the assessment. Update the ‘response’ values as
-required.</p>
+<p>Basic details about the assessment.</p>
 <table class="table">
 <thead><tr class="header">
 <th align="left">question</th>
@@ -102,7 +101,7 @@ required.</p>
 </tr>
 <tr class="even">
 <td align="left">status</td>
-<td align="left">prototype</td>
+<td align="left">testing</td>
 </tr>
 <tr class="odd">
 <td align="left">type</td>
@@ -114,20 +113,29 @@ required.</p>
 <div class="section level2">
 <h2 id="input">Input<a class="anchor" aria-label="anchor" href="#input"></a>
 </h2>
-<p>A list of questions required to run the assessment.</p>
+<p>A list of questions required to run this assessment.</p>
 <table class="table">
 <thead><tr class="header">
+<th align="left">sample_id</th>
 <th align="left">question</th>
 <th align="left">response</th>
+<th align="left">label</th>
+<th align="left">parameter</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
+<td align="left">12345</td>
 <td align="left">Taxon abundance</td>
 <td align="left">12</td>
+<td align="left">Baetidae</td>
+<td align="left">River Family Inverts</td>
 </tr>
 <tr class="even">
+<td align="left">12346</td>
 <td align="left">Live abundance</td>
 <td align="left">12</td>
+<td align="left">Baetidae</td>
+<td align="left">BANKSIDE_INVERTS</td>
 </tr>
 </tbody>
 </table>
@@ -135,9 +143,10 @@ required.</p>
 <div class="section level2">
 <h2 id="assessment">Assessment<a class="anchor" aria-label="anchor" href="#assessment"></a>
 </h2>
-<p>If applicable, write a function to assess your input data and return
-an outcome. For example, a metric, statistic, prediction etc.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<p>Function code used to run this assessment.</p>
+<details><summary>
+Code
+</summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">assessment_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">...</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># Calculated invert metrics...</span></span>
 <span>  <span class="co"># Note, any non-standard base R library must be call using require().</span></span>
@@ -150,7 +159,10 @@ an outcome. For example, a metric, statistic, prediction etc.</p>
 <span>    <span class="va">input</span>,</span>
 <span>    <span class="va">parameter</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>      <span class="st">"River Family Inverts"</span>,</span>
-<span>      <span class="st">"BANKSIDE_INVERTS"</span></span>
+<span>      <span class="st">"BANKSIDE_INVERTS"</span>,</span>
+<span>      <span class="st">"F_BMWP_TST"</span>,</span>
+<span>      <span class="st">"MTL_TL4"</span>,</span>
+<span>      <span class="st">"MTL_TL5"</span></span>
 <span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span>  <span class="va">input</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">input</span>, <span class="va">question</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
@@ -164,20 +176,17 @@ an outcome. For example, a metric, statistic, prediction etc.</p>
 <span>  <span class="va">input</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
 <span>    <span class="va">input</span>, <span class="st">"sample_id"</span>, <span class="st">"question"</span>, <span class="st">"response"</span>, <span class="st">"label"</span>, <span class="st">"parameter"</span></span>
 <span>  <span class="op">)</span></span>
-<span></span>
 <span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="fu">macroinvertebrateMetrics</span><span class="fu">::</span><span class="fu"><a href="https://aquametrics.github.io/macroinvertebrateMetrics/reference/calc_metric.html" class="external-link">calc_metric</a></span><span class="op">(</span><span class="va">input</span><span class="op">)</span></span>
-<span></span>
-<span>  <span class="co"># riverfly &lt;- macroinvertebrateMetrics::calc_riverfly(input)</span></span>
-<span>  </span>
-<span>  <span class="co"># output &lt;- dplyr::bind_rows(whpt, riverfly)</span></span>
-<span></span>
+<span>  <span class="va">sample_details</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">input</span>, <span class="va">sample_id</span>, <span class="va">parameter</span><span class="op">)</span></span>
+<span>  <span class="va">sample_details</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">sample_details</span><span class="op">)</span></span>
 <span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
-<span>    <span class="va">output</span>, <span class="st">"sample_id"</span>, <span class="st">"question"</span>, <span class="st">"response"</span></span>
-<span></span>
+<span>    <span class="va">output</span>, <span class="va">sample_id</span>, <span class="va">question</span>, <span class="va">response</span></span>
 <span>  <span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sample_id"</span>, <span class="st">"question"</span>, <span class="st">"response"</span><span class="op">)</span></span>
+<span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">output</span>, <span class="va">sample_details</span>, by <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by</a></span><span class="op">(</span><span class="va">sample_id</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">output</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
+</details>
 </div>
 <div class="section level2">
 <h2 id="outcome">Outcome<a class="anchor" aria-label="anchor" href="#outcome"></a>
@@ -332,7 +341,7 @@ assessment.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>

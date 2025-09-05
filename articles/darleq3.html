@@ -80,8 +80,7 @@ guidance</a>.</p>
 <div class="section level2">
 <h2 id="description">Description<a class="anchor" aria-label="anchor" href="#description"></a>
 </h2>
-<p>Basic details about the assessment. Update the ‘response’ values as
-required.</p>
+<p>Basic details about the assessment.</p>
 <table class="table">
 <colgroup>
 <col width="15%">
@@ -107,7 +106,7 @@ Phytobenthos</td>
 </tr>
 <tr class="even">
 <td align="left">status</td>
-<td align="left">prototype</td>
+<td align="left">testing</td>
 </tr>
 <tr class="odd">
 <td align="left">type</td>
@@ -124,30 +123,43 @@ Phytobenthos</td>
 alkalinity. If ‘alkalinity’ column not included, alkalinity will be
 calculated from rows with ‘alkalinity’ question using the response
 column value.</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 9</span></span></span>
-<span><span class="co">#&gt;   question   response label parameter data_type max   min   source question_type</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> location_… 8175     Gomp… <span style="color: #BB0000;">NA</span>        character <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    sepa_… reference    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> sample_id  1        <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        character <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    sepa_… reference    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> date_taken 2021-05… <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        character <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    sepa_… reference    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Taxon abu… 12       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        number    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    sepa_… observation  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> parameter  45       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        number    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    locat… reference    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Alkalinity River D… <span style="color: #BB0000;">NA</span>    River Di… character <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    sepa_… predictor    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> TDI4       45       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        number    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    sepa_… outcome      </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> Predicted… 67       <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        number    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    sepa_… outcome</span></span></code></pre>
 <table class="table">
+<colgroup>
+<col width="12%">
+<col width="10%">
+<col width="11%">
+<col width="17%">
+<col width="9%">
+<col width="22%">
+<col width="15%">
+</colgroup>
 <thead><tr class="header">
+<th align="left">location_id</th>
+<th align="left">sample_id</th>
+<th align="left">date_taken</th>
 <th align="left">question</th>
 <th align="left">response</th>
+<th align="left">label</th>
+<th align="left">parameter</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
+<td align="left">8175</td>
+<td align="left">12345</td>
+<td align="left">2019-11-21</td>
 <td align="left">Taxon abundance</td>
 <td align="left">12</td>
+<td align="left">Gomphonema olivaceum</td>
+<td align="left">River Diatoms</td>
 </tr>
 <tr class="even">
+<td align="left">8175</td>
+<td align="left">12345</td>
+<td align="left">2019-11-21</td>
 <td align="left">Alkalinity</td>
 <td align="left">45</td>
+<td align="left">NA</td>
+<td align="left">Chemistry</td>
 </tr>
 </tbody>
 </table>
@@ -159,7 +171,7 @@ column value.</p>
 outcome.</p>
 <details><summary>
 Code
-</summary><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+</summary><div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">assessment_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">metric</span> <span class="op">=</span> <span class="st">"TDI5LM"</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
@@ -176,11 +188,13 @@ Code
 <span>      stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, check.names <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>    <span class="op">)</span></span>
 <span>    <span class="va">predictors</span><span class="op">$</span><span class="va">location_id</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">predictors</span><span class="op">$</span><span class="va">location_id</span><span class="op">)</span></span>
-<span>     <span class="va">predictors</span><span class="op">$</span><span class="va">date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">predictors</span><span class="op">$</span><span class="va">date</span><span class="op">)</span></span>
+<span>    <span class="va">predictors</span><span class="op">$</span><span class="va">date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">predictors</span><span class="op">$</span><span class="va">date</span><span class="op">)</span></span>
 <span>    <span class="va">predictors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">predictors</span>, <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"chemistry_site"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>      <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">predictors</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"location_id"</span><span class="op">)</span>,</span>
-<span>                        multiple <span class="op">=</span> <span class="st">"first"</span><span class="op">)</span></span>
+<span>      <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">predictors</span>,</span>
+<span>        by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"location_id"</span><span class="op">)</span>,</span>
+<span>        multiple <span class="op">=</span> <span class="st">"first"</span></span>
+<span>      <span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span></span>
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alkalinity"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -529,10 +543,8 @@ Code
 <h2 id="test">Test<a class="anchor" aria-label="anchor" href="#test"></a>
 </h2>
 <p>This section tests if this assessment is usable using
-<code>assessment</code> function.</p>
-<pre><code><span><span class="co">#&gt; Hello from hera, ...work in progress!</span></span>
-<span><span class="co">#&gt; Hello from hera, ...work in progress!</span></span>
-<span><span class="co">#&gt; Warning in CPL_crs_from_input(x): GDAL Message 1: +init=epsg:XXXX syntax is</span></span>
+<code><a href="../reference/assess.html">assess()</a></code> function.</p>
+<pre><code><span><span class="co">#&gt; Warning in CPL_crs_from_input(x): GDAL Message 1: +init=epsg:XXXX syntax is</span></span>
 <span><span class="co">#&gt; deprecated. It might return a CRS with a non-EPSG compliant axis order.</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 237 × 5</span></span></span>
 <span><span class="co">#&gt;    sample_id location_id question          response          parameter          </span></span>
@@ -566,7 +578,7 @@ assessment.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
 </div>
 
     </footer>
