@@ -87,9 +87,7 @@ input <- tribble(
 # required)
 input_display <- select(
   input,
-  location_id,
   sample_id,
-  date_taken,
   question,
   response,
   label,

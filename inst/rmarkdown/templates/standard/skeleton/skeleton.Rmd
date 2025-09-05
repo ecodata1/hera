@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -150,7 +150,7 @@ After **updating the catalogue, rebuild the package**, click on Build > Install 
 
 This section tests if this assessment is usable using `assess()` function.
 
-```{r}
+```{r test}
 # No need to edit this code
 assess(
   data = hera::demo_data,
