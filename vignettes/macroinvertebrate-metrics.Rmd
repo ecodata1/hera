@@ -33,7 +33,7 @@ This document has been created following the generic [assessment guidance](https
 
 ## Description
 
-Basic details about the assessment. Update the 'response' values as required.
+Basic details about the assessment.
 
 ```{r description}
 description <- tribble(
@@ -41,7 +41,7 @@ description <- tribble(
   "name_short", "Macroinvertebrate Metrics",
   "name_long", "Freshwater Macroinvertebrate Metrics",
   "parameter", "River Invertebrates",
-  "status", "prototype",
+  "status", "testing",
   "type", "metric"
 )
 
@@ -50,7 +50,7 @@ knitr::kable(description)
 
 ## Input
 
-A list of questions required to run the assessment.
+A list of questions required to run this assessment.
 
 ```{r input}
 input <- tribble(
@@ -83,16 +83,29 @@ input <- tribble(
   "sepa_ecology_results"
 )
 
-data <- input
-data <- select(data, question, response)
-data <- data[!duplicated(data[, c("question")]), ]
-
-knitr::kable(data)
+# Only display columns vital to run example (min, max, source, type are not
+# required)
+input_display <- select(
+  input,
+  location_id,
+  sample_id,
+  date_taken,
+  question,
+  response,
+  label,
+  parameter
+)
+# Only display one example of each question
+input_display <- input_display[!duplicated(input_display[, c("question")]), ]
+knitr::kable(input_display)
 ```
 
 ## Assessment
 
-If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
+Function code used to run this assessment.
+
+<details>
+  <summary>Code</summary>
 
 ```{r assessment, collapse=TRUE, echo=TRUE}
 assessment_function <- function(data, ...) {
@@ -135,6 +148,8 @@ assessment_function <- function(data, ...) {
   return(output)
 }
 ```
+
+</details>
 
 ## Outcome
 

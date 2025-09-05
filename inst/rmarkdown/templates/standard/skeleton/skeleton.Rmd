@@ -33,27 +33,27 @@ This document has been created following the generic [assessment guidance](https
 
 ## Description
 
-Basic details about the assessment. Update the 'response' values as required.
+Basic details about the assessment. 
 
 ```{r description}
-
+# Update the 'response' values as required
 description <- tribble(
   ~question, ~response,
   "name_short", "TDI",
   "name_long", "Example",
   "parameter", "River Diatoms",
-  "status", "prototype"
+  "status", "prototype",
+  "type", "metric"
 )
 
-description
+knitr::kable(description)
 ```
 
 ## Input
 
-A list of questions required to run the assessment.
+A list of questions required to run the assessment, example provided below.
 
 ```{r input}
-
 input <- tibble(
   location_id = c("8175", "8175"),
   sample_id = c("12345", "12345"),
@@ -67,36 +67,50 @@ input <- tibble(
   min = c(NA, NA),
   source = c("sepa_ecology_results", "location_attributes")
 )
-input
+
+# Only display columns vital to run example (min, max, source, type are not
+# required)
+input_display <- select(
+  input,
+  location_id,
+  sample_id,
+  date_taken,
+  question,
+  response,
+  label,
+  parameter
+)
+# Only display one example of each question
+input_display <- input_display[!duplicated(input_display[, c("question")]), ]
+knitr::kable(input_display)
 ```
 
 ## Assessment
 
-If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
+Function code used to run this assessment.
+
+<details>
+  <summary>Code</summary>
 
 ```{r assessment}
-
 assessment_function <- function(data) {
-  # Calculated some statistic...
   # Note, any non-standard base R library must be call using require().
   # require(dplyr)
   # require(tidyr)
   # require(magrittr)
   # require(tibble)
-  # data <- data %>%
-  #   group_by(sample_id) %>% 
-  #   summarise(question = "n_count",
-  #             response = n(),
-  #             sample_id = unique(sample_id)
-  #             )
-  
+
+  # Calculated some statistic...
+
   return(data)
 }
 ```
 
+</details>
+
 ## Outcome
 
-The outcome of your assessment.
+The outcome of this assessment.
 
 ```{r output}
 outcome <- assessment_function(input)
@@ -105,12 +119,12 @@ outcome
 
 ## Check
 
-Run checks on the assessment.
+Run checks on this assessment.
 
 ```{r checklist}
 # No need to edit this code
 # Format description
-standard_format <- hera:::hera_format(description = description) 
+standard_format <- hera:::hera_format(description = description)
 # Check description
 check_list <- hera:::hera_test(description = description)
 knitr::kable(check_list$standard_check)
@@ -134,7 +148,7 @@ After **updating the catalogue, rebuild the package**, click on Build > Install 
 
 ## Test
 
-This section tests if this assessment is usable using `assessment` function.
+This section tests if this assessment is usable using `assess()` function.
 
 ```{r}
 # No need to edit this code

@@ -41,7 +41,7 @@ description <- tribble(
   "name_short", "RICT",
   "name_long", "RICT",
   "parameter", "River Family Invertebrates",
-  "status", "prototype",
+  "status", "testing",
   "type", "metric"
 )
 
@@ -50,7 +50,7 @@ knitr::kable(description)
 
 ## Input
 
-A list of questions required to run the assessment.
+A list of questions required to run this assessment.
 
 ```{r input}
 input <- tibble(
@@ -66,16 +66,29 @@ input <- tibble(
   min = NA,
   source = c("sepa_ecology_results")
 )
-data <- input
-data <- select(data, question, response)
-data <- data[!duplicated(data[, c("question")]), ]
-
-knitr::kable(data)
+# Only display columns vital to run example (min, max, source, type are not
+# required)
+input_display <- select(
+  input,
+  location_id,
+  sample_id,
+  date_taken,
+  question,
+  response,
+  label,
+  parameter
+)
+# Only display one example of each question
+input_display <- input_display[!duplicated(input_display[, c("question")]), ]
+knitr::kable(input_display)
 ```
 
 ## Assessment
 
-If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
+Returns RICT output
+
+<details>
+  <summary>Code</summary>
 
 ```{r assessment, message=FALSE, warning=FALSE, collapse=TRUE, echo=TRUE}
 assessment_function <- function(data, ...) {
@@ -84,13 +97,15 @@ assessment_function <- function(data, ...) {
   require(rict)
   require(macroinvertebrateMetrics)
   require(dplyr)
+  require(tidyr)
+  require(magrittr)
   message(unique(data$location_id))
   metric_function <- catalogue[catalogue$assessment ==
     "Macroinvertebrate Metrics", 3][[1]]
   input_data <- data
   input_data$location_id <- NULL
   output <- metric_function[[1]](input_data)
-  if(is.null(output)) {
+  if (is.null(output)) {
     return(NULL)
   }
   output <- dplyr::filter(output, question %in% c("WHPT_ASPT", "WHPT_NTAXA"))
@@ -111,7 +126,7 @@ assessment_function <- function(data, ...) {
     predict_data <- filter(predictors, location_id %in% unique(data$location_id))
     predict_data$date <- as.Date(predict_data$date)
     predict_data <- arrange(predict_data, dplyr::desc(date))
-    
+
     output_location <- inner_join(output,
       unique(data[, c(
         "location_id",
@@ -121,8 +136,12 @@ assessment_function <- function(data, ...) {
       by = "sample_id",
       relationship = "many-to-many"
     )
-
-    whpt_input <- inner_join(output_location, predict_data, by = "location_id", multiple = "first")
+    whpt_input <- inner_join(
+      output_location,
+      predict_data,
+      by = "location_id",
+      multiple = "first"
+    )
   } else {
     # function to average predictors for each year? See sepaTools package?::
     final_data <- data
@@ -245,7 +264,7 @@ assessment_function <- function(data, ...) {
   data$year <- format.Date(data$date_taken, "%Y")
   data$year <- as.integer(data$year)
   rict_output <- purrr::map(unique(data$location_id), function(location_id) {
-   data <- data[data$location_id == location_id, ]
+    data <- data[data$location_id == location_id, ]
     if (!is.null(data$river_width)) {
       if (any(!is.na(data$river_width))) {
         data$river_width <- as.numeric(data$river_width)
@@ -499,23 +518,28 @@ assessment_function <- function(data, ...) {
 
     predict_single <- rict::rict_predict(rict_data, all_indices = TRUE)
     # predict_single$sample_id <- rict_data$sample_id
-    
+
     sample_season <- select(data, "location_id", "sample_id", "season")
     sample_season <- unique(sample_season)
     sample_season$season <- as.numeric(sample_season$season)
-    predict_single <- select(predict_single,
-                             "SuitCode", "SuitText",
-                             "SEASON", "SITE",
-                             "TL2_08_Group_ARMI_Score",
-                             "TL2_08_Group_ARMI_NTaxa",
-                             "TL2_WHPT_Score_AbW_DistFam",
-                             "TL2_WHPT_NTAXA_AbW_DistFam", 
-                             "TL2_WHPT_ASPT_AbW_DistFam")
+    predict_single <- select(
+      predict_single,
+      "SuitCode", "SuitText",
+      "SEASON", "SITE",
+      "TL2_08_Group_ARMI_Score",
+      "TL2_08_Group_ARMI_NTaxa",
+      "TL2_WHPT_Score_AbW_DistFam",
+      "TL2_WHPT_NTAXA_AbW_DistFam",
+      "TL2_WHPT_ASPT_AbW_DistFam"
+    )
     predict_single <- unique(predict_single)
-    predict_single <- inner_join(sample_season, 
-                                 predict_single, 
-                                 by = join_by(season == SEASON,
-                                              location_id == SITE))
+    predict_single <- inner_join(sample_season,
+      predict_single,
+      by = join_by(
+        season == SEASON,
+        location_id == SITE
+      )
+    )
 
     single_predict <- predict_single
     # single_predict <- select(predict_single, sample_id, SuitCode, SuitText)
@@ -648,7 +672,7 @@ assessment_function <- function(data, ...) {
       by = "sample_id",
       relationship = "many-to-many"
     )
-   #rict_class <- rename(rict_class, "location_id" = SITE)
+    # rict_class <- rename(rict_class, "location_id" = SITE)
     rict_aspt <- tibble(
       "location_id" = predict_single$location_id,
       "sample_id" = predict_single$sample_id,
@@ -667,13 +691,13 @@ assessment_function <- function(data, ...) {
       "question" = "RICT Rerference ARMI Score",
       "response" = as.character(predict_single$TL2_08_Group_ARMI_Score)
     )
-      rict_river_ntaxa <- tibble(
+    rict_river_ntaxa <- tibble(
       "location_id" = predict_single$location_id,
       "sample_id" = predict_single$sample_id,
       "question" = "RICT Rerference ARMI NTAXA",
       "response" = as.character(predict_single$TL2_08_Group_ARMI_NTaxa)
     )
-    
+
     predict_single <- bind_rows(rict_aspt, rict_ntaxa, rict_river_score, rict_river_ntaxa)
     predict_single$parameter <- "RICT Prediction"
     rict_prediction <- bind_rows(
@@ -747,12 +771,13 @@ assessment_function <- function(data, ...) {
 }
 ```
 
+</details>
+
 ## Outcome
 
-The outcome of your assessment.
+The outcome of this assessment.
 
 ```{r output}
-# demo_data <- get_data(1000)
 # Pretend no alkalinity - force to use supporting table of alkalinity and
 # physical survey results (silt, river_width etc)
 outcome <- suppressMessages(suppressWarnings(assessment_function(input)))
@@ -763,7 +788,7 @@ knitr::kable(outcome_table)
 
 ## Check
 
-Run checks on the assessment.
+Run checks on this assessment.
 
 ```{r checklist}
 # No need to edit this code
@@ -793,7 +818,7 @@ After **updating the catalogue, rebuild the package**, click on Build > Install 
 
 ## Test
 
-This section tests if this assessment is usable using `assessment` function.
+This section tests if this assessment is usable using `assess()` function.
 
 ```{r, results='hide'}
 # No need to edit this code
