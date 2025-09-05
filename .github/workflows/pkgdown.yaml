@@ -24,6 +24,7 @@ jobs:
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      isPush: ${{ github.event_name == 'push' }}
       R_KEEP_PKG_SOURCE: yes
 
     steps:
