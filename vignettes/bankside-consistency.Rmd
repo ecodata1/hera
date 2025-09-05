@@ -264,10 +264,10 @@ This section tests if this assessment is usable using `assess()` function.
 
 ```{r test}
 # No need to edit this code
-assess(
-  data = hera::demo_data,
-  name = description$response[description$question == "name_short"]
-)
+# assess(
+#   data = hera::demo_data,
+#   name = description$response[description$question == "name_short"]
+# )
 ```
 
 ## Launch app
