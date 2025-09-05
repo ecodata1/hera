@@ -88,7 +88,7 @@ test_that("Macroinvertebrate Metrics works", {
 test_that("MPFF Compliance works", {
   data <- kraken::demo_iqi
   data$parameter <- "MPFF Compliance"
-  output <- assess(
+  output <- hera::assess(
     data,
     "MPFF Compliance",
     hera_format = FALSE,

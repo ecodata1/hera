@@ -1,0 +1,183 @@
+---
+title: "Bacteria Tufts"
+output: rmarkdown::html_vignette
+editor_options: 
+  chunk_output_type: console
+vignette: >
+  %\VignetteIndexEntry{Bacteria Tufts}
+  %\VignetteEncoding{UTF-8}  
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  echo = FALSE
+)
+library(hera)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(tibble)
+library(magrittr)
+library(testthat)
+library(visNetwork)
+```
+
+## Welcome
+
+This document has been created following the generic [assessment guidance](https://ecodata1.github.io/hera/articles/development_guide.html).
+
+<!-- Create a new regulatory assessment by updating the code info below, for guidance see https://ecodata1.github.io/hera/articles/development_guide.html  -->
+
+## Description
+
+Basic details about the assessment. Update the 'response' values as required.
+
+```{r description}
+
+description <- tribble(
+  ~question, ~response,
+  "name_short", "Bacterial Tufts",
+  "name_long", "Bacterial Tufts Metric",
+  "parameter", "SEWAGE_FUNGUS",
+  "status", "prototype",
+  "type", "metric"
+)
+
+description
+```
+
+## Input
+
+A list of questions required to run the assessment.
+
+```{r input}
+
+input <- tibble(
+  location_id = c("8175", "8175"),
+  sample_id = c("12345", "12345"),
+  date_taken = as.Date(c("2019-11-21", "2019-11-21")),
+  question = c("Sewage fungus cover", "Sewage fungus density"),
+  response = c("<30%", "Thin"),
+  label = c(NA, NA),
+  parameter = c("SEWAGE_FUNGUS", "SEWAGE_FUNGUS"),
+  type = c("character", "character"),
+  max = c(NA, NA),
+  min = c(NA, NA),
+  source = c("sepa_ecology_results","sepa_ecology_results")
+)
+input
+```
+
+## Assessment
+
+If applicable, write a function to assess your input data and return an outcome. For example, a metric, statistic, prediction etc.
+
+```{r assessment}
+
+assessment_function <- function(data) {
+  # Calculated some statistic...
+  # Note, any non-standard base R library must be call using require().
+  require(dplyr)
+  require(tidyr)
+  require(magrittr)
+  require(tibble)
+  require(purrr)
+
+  data <- purrr::map_df(split(data, data$sample_id), function(sample) {
+    if (nrow(sample) < 2) {
+      return(NULL)
+    } else {
+      sample <- dplyr::arrange(sample, question)
+      sample$combined <- paste(sample$response, collapse = " ")
+      row <- sample[1, ] # grab a row to use as template for tufts classification
+      row <- dplyr::mutate(row,
+        "question" = "Bacterial Tuft Class",
+        "parameter" = "Bacterial Tuft"
+      )
+      row <- dplyr::mutate(row, "response" = dplyr::case_when(
+        combined == "<30% Trace" ~ "Moderate",
+        combined == "30-60% Trace" ~ "Moderate",
+        combined == ">60% Trace" ~ "Poor",
+        combined == "<30% Thin" ~ "Moderate",
+        combined == "30-60% Thin" ~ "Poor",
+        combined == ">60% Thin" ~ "Poor",
+        combined == "<30% Thick" ~ "Poor",
+        combined == "30-60% Thick" ~ "Poor",
+        combined == ">60% Thick" ~ "Poor",
+        combined == "<30% Massive" ~ "Poor",
+        combined == "30-60% Massive" ~ "Bad",
+        combined == ">60% Massive" ~ "Bad"
+      ))
+
+      sample <- dplyr::bind_rows(sample, row)
+      sample$combined <- NULL
+      return(sample)
+    }
+  })
+  
+  
+  return(data)
+}
+```
+
+## Outcome
+
+The outcome of your assessment.
+
+```{r output}
+outcome <- assessment_function(input)
+outcome
+```
+
+## Check
+
+Run checks on the assessment.
+
+```{r checklist}
+# No need to edit this code
+# Format description
+standard_format <- hera:::hera_format(description = description) 
+# Check description
+check_list <- hera:::hera_test(description = description)
+knitr::kable(check_list$standard_check)
+```
+
+## Update
+
+Update the catalogue of assessments to make them available.
+
+```{r hera_update}
+# No need to edit this code
+hera:::update_catalogue(
+  description = description,
+  input = input,
+  assessment_function = assessment_function,
+  output = outcome
+)
+```
+
+After **updating the catalogue, rebuild the package**, click on Build > Install and Restart menu or 'Install and Restart' button in the Build pane.
+
+## Test
+
+This section tests if this assessment is usable using `assessment` function.
+
+```{r test}
+# No need to edit this code
+assess(
+  data = hera::demo_data,
+  name = description$response[description$question == "name_short"]
+)
+```
+
+## Launch app
+
+Below is an interactive application displaying the results of your assessment.
+
+```{r launch_app, echo=FALSE, eval=FALSE}
+# No need to edit this code
+# launch_app(new_catalogue = catalogue, data = data)
+```

@@ -57,8 +57,8 @@ A list of questions required to run the assessment.
 ```{r input}
 input <- tibble(
   location_id = c("206972", "206972"),
-  sample_id = c("12345", "12345"),
-  date_taken = as.Date(c("2019-11-21", "2019-11-21")),
+  sample_id = c("12345", "54321"),
+  date_taken = as.Date(c("2019-11-21", "2025-11-21")),
   question = c("Taxon abundance", "Live abundance"),
   response = c("12", "21"),
   label = c("Baetidae", "Baetidae"),
@@ -68,21 +68,34 @@ input <- tibble(
   min = c(NA, NA),
   source = c("sepa_ecology_results", "sepa_ecology_results")
 )
-data <- input
-data <- select(data, question, response)
-data <- data[!duplicated(data[, c("question")]), ]
-
-knitr::kable(data)
+# Only display columns vital to run example (min, max, source, type are not
+# required)
+input_display <- select(
+  input,
+  location_id,
+  sample_id,
+  date_taken,
+  question,
+  response,
+  label,
+  parameter
+)
+# Only display one example of each question
+input_display <- input_display[!duplicated(input_display[, c("question")]), ]
+knitr::kable(input_display)
 ```
 
 ## Assessment
 
-Function code used to run the metric.
+Function code used to run this assessment.
+
+<details>
+  <summary>Code</summary>
 
 ```{r, echo = TRUE, eval = TRUE}
 assessment_function <- function(data, ...) {
   # Some calculated a statistic...
-  # Note, any non-standard base R library must be call using require().
+  # Note, any non-standard base R library must be called using require().
   require(dplyr)
   require(tidyr)
   require(magrittr)
@@ -179,7 +192,6 @@ vars <- c(
 "Reported WHPT Class Year"
 )
 
-
 report <- dplyr::select(report, any_of(vars))
 vars <- c(
 "season",
@@ -202,6 +214,8 @@ consistency_check <- pivot_longer(report, cols = all_of(vars), names_to = "quest
   return(consistency_check)
 }
 ```
+
+</details>
 
 ## Outcome
 
@@ -243,30 +257,17 @@ hera:::update_catalogue(
 
 After **updating the catalogue, rebuild the package**, click on Build \> Install and Restart menu or 'Install and Restart' button in the Build pane.
 
+
 ## Test
 
-This section tests if this assessment is usable using `assess` function.
-  
-Using demo data:
-```{r}
-# For some reason not working on CI / github actions:
+This section tests if this assessment is usable using `assess()` function.
+
+```{r test}
 # No need to edit this code
-# data_out <- assess(
+# assess(
 #   data = hera::demo_data,
 #   name = description$response[description$question == "name_short"]
 # )
-# knitr::kable(head(data_out))
-```
-  
-Using converted data:
-```{r}
-# For some reason not working on CI / github actions:
-# lims_data <- hera:::convert(hera::lims_data)
-# lims_out <- assess(
-#   data = lims_data,
-#   name = description$response[description$question == "name_short"]
-# )
-# knitr::kable(head(lims_data))
 ```
 
 ## Launch app

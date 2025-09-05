@@ -4,7 +4,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 WORK IN PROGRESS
 
 Hera is a prototype package to explore the future of regulatory environmental
-modelling. The package outlines possible approaches to creating a shared
+modelling. The package outlines approaches to creating a shared
 research platform for building, testing and deploying models used to assess
 environmental risk for regulatory purposes.
 See [Request for
@@ -33,9 +33,14 @@ paper for an outline and broad technical specifications.
 
 Hera is envisaged as an opinionated collections of R packages designed for
 sharing environmental models. All packages share an underlying design, grammar
-and data structures. This allows the separation of the concerns between data,
-models, post-modelling steps and visualisation. Allowing greater collaboration
+and data structure. This allows the separation of concerns between data,
+models, post-modelling and visualisation. Allowing greater collaboration
 and sharing of methods and tools.
+
+[Heraclitus](https://en.wikipedia.org/wiki/Heraclitus):
+
+>  You Cannot Step Into the Same River Twice
+
 
 ## Installation
 
@@ -80,4 +85,7 @@ assessments <- assess(demo_data,
 assessments[1:5, c("sample_id", "parameter", "question", "response")]
 ```
 
+Heraclitus:
+
+>  Everything flows
 
