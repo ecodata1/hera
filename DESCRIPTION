@@ -1,7 +1,7 @@
 Package: hera
 Type: Package
 Title: Building Environmental Models Together
-Version: 0.2.1
+Version: 1.0.0
 Authors@R: 
     person(given = "Tim",
            family = "Foster",
