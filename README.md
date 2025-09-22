@@ -3,7 +3,7 @@
 
 # hera
 
-<img src='https://raw.githubusercontent.com/ecodata1/hera/main/man/figures/heraverse_logo_2.png' align="right" width="300" />
+<img src='https://raw.githubusercontent.com/ecodata1/hera/main/man/figures/heraverse_logo_2.png' align="right" width="300" alt="Collage of hex logos for hera and related packages"  />
 
 <!-- badges: start -->
 
@@ -54,13 +54,13 @@ library(hera)
 data <- assess(hera::demo_data)
 data[1:5, c("sample_id", "parameter", "question", "response")]
 #> # A tibble: 5 × 4
-#>   sample_id parameter question           response                         
-#>   <chr>     <chr>     <chr>              <chr>                            
-#> 1 1017980   <NA>      EPSI Score TL2     97.2877525074163                 
-#> 2 1017980   <NA>      EPSI Condition TL2 Minimally sedimented/unsedimented
-#> 3 1101214   <NA>      EPSI Score TL2     94.6979865771812                 
-#> 4 1101214   <NA>      EPSI Condition TL2 Minimally sedimented/unsedimented
-#> 5 1250462   <NA>      EPSI Score TL2     97.8168378529374
+#>   sample_id parameter              question          response        
+#>   <chr>     <chr>                  <chr>             <chr>           
+#> 1 1250462   Phytobenthos (diatoms) Alkalinity        121.9125401     
+#> 2 1250462   Phytobenthos (diatoms) lake_TYPE         HA              
+#> 3 1250462   Phytobenthos (diatoms) Total_count       312             
+#> 4 1250462   Phytobenthos (diatoms) Percent_in_TDI5LM 99.3589743589744
+#> 5 1250462   Phytobenthos (diatoms) N_TDI5LM          37
 ```
 
 Alternatively, you can view the `catalogue` and select which assessments
@@ -68,28 +68,32 @@ to be run.
 
 ``` r
 catalogue
-#> # A tibble: 4 × 3
+#> # A tibble: 5 × 3
 #>   assessment                data               assessment_function
 #>   <chr>                     <list>             <list>             
-#> 1 Macroinvertebrate Metrics <tibble [11 × 10]> <fn>               
-#> 2 DARLEQ3                   <tibble [35 × 12]> <fn>               
-#> 3 Bankside Consistency      <tibble [11 × 12]> <fn>               
-#> 4 RICT                      <tibble [20 × 12]> <fn>
+#> 1 DARLEQ3                   <tibble [36 × 12]> <fn>               
+#> 2 Macroinvertebrate Metrics <tibble [22 × 10]> <fn>               
+#> 3 Bankside Consistency      <tibble [29 × 12]> <fn>               
+#> 4 MPFF Compliance           <tibble [34 × 10]> <fn>               
+#> 5 RICT                      <tibble [30 × 12]> <fn>
 ```
 
 Then select which assessment(s) you wish to run by name:
 
 ``` r
-assessments <- assess(demo_data, 
-                      name = c("RICT",
-                               "Macroinvertebrate Metrics"))
+assessments <- assess(demo_data,
+  name = c(
+    "RICT",
+    "Macroinvertebrate Metrics"
+  )
+)
 assessments[1:5, c("sample_id", "parameter", "question", "response")]
 #> # A tibble: 5 × 4
-#>   sample_id parameter question           response                         
-#>   <chr>     <chr>     <chr>              <chr>                            
-#> 1 1017980   <NA>      EPSI Score TL2     97.2877525074163                 
-#> 2 1017980   <NA>      EPSI Condition TL2 Minimally sedimented/unsedimented
-#> 3 1101214   <NA>      EPSI Score TL2     94.6979865771812                 
-#> 4 1101214   <NA>      EPSI Condition TL2 Minimally sedimented/unsedimented
-#> 5 1250462   <NA>      EPSI Score TL2     97.8168378529374
+#>   sample_id parameter            question     response
+#>   <chr>     <chr>                <chr>        <chr>   
+#> 1 1672942   River Family Inverts sample_score 0       
+#> 2 1672942   River Family Inverts ntaxa        1       
+#> 3 1672942   River Family Inverts wfd_awic     0       
+#> 4 1800006   River Family Inverts sample_score 0       
+#> 5 1800006   River Family Inverts ntaxa        1
 ```
