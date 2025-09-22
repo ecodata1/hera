@@ -65,6 +65,9 @@ jobs:
         run: sudo apt install libgdal-dev libproj-dev libgeos-dev libudunits2-dev
 
       - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::pkgdown, local::.
+          needs: website
 
       - name: Deploy package
         if: ${{ github.event_name == 'push' }}

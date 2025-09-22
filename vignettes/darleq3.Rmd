@@ -32,7 +32,7 @@ This document has been created following the generic [assessment guidance](https
 
 ## Description
 
-Basic details about the assessment. Update the 'response' values as required.
+Basic details about the assessment.
 
 ```{r setup}
 description <- tribble(
@@ -40,7 +40,7 @@ description <- tribble(
   "name_short", "DARLEQ3",
   "name_long", "UKTAG River Assessment Method Macrophytes and Phytobenthos",
   "parameter", "River Diatoms",
-  "status", "prototype",
+  "status", "testing",
   "type", "metric"
 )
 
@@ -49,64 +49,12 @@ knitr::kable(description)
 
 ## Input
 
-A list of questions required to run the assessment. Optional 'alkalinity' column can be included to provide a pre-calculated mean alkalinity. If 'alkalinity' column not included, alkalinity will be calculated from rows with 'alkalinity' question using the response column value.
+A list of questions required to run the assessment. Optional 'alkalinity' column
+can be included to provide a pre-calculated mean alkalinity. If 'alkalinity'
+column not included, alkalinity will be calculated from rows with 'alkalinity'
+question using the response column value.
 
 ```{r input}
-input <- tibble(
-  question = c(
-    "location_id",
-    "sample_id",
-    "date_taken",
-    "Taxon abundance",
-    "parameter",
-    "Alkalinity",
-    "TDI4",
-    "Predicted TDI4"
-  ),
-  response = c(
-    "8175",
-    "1",
-    "2021-05-21",
-    "12",
-    "45",
-    "River Diatoms",
-    "45",
-    "67"
-  ),
-  label = c("Gomphonema olivaceum", NA, NA, NA, NA, NA, NA, NA),
-  parameter = c(NA, NA, NA, NA, NA, "River Diatoms", NA, NA),
-  data_type = c(
-    "character", "character",
-    "character", "number",
-    "number", "character",
-    "number", "number"
-  ),
-  max = c(NA, NA, NA, NA, NA, NA, NA, NA),
-  min = c(NA, NA, NA, NA, NA, NA, NA, NA),
-  source = c(
-    "sepa_ecology_results",
-    "sepa_ecology_results",
-    "sepa_ecology_results",
-    "sepa_ecology_results",
-    "location_attributes",
-    "sepa_ecology_results",
-    "sepa_metric_results",
-    "sepa_metric_results"
-  ),
-  question_type = c(
-    "reference",
-    "reference",
-    "reference",
-    "observation",
-    "reference",
-    "predictor",
-    "outcome",
-    "outcome"
-  )
-)
-input
-
-
 input <- tibble(
   location_id = c("8175", "8175"),
   sample_id = c("12345", "12345"),
@@ -120,11 +68,21 @@ input <- tibble(
   min = c(NA, NA),
   source = c("sepa_ecology_results", "location_attributes")
 )
-data <- input
-data <- select(data, question, response)
-data <- data[!duplicated(data[, c("question")]), ]
-
-knitr::kable(data)
+# Only display columns vital to run example (min, max, source, type are not
+# required)
+input_display <- select(
+  input,
+  location_id,
+  sample_id,
+  date_taken,
+  question,
+  response,
+  label,
+  parameter
+)
+# Only display one example of each question
+input_display <- input_display[!duplicated(input_display[, c("question")]), ]
+knitr::kable(input_display)
 ```
 
 ## Assessment
@@ -151,11 +109,13 @@ assessment_function <- function(data, metric = "TDI5LM") {
       stringsAsFactors = FALSE, check.names = FALSE
     )
     predictors$location_id <- as.character(predictors$location_id)
-     predictors$date <- as.Date(predictors$date)
+    predictors$date <- as.Date(predictors$date)
     predictors <- arrange(predictors, dplyr::desc(date))
     if (!any(names(data) %in% "chemistry_site")) {
-      data <- left_join(data, predictors, by = c("location_id"),
-                        multiple = "first")
+      data <- left_join(data, predictors,
+        by = c("location_id"),
+        multiple = "first"
+      )
     }
 
 
@@ -380,7 +340,7 @@ hera:::update_catalogue(
 
 ## Test
 
-This section tests if this assessment is usable using `assessment` function.
+This section tests if this assessment is usable using `assess()` function.
 
 ```{r}
 # No need to edit this code
