@@ -57,13 +57,13 @@ library(hera)
 data <- assess(hera::demo_data)
 data[1:5, c("sample_id", "parameter", "question", "response")]
 #> # A tibble: 5 × 4
-#>   sample_id parameter            question     response
-#>   <chr>     <chr>                <chr>        <chr>   
-#> 1 1672942   River Family Inverts sample_score 0       
-#> 2 1672942   River Family Inverts ntaxa        1       
-#> 3 1672942   River Family Inverts wfd_awic     0       
-#> 4 1800006   River Family Inverts sample_score 0       
-#> 5 1800006   River Family Inverts ntaxa        1
+#>   sample_id parameter              question          response        
+#>   <chr>     <chr>                  <chr>             <chr>           
+#> 1 1250462   Phytobenthos (diatoms) Alkalinity        121.9125401     
+#> 2 1250462   Phytobenthos (diatoms) lake_TYPE         HA              
+#> 3 1250462   Phytobenthos (diatoms) Total_count       312             
+#> 4 1250462   Phytobenthos (diatoms) Percent_in_TDI5LM 99.3589743589744
+#> 5 1250462   Phytobenthos (diatoms) N_TDI5LM          37
 ```
 
 Alternatively, you can view the `catalogue` and select which assessments
@@ -71,14 +71,15 @@ to be run.
 
 ``` r
 catalogue
-#> # A tibble: 5 × 3
+#> # A tibble: 6 × 3
 #>   assessment                data               assessment_function
 #>   <chr>                     <list>             <list>             
-#> 1 MPFF Compliance           <tibble [34 × 10]> <fn>               
-#> 2 Macroinvertebrate Metrics <tibble [22 × 10]> <fn>               
-#> 3 DARLEQ3                   <tibble [36 × 12]> <fn>               
-#> 4 Bankside Consistency      <tibble [29 × 12]> <fn>               
-#> 5 RICT                      <tibble [30 × 12]> <fn>
+#> 1 DARLEQ3                   <tibble [36 × 12]> <fn>               
+#> 2 Bacterial Tufts           <tibble [10 × 12]> <fn>               
+#> 3 Macroinvertebrate Metrics <tibble [22 × 10]> <fn>               
+#> 4 Bankside Consistency      <tibble [17 × 12]> <fn>               
+#> 5 MPFF Compliance           <tibble [34 × 10]> <fn>               
+#> 6 RICT                      <tibble [30 × 12]> <fn>
 ```
 
 Then select which assessment(s) you wish to run by name:

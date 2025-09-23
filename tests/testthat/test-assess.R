@@ -93,7 +93,7 @@ test_that("MPFF Compliance works", {
     "MPFF Compliance",
     hera_format = FALSE,
     loess = TRUE,
-    niter = 10
+    n_try = 10
   )
   # test on pre-calculated results
   testthat::expect_equal(
