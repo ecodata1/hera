@@ -31,10 +31,6 @@
 #' @importFrom dplyr group_by inner_join mutate bind_rows bind_cols filter
 #' @importFrom magrittr `%>%`
 #' @importFrom purrr map
-#' @importFrom whpt whpt_predict
-#' @importFrom darleq3 calc_Metric
-#' @importFrom macroinvertebrateMetrics calc_epsi
-#' @importFrom kraken kraken
 #' @export
 assess <- function(data = NULL, name = NULL, catalogue = NULL, ...) {
   data <- validation(data)
