@@ -98,6 +98,8 @@ assessment_function <- function(data, metric = "TDI5LM") {
   require(tidyr)
   require(magrittr)
   require(tibble)
+  require(stringr)
+
   # Get alkalinity predictor if not present...
   if (!any(names(data) %in% "alkalinity")) {
     # predictor table for alkalinity if "chemistry_site" variable
@@ -241,7 +243,6 @@ assessment_function <- function(data, metric = "TDI5LM") {
     ) %>%
     unique()
   taxon_names <- arrange(taxon_names, TaxonName)
-
   # Combine dataframes into named list ------------------------
   header <- data.frame(header)
   header <- header[header$SampleID %in% row.names(diatom_data), ]
@@ -249,6 +250,19 @@ assessment_function <- function(data, metric = "TDI5LM") {
   row.names(header) <- header$SampleID
   header$SampleID <- as.character(header$SampleID)
   header$SAMPLE_DATE <- as.Date(header$SAMPLE_DATE)
+  # make sure header and diatom_data are arranged in the same way even if
+  # sampleID is character or numeric. sort character sample ids as numeric not
+  # alphabetically
+  header$row.names <- row.names(header)
+  header <- arrange(header, str_rank(row.names, numeric = TRUE))
+  row.names(header) <-  header$row.names 
+  header$row.names <- NULL
+  
+  diatom_data$row.names <- row.names(diatom_data)
+  diatom_data <- arrange(diatom_data, str_rank(row.names, numeric = TRUE))
+  row.names(diatom_data) <-  diatom_data$row.names 
+  diatom_data$row.names <- NULL
+  
   output <- darleq3::calc_Metric(diatom_data, metric)
   output <- darleq3::calc_EQR(output,
     header,
