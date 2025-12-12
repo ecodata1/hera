@@ -177,6 +177,8 @@ Code
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://tibble.tidyverse.org/" class="external-link">tibble</a></span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://stringr.tidyverse.org" class="external-link">stringr</a></span><span class="op">)</span></span>
+<span></span>
 <span>  <span class="co"># Get alkalinity predictor if not present...</span></span>
 <span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/any.html" class="external-link">any</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="st">"alkalinity"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="co"># predictor table for alkalinity if "chemistry_site" variable</span></span>
@@ -319,7 +321,6 @@ Code
 <span>    <span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>  <span class="va">taxon_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">taxon_names</span>, <span class="va">TaxonName</span><span class="op">)</span></span>
-<span></span>
 <span>  <span class="co"># Combine dataframes into named list ------------------------</span></span>
 <span>  <span class="va">header</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">header</span><span class="op">)</span></span>
 <span>  <span class="va">header</span> <span class="op">&lt;-</span> <span class="va">header</span><span class="op">[</span><span class="va">header</span><span class="op">$</span><span class="va">SampleID</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names</a></span><span class="op">(</span><span class="va">diatom_data</span><span class="op">)</span>, <span class="op">]</span></span>
@@ -327,6 +328,19 @@ Code
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names</a></span><span class="op">(</span><span class="va">header</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">header</span><span class="op">$</span><span class="va">SampleID</span></span>
 <span>  <span class="va">header</span><span class="op">$</span><span class="va">SampleID</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="va">header</span><span class="op">$</span><span class="va">SampleID</span><span class="op">)</span></span>
 <span>  <span class="va">header</span><span class="op">$</span><span class="va">SAMPLE_DATE</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html" class="external-link">as.Date</a></span><span class="op">(</span><span class="va">header</span><span class="op">$</span><span class="va">SAMPLE_DATE</span><span class="op">)</span></span>
+<span>  <span class="co"># make sure header and diatom_data are arranged in the same way even if</span></span>
+<span>  <span class="co"># sampleID is character or numeric. sort character sample ids as numeric not</span></span>
+<span>  <span class="co"># alphabetically</span></span>
+<span>  <span class="va">header</span><span class="op">$</span><span class="va">row.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names</a></span><span class="op">(</span><span class="va">header</span><span class="op">)</span></span>
+<span>  <span class="va">header</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">header</span>, <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_order.html" class="external-link">str_rank</a></span><span class="op">(</span><span class="va">row.names</span>, numeric <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names</a></span><span class="op">(</span><span class="va">header</span><span class="op">)</span> <span class="op">&lt;-</span>  <span class="va">header</span><span class="op">$</span><span class="va">row.names</span> </span>
+<span>  <span class="va">header</span><span class="op">$</span><span class="va">row.names</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
+<span>  </span>
+<span>  <span class="va">diatom_data</span><span class="op">$</span><span class="va">row.names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names</a></span><span class="op">(</span><span class="va">diatom_data</span><span class="op">)</span></span>
+<span>  <span class="va">diatom_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">diatom_data</span>, <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_order.html" class="external-link">str_rank</a></span><span class="op">(</span><span class="va">row.names</span>, numeric <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/row.names.html" class="external-link">row.names</a></span><span class="op">(</span><span class="va">diatom_data</span><span class="op">)</span> <span class="op">&lt;-</span>  <span class="va">diatom_data</span><span class="op">$</span><span class="va">row.names</span> </span>
+<span>  <span class="va">diatom_data</span><span class="op">$</span><span class="va">row.names</span> <span class="op">&lt;-</span> <span class="cn">NULL</span></span>
+<span>  </span>
 <span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="fu">darleq3</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/darleq3/man/calc_Metric.html" class="external-link">calc_Metric</a></span><span class="op">(</span><span class="va">diatom_data</span>, <span class="va">metric</span><span class="op">)</span></span>
 <span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="fu">darleq3</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/darleq3/man/calc_EQR.html" class="external-link">calc_EQR</a></span><span class="op">(</span><span class="va">output</span>,</span>
 <span>    <span class="va">header</span>,</span>
@@ -378,6 +392,7 @@ Code
 <h2 id="outcome">Outcome<a class="anchor" aria-label="anchor" href="#outcome"></a>
 </h2>
 <p>The outcome of your assessment.</p>
+<pre><code><span><span class="co">#&gt; Loading required package: stringr</span></span></code></pre>
 <table class="table">
 <thead><tr class="header">
 <th align="left">question</th>
@@ -507,8 +522,8 @@ Code
 <h2 id="check">Check<a class="anchor" aria-label="anchor" href="#check"></a>
 </h2>
 <p>Run checks on the assessment.</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🥇</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🎊</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; <span style="font-weight: bold;">Test passed with 1 success 🥇</span>.</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Test passed with 1 success 🎊</span>.</span></span></code></pre>
 <table class="table">
 <thead><tr class="header">
 <th align="left">check</th>
@@ -549,16 +564,16 @@ Code
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 237 × 5</span></span></span>
 <span><span class="co">#&gt;    sample_id location_id question          response          parameter          </span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 1250462   8175        Alkalinity        121.9125401       Phytobenthos (diat…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 1250462   8175        lake_TYPE         HA                Phytobenthos (diat…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 1250462   8175        Total_count       312               Phytobenthos (diat…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 1250462   8175        Percent_in_TDI5LM 99.3589743589744  Phytobenthos (diat…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 1250462   8175        N_TDI5LM          37                Phytobenthos (diat…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 1250462   8175        N2_TDI5LM         11.09             Phytobenthos (diat…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 1250462   8175        Max_TDI5LM        20.51             Phytobenthos (diat…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 1250462   8175        TDI5LM            64.258064516129   Phytobenthos (diat…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 1250462   8175        eTDI5LM           53.8155110499444  Phytobenthos (diat…</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 1250462   8175        EQR_TDI5LM        0.619115833846688 Phytobenthos (diat…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 648750    8175        Alkalinity        121.9125401       Phytobenthos (diat…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 648750    8175        lake_TYPE         HA                Phytobenthos (diat…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 648750    8175        Total_count       304               Phytobenthos (diat…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 648750    8175        Percent_in_TDI5LM 100               Phytobenthos (diat…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 648750    8175        N_TDI5LM          18                Phytobenthos (diat…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 648750    8175        N2_TDI5LM         4.12              Phytobenthos (diat…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 648750    8175        Max_TDI5LM        43.09             Phytobenthos (diat…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 648750    8175        TDI5LM            69.6299342105263  Phytobenthos (diat…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 648750    8175        eTDI5LM           53.8155110499444  Phytobenthos (diat…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 648750    8175        EQR_TDI5LM        0.526065204658927 Phytobenthos (diat…</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 227 more rows</span></span></span></code></pre>
 </div>
 <div class="section level2">
@@ -578,7 +593,7 @@ assessment.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

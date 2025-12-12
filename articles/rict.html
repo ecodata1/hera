@@ -160,6 +160,7 @@ Code
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org" class="external-link">magrittr</a></span><span class="op">)</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org" class="external-link">lubridate</a></span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">message</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">location_id</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">metric_function</span> <span class="op">&lt;-</span> <span class="va">catalogue</span><span class="op">[</span><span class="va">catalogue</span><span class="op">$</span><span class="va">assessment</span> <span class="op">==</span></span>
 <span>    <span class="st">"Macroinvertebrate Metrics"</span>, <span class="fl">3</span><span class="op">]</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
@@ -170,8 +171,6 @@ Code
 <span>    <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span>  <span class="va">output</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">output</span>, <span class="va">question</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"WHPT_ASPT"</span>, <span class="st">"WHPT_NTAXA"</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span></span>
 <span>  <span class="co"># Alkalinity ---------</span></span>
 <span>  <span class="co"># if(!any(names(data) %in% c("alkalinity"))) {</span></span>
 <span>  <span class="co">#   alk &lt;- hera:::mean_alkalinity(data)</span></span>
@@ -210,6 +209,8 @@ Code
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">final_data</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op">{</span></span>
 <span>      <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
+<span>    </span>
+<span>    <span class="va">final_data</span><span class="op">$</span><span class="va">year</span> <span class="op">&lt;-</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/year.html" class="external-link">year</a></span><span class="op">(</span><span class="va">final_data</span><span class="op">$</span><span class="va">date_taken</span><span class="op">)</span></span>
 <span>    <span class="va">summarise_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
 <span>      <span class="va">final_data</span>,</span>
 <span>      <span class="st">"location_id"</span>,</span>
@@ -263,6 +264,13 @@ Code
 <span>      names_from <span class="op">=</span> <span class="va">question</span>,</span>
 <span>      values_from <span class="op">=</span> <span class="va">response</span></span>
 <span>    <span class="op">)</span></span>
+<span>    </span>
+<span>    <span class="co"># if no river_width then stop (maybe from lake)</span></span>
+<span>    <span class="va">name</span> <span class="op">&lt;-</span> <span class="st">"river_width"</span></span>
+<span>      <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="va">name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">summarise_data</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>    </span>
 <span>    <span class="va">summarise_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/type.convert.html" class="external-link">type.convert</a></span><span class="op">(</span><span class="va">summarise_data</span>, as.is <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span>    <span class="va">summarise_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">summarise_data</span>, <span class="op">-</span><span class="st">"sample_id"</span><span class="op">)</span></span>
 <span>    <span class="va">summarise_data</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span></span>
@@ -280,7 +288,6 @@ Code
 <span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">location_id</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>      <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="st">"alkalinity"</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">alkalinity</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">ungroup</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
-<span></span>
 <span>    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
 <span>      <span class="va">data</span>,</span>
 <span>      <span class="st">"sample_id"</span>,</span>
@@ -904,8 +911,8 @@ Code
 <h2 id="check">Check<a class="anchor" aria-label="anchor" href="#check"></a>
 </h2>
 <p>Run checks on this assessment.</p>
-<pre><code><span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 🌈</span></span>
-<span><span class="co">#&gt; <span style="color: #00BB00;">Test passed</span> 😀</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; <span style="font-weight: bold;">Test passed with 1 success 🌈</span>.</span></span>
+<span><span class="co">#&gt; <span style="font-weight: bold;">Test passed with 1 success 😀</span>.</span></span></code></pre>
 <table class="table">
 <thead><tr class="header">
 <th align="left">check</th>
@@ -991,7 +998,7 @@ assessment.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
