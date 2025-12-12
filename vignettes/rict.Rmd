@@ -99,6 +99,7 @@ assessment_function <- function(data, ...) {
   require(dplyr)
   require(tidyr)
   require(magrittr)
+  require(lubridate)
   message(unique(data$location_id))
   metric_function <- catalogue[catalogue$assessment ==
     "Macroinvertebrate Metrics", 3][[1]]
@@ -109,8 +110,6 @@ assessment_function <- function(data, ...) {
     return(NULL)
   }
   output <- dplyr::filter(output, question %in% c("WHPT_ASPT", "WHPT_NTAXA"))
-
-
   # Alkalinity ---------
   # if(!any(names(data) %in% c("alkalinity"))) {
   #   alk <- hera:::mean_alkalinity(data)
@@ -149,6 +148,8 @@ assessment_function <- function(data, ...) {
     if (nrow(final_data) < 1) {
       return(NULL)
     }
+    
+    final_data$year <- lubridate::year(final_data$date_taken)
     summarise_data <- select(
       final_data,
       "location_id",
@@ -202,6 +203,13 @@ assessment_function <- function(data, ...) {
       names_from = question,
       values_from = response
     )
+    
+    # if no river_width then stop (maybe from lake)
+    name <- "river_width"
+      if (!name %in% colnames(summarise_data)) {
+      return(NULL)
+    }
+    
     summarise_data <- type.convert(summarise_data, as.is = TRUE)
     summarise_data <- select(summarise_data, -"sample_id")
     summarise_data <- dplyr::group_by(
@@ -219,7 +227,6 @@ assessment_function <- function(data, ...) {
       group_by(location_id) %>%
       mutate("alkalinity" = mean(alkalinity, na.rm = TRUE))
     data <- ungroup(data)
-
     data <- select(
       data,
       "sample_id",

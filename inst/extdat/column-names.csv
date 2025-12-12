@@ -39,7 +39,7 @@ TRUE,,,TRUE,Observed value,result,result,FORMATTED_ENTRY,result.value,resultObse
 ,TRUE,,,,result_id,,,,,result_id,result_id
 ,TRUE,TRUE,,,season,,,,,season,season
 ,,TRUE,,,mean_alkalinity,,,,,mean_alkalinity,mean_alkalinity
-TRUE,TRUE,,,,analytical_function,,,,,,quality_element
+TRUE,TRUE,,,,analytical_function,,ANALYTICAL_FUNCTION,,,,analytical_function
 ,TRUE,,,Water body identifier,water_body_id,,,WFD Waterbody ID,waterBodyIdentifier,water_body_id,water_body_id
 ,,TRUE,,,altitude,,,altitude,,altitude,altitude
 ,,,,,dist_from_source,,,Distance from Source,,Dist_from_Source,Dist_from_Source
