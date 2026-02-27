@@ -57,9 +57,9 @@ tufts <- filter(lims_eco, parameter == "SEWAGE_FUNGUS")
 
 sewage_fungus <- function(data) {
   purrr::map_df(split(data, data$sample_id), function(sample) {
-    if (nrow(sample) < 2) {
-      return(NULL)
-    } else {
+  #  if (nrow(sample) < 2) {
+  #    return(NULL)
+  #  } else {
       sample <- dplyr::arrange(sample, question)
       sample$combined <- paste(sample$response, collapse = " ")
       row <- sample[1, ] # grab a row to use as template for tufts classification
@@ -68,6 +68,10 @@ sewage_fungus <- function(data) {
         "parameter" = "Bacterial Tuft"
       )
       row <- dplyr::mutate(row, "response" = dplyr::case_when(
+        combined == "0%" ~ "High/Good",
+        combined == "0% Trace" ~ "High/Good",
+        combined == "0% Thin" ~ "High/Good",
+        combined == "0% Thick" ~ "High/Good",
         combined == "<30% Trace" ~ "Moderate",
         combined == "30-60% Trace" ~ "Moderate",
         combined == ">60% Trace" ~ "Poor",
@@ -76,7 +80,7 @@ sewage_fungus <- function(data) {
         combined == ">60% Thin" ~ "Poor",
         combined == "<30% Thick" ~ "Poor",
         combined == "30-60% Thick" ~ "Poor",
-        combined == ">60% Thick" ~ "Poor",
+        combined == ">60% Thick" ~ "Bad",
         combined == "<30% Massive" ~ "Poor",
         combined == "30-60% Massive" ~ "Bad",
         combined == ">60% Massive" ~ "Bad"
@@ -85,7 +89,7 @@ sewage_fungus <- function(data) {
       sample <- dplyr::bind_rows(sample, row)
       sample$combined <- NULL
       return(sample)
-    }
+#    }
   })
 }
 tufts <- sewage_fungus(tufts)
@@ -96,8 +100,15 @@ tufts <- sewage_fungus(tufts)
 ## Find failing sites
 
 ```{r}
+path2 <- paste0(
+  "C:/Users/",
+  user,
+  "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/2024-classification-diatoms-final.csv"
+)
 
-diatoms <- read.csv(file = "data\\2023-classification-diatoms-final.csv",  check.names = FALSE)
+diatoms <- read.csv(file = path2,  check.names = FALSE)
+
+
 diatoms <- filter(diatoms, `Location Code` %in% unique(tufts$location_id))
 diatoms <- filter(diatoms, Class %in% c("Moderate", "Poor", "Bad"))
                 
@@ -113,8 +124,7 @@ test <- left_join(diatoms, tufts, by = join_by(`Location Code` == `location_id`)
 test <- select(test, "Location Code", "response", "Class", "sample_id", "date_taken")
 
 test <- mutate(test, bacterial_status = case_when(
-  response == "High" ~ "1",
-  response == "Good" ~ "2",
+  response == "High/Good" ~ "2",
   response == "Moderate" ~ "3",
   response == "Poor" ~ "4",
   response == "Bad" ~ "5"
@@ -128,9 +138,38 @@ test <- mutate(test, diatom_status = case_when(
   Class == "Bad" ~ "5"
 ))
 
+test$bacterial_status <- as.numeric(test$bacterial_status)
+test$diatom_status <- as.numeric(test$diatom_status)
+
+averagedresults <- test %>% 
+  group_by(`Location Code`) %>%
+  summarise(sample_count = n(),
+            bacterial_status = mean(bacterial_status), 
+            diatom_status = mean(diatom_status))
+
+averagedresults <- mutate(averagedresults, bacterial_class = case_when(
+  bacterial_status <= 2.5 ~ "High/Good",
+  bacterial_status <= 3.5 ~ "Moderate",
+  bacterial_status <= 4.5 ~ "Poor",
+  bacterial_status >= 4.5 ~ "Bad"
+))
+
+averagedresults <- mutate(averagedresults, diatom_class = case_when(
+  diatom_status == "1" ~ "High",
+  diatom_status == "2" ~ "Good",
+  diatom_status == "3" ~ "Moderate",
+  diatom_status == "4" ~ "Poor",
+  diatom_status == "5" ~ "Bad" 
+))
+
+averagedresults <- filter(averagedresults, bacterial_status > diatom_status)
+
+
+
+
 test <- filter(test, bacterial_status > diatom_status)
 test <- rename(test, bacterial_class = response)
 test <- rename(test, diatom_class = Class)
 
-write.csv(test, "bacterial_tufts_overrides.csv")
+#write.csv(test, "bacterial_tufts_overrides.csv")
 ```

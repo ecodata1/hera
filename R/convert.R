@@ -138,9 +138,12 @@ convert <- function(data, convert_to = "hera", convert_from = "sepa_lims") {
     data$date_taken <- as.Date(data$date_taken)
     data$analysis_repname <- data$parameter
     data$parameter[data$parameter == "RIVER_DIATOMS"] <- "River Diatoms"
+    data$parameter[data$parameter == "DIATOMS"] <- "River Diatoms"
     data$parameter[data$parameter == "LAB_INVERTS"] <- "River Family Inverts"
+    data$parameter[data$parameter == "INVERTS_TL2"] <- "River Family Inverts"
     data$parameter[data$parameter == "MTL_TL4"] <- "River Family Inverts"
     data$parameter[data$parameter == "MTL_TL5"] <- "River Family Inverts"
+    data$parameter[data$parameter == "INVERTS_TL5"] <- "River Family Inverts"
     data$parameter[data$parameter == "FW_INVERTS_FIELD"] <- "River Family Inverts"
     data$analysis_repname[data$analysis_repname == "FW_INVERTS_FIELD"] <- "Invert Physical Data"
     data$parameter[data$parameter == "INVERTS_FIELD"] <- "River Family Inverts"
