@@ -568,94 +568,94 @@ assessment_function <- function(data, ...) {
     rict_data <- unique(rict_data)
 
     rict_output <- inner_join(rict_output, single_predict, by = join_by(sample_id))
-
+    browser()
     spr_ntaxa <- select(
       rict_output,
       "sample_id",
-      "H" = "H_NTAXA_spr",
-      "G" = "G_NTAXA_spr",
-      "M" = "M_NTAXA_spr",
-      "P" = "P_NTAXA_spr",
-      "B" = "B_NTAXA_spr",
-      "Class" = "mostProb_NTAXA_spr",
-      "EQR" = "NTAXA_eqr_av_spr",
-      "Suit Code" = "SuitCode",
-      "Suit Text" = "SuitText"
+      "CoCH_NTAXA" = "H_NTAXA_spr",
+      "CoCG_NTAXA" = "G_NTAXA_spr",
+      "CoCM_NTAXA" = "M_NTAXA_spr",
+      "CoCP_NTAXA" = "P_NTAXA_spr",
+      "CoCB_NTAXA" = "B_NTAXA_spr",
+      "Class_NTAXA" = "mostProb_NTAXA_spr",
+      "EQR_NTAXA" = "NTAXA_eqr_av_spr",
+      "SuitCode",
+      "SuitText"
     )
     spr_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
 
     sum_ntaxa <- select(
       rict_output,
       "sample_id",
-      "H" = "H_NTAXA_sum",
-      "G" = "G_NTAXA_sum",
-      "M" = "M_NTAXA_sum",
-      "P" = "P_NTAXA_sum",
-      "B" = "B_NTAXA_sum",
-      "Class" = "mostProb_NTAXA_sum",
-      "EQR" = "NTAXA_eqr_av_sum",
-      "Suit Code" = "SuitCode",
-      "Suit Text" = "SuitText"
+      "CoCH_NTAXA" = "H_NTAXA_sum",
+      "CoCG_NTAXA" = "G_NTAXA_sum",
+      "CoCM_NTAXA" = "M_NTAXA_sum",
+      "CoCP_NTAXA" = "P_NTAXA_sum",
+      "CoCB_NTAXA" = "B_NTAXA_sum",
+      "Class_NTAXA" = "mostProb_NTAXA_sum",
+      "EQR_NTAXA" = "NTAXA_eqr_av_sum",
+      "SuitCode",
+      "SuitText"
     )
     sum_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
 
     aut_ntaxa <- select(
       rict_output,
       "sample_id",
-      "H" = "H_NTAXA_aut",
-      "G" = "G_NTAXA_aut",
-      "M" = "M_NTAXA_aut",
-      "P" = "P_NTAXA_aut",
-      "B" = "B_NTAXA_aut",
-      "Class" = "mostProb_NTAXA_aut",
-      "EQR" = "NTAXA_eqr_av_aut",
-      "Suit Code" = "SuitCode",
-      "Suit Text" = "SuitText"
+      "CoCH_NTAXA" = "H_NTAXA_aut",
+      "CoCG_NTAXA" = "G_NTAXA_aut",
+      "CoCM_NTAXA" = "M_NTAXA_aut",
+      "CoCP_NTAXA" = "P_NTAXA_aut",
+      "CoCB_NTAXA" = "B_NTAXA_aut",
+      "Class_NTAXA" = "mostProb_NTAXA_aut",
+      "EQR_NTAXA" = "NTAXA_eqr_av_aut",
+      "SuitCode",
+      "SuitText"
     )
     aut_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
 
     aut_aspt <- select(
       rict_output,
       "sample_id",
-      "H" = "H_ASPT_aut",
-      "G" = "G_ASPT_aut",
-      "M" = "M_ASPT_aut",
-      "P" = "P_ASPT_aut",
-      "B" = "B_ASPT_aut",
-      "Class" = "mostProb_ASPT_aut",
-      "EQR" = "ASPT_eqr_av_aut",
-      "Suit Code" = "SuitCode",
-      "Suit Text" = "SuitText"
+      "CoCH_ASPT" = "H_ASPT_aut",
+      "CoCG_ASPT" = "G_ASPT_aut",
+      "CoCM_ASPT" = "M_ASPT_aut",
+      "CoCP_ASPT" = "P_ASPT_aut",
+      "CoCB_ASPT" = "B_ASPT_aut",
+      "Class_ASPT" = "mostProb_ASPT_aut",
+      "EQR_ASPT" = "ASPT_eqr_av_aut",
+      "SuitCode",
+      "SuitText"
     )
     aut_aspt$parameter <- "Macroinvertebrates (ASPT)"
 
     spr_aspt <- select(
       rict_output,
       "sample_id",
-      "H" = "H_ASPT_spr",
-      "G" = "G_ASPT_spr",
-      "M" = "M_ASPT_spr",
-      "P" = "P_ASPT_spr",
-      "B" = "B_ASPT_spr",
-      "Class" = "mostProb_ASPT_spr",
-      "EQR" = "ASPT_eqr_av_spr",
-      "Suit Code" = "SuitCode",
-      "Suit Text" = "SuitText"
+      "CoCH_ASPT" = "H_ASPT_spr",
+      "CoCG_ASPT" = "G_ASPT_spr",
+      "CoCM_ASPT" = "M_ASPT_spr",
+      "CoCP_ASPT" = "P_ASPT_spr",
+      "CoCB_ASPT" = "B_ASPT_spr",
+      "Class_ASPT" = "mostProb_ASPT_spr",
+      "EQR_ASPT" = "ASPT_eqr_av_spr",
+      "SuitCode",
+      "SuitText"
     )
     spr_aspt$parameter <- "Macroinvertebrates (ASPT)"
 
     sum_aspt <- select(
       rict_output,
       "sample_id",
-      "H" = "H_ASPT_sum",
-      "G" = "G_ASPT_sum",
-      "M" = "M_ASPT_sum",
-      "P" = "P_ASPT_sum",
-      "B" = "B_ASPT_sum",
-      "Class" = "mostProb_ASPT_sum",
-      "EQR" = "eqr_av_sum_aspt",
-      "Suit Code" = "SuitCode",
-      "Suit Text" = "SuitText"
+      "CoCH_ASPT" = "H_ASPT_sum",
+      "CoCG_ASPT" = "G_ASPT_sum",
+      "CoCM_ASPT" = "M_ASPT_sum",
+      "CoCP_ASPT" = "P_ASPT_sum",
+      "CoCB_ASPT" = "B_ASPT_sum",
+      "Class_ASPT" = "mostProb_ASPT_sum",
+      "EQR_ASPT" = "eqr_av_sum_aspt",
+      "SuitCode",
+      "SuitText"
     )
     sum_aspt$parameter <- "Macroinvertebrates (ASPT)"
     rict_class <- bind_rows(
@@ -667,13 +667,14 @@ assessment_function <- function(data, ...) {
       aut_ntaxa
     )
 
-    rict_class <- rict_class[complete.cases(rict_class), ]
+    rict_class <- rict_class[ rowSums(is.na(rict_class)) < 8, ]
     rict_class <- mutate_all(rict_class, as.character)
     rict_class <- pivot_longer(rict_class,
       names_to = "question",
       values_to = "response",
       cols = c(-sample_id, -parameter)
     )
+    rict_class <- filter(rict_class, !is.na(response))
     rict_class <- inner_join(rict_class,
       rict_data[, c("location_id", "sample_id")],
       by = "sample_id",
