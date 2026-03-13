@@ -9,9 +9,6 @@ editor_options:
 # TODO
 
 -   Convert() function does a lot of tweaks - can these go in a .csv lookup file?
--   Unit test for mean_alkalinity
--   Unit test for RICT
--   Unit test for DARLEQ
 -   List where data is saved from previous years and combine into single dataset?
 
 ```{r}
@@ -30,10 +27,15 @@ Open files of pre-fetched data from LIMS (provided by LIMS Admin). Data provided
 
 ```{r}
 user <- Sys.info()["user"]
+user_path <- "/OneDrive - Scottish Environment Protection Agency/DNA Data/"
+# user_path <- "/OneDrive - Scottish Environment Protection Agency/Ecology All Staff - DNA Data/"
+
+
 path <- paste0(
   "C:/Users/",
   user,
-  "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/latest-lims-data.csv"
+  user_path,
+  "Readiness Data/classification/latest-lims-data.csv"
 )
 
 lims_eco <- readr::read_csv(
@@ -110,7 +112,8 @@ user <- Sys.info()["user"]
 path <- paste0(
   "C:/Users/",
   user,
-  "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/analytical-data/all_data_clean.arrow"
+  user_path,
+  "Readiness Data/analytical-data/all_data_clean.arrow"
 )
 
 ds <- open_dataset(path,
@@ -159,7 +162,8 @@ eco_data$question[eco_data$question ==
 path <- paste0(
   "C:/Users/",
   user,
-  "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/analytical-data/ALK_RESULTS_CHEM_SEP19.xlsx"
+  user_path,
+  "Readiness Data/analytical-data/ALK_RESULTS_CHEM_SEP19.xlsx"
 )
 
 alk_results_sep_19 <- readxl::read_excel(path)
@@ -506,7 +510,8 @@ user <- Sys.info()["user"]
 path <- paste0(
   "C:/Users/",
   user,
-  "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/NMP-2025.xlsx"
+  user_path,
+  "Readiness Data/classification/NMP-2025.xlsx"
 )
 
 nmp <- readxl::read_xlsx(
@@ -622,7 +627,8 @@ Join 2023 classification results based on WB
 path <- paste0(
   "C:/Users/",
   user,
-  "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/classification-latest-published.xlsx"
+  user_path,
+  "Readiness Data/classification/classification-latest-published.xlsx"
 )
 
 class <- readxl::read_excel(path = path)
@@ -763,7 +769,8 @@ user <- Sys.info()["user"]
 path <- paste0(
   "C:/Users/",
   user,
-  "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/replocs-live.csv"
+  user_path,
+  "Readiness Data/classification/replocs-live.csv"
 )
 
 replocs <- read.csv(path)
@@ -813,10 +820,11 @@ table(inverts_reportable$Class, inverts_reportable$`Previous class`)
 
 ```{r}
 user <- Sys.info()["user"]
-folder <- "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/"
+folder <- "Readiness Data/classification/"
 file_path <- paste0(
   "C:/Users/",
   user,
+  user_path,
   folder
 )
 

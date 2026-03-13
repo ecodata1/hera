@@ -106,3 +106,16 @@ test_that("MPFF Compliance works", {
     round(89594.9653487682, 0)
   )
 })
+
+
+test_that("RICT works", {
+  data <- hera::demo_data
+  data <- data[data$sample_id == 1017980,]
+  output <- hera::assess(
+    data,
+    "RICT"
+  )
+  # test on pre-calculated results
+  testthat::expect_equal(output$response[output$question == "EQR"],
+                         c("0.871378661745642", "0.742180537119864"))
+})
