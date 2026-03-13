@@ -9,9 +9,6 @@ editor_options:
 # TODO
 
 -   Convert() function does a lot of tweaks - can these go in a .csv lookup file?
--   Unit test for mean_alkalinity
--   Unit test for RICT
--   Unit test for DARLEQ
 -   List where data is saved from previous years and combine into single dataset?
 
 ```{r}
