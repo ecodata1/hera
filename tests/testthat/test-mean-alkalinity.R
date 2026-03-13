@@ -1,7 +1,7 @@
 test_that("test mean_alkalinity works", {
   alk_test <- read.csv(
     system.file("extdat","demo-data/test_alk.csv",package = "hera"))
-  alk_test <- hera:::mean_alkalinity(test_data)
+  alk_test <- hera:::mean_alkalinity(alk_test)
   alk_test <- alk_test %>% filter(sample_number == 239318)
   manual_check <- mean(
     c(
