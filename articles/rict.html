@@ -628,94 +628,94 @@ Code
 <span>    <span class="va">rict_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">rict_data</span><span class="op">)</span></span>
 <span></span>
 <span>    <span class="va">rict_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">rict_output</span>, <span class="va">single_predict</span>, by <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by</a></span><span class="op">(</span><span class="va">sample_id</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/browser.html" class="external-link">browser</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>    <span class="va">spr_ntaxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
 <span>      <span class="va">rict_output</span>,</span>
 <span>      <span class="st">"sample_id"</span>,</span>
-<span>      <span class="st">"H"</span> <span class="op">=</span> <span class="st">"H_NTAXA_spr"</span>,</span>
-<span>      <span class="st">"G"</span> <span class="op">=</span> <span class="st">"G_NTAXA_spr"</span>,</span>
-<span>      <span class="st">"M"</span> <span class="op">=</span> <span class="st">"M_NTAXA_spr"</span>,</span>
-<span>      <span class="st">"P"</span> <span class="op">=</span> <span class="st">"P_NTAXA_spr"</span>,</span>
-<span>      <span class="st">"B"</span> <span class="op">=</span> <span class="st">"B_NTAXA_spr"</span>,</span>
-<span>      <span class="st">"Class"</span> <span class="op">=</span> <span class="st">"mostProb_NTAXA_spr"</span>,</span>
-<span>      <span class="st">"EQR"</span> <span class="op">=</span> <span class="st">"NTAXA_eqr_av_spr"</span>,</span>
-<span>      <span class="st">"Suit Code"</span> <span class="op">=</span> <span class="st">"SuitCode"</span>,</span>
-<span>      <span class="st">"Suit Text"</span> <span class="op">=</span> <span class="st">"SuitText"</span></span>
+<span>      <span class="st">"CoCH_NTAXA"</span> <span class="op">=</span> <span class="st">"H_NTAXA_spr"</span>,</span>
+<span>      <span class="st">"CoCG_NTAXA"</span> <span class="op">=</span> <span class="st">"G_NTAXA_spr"</span>,</span>
+<span>      <span class="st">"CoCM_NTAXA"</span> <span class="op">=</span> <span class="st">"M_NTAXA_spr"</span>,</span>
+<span>      <span class="st">"CoCP_NTAXA"</span> <span class="op">=</span> <span class="st">"P_NTAXA_spr"</span>,</span>
+<span>      <span class="st">"CoCB_NTAXA"</span> <span class="op">=</span> <span class="st">"B_NTAXA_spr"</span>,</span>
+<span>      <span class="st">"Class_NTAXA"</span> <span class="op">=</span> <span class="st">"mostProb_NTAXA_spr"</span>,</span>
+<span>      <span class="st">"EQR_NTAXA"</span> <span class="op">=</span> <span class="st">"NTAXA_eqr_av_spr"</span>,</span>
+<span>      <span class="st">"SuitCode"</span>,</span>
+<span>      <span class="st">"SuitText"</span></span>
 <span>    <span class="op">)</span></span>
 <span>    <span class="va">spr_ntaxa</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"Macroinvertebrates (NTAXA)"</span></span>
 <span></span>
 <span>    <span class="va">sum_ntaxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
 <span>      <span class="va">rict_output</span>,</span>
 <span>      <span class="st">"sample_id"</span>,</span>
-<span>      <span class="st">"H"</span> <span class="op">=</span> <span class="st">"H_NTAXA_sum"</span>,</span>
-<span>      <span class="st">"G"</span> <span class="op">=</span> <span class="st">"G_NTAXA_sum"</span>,</span>
-<span>      <span class="st">"M"</span> <span class="op">=</span> <span class="st">"M_NTAXA_sum"</span>,</span>
-<span>      <span class="st">"P"</span> <span class="op">=</span> <span class="st">"P_NTAXA_sum"</span>,</span>
-<span>      <span class="st">"B"</span> <span class="op">=</span> <span class="st">"B_NTAXA_sum"</span>,</span>
-<span>      <span class="st">"Class"</span> <span class="op">=</span> <span class="st">"mostProb_NTAXA_sum"</span>,</span>
-<span>      <span class="st">"EQR"</span> <span class="op">=</span> <span class="st">"NTAXA_eqr_av_sum"</span>,</span>
-<span>      <span class="st">"Suit Code"</span> <span class="op">=</span> <span class="st">"SuitCode"</span>,</span>
-<span>      <span class="st">"Suit Text"</span> <span class="op">=</span> <span class="st">"SuitText"</span></span>
+<span>      <span class="st">"CoCH_NTAXA"</span> <span class="op">=</span> <span class="st">"H_NTAXA_sum"</span>,</span>
+<span>      <span class="st">"CoCG_NTAXA"</span> <span class="op">=</span> <span class="st">"G_NTAXA_sum"</span>,</span>
+<span>      <span class="st">"CoCM_NTAXA"</span> <span class="op">=</span> <span class="st">"M_NTAXA_sum"</span>,</span>
+<span>      <span class="st">"CoCP_NTAXA"</span> <span class="op">=</span> <span class="st">"P_NTAXA_sum"</span>,</span>
+<span>      <span class="st">"CoCB_NTAXA"</span> <span class="op">=</span> <span class="st">"B_NTAXA_sum"</span>,</span>
+<span>      <span class="st">"Class_NTAXA"</span> <span class="op">=</span> <span class="st">"mostProb_NTAXA_sum"</span>,</span>
+<span>      <span class="st">"EQR_NTAXA"</span> <span class="op">=</span> <span class="st">"NTAXA_eqr_av_sum"</span>,</span>
+<span>      <span class="st">"SuitCode"</span>,</span>
+<span>      <span class="st">"SuitText"</span></span>
 <span>    <span class="op">)</span></span>
 <span>    <span class="va">sum_ntaxa</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"Macroinvertebrates (NTAXA)"</span></span>
 <span></span>
 <span>    <span class="va">aut_ntaxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
 <span>      <span class="va">rict_output</span>,</span>
 <span>      <span class="st">"sample_id"</span>,</span>
-<span>      <span class="st">"H"</span> <span class="op">=</span> <span class="st">"H_NTAXA_aut"</span>,</span>
-<span>      <span class="st">"G"</span> <span class="op">=</span> <span class="st">"G_NTAXA_aut"</span>,</span>
-<span>      <span class="st">"M"</span> <span class="op">=</span> <span class="st">"M_NTAXA_aut"</span>,</span>
-<span>      <span class="st">"P"</span> <span class="op">=</span> <span class="st">"P_NTAXA_aut"</span>,</span>
-<span>      <span class="st">"B"</span> <span class="op">=</span> <span class="st">"B_NTAXA_aut"</span>,</span>
-<span>      <span class="st">"Class"</span> <span class="op">=</span> <span class="st">"mostProb_NTAXA_aut"</span>,</span>
-<span>      <span class="st">"EQR"</span> <span class="op">=</span> <span class="st">"NTAXA_eqr_av_aut"</span>,</span>
-<span>      <span class="st">"Suit Code"</span> <span class="op">=</span> <span class="st">"SuitCode"</span>,</span>
-<span>      <span class="st">"Suit Text"</span> <span class="op">=</span> <span class="st">"SuitText"</span></span>
+<span>      <span class="st">"CoCH_NTAXA"</span> <span class="op">=</span> <span class="st">"H_NTAXA_aut"</span>,</span>
+<span>      <span class="st">"CoCG_NTAXA"</span> <span class="op">=</span> <span class="st">"G_NTAXA_aut"</span>,</span>
+<span>      <span class="st">"CoCM_NTAXA"</span> <span class="op">=</span> <span class="st">"M_NTAXA_aut"</span>,</span>
+<span>      <span class="st">"CoCP_NTAXA"</span> <span class="op">=</span> <span class="st">"P_NTAXA_aut"</span>,</span>
+<span>      <span class="st">"CoCB_NTAXA"</span> <span class="op">=</span> <span class="st">"B_NTAXA_aut"</span>,</span>
+<span>      <span class="st">"Class_NTAXA"</span> <span class="op">=</span> <span class="st">"mostProb_NTAXA_aut"</span>,</span>
+<span>      <span class="st">"EQR_NTAXA"</span> <span class="op">=</span> <span class="st">"NTAXA_eqr_av_aut"</span>,</span>
+<span>      <span class="st">"SuitCode"</span>,</span>
+<span>      <span class="st">"SuitText"</span></span>
 <span>    <span class="op">)</span></span>
 <span>    <span class="va">aut_ntaxa</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"Macroinvertebrates (NTAXA)"</span></span>
 <span></span>
 <span>    <span class="va">aut_aspt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
 <span>      <span class="va">rict_output</span>,</span>
 <span>      <span class="st">"sample_id"</span>,</span>
-<span>      <span class="st">"H"</span> <span class="op">=</span> <span class="st">"H_ASPT_aut"</span>,</span>
-<span>      <span class="st">"G"</span> <span class="op">=</span> <span class="st">"G_ASPT_aut"</span>,</span>
-<span>      <span class="st">"M"</span> <span class="op">=</span> <span class="st">"M_ASPT_aut"</span>,</span>
-<span>      <span class="st">"P"</span> <span class="op">=</span> <span class="st">"P_ASPT_aut"</span>,</span>
-<span>      <span class="st">"B"</span> <span class="op">=</span> <span class="st">"B_ASPT_aut"</span>,</span>
-<span>      <span class="st">"Class"</span> <span class="op">=</span> <span class="st">"mostProb_ASPT_aut"</span>,</span>
-<span>      <span class="st">"EQR"</span> <span class="op">=</span> <span class="st">"ASPT_eqr_av_aut"</span>,</span>
-<span>      <span class="st">"Suit Code"</span> <span class="op">=</span> <span class="st">"SuitCode"</span>,</span>
-<span>      <span class="st">"Suit Text"</span> <span class="op">=</span> <span class="st">"SuitText"</span></span>
+<span>      <span class="st">"CoCH_ASPT"</span> <span class="op">=</span> <span class="st">"H_ASPT_aut"</span>,</span>
+<span>      <span class="st">"CoCG_ASPT"</span> <span class="op">=</span> <span class="st">"G_ASPT_aut"</span>,</span>
+<span>      <span class="st">"CoCM_ASPT"</span> <span class="op">=</span> <span class="st">"M_ASPT_aut"</span>,</span>
+<span>      <span class="st">"CoCP_ASPT"</span> <span class="op">=</span> <span class="st">"P_ASPT_aut"</span>,</span>
+<span>      <span class="st">"CoCB_ASPT"</span> <span class="op">=</span> <span class="st">"B_ASPT_aut"</span>,</span>
+<span>      <span class="st">"Class_ASPT"</span> <span class="op">=</span> <span class="st">"mostProb_ASPT_aut"</span>,</span>
+<span>      <span class="st">"EQR_ASPT"</span> <span class="op">=</span> <span class="st">"ASPT_eqr_av_aut"</span>,</span>
+<span>      <span class="st">"SuitCode"</span>,</span>
+<span>      <span class="st">"SuitText"</span></span>
 <span>    <span class="op">)</span></span>
 <span>    <span class="va">aut_aspt</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"Macroinvertebrates (ASPT)"</span></span>
 <span></span>
 <span>    <span class="va">spr_aspt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
 <span>      <span class="va">rict_output</span>,</span>
 <span>      <span class="st">"sample_id"</span>,</span>
-<span>      <span class="st">"H"</span> <span class="op">=</span> <span class="st">"H_ASPT_spr"</span>,</span>
-<span>      <span class="st">"G"</span> <span class="op">=</span> <span class="st">"G_ASPT_spr"</span>,</span>
-<span>      <span class="st">"M"</span> <span class="op">=</span> <span class="st">"M_ASPT_spr"</span>,</span>
-<span>      <span class="st">"P"</span> <span class="op">=</span> <span class="st">"P_ASPT_spr"</span>,</span>
-<span>      <span class="st">"B"</span> <span class="op">=</span> <span class="st">"B_ASPT_spr"</span>,</span>
-<span>      <span class="st">"Class"</span> <span class="op">=</span> <span class="st">"mostProb_ASPT_spr"</span>,</span>
-<span>      <span class="st">"EQR"</span> <span class="op">=</span> <span class="st">"ASPT_eqr_av_spr"</span>,</span>
-<span>      <span class="st">"Suit Code"</span> <span class="op">=</span> <span class="st">"SuitCode"</span>,</span>
-<span>      <span class="st">"Suit Text"</span> <span class="op">=</span> <span class="st">"SuitText"</span></span>
+<span>      <span class="st">"CoCH_ASPT"</span> <span class="op">=</span> <span class="st">"H_ASPT_spr"</span>,</span>
+<span>      <span class="st">"CoCG_ASPT"</span> <span class="op">=</span> <span class="st">"G_ASPT_spr"</span>,</span>
+<span>      <span class="st">"CoCM_ASPT"</span> <span class="op">=</span> <span class="st">"M_ASPT_spr"</span>,</span>
+<span>      <span class="st">"CoCP_ASPT"</span> <span class="op">=</span> <span class="st">"P_ASPT_spr"</span>,</span>
+<span>      <span class="st">"CoCB_ASPT"</span> <span class="op">=</span> <span class="st">"B_ASPT_spr"</span>,</span>
+<span>      <span class="st">"Class_ASPT"</span> <span class="op">=</span> <span class="st">"mostProb_ASPT_spr"</span>,</span>
+<span>      <span class="st">"EQR_ASPT"</span> <span class="op">=</span> <span class="st">"ASPT_eqr_av_spr"</span>,</span>
+<span>      <span class="st">"SuitCode"</span>,</span>
+<span>      <span class="st">"SuitText"</span></span>
 <span>    <span class="op">)</span></span>
 <span>    <span class="va">spr_aspt</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"Macroinvertebrates (ASPT)"</span></span>
 <span></span>
 <span>    <span class="va">sum_aspt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
 <span>      <span class="va">rict_output</span>,</span>
 <span>      <span class="st">"sample_id"</span>,</span>
-<span>      <span class="st">"H"</span> <span class="op">=</span> <span class="st">"H_ASPT_sum"</span>,</span>
-<span>      <span class="st">"G"</span> <span class="op">=</span> <span class="st">"G_ASPT_sum"</span>,</span>
-<span>      <span class="st">"M"</span> <span class="op">=</span> <span class="st">"M_ASPT_sum"</span>,</span>
-<span>      <span class="st">"P"</span> <span class="op">=</span> <span class="st">"P_ASPT_sum"</span>,</span>
-<span>      <span class="st">"B"</span> <span class="op">=</span> <span class="st">"B_ASPT_sum"</span>,</span>
-<span>      <span class="st">"Class"</span> <span class="op">=</span> <span class="st">"mostProb_ASPT_sum"</span>,</span>
-<span>      <span class="st">"EQR"</span> <span class="op">=</span> <span class="st">"eqr_av_sum_aspt"</span>,</span>
-<span>      <span class="st">"Suit Code"</span> <span class="op">=</span> <span class="st">"SuitCode"</span>,</span>
-<span>      <span class="st">"Suit Text"</span> <span class="op">=</span> <span class="st">"SuitText"</span></span>
+<span>      <span class="st">"CoCH_ASPT"</span> <span class="op">=</span> <span class="st">"H_ASPT_sum"</span>,</span>
+<span>      <span class="st">"CoCG_ASPT"</span> <span class="op">=</span> <span class="st">"G_ASPT_sum"</span>,</span>
+<span>      <span class="st">"CoCM_ASPT"</span> <span class="op">=</span> <span class="st">"M_ASPT_sum"</span>,</span>
+<span>      <span class="st">"CoCP_ASPT"</span> <span class="op">=</span> <span class="st">"P_ASPT_sum"</span>,</span>
+<span>      <span class="st">"CoCB_ASPT"</span> <span class="op">=</span> <span class="st">"B_ASPT_sum"</span>,</span>
+<span>      <span class="st">"Class_ASPT"</span> <span class="op">=</span> <span class="st">"mostProb_ASPT_sum"</span>,</span>
+<span>      <span class="st">"EQR_ASPT"</span> <span class="op">=</span> <span class="st">"eqr_av_sum_aspt"</span>,</span>
+<span>      <span class="st">"SuitCode"</span>,</span>
+<span>      <span class="st">"SuitText"</span></span>
 <span>    <span class="op">)</span></span>
 <span>    <span class="va">sum_aspt</span><span class="op">$</span><span class="va">parameter</span> <span class="op">&lt;-</span> <span class="st">"Macroinvertebrates (ASPT)"</span></span>
 <span>    <span class="va">rict_class</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">bind_rows</a></span><span class="op">(</span></span>
@@ -727,13 +727,14 @@ Code
 <span>      <span class="va">aut_ntaxa</span></span>
 <span>    <span class="op">)</span></span>
 <span></span>
-<span>    <span class="va">rict_class</span> <span class="op">&lt;-</span> <span class="va">rict_class</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/stats/complete.cases.html" class="external-link">complete.cases</a></span><span class="op">(</span><span class="va">rict_class</span><span class="op">)</span>, <span class="op">]</span></span>
+<span>    <span class="va">rict_class</span> <span class="op">&lt;-</span> <span class="va">rict_class</span><span class="op">[</span> <span class="fu"><a href="https://rdrr.io/r/base/colSums.html" class="external-link">rowSums</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">rict_class</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;</span> <span class="fl">8</span>, <span class="op">]</span></span>
 <span>    <span class="va">rict_class</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate_all.html" class="external-link">mutate_all</a></span><span class="op">(</span><span class="va">rict_class</span>, <span class="va">as.character</span><span class="op">)</span></span>
 <span>    <span class="va">rict_class</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html" class="external-link">pivot_longer</a></span><span class="op">(</span><span class="va">rict_class</span>,</span>
 <span>      names_to <span class="op">=</span> <span class="st">"question"</span>,</span>
 <span>      values_to <span class="op">=</span> <span class="st">"response"</span>,</span>
 <span>      cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="va">sample_id</span>, <span class="op">-</span><span class="va">parameter</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
+<span>    <span class="va">rict_class</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">rict_class</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">response</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="va">rict_class</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">rict_class</span>,</span>
 <span>      <span class="va">rict_data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"location_id"</span>, <span class="st">"sample_id"</span><span class="op">)</span><span class="op">]</span>,</span>
 <span>      by <span class="op">=</span> <span class="st">"sample_id"</span>,</span>
@@ -842,6 +843,69 @@ Code
 <h2 id="outcome">Outcome<a class="anchor" aria-label="anchor" href="#outcome"></a>
 </h2>
 <p>The outcome of this assessment.</p>
+<pre><code><span><span class="co">#&gt; Called from: .f(.x[[i]], ...)</span></span>
+<span><span class="co">#&gt; debug: spr_ntaxa &lt;- select(rict_output, "sample_id", CoCH_NTAXA = "H_NTAXA_spr", </span></span>
+<span><span class="co">#&gt;     CoCG_NTAXA = "G_NTAXA_spr", CoCM_NTAXA = "M_NTAXA_spr", CoCP_NTAXA = "P_NTAXA_spr", </span></span>
+<span><span class="co">#&gt;     CoCB_NTAXA = "B_NTAXA_spr", Class_NTAXA = "mostProb_NTAXA_spr", </span></span>
+<span><span class="co">#&gt;     EQR_NTAXA = "NTAXA_eqr_av_spr", "SuitCode", "SuitText")</span></span>
+<span><span class="co">#&gt; debug: spr_ntaxa$parameter &lt;- "Macroinvertebrates (NTAXA)"</span></span>
+<span><span class="co">#&gt; debug: sum_ntaxa &lt;- select(rict_output, "sample_id", CoCH_NTAXA = "H_NTAXA_sum", </span></span>
+<span><span class="co">#&gt;     CoCG_NTAXA = "G_NTAXA_sum", CoCM_NTAXA = "M_NTAXA_sum", CoCP_NTAXA = "P_NTAXA_sum", </span></span>
+<span><span class="co">#&gt;     CoCB_NTAXA = "B_NTAXA_sum", Class_NTAXA = "mostProb_NTAXA_sum", </span></span>
+<span><span class="co">#&gt;     EQR_NTAXA = "NTAXA_eqr_av_sum", "SuitCode", "SuitText")</span></span>
+<span><span class="co">#&gt; debug: sum_ntaxa$parameter &lt;- "Macroinvertebrates (NTAXA)"</span></span>
+<span><span class="co">#&gt; debug: aut_ntaxa &lt;- select(rict_output, "sample_id", CoCH_NTAXA = "H_NTAXA_aut", </span></span>
+<span><span class="co">#&gt;     CoCG_NTAXA = "G_NTAXA_aut", CoCM_NTAXA = "M_NTAXA_aut", CoCP_NTAXA = "P_NTAXA_aut", </span></span>
+<span><span class="co">#&gt;     CoCB_NTAXA = "B_NTAXA_aut", Class_NTAXA = "mostProb_NTAXA_aut", </span></span>
+<span><span class="co">#&gt;     EQR_NTAXA = "NTAXA_eqr_av_aut", "SuitCode", "SuitText")</span></span>
+<span><span class="co">#&gt; debug: aut_ntaxa$parameter &lt;- "Macroinvertebrates (NTAXA)"</span></span>
+<span><span class="co">#&gt; debug: aut_aspt &lt;- select(rict_output, "sample_id", CoCH_ASPT = "H_ASPT_aut", </span></span>
+<span><span class="co">#&gt;     CoCG_ASPT = "G_ASPT_aut", CoCM_ASPT = "M_ASPT_aut", CoCP_ASPT = "P_ASPT_aut", </span></span>
+<span><span class="co">#&gt;     CoCB_ASPT = "B_ASPT_aut", Class_ASPT = "mostProb_ASPT_aut", </span></span>
+<span><span class="co">#&gt;     EQR_ASPT = "ASPT_eqr_av_aut", "SuitCode", "SuitText")</span></span>
+<span><span class="co">#&gt; debug: aut_aspt$parameter &lt;- "Macroinvertebrates (ASPT)"</span></span>
+<span><span class="co">#&gt; debug: spr_aspt &lt;- select(rict_output, "sample_id", CoCH_ASPT = "H_ASPT_spr", </span></span>
+<span><span class="co">#&gt;     CoCG_ASPT = "G_ASPT_spr", CoCM_ASPT = "M_ASPT_spr", CoCP_ASPT = "P_ASPT_spr", </span></span>
+<span><span class="co">#&gt;     CoCB_ASPT = "B_ASPT_spr", Class_ASPT = "mostProb_ASPT_spr", </span></span>
+<span><span class="co">#&gt;     EQR_ASPT = "ASPT_eqr_av_spr", "SuitCode", "SuitText")</span></span>
+<span><span class="co">#&gt; debug: spr_aspt$parameter &lt;- "Macroinvertebrates (ASPT)"</span></span>
+<span><span class="co">#&gt; debug: sum_aspt &lt;- select(rict_output, "sample_id", CoCH_ASPT = "H_ASPT_sum", </span></span>
+<span><span class="co">#&gt;     CoCG_ASPT = "G_ASPT_sum", CoCM_ASPT = "M_ASPT_sum", CoCP_ASPT = "P_ASPT_sum", </span></span>
+<span><span class="co">#&gt;     CoCB_ASPT = "B_ASPT_sum", Class_ASPT = "mostProb_ASPT_sum", </span></span>
+<span><span class="co">#&gt;     EQR_ASPT = "eqr_av_sum_aspt", "SuitCode", "SuitText")</span></span>
+<span><span class="co">#&gt; debug: sum_aspt$parameter &lt;- "Macroinvertebrates (ASPT)"</span></span>
+<span><span class="co">#&gt; debug: rict_class &lt;- bind_rows(spr_aspt, sum_aspt, aut_aspt, spr_ntaxa, </span></span>
+<span><span class="co">#&gt;     sum_ntaxa, aut_ntaxa)</span></span>
+<span><span class="co">#&gt; debug: rict_class &lt;- rict_class[rowSums(is.na(rict_class)) &lt; 8, ]</span></span>
+<span><span class="co">#&gt; debug: rict_class &lt;- mutate_all(rict_class, as.character)</span></span>
+<span><span class="co">#&gt; debug: rict_class &lt;- pivot_longer(rict_class, names_to = "question", </span></span>
+<span><span class="co">#&gt;     values_to = "response", cols = c(-sample_id, -parameter))</span></span>
+<span><span class="co">#&gt; debug: rict_class &lt;- filter(rict_class, !is.na(response))</span></span>
+<span><span class="co">#&gt; debug: rict_class &lt;- inner_join(rict_class, rict_data[, c("location_id", </span></span>
+<span><span class="co">#&gt;     "sample_id")], by = "sample_id", relationship = "many-to-many")</span></span>
+<span><span class="co">#&gt; debug: rict_aspt &lt;- tibble(location_id = predict_single$location_id, </span></span>
+<span><span class="co">#&gt;     sample_id = predict_single$sample_id, question = "RICT Reference WHPT ASPT", </span></span>
+<span><span class="co">#&gt;     response = as.character(predict_single$TL2_WHPT_ASPT_AbW_DistFam))</span></span>
+<span><span class="co">#&gt; debug: rict_ntaxa &lt;- tibble(location_id = predict_single$location_id, </span></span>
+<span><span class="co">#&gt;     sample_id = predict_single$sample_id, question = "RICT Rerference WHPT NTAXA", </span></span>
+<span><span class="co">#&gt;     response = as.character(predict_single$TL2_WHPT_NTAXA_AbW_DistFam))</span></span>
+<span><span class="co">#&gt; debug: rict_river_score &lt;- tibble(location_id = predict_single$location_id, </span></span>
+<span><span class="co">#&gt;     sample_id = predict_single$sample_id, question = "RICT Rerference ARMI Score", </span></span>
+<span><span class="co">#&gt;     response = as.character(predict_single$TL2_08_Group_ARMI_Score))</span></span>
+<span><span class="co">#&gt; debug: rict_river_ntaxa &lt;- tibble(location_id = predict_single$location_id, </span></span>
+<span><span class="co">#&gt;     sample_id = predict_single$sample_id, question = "RICT Rerference ARMI NTAXA", </span></span>
+<span><span class="co">#&gt;     response = as.character(predict_single$TL2_08_Group_ARMI_NTaxa))</span></span>
+<span><span class="co">#&gt; debug: predict_single &lt;- bind_rows(rict_aspt, rict_ntaxa, rict_river_score, </span></span>
+<span><span class="co">#&gt;     rict_river_ntaxa)</span></span>
+<span><span class="co">#&gt; debug: predict_single$parameter &lt;- "RICT Prediction"</span></span>
+<span><span class="co">#&gt; debug: rict_prediction &lt;- bind_rows(predict_single, rict_class, multi_year_output)</span></span>
+<span><span class="co">#&gt; debug: row &lt;- rict_prediction[is.na(rict_prediction$sample_id), ]</span></span>
+<span><span class="co">#&gt; debug: row &lt;- row[1:2, ]</span></span>
+<span><span class="co">#&gt; debug: row$parameter[1] &lt;- "Macroinvertebrates (ASPT)"</span></span>
+<span><span class="co">#&gt; debug: row$parameter[2] &lt;- "Macroinvertebrates (NTAXA)"</span></span>
+<span><span class="co">#&gt; debug: row$question &lt;- "Years included"</span></span>
+<span><span class="co">#&gt; debug: row$response &lt;- paste(unique(rict_data$Year), collapse = ",")</span></span>
+<span><span class="co">#&gt; debug: rict_prediction &lt;- bind_rows(rict_prediction, row)</span></span></code></pre>
 <table class="table">
 <thead><tr class="header">
 <th align="left">question</th>
@@ -865,42 +929,70 @@ Code
 <td align="left">5.82390315155402</td>
 </tr>
 <tr class="odd">
-<td align="left">CoCH</td>
+<td align="left">CoCH_ASPT</td>
 <td align="left">22.83</td>
 </tr>
 <tr class="even">
-<td align="left">CoCG</td>
+<td align="left">CoCG_ASPT</td>
 <td align="left">30.05</td>
 </tr>
 <tr class="odd">
-<td align="left">CoCM</td>
+<td align="left">CoCM_ASPT</td>
 <td align="left">31.64</td>
 </tr>
 <tr class="even">
-<td align="left">CoCP</td>
+<td align="left">CoCP_ASPT</td>
 <td align="left">10.48</td>
 </tr>
 <tr class="odd">
-<td align="left">CoCB</td>
+<td align="left">CoCB_ASPT</td>
 <td align="left">4.99</td>
 </tr>
 <tr class="even">
-<td align="left">Class</td>
+<td align="left">Class_ASPT</td>
 <td align="left">Moderate</td>
 </tr>
 <tr class="odd">
-<td align="left">EQR</td>
+<td align="left">EQR_ASPT</td>
 <td align="left">0.868839670474072</td>
 </tr>
 <tr class="even">
-<td align="left">Suit Code</td>
+<td align="left">SuitCode</td>
 <td align="left">1</td>
 </tr>
 <tr class="odd">
-<td align="left">Suit Text</td>
+<td align="left">SuitText</td>
 <td align="left">&gt;5%</td>
 </tr>
 <tr class="even">
+<td align="left">CoCH_NTAXA</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">CoCG_NTAXA</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">CoCM_NTAXA</td>
+<td align="left">0</td>
+</tr>
+<tr class="odd">
+<td align="left">CoCP_NTAXA</td>
+<td align="left">0</td>
+</tr>
+<tr class="even">
+<td align="left">CoCB_NTAXA</td>
+<td align="left">100</td>
+</tr>
+<tr class="odd">
+<td align="left">Class_NTAXA</td>
+<td align="left">Bad</td>
+</tr>
+<tr class="even">
+<td align="left">EQR_NTAXA</td>
+<td align="left">0.116194146599058</td>
+</tr>
+<tr class="odd">
 <td align="left">Years included</td>
 <td align="left">2019</td>
 </tr>
