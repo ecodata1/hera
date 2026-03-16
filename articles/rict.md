@@ -725,17 +725,17 @@ The outcome of this assessment.
 
 | question                   | response          |
 |:---------------------------|:------------------|
-| RICT Reference WHPT ASPT   | 6.70423763296175  |
-| RICT Rerference WHPT NTAXA | 23.3958436732449  |
-| RICT Rerference ARMI Score | 13.5271425604722  |
-| RICT Rerference ARMI NTAXA | 5.82390315155402  |
-| CoCH_ASPT                  | 22.83             |
-| CoCG_ASPT                  | 30.05             |
-| CoCM_ASPT                  | 31.64             |
-| CoCP_ASPT                  | 10.48             |
-| CoCB_ASPT                  | 4.99              |
+| RICT Reference WHPT ASPT   | 6.69486760152206  |
+| RICT Rerference WHPT NTAXA | 22.783742918366   |
+| RICT Rerference ARMI Score | 13.0465227728224  |
+| RICT Rerference ARMI NTAXA | 5.72979610869053  |
+| CoCH_ASPT                  | 23.31             |
+| CoCG_ASPT                  | 30.19             |
+| CoCM_ASPT                  | 31.17             |
+| CoCP_ASPT                  | 10.46             |
+| CoCB_ASPT                  | 4.86              |
 | Class_ASPT                 | Moderate          |
-| EQR_ASPT                   | 0.868839670474072 |
+| EQR_ASPT                   | 0.870661347849129 |
 | SuitCode                   | 1                 |
 | SuitText                   | \>5%              |
 | CoCH_NTAXA                 | 0                 |
@@ -744,7 +744,7 @@ The outcome of this assessment.
 | CoCP_NTAXA                 | 0                 |
 | CoCB_NTAXA                 | 100               |
 | Class_NTAXA                | Bad               |
-| EQR_NTAXA                  | 0.116194146599058 |
+| EQR_NTAXA                  | 0.119467330171379 |
 | Years included             | 2019              |
 
 ## Check
@@ -795,8 +795,8 @@ function.
     #> Warning in data.frame(..., check.names = FALSE): row names were found from a
     #> short variable and have been discarded
     #> Warning in inner_join(sample_season, predict_single, by = join_by(season == : Detected an unexpected many-to-many relationship between `x` and `y`.
-    #> ℹ Row 2 of `x` matches multiple rows in `y`.
-    #> ℹ Row 4 of `y` matches multiple rows in `x`.
+    #> ℹ Row 1 of `x` matches multiple rows in `y`.
+    #> ℹ Row 5 of `y` matches multiple rows in `x`.
     #> ℹ If a many-to-many relationship is expected, set `relationship =
     #>   "many-to-many"` to silence this warning.
     #> Variables for the 'physical' model detected - applying relevant checks.
@@ -804,8 +804,8 @@ function.
     #> Success, all validation checks passed!
     #> Classifying...
     #> Warning in inner_join(rict_output, single_predict, by = join_by(sample_id)): Detected an unexpected many-to-many relationship between `x` and `y`.
-    #> ℹ Row 2 of `x` matches multiple rows in `y`.
-    #> ℹ Row 2 of `y` matches multiple rows in `x`.
+    #> ℹ Row 1 of `x` matches multiple rows in `y`.
+    #> ℹ Row 3 of `y` matches multiple rows in `x`.
     #> ℹ If a many-to-many relationship is expected, set `relationship =
     #>   "many-to-many"` to silence this warning.
 
