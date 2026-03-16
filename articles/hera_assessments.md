@@ -78,15 +78,22 @@
 | RICT                      | RICT Rerference WHPT NTAXA |
 | RICT                      | RICT Rerference ARMI Score |
 | RICT                      | RICT Rerference ARMI NTAXA |
-| RICT                      | CoCH                       |
-| RICT                      | CoCG                       |
-| RICT                      | CoCM                       |
-| RICT                      | CoCP                       |
-| RICT                      | CoCB                       |
-| RICT                      | Class                      |
-| RICT                      | EQR                        |
-| RICT                      | Suit Code                  |
-| RICT                      | Suit Text                  |
+| RICT                      | CoCH_ASPT                  |
+| RICT                      | CoCG_ASPT                  |
+| RICT                      | CoCM_ASPT                  |
+| RICT                      | CoCP_ASPT                  |
+| RICT                      | CoCB_ASPT                  |
+| RICT                      | Class_ASPT                 |
+| RICT                      | EQR_ASPT                   |
+| RICT                      | SuitCode                   |
+| RICT                      | SuitText                   |
+| RICT                      | CoCH_NTAXA                 |
+| RICT                      | CoCG_NTAXA                 |
+| RICT                      | CoCM_NTAXA                 |
+| RICT                      | CoCP_NTAXA                 |
+| RICT                      | CoCB_NTAXA                 |
+| RICT                      | Class_NTAXA                |
+| RICT                      | EQR_NTAXA                  |
 | RICT                      | Years included             |
 
 ## Dependencies

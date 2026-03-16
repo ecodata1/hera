@@ -509,7 +509,6 @@ assessment_function <- function(data, ...) {
     rict_data <- unique(rict_data)
 
     rict_output <- inner_join(rict_output, single_predict, by = join_by(sample_id))
-    browser()
     spr_ntaxa <- select(
       rict_output,
       "sample_id",
@@ -723,70 +722,6 @@ assessment_function <- function(data, ...) {
 ## Outcome
 
 The outcome of this assessment.
-
-    #> Called from: .f(.x[[i]], ...)
-    #> debug: spr_ntaxa <- select(rict_output, "sample_id", CoCH_NTAXA = "H_NTAXA_spr", 
-    #>     CoCG_NTAXA = "G_NTAXA_spr", CoCM_NTAXA = "M_NTAXA_spr", CoCP_NTAXA = "P_NTAXA_spr", 
-    #>     CoCB_NTAXA = "B_NTAXA_spr", Class_NTAXA = "mostProb_NTAXA_spr", 
-    #>     EQR_NTAXA = "NTAXA_eqr_av_spr", "SuitCode", "SuitText")
-    #> debug: spr_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
-    #> debug: sum_ntaxa <- select(rict_output, "sample_id", CoCH_NTAXA = "H_NTAXA_sum", 
-    #>     CoCG_NTAXA = "G_NTAXA_sum", CoCM_NTAXA = "M_NTAXA_sum", CoCP_NTAXA = "P_NTAXA_sum", 
-    #>     CoCB_NTAXA = "B_NTAXA_sum", Class_NTAXA = "mostProb_NTAXA_sum", 
-    #>     EQR_NTAXA = "NTAXA_eqr_av_sum", "SuitCode", "SuitText")
-    #> debug: sum_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
-    #> debug: aut_ntaxa <- select(rict_output, "sample_id", CoCH_NTAXA = "H_NTAXA_aut", 
-    #>     CoCG_NTAXA = "G_NTAXA_aut", CoCM_NTAXA = "M_NTAXA_aut", CoCP_NTAXA = "P_NTAXA_aut", 
-    #>     CoCB_NTAXA = "B_NTAXA_aut", Class_NTAXA = "mostProb_NTAXA_aut", 
-    #>     EQR_NTAXA = "NTAXA_eqr_av_aut", "SuitCode", "SuitText")
-    #> debug: aut_ntaxa$parameter <- "Macroinvertebrates (NTAXA)"
-    #> debug: aut_aspt <- select(rict_output, "sample_id", CoCH_ASPT = "H_ASPT_aut", 
-    #>     CoCG_ASPT = "G_ASPT_aut", CoCM_ASPT = "M_ASPT_aut", CoCP_ASPT = "P_ASPT_aut", 
-    #>     CoCB_ASPT = "B_ASPT_aut", Class_ASPT = "mostProb_ASPT_aut", 
-    #>     EQR_ASPT = "ASPT_eqr_av_aut", "SuitCode", "SuitText")
-    #> debug: aut_aspt$parameter <- "Macroinvertebrates (ASPT)"
-    #> debug: spr_aspt <- select(rict_output, "sample_id", CoCH_ASPT = "H_ASPT_spr", 
-    #>     CoCG_ASPT = "G_ASPT_spr", CoCM_ASPT = "M_ASPT_spr", CoCP_ASPT = "P_ASPT_spr", 
-    #>     CoCB_ASPT = "B_ASPT_spr", Class_ASPT = "mostProb_ASPT_spr", 
-    #>     EQR_ASPT = "ASPT_eqr_av_spr", "SuitCode", "SuitText")
-    #> debug: spr_aspt$parameter <- "Macroinvertebrates (ASPT)"
-    #> debug: sum_aspt <- select(rict_output, "sample_id", CoCH_ASPT = "H_ASPT_sum", 
-    #>     CoCG_ASPT = "G_ASPT_sum", CoCM_ASPT = "M_ASPT_sum", CoCP_ASPT = "P_ASPT_sum", 
-    #>     CoCB_ASPT = "B_ASPT_sum", Class_ASPT = "mostProb_ASPT_sum", 
-    #>     EQR_ASPT = "eqr_av_sum_aspt", "SuitCode", "SuitText")
-    #> debug: sum_aspt$parameter <- "Macroinvertebrates (ASPT)"
-    #> debug: rict_class <- bind_rows(spr_aspt, sum_aspt, aut_aspt, spr_ntaxa, 
-    #>     sum_ntaxa, aut_ntaxa)
-    #> debug: rict_class <- rict_class[rowSums(is.na(rict_class)) < 8, ]
-    #> debug: rict_class <- mutate_all(rict_class, as.character)
-    #> debug: rict_class <- pivot_longer(rict_class, names_to = "question", 
-    #>     values_to = "response", cols = c(-sample_id, -parameter))
-    #> debug: rict_class <- filter(rict_class, !is.na(response))
-    #> debug: rict_class <- inner_join(rict_class, rict_data[, c("location_id", 
-    #>     "sample_id")], by = "sample_id", relationship = "many-to-many")
-    #> debug: rict_aspt <- tibble(location_id = predict_single$location_id, 
-    #>     sample_id = predict_single$sample_id, question = "RICT Reference WHPT ASPT", 
-    #>     response = as.character(predict_single$TL2_WHPT_ASPT_AbW_DistFam))
-    #> debug: rict_ntaxa <- tibble(location_id = predict_single$location_id, 
-    #>     sample_id = predict_single$sample_id, question = "RICT Rerference WHPT NTAXA", 
-    #>     response = as.character(predict_single$TL2_WHPT_NTAXA_AbW_DistFam))
-    #> debug: rict_river_score <- tibble(location_id = predict_single$location_id, 
-    #>     sample_id = predict_single$sample_id, question = "RICT Rerference ARMI Score", 
-    #>     response = as.character(predict_single$TL2_08_Group_ARMI_Score))
-    #> debug: rict_river_ntaxa <- tibble(location_id = predict_single$location_id, 
-    #>     sample_id = predict_single$sample_id, question = "RICT Rerference ARMI NTAXA", 
-    #>     response = as.character(predict_single$TL2_08_Group_ARMI_NTaxa))
-    #> debug: predict_single <- bind_rows(rict_aspt, rict_ntaxa, rict_river_score, 
-    #>     rict_river_ntaxa)
-    #> debug: predict_single$parameter <- "RICT Prediction"
-    #> debug: rict_prediction <- bind_rows(predict_single, rict_class, multi_year_output)
-    #> debug: row <- rict_prediction[is.na(rict_prediction$sample_id), ]
-    #> debug: row <- row[1:2, ]
-    #> debug: row$parameter[1] <- "Macroinvertebrates (ASPT)"
-    #> debug: row$parameter[2] <- "Macroinvertebrates (NTAXA)"
-    #> debug: row$question <- "Years included"
-    #> debug: row$response <- paste(unique(rict_data$Year), collapse = ",")
-    #> debug: rict_prediction <- bind_rows(rict_prediction, row)
 
 | question                   | response          |
 |:---------------------------|:------------------|

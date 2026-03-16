@@ -628,7 +628,6 @@ Code
 <span>    <span class="va">rict_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unique.html" class="external-link">unique</a></span><span class="op">(</span><span class="va">rict_data</span><span class="op">)</span></span>
 <span></span>
 <span>    <span class="va">rict_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">inner_join</a></span><span class="op">(</span><span class="va">rict_output</span>, <span class="va">single_predict</span>, by <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/join_by.html" class="external-link">join_by</a></span><span class="op">(</span><span class="va">sample_id</span><span class="op">)</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/browser.html" class="external-link">browser</a></span><span class="op">(</span><span class="op">)</span></span>
 <span>    <span class="va">spr_ntaxa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span></span>
 <span>      <span class="va">rict_output</span>,</span>
 <span>      <span class="st">"sample_id"</span>,</span>
@@ -843,69 +842,6 @@ Code
 <h2 id="outcome">Outcome<a class="anchor" aria-label="anchor" href="#outcome"></a>
 </h2>
 <p>The outcome of this assessment.</p>
-<pre><code><span><span class="co">#&gt; Called from: .f(.x[[i]], ...)</span></span>
-<span><span class="co">#&gt; debug: spr_ntaxa &lt;- select(rict_output, "sample_id", CoCH_NTAXA = "H_NTAXA_spr", </span></span>
-<span><span class="co">#&gt;     CoCG_NTAXA = "G_NTAXA_spr", CoCM_NTAXA = "M_NTAXA_spr", CoCP_NTAXA = "P_NTAXA_spr", </span></span>
-<span><span class="co">#&gt;     CoCB_NTAXA = "B_NTAXA_spr", Class_NTAXA = "mostProb_NTAXA_spr", </span></span>
-<span><span class="co">#&gt;     EQR_NTAXA = "NTAXA_eqr_av_spr", "SuitCode", "SuitText")</span></span>
-<span><span class="co">#&gt; debug: spr_ntaxa$parameter &lt;- "Macroinvertebrates (NTAXA)"</span></span>
-<span><span class="co">#&gt; debug: sum_ntaxa &lt;- select(rict_output, "sample_id", CoCH_NTAXA = "H_NTAXA_sum", </span></span>
-<span><span class="co">#&gt;     CoCG_NTAXA = "G_NTAXA_sum", CoCM_NTAXA = "M_NTAXA_sum", CoCP_NTAXA = "P_NTAXA_sum", </span></span>
-<span><span class="co">#&gt;     CoCB_NTAXA = "B_NTAXA_sum", Class_NTAXA = "mostProb_NTAXA_sum", </span></span>
-<span><span class="co">#&gt;     EQR_NTAXA = "NTAXA_eqr_av_sum", "SuitCode", "SuitText")</span></span>
-<span><span class="co">#&gt; debug: sum_ntaxa$parameter &lt;- "Macroinvertebrates (NTAXA)"</span></span>
-<span><span class="co">#&gt; debug: aut_ntaxa &lt;- select(rict_output, "sample_id", CoCH_NTAXA = "H_NTAXA_aut", </span></span>
-<span><span class="co">#&gt;     CoCG_NTAXA = "G_NTAXA_aut", CoCM_NTAXA = "M_NTAXA_aut", CoCP_NTAXA = "P_NTAXA_aut", </span></span>
-<span><span class="co">#&gt;     CoCB_NTAXA = "B_NTAXA_aut", Class_NTAXA = "mostProb_NTAXA_aut", </span></span>
-<span><span class="co">#&gt;     EQR_NTAXA = "NTAXA_eqr_av_aut", "SuitCode", "SuitText")</span></span>
-<span><span class="co">#&gt; debug: aut_ntaxa$parameter &lt;- "Macroinvertebrates (NTAXA)"</span></span>
-<span><span class="co">#&gt; debug: aut_aspt &lt;- select(rict_output, "sample_id", CoCH_ASPT = "H_ASPT_aut", </span></span>
-<span><span class="co">#&gt;     CoCG_ASPT = "G_ASPT_aut", CoCM_ASPT = "M_ASPT_aut", CoCP_ASPT = "P_ASPT_aut", </span></span>
-<span><span class="co">#&gt;     CoCB_ASPT = "B_ASPT_aut", Class_ASPT = "mostProb_ASPT_aut", </span></span>
-<span><span class="co">#&gt;     EQR_ASPT = "ASPT_eqr_av_aut", "SuitCode", "SuitText")</span></span>
-<span><span class="co">#&gt; debug: aut_aspt$parameter &lt;- "Macroinvertebrates (ASPT)"</span></span>
-<span><span class="co">#&gt; debug: spr_aspt &lt;- select(rict_output, "sample_id", CoCH_ASPT = "H_ASPT_spr", </span></span>
-<span><span class="co">#&gt;     CoCG_ASPT = "G_ASPT_spr", CoCM_ASPT = "M_ASPT_spr", CoCP_ASPT = "P_ASPT_spr", </span></span>
-<span><span class="co">#&gt;     CoCB_ASPT = "B_ASPT_spr", Class_ASPT = "mostProb_ASPT_spr", </span></span>
-<span><span class="co">#&gt;     EQR_ASPT = "ASPT_eqr_av_spr", "SuitCode", "SuitText")</span></span>
-<span><span class="co">#&gt; debug: spr_aspt$parameter &lt;- "Macroinvertebrates (ASPT)"</span></span>
-<span><span class="co">#&gt; debug: sum_aspt &lt;- select(rict_output, "sample_id", CoCH_ASPT = "H_ASPT_sum", </span></span>
-<span><span class="co">#&gt;     CoCG_ASPT = "G_ASPT_sum", CoCM_ASPT = "M_ASPT_sum", CoCP_ASPT = "P_ASPT_sum", </span></span>
-<span><span class="co">#&gt;     CoCB_ASPT = "B_ASPT_sum", Class_ASPT = "mostProb_ASPT_sum", </span></span>
-<span><span class="co">#&gt;     EQR_ASPT = "eqr_av_sum_aspt", "SuitCode", "SuitText")</span></span>
-<span><span class="co">#&gt; debug: sum_aspt$parameter &lt;- "Macroinvertebrates (ASPT)"</span></span>
-<span><span class="co">#&gt; debug: rict_class &lt;- bind_rows(spr_aspt, sum_aspt, aut_aspt, spr_ntaxa, </span></span>
-<span><span class="co">#&gt;     sum_ntaxa, aut_ntaxa)</span></span>
-<span><span class="co">#&gt; debug: rict_class &lt;- rict_class[rowSums(is.na(rict_class)) &lt; 8, ]</span></span>
-<span><span class="co">#&gt; debug: rict_class &lt;- mutate_all(rict_class, as.character)</span></span>
-<span><span class="co">#&gt; debug: rict_class &lt;- pivot_longer(rict_class, names_to = "question", </span></span>
-<span><span class="co">#&gt;     values_to = "response", cols = c(-sample_id, -parameter))</span></span>
-<span><span class="co">#&gt; debug: rict_class &lt;- filter(rict_class, !is.na(response))</span></span>
-<span><span class="co">#&gt; debug: rict_class &lt;- inner_join(rict_class, rict_data[, c("location_id", </span></span>
-<span><span class="co">#&gt;     "sample_id")], by = "sample_id", relationship = "many-to-many")</span></span>
-<span><span class="co">#&gt; debug: rict_aspt &lt;- tibble(location_id = predict_single$location_id, </span></span>
-<span><span class="co">#&gt;     sample_id = predict_single$sample_id, question = "RICT Reference WHPT ASPT", </span></span>
-<span><span class="co">#&gt;     response = as.character(predict_single$TL2_WHPT_ASPT_AbW_DistFam))</span></span>
-<span><span class="co">#&gt; debug: rict_ntaxa &lt;- tibble(location_id = predict_single$location_id, </span></span>
-<span><span class="co">#&gt;     sample_id = predict_single$sample_id, question = "RICT Rerference WHPT NTAXA", </span></span>
-<span><span class="co">#&gt;     response = as.character(predict_single$TL2_WHPT_NTAXA_AbW_DistFam))</span></span>
-<span><span class="co">#&gt; debug: rict_river_score &lt;- tibble(location_id = predict_single$location_id, </span></span>
-<span><span class="co">#&gt;     sample_id = predict_single$sample_id, question = "RICT Rerference ARMI Score", </span></span>
-<span><span class="co">#&gt;     response = as.character(predict_single$TL2_08_Group_ARMI_Score))</span></span>
-<span><span class="co">#&gt; debug: rict_river_ntaxa &lt;- tibble(location_id = predict_single$location_id, </span></span>
-<span><span class="co">#&gt;     sample_id = predict_single$sample_id, question = "RICT Rerference ARMI NTAXA", </span></span>
-<span><span class="co">#&gt;     response = as.character(predict_single$TL2_08_Group_ARMI_NTaxa))</span></span>
-<span><span class="co">#&gt; debug: predict_single &lt;- bind_rows(rict_aspt, rict_ntaxa, rict_river_score, </span></span>
-<span><span class="co">#&gt;     rict_river_ntaxa)</span></span>
-<span><span class="co">#&gt; debug: predict_single$parameter &lt;- "RICT Prediction"</span></span>
-<span><span class="co">#&gt; debug: rict_prediction &lt;- bind_rows(predict_single, rict_class, multi_year_output)</span></span>
-<span><span class="co">#&gt; debug: row &lt;- rict_prediction[is.na(rict_prediction$sample_id), ]</span></span>
-<span><span class="co">#&gt; debug: row &lt;- row[1:2, ]</span></span>
-<span><span class="co">#&gt; debug: row$parameter[1] &lt;- "Macroinvertebrates (ASPT)"</span></span>
-<span><span class="co">#&gt; debug: row$parameter[2] &lt;- "Macroinvertebrates (NTAXA)"</span></span>
-<span><span class="co">#&gt; debug: row$question &lt;- "Years included"</span></span>
-<span><span class="co">#&gt; debug: row$response &lt;- paste(unique(rict_data$Year), collapse = ",")</span></span>
-<span><span class="co">#&gt; debug: rict_prediction &lt;- bind_rows(rict_prediction, row)</span></span></code></pre>
 <table class="table">
 <thead><tr class="header">
 <th align="left">question</th>
