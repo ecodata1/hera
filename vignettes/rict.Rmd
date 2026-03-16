@@ -568,7 +568,6 @@ assessment_function <- function(data, ...) {
     rict_data <- unique(rict_data)
 
     rict_output <- inner_join(rict_output, single_predict, by = join_by(sample_id))
-    browser()
     spr_ntaxa <- select(
       rict_output,
       "sample_id",
