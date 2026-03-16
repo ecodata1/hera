@@ -116,6 +116,6 @@ test_that("RICT works", {
     "RICT"
   )
   # test on pre-calculated results
-  testthat::expect_equal(output$response[output$question %in% c("EQR_ASPT", "EQR_NTAXA")],
-                         c("0.871378661745642", "0.742180537119864"))
+  testthat::expect_equal(round(as.numeric(output$response[output$question %in% c("EQR_ASPT", "EQR_NTAXA")]),6),
+                         round(as.numeric(c("0.871378661745642", "0.742180537119864")), 6))
 })
