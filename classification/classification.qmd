@@ -567,7 +567,7 @@ results_filtered <- left_join(results_filtered, all_nmp, by = join_by(
 
 # Previous Class
 
-Join 2023 classification results based on WB
+Join 2023 classification results based on WB.
 
 ```{r}
 # user <- Sys.info()["user"]
