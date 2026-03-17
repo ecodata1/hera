@@ -33,7 +33,7 @@ Returns RICT output
 Code
 
 ``` r
-assessment_function <- function(data, ...) {
+assessment_function <- function(data, preds = FALSE) {
   # Calculated some statistic...
   # Note, any non-standard base R library must be call using require().
   require(rict)
@@ -67,7 +67,12 @@ assessment_function <- function(data, ...) {
     predict_data <- filter(predictors, location_id %in% unique(data$location_id))
     predict_data$date <- as.Date(predict_data$date)
     predict_data <- arrange(predict_data, dplyr::desc(date))
-
+    if(preds != FALSE) { 
+    predict_data <- slice(predict_data, .by = location_id, 1:2)
+    predict_data <- arrange(predict_data, date)
+    predict_data <- slice(predict_data, .by = location_id, 1)   
+    }
+    
     output_location <- inner_join(output,
       unique(data[, c(
         "location_id",
