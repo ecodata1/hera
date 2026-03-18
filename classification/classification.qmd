@@ -246,6 +246,54 @@ Filter RICT predictors.
 predictors$date <- as.Date(predictors$date)
 # use latest 'version' for each location_id
 predictors <- arrange(predictors, desc(date))
+
+# Take up to the first two most recent rows from each location
+#    predictors <- slice(predictors, .by = location_id, 1:2)
+# For each location, if only one row - use that row
+ # predictors <- purrr::map_df(split(predictors,predictors$location_id),
+ #  function(location) {
+ #      if(nrow(location) == 1) {
+ #        return(location)
+ #      }
+# If two rows, return first row if date not 2025-03-16
+    #   if(location$date[1] != "2026-03-16") {
+    #     return(location[1, ])
+    #   } else {
+    #     return(location[2, ])
+    #   }
+    # })
+    
+   # 5187
+    # predictors <- arrange(predictors, date)
+    # predictors <- slice(predictors, .by = location_id, 1) 
+
+
+# # For each location, if only one row - use that row
+#  predictors <- purrr::map_df(split(predictors,predictors$location_id),
+#   function(location) {
+#       if(nrow(location) == 1) {
+#         return(location)
+#       }
+# # If two rows, return first row if date not 2026-03-16
+#       if(location$date[1] != "2026-03-16") {
+#         return(location)
+#       } 
+# # If first row date is 2026-03-16 and slope < 1 - replace slope value with value from value from most recent sampling_point sourced value. 
+#         if(location$slope[1] < 1) {
+#           slope <-   location$slope[1]
+#           location$slope[1] <- location$slope[location$predictor_source == "sampling_point"][1]
+#           location$comments[1] <- "RICT layer slope (<1) not used, replaced with previous slope value"
+#           if(is.na(location$slope[1])) {
+#             location$slope[1] <- slope
+#              location$comments[1] <- "RICT layer slope < 1 - replace with map measured slope"
+#           }
+#           
+#         }
+#         return(location)
+#     })
+
+
+    
 predictors <- select(
   predictors,
   alkalinity,
@@ -258,6 +306,9 @@ predictors <- select(
   dist_from_source
 )
 predictors <- predictors[!duplicated(predictors$location_id), ]
+
+predictors$slope[predictors$slope < 1 & !is.na(predictors$slope)] <- 1
+
 
 data <- left_join(data, predictors, by = c("location_id"))
 
@@ -635,22 +686,25 @@ class <- readxl::read_excel(path = path)
 
 aspt_class <- filter(
   class,
-  REPORTING_PARAMETER == "Macroinvertebrates (ASPT)" &
-    ON_WATER_BODY == "Y"
+  REPORTING_PARAMETER == "Macroinvertebrates (ASPT)"
+  # &
+  #   ON_WATER_BODY == "Y"
 )
 aspt_class$parameter <- "Macroinvertebrates (ASPT) - Rivers"
 
 ntaxa_class <- filter(
   class,
-  REPORTING_PARAMETER == "Macroinvertebrates (NTAXA)" &
-    ON_WATER_BODY == "Y"
+  REPORTING_PARAMETER == "Macroinvertebrates (NTAXA)" 
+  # &
+  #   ON_WATER_BODY == "Y"
 )
 ntaxa_class$parameter <- "Macroinvertebrates (NTAXA) - Rivers"
 
 diatom_class <- filter(
   class,
-  REPORTING_PARAMETER == "Phytobenthos (diatoms)" &
-    ON_WATER_BODY == "Y"
+  REPORTING_PARAMETER == "Phytobenthos (diatoms)" 
+  # &
+  #   ON_WATER_BODY == "Y"
 )
 diatom_class$parameter <- "Phytobenthos (diatoms) - Rivers"
 
@@ -795,7 +849,7 @@ replocs <- select(
 )
 
 
-results_filtered_test <- left_join(results_filtered, replocs, by = join_by(
+results_filtered <- left_join(results_filtered, replocs, by = join_by(
   lookup == CLASSIFICATION_PARAMETER_DESC,
   `Location Code` == LOCATION_CODE
 ))
