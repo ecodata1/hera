@@ -730,17 +730,17 @@ The outcome of this assessment.
 
 | question                   | response          |
 |:---------------------------|:------------------|
-| RICT Reference WHPT ASPT   | 6.69486760152206  |
-| RICT Rerference WHPT NTAXA | 22.783742918366   |
-| RICT Rerference ARMI Score | 13.0465227728224  |
-| RICT Rerference ARMI NTAXA | 5.72979610869053  |
-| CoCH_ASPT                  | 23.31             |
-| CoCG_ASPT                  | 30.19             |
-| CoCM_ASPT                  | 31.17             |
-| CoCP_ASPT                  | 10.46             |
-| CoCB_ASPT                  | 4.86              |
+| RICT Reference WHPT ASPT   | 6.6959699264488   |
+| RICT Rerference WHPT NTAXA | 23.3904592773285  |
+| RICT Rerference ARMI Score | 13.5216987710015  |
+| RICT Rerference ARMI NTAXA | 5.82191048488206  |
+| CoCH_ASPT                  | 23.13             |
+| CoCG_ASPT                  | 30.13             |
+| CoCM_ASPT                  | 31.38             |
+| CoCP_ASPT                  | 10.44             |
+| CoCB_ASPT                  | 4.91              |
 | Class_ASPT                 | Moderate          |
-| EQR_ASPT                   | 0.870661347849129 |
+| EQR_ASPT                   | 0.869886431680719 |
 | SuitCode                   | 1                 |
 | SuitText                   | \>5%              |
 | CoCH_NTAXA                 | 0                 |
@@ -749,7 +749,7 @@ The outcome of this assessment.
 | CoCP_NTAXA                 | 0                 |
 | CoCB_NTAXA                 | 100               |
 | Class_NTAXA                | Bad               |
-| EQR_NTAXA                  | 0.119467330171379 |
+| EQR_NTAXA                  | 0.116214658454127 |
 | Years included             | 2019              |
 
 ## Check

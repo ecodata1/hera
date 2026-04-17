@@ -62,7 +62,7 @@ assessment_function <- function(data, ...) {
   input <- dplyr::select(
     input, "sample_id", "question", "response", "label", "parameter"
   )
-  output <- macroinvertebrateMetrics::calc_metric(input)
+  output <- macroinvertebrateMetrics::calc_metric(input, metrics = c("epsi", "riverfly", "whpt"))
   sample_details <- select(input, sample_id, parameter)
   sample_details <- distinct(sample_details)
   output <- dplyr::select(
@@ -94,24 +94,19 @@ The outcome of your assessment.
     #> 
     #>     demo_data
 
-| question              | response                          |
-|:----------------------|:----------------------------------|
-| EPSI Score TL2        | 100                               |
-| EPSI Condition TL2    | Minimally sedimented/unsedimented |
-| PSI Score TL3         | 100                               |
-| PSI Condition TL3     | Minimally sedimented/unsedimented |
-| Riverfly Score        | 2                                 |
-| Riverfly NTAXA        | 1                                 |
-| Riverfly ASPT         | 2                                 |
-| SPEAR ratio TL2       | 100                               |
-| SPEAR toxic ratio TL2 | -12.7607142857143                 |
-| SPEAR class TL2       | High                              |
-| WHPT_SCORE            | 5.9                               |
-| WHPT_ASPT             | 5.9                               |
-| WHPT_NTAXA            | 1                                 |
-| WHPT_P_SCORE          | 5.5                               |
-| WHPT_P_ASPT           | 5.5                               |
-| WHPT_P_NTAXA          | 1                                 |
+| question           | response                          |
+|:-------------------|:----------------------------------|
+| EPSI Score TL2     | 100                               |
+| EPSI Condition TL2 | Minimally sedimented/unsedimented |
+| Riverfly Score     | 2                                 |
+| Riverfly NTAXA     | 1                                 |
+| Riverfly ASPT      | 2                                 |
+| WHPT_SCORE         | 5.9                               |
+| WHPT_ASPT          | 5.9                               |
+| WHPT_NTAXA         | 1                                 |
+| WHPT_P_SCORE       | 5.5                               |
+| WHPT_P_ASPT        | 5.5                               |
+| WHPT_P_NTAXA       | 1                                 |
 
 ## Check
 
