@@ -36,7 +36,7 @@ Code
 
 assessment_function <- function(data, ...) {
   # Calculated invert metrics...
-  # Note, any non-standard base R library must be call using require().
+  # Note, any non-standard base R library must be called using require().
   require(dplyr)
   require(whpt)
   require(macroinvertebrateMetrics)

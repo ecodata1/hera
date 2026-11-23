@@ -8,10 +8,6 @@ Convert hera dataframe into RICT input dataframe
 convert_rict(data)
 ```
 
-## Arguments
-
-- data:
-
 ## Value
 
 data.frame in RICT input format.

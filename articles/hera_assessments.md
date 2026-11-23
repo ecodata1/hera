@@ -5,9 +5,9 @@
 | name |
 |:---|
 | [Bacterial Tufts Metric](https://ecodata1.github.io/hera/articles/bacterial-tufts.md) |
-| [Rapid Assessment of Bankside Consistency with Water Body Status](https://ecodata1.github.io/hera/articles/bankside-consistency.md) |
 | [Marine Pen Fish farm Compliance](https://ecodata1.github.io/hera/articles/mpff-compliance.md) |
 | [UKTAG River Assessment Method Macrophytes and Phytobenthos](https://ecodata1.github.io/hera/articles/darleq3.md) |
+| [Rapid Assessment of Bankside Consistency with Water Body Status](https://ecodata1.github.io/hera/articles/bankside-consistency.md) |
 | [Freshwater Macroinvertebrate Metrics](https://ecodata1.github.io/hera/articles/macroinvertebrate-metrics.md) |
 | [RICT](https://ecodata1.github.io/hera/articles/rict.md) |
 
@@ -18,17 +18,6 @@
 | Bacterial Tufts           | Sewage fungus cover        |
 | Bacterial Tufts           | Sewage fungus density      |
 | Bacterial Tufts           | Bacterial Tuft Class       |
-| Bankside Consistency      | season                     |
-| Bankside Consistency      | Reference NTAXA            |
-| Bankside Consistency      | Reference ASPT             |
-| Bankside Consistency      | assessment                 |
-| Bankside Consistency      | driver                     |
-| Bankside Consistency      | WHPT_NTAXA                 |
-| Bankside Consistency      | WHPT_ASPT                  |
-| Bankside Consistency      | Typical ASPT Class         |
-| Bankside Consistency      | Typical NTAXA Class        |
-| Bankside Consistency      | Reported WHPT Class Year   |
-| Bankside Consistency      | water body sampled         |
 | DARLEQ3                   | Alkalinity                 |
 | DARLEQ3                   | lake_TYPE                  |
 | DARLEQ3                   | Total_count                |
@@ -58,6 +47,17 @@
 | DARLEQ3                   | CoCMPB                     |
 | DARLEQ3                   | ROM_GM                     |
 | DARLEQ3                   | Years included             |
+| Bankside Consistency      | season                     |
+| Bankside Consistency      | Reference NTAXA            |
+| Bankside Consistency      | Reference ASPT             |
+| Bankside Consistency      | assessment                 |
+| Bankside Consistency      | driver                     |
+| Bankside Consistency      | WHPT_NTAXA                 |
+| Bankside Consistency      | WHPT_ASPT                  |
+| Bankside Consistency      | Typical ASPT Class         |
+| Bankside Consistency      | Typical NTAXA Class        |
+| Bankside Consistency      | Reported WHPT Class Year   |
+| Bankside Consistency      | water body sampled         |
 | Macroinvertebrate Metrics | EPSI Score TL2             |
 | Macroinvertebrate Metrics | EPSI Condition TL2         |
 | Macroinvertebrate Metrics | WHPT_SCORE                 |

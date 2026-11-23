@@ -481,9 +481,9 @@ hera::catalogue
   assessment                data               assessment_function
   <chr>                     <list>             <list>             
 1 Bacterial Tufts           <tibble [10 × 12]> <fn>               
-2 Bankside Consistency      <tibble [17 × 12]> <fn>               
-3 MPFF Compliance           <tibble [34 × 10]> <fn>               
-4 DARLEQ3                   <tibble [36 × 12]> <fn>               
+2 MPFF Compliance           <tibble [34 × 10]> <fn>               
+3 DARLEQ3                   <tibble [36 × 12]> <fn>               
+4 Bankside Consistency      <tibble [17 × 12]> <fn>               
 5 Macroinvertebrate Metrics <tibble [17 × 10]> <fn>               
 6 RICT                      <tibble [30 × 12]> <fn>               
 ```
