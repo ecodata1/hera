@@ -7,11 +7,12 @@
 combine(outcome, data)
 }
 \arguments{
-\item{outcome}{The output from prediction or other hera function}
+\item{outcome}{The output from `assess()` hera function}
 
-\item{data}{The input data to prediction or other hera function}
+\item{data}{The input data to `assess()` hera function}
 }
 \description{
 Output with all columns from data relevant to assessment name. Either by
-sample_id or location_id (depending how output is calculated)
+sample_id and/or location_id (depending if sample or location level
+assessment).
 }

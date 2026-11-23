@@ -234,6 +234,8 @@ head(indexes)
 Predictors or expected values used in this assessment.
 
 ```{r predictors}
+
+data$alkalinity <- 75
 predictors <- data %>%
   select(
     dist_from_source,
@@ -526,8 +528,8 @@ assessment_function <- function(data, assessment_table = NULL) {
 
   return(assessments)
 }
-# assessments <- assessment_function(combined_data, assessment_table)
-# assessments
+ assessments <- assessment_function(combined_data, assessment_table)
+ assessments
 ```
 
 ## Confidence
@@ -600,8 +602,8 @@ confidence_function <- function(data, aggregates = "sample_id") {
 }
 
 
-# confidences <- confidence_function(data = assessments)
-# confidences
+ confidences <- confidence_function(data = assessments)
+ confidences
 ```
 
 ## Checklist

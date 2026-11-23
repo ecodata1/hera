@@ -6,9 +6,6 @@
 \usage{
 convert_rict(data)
 }
-\arguments{
-\item{data}{}
-}
 \value{
 data.frame in RICT input format.
 }
