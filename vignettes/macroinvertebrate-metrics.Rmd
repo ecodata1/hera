@@ -113,6 +113,8 @@ assessment_function <- function(data, ...) {
   require(whpt)
   require(macroinvertebrateMetrics)
   input <- data
+  # tidy old, messy archive data
+  input$label <- gsub("sp.", "", input$label)
   input$label <- trimws(input$label)
   input <- dplyr::filter(
     input,
@@ -135,13 +137,14 @@ assessment_function <- function(data, ...) {
   input <- dplyr::select(
     input, "sample_id", "question", "response", "label", "parameter"
   )
-  output <- macroinvertebrateMetrics::calc_metric(input)
-  sample_details <- select(input, sample_id, parameter)
-  sample_details <- distinct(sample_details)
+  output <- macroinvertebrateMetrics::calc_metric(
+    input, 
+    metrics = c("epsi","whpt","riverfly")
+    )
+ 
   output <- dplyr::select(
-    output, sample_id, question, response
+    output, sample_id, question, response, parameter
   )
-  output <- inner_join(output, sample_details, by = join_by(sample_id))
 
   return(output)
 }
