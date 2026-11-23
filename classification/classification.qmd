@@ -9,9 +9,6 @@ editor_options:
 # TODO
 
 -   Convert() function does a lot of tweaks - can these go in a .csv lookup file?
--   Unit test for mean_alkalinity
--   Unit test for RICT
--   Unit test for DARLEQ
 -   List where data is saved from previous years and combine into single dataset?
 
 ```{r}
@@ -30,10 +27,15 @@ Open files of pre-fetched data from LIMS (provided by LIMS Admin). Data provided
 
 ```{r}
 user <- Sys.info()["user"]
+user_path <- "/OneDrive - Scottish Environment Protection Agency/DNA Data/"
+# user_path <- "/OneDrive - Scottish Environment Protection Agency/Ecology All Staff - DNA Data/"
+
+
 path <- paste0(
   "C:/Users/",
   user,
-  "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/latest-lims-data.csv"
+  user_path,
+  "Readiness Data/classification/latest-lims-data.csv"
 )
 
 lims_eco <- readr::read_csv(
@@ -110,7 +112,8 @@ user <- Sys.info()["user"]
 path <- paste0(
   "C:/Users/",
   user,
-  "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/analytical-data/all_data_clean.arrow"
+  user_path,
+  "Readiness Data/analytical-data/all_data_clean.arrow"
 )
 
 ds <- open_dataset(path,
@@ -159,7 +162,8 @@ eco_data$question[eco_data$question ==
 path <- paste0(
   "C:/Users/",
   user,
-  "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/analytical-data/ALK_RESULTS_CHEM_SEP19.xlsx"
+  user_path,
+  "Readiness Data/analytical-data/ALK_RESULTS_CHEM_SEP19.xlsx"
 )
 
 alk_results_sep_19 <- readxl::read_excel(path)
@@ -241,7 +245,103 @@ Filter RICT predictors.
 ```{r, message=FALSE}
 predictors$date <- as.Date(predictors$date)
 # use latest 'version' for each location_id
-predictors <- arrange(predictors, desc(date))
+predictors <- dplyr::arrange(predictors, dplyr::desc(date))
+
+### Use sampling_point layer if available ###
+
+# Take up to the first two most recent rows from each location
+ #  predictors <- slice(predictors, .by = location_id, 1:2)
+# For each location, if only one row - use that row
+  # predictors <- purrr::map_df(split(predictors,predictors$location_id),
+  # function(location) {
+  #     if(nrow(location) == 1) {
+  #       return(location)
+  #     }
+# If two rows, return first row if date not 2026-03-16
+    #   if(location$date[1] != "2026-03-16") {
+    #     return(location[1, ])
+    #   } else {
+    #     return(location[2, ])
+    #   }
+    # })
+    
+   # 5187
+    # predictors <- arrange(predictors, date)
+    # predictors <- slice(predictors, .by = location_id, 1) 
+
+#### Use old slope change ####
+
+# # For each location, if only one row - use that row
+#  predictors <- purrr::map_df(split(predictors,predictors$location_id),
+#   function(location) {
+#       if(nrow(location) == 1) {
+#         return(location)
+#       }
+# # If two rows, return first row if date not 2026-03-16
+#       if(location$date[1] != "2026-03-16") {
+#         return(location)
+#       } 
+# # If first row date is 2026-03-16 and slope < 1 - replace slope value with value from value from most recent sampling_point sourced value. 
+#         if(location$slope[1] < 1) {
+#           slope <-   location$slope[1]
+#           location$slope[1] <- location$slope[location$predictor_source == "sampling_point"][1]
+#           location$comments[1] <- "RICT layer slope (<1) not used, replaced with previous slope value"
+#           if(is.na(location$slope[1])) {
+#             location$slope[1] <- slope
+#              location$comments[1] <- "RICT layer slope < 1 - replace with map measured slope"
+#           }
+#           
+#         }
+#         return(location)
+#     })
+
+### Use old altitude ###
+# # For each location, if only one row - use that row
+ # predictors <- purrr::map_df(split(predictors,predictors$location_id),
+ #  function(location) {
+ # 
+ #    # if(unique(location$location_id) %in% 10003) {
+ #    #   browser()
+ #    # }
+ #  
+ #    
+ #      if(nrow(location) == 1 && location$predictor_source[1] == "sampling_point") {
+ #        return(location)
+ #      }
+ #    
+ #       if(nrow(location) == 1 && is.na(location$altitude)) {
+ #        return(location)
+ #      }
+# If two rows, return first row if date not 2026-03-16
+   #   if(location$date[1] == "2026-03-16") {
+       
+     
+# # If first row date is 2026-03-16 and altitude < 5 - replace altitude value with value from value from most recent sampling_point sourced value. 
+      #   if(location$altitude[1] < 5 &&
+      #      !is.na(location$altitude[location$predictor_source == "sampling_point"][1]) &&
+      #      location$altitude[1] < location$altitude[location$predictor_source == "sampling_point"][1]) {
+      #       location$altitude[1] <- 
+      #       location$altitude[location$predictor_source == "sampling_point"][1]
+      #     location$comments[1] <- paste0(location$comments[1], 
+      #       "RICT layer altitude (<=5) not used, replaced with previous altitude value")
+      #   
+      #   }
+      #   if(location$altitude[1] < 5) {
+      #        location$comments[1] <-  paste0(location$comments[1],
+      #          "RICT layer altitude <= 5 - replace with map measured altitude")
+      #   }
+      # }
+   
+    #     return(location)
+    #   
+    # })
+
+# predictors$altitude[predictors$location_id == 4411][1] <- 5
+# predictors$comments[predictors$location_id == 4411][1] <- "RICT layer altitude replaced with map measured altitude"
+#     
+
+
+
 predictors <- select(
   predictors,
   alkalinity,
@@ -254,6 +354,9 @@ predictors <- select(
   dist_from_source
 )
 predictors <- predictors[!duplicated(predictors$location_id), ]
+
+predictors$slope[predictors$slope < 1 & !is.na(predictors$slope)] <- 1
+
 
 data <- left_join(data, predictors, by = c("location_id"))
 
@@ -368,6 +471,23 @@ Run classification
 # data <- read.csv("vignettes//data//2024-03-18-data-v2.csv")
 # data <- read.csv("vignettes//data//2024-03-18-data.csv")
 
+
+# data <- mutate(data, 
+#                label = ifelse(label == "Karayevia sp", "Karayevia sp.", label))
+# data <- mutate(data, 
+#                label = ifelse(
+#                  label == "Nitzschia dissipata subsp. media",
+#                  "Nitzschia dissipata var. media", label))
+# data <- mutate(data, 
+#                label = ifelse(label == "Gomphonema micopus", 
+#                               "Gomphonema micropus", label))
+# 
+# data <- mutate(data, 
+#                label = ifelse(label == "Aneumastus", 
+#                               "Aneumastus", label))
+
+
+
 data <- data[!is.na(data$grid_reference), ]
 data <- data[data$grid_reference != "", ]
 
@@ -398,17 +518,17 @@ data <- data %>%
   filter(is.na(length))
 
 data <- mutate(data, year = lubridate::year(date_taken))
-data <- data[data$year < 2025, ]
+data <- data[data$year < 2026, ]
 data <- dplyr::group_by(data, location_id, parameter) %>%
   dplyr::mutate(max_year = max(year))
 data <- ungroup(data)
 
 # only planned ecology samples (adhoc chemistry samples used for alkalinity
 # average to agree with historic procedure)
-data <- filter(data, purpose %in% c("SCHED", "Planned"))
+data <- filter(data, purpose %in% c("SCHED", "Planned","SCHED_ALIQ", "SCHEDULED"))
 # In case 'data' variable gets written over by other scripts
 test_data <- data
-results <- map_df(c(2019, 2020, 2021, 2022, 2023, 2024), function(class_year) {
+results <- map_df(c(2020, 2021, 2022, 2023, 2024, 2025), function(class_year) {
   ids <- unique(data[data$max_year == class_year, c("sample_id", "parameter")])
   filter_data <- inner_join(data,
     ids,
@@ -506,46 +626,47 @@ user <- Sys.info()["user"]
 path <- paste0(
   "C:/Users/",
   user,
-  "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/INV DIAT RAT NMP24 FINAL 23-04-24.xlsx"
+  user_path,
+  "Readiness Data/classification/NMP-2025.xlsx"
 )
 
 nmp <- readxl::read_xlsx(
   path =
-    path, sheet = "2024 FRESHWATER RIVER LOCH NMP"
+    path, sheet = "NMP-2025", skip = 1
 )
 
 # Fix issue with duplicates in NMP
-nmp_diatoms <- filter(nmp, !is.na(`REG PURPOSE-DIAT`))
-nmp_diatoms$`REG Mon Reason` <- nmp_diatoms$`REG PURPOSE-DIAT`
-nmp_diatoms <- nmp_diatoms[!duplicated(nmp_diatoms$`Sample Point code`), ]
-
-
-nmp_inverts <- filter(nmp, !is.na(`REG PURPOSE-INV`))
-nmp_inverts$`REG Mon Reason` <- nmp_inverts$`REG PURPOSE-INV`
-nmp_inverts <- nmp_inverts[!duplicated(nmp_inverts$`Sample Point code`), ]
-
-
-nmp_diatoms$ANALYSIS <- "DIATOMS"
-nmp_inverts$ANALYSIS <- "INVERTS"
-nmp <- bind_rows(nmp_diatoms, nmp_inverts)
+# nmp_diatoms <- filter(nmp, !is.na(`REG PURPOSE-DIAT`))
+# nmp_diatoms$`REG Mon Reason` <- nmp_diatoms$`REG PURPOSE-DIAT`
+# nmp_diatoms <- nmp_diatoms[!duplicated(nmp_diatoms$`Sample Point code`), ]
+# 
+# 
+# nmp_inverts <- filter(nmp, !is.na(`REG PURPOSE-INV`))
+# nmp_inverts$`REG Mon Reason` <- nmp_inverts$`REG PURPOSE-INV`
+# nmp_inverts <- nmp_inverts[!duplicated(nmp_inverts$`Sample Point code`), ]
+# 
+# 
+# nmp_diatoms$ANALYSIS <- "DIATOMS"
+# nmp_inverts$ANALYSIS <- "INVERTS"
+# nmp <- bind_rows(nmp_diatoms, nmp_inverts)
 ```
 
 # Join NMP
 
 ```{r}
 nmp <- select(nmp,
-  "location_id" = `Sample Point code`,
-  "wbid" = WBID,
-  analysis = ANALYSIS,
+  "location_id" = `Sampling Point`,
+  "wbid" = `Water Body id`,
+  analysis = Analysis,
   #  "replocs_check" = `CHK REPLOCS`,
-  "mon_purp" = `REG Mon Reason`,
-  DESC = `Sample Point Description`,
-  "Local office" = "LOCAL OFFICE"
+  "mon_purp" = `Monitoring Purpose`,
+  DESC = `Sampling Point Description`,
+  "Local office" = "EAU Team"
 )
 
-diatoms <- nmp[nmp$analysis == "DIATOMS", ]
+diatoms <- nmp[nmp$analysis %in% c("Diat","DIAT"), ]
 diatoms$analysis <- "Phytobenthos (diatoms) - Rivers"
-inverts <- nmp[nmp$analysis == "INVERTS", ]
+inverts <- nmp[nmp$analysis %in% c("TL2","TL5","TL4"), ]
 
 aspt <- inverts
 ntaxa <- inverts
@@ -562,89 +683,93 @@ results_filtered <- left_join(results_filtered, all_nmp, by = join_by(
 
 # Previous Class
 
-Join 2023 classification results based on WB
+Join 2023 classification results based on WB.
 
 ```{r}
-user <- Sys.info()["user"]
+# user <- Sys.info()["user"]
+# path <- paste0(
+#   "C:/Users/",
+#   user,
+#   "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/readiness.csv"
+# )
+# 
+# readiness <- read.csv(file = path, 
+#                       stringsAsFactors = FALSE, 
+#                       check.names = FALSE)
+# 
+# 
+# readiness <- readiness %>%   filter(`Analysis Type` %in% c("INVERTS", "DIATOMS"))
+# 
+# readiness <- select(readiness, nmp_wbid,
+#                     `Sampling Point`,
+#                     `Analysis Type`,
+#                     `REG Mon Purps (combined)`,
+#                     `LOCAL OFFICE`) %>%  
+#   distinct() %>% 
+#   filter(!is.na(nmp_wbid))
+# # 
+# # readiness <- readiness %>% 
+# #   pivot_wider(names_from = `Analysis Type`, values_from = `REG Mon Purps (combined)`)
+# # 
+# 
+# # remove duplicates (incorrect wbid / sampling point combination from NMP)
+# select(readiness, nmp_wbid, `Sampling Point`) %>% 
+#     distinct() %>% 
+# group_by(`Sampling Point`) %>% 
+#   mutate(n_count = n()) %>%  filter(n_count > 1)
+# 
+# 
+# readiness <- filter(readiness, 
+#                     `Sampling Point` != 121293 &
+#                       nmp_wbid != 10145)
+# 
+# 
+# readiness <- filter(readiness, 
+#                     `Sampling Point` != 302505 &
+#                       nmp_wbid != 3202)
+# 
+# # replace wbid with NMP wbid
+# readiness$nmp_wbid <- as.character(readiness$nmp_wbid)
+# readiness$`Sampling Point` <- as.character(readiness$`Sampling Point`)
+# results_filtered <- left_join(results_filtered,
+#   readiness,
+#   by = join_by(
+#     location_id == `Sampling Point`
+#   )
+# )
+
+# results_filtered$wbid <- results_filtered$nmp_wbid
+
 path <- paste0(
   "C:/Users/",
   user,
-  "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/readiness.csv"
-)
-
-readiness <- read.csv(file = path, 
-                      stringsAsFactors = FALSE, 
-                      check.names = FALSE)
-
-
-readiness <- readiness %>%   filter(`Analysis Type` %in% c("INVERTS", "DIATOMS"))
-
-readiness <- select(readiness, nmp_wbid,
-                    `Sampling Point`,
-                    `Analysis Type`,
-                    `REG Mon Purps (combined)`,
-                    `LOCAL OFFICE`) %>%  
-  distinct() %>% 
-  filter(!is.na(nmp_wbid))
-# 
-# readiness <- readiness %>% 
-#   pivot_wider(names_from = `Analysis Type`, values_from = `REG Mon Purps (combined)`)
-# 
-
-# remove duplicates (incorrect wbid / sampling point combination from NMP)
-select(readiness, nmp_wbid, `Sampling Point`) %>% 
-    distinct() %>% 
-group_by(`Sampling Point`) %>% 
-  mutate(n_count = n()) %>%  filter(n_count > 1)
-
-
-readiness <- filter(readiness, 
-                    `Sampling Point` != 121293 &
-                      nmp_wbid != 10145)
-
-
-readiness <- filter(readiness, 
-                    `Sampling Point` != 302505 &
-                      nmp_wbid != 3202)
-
-# replace wbid with NMP wbid
-readiness$nmp_wbid <- as.character(readiness$nmp_wbid)
-readiness$`Sampling Point` <- as.character(readiness$`Sampling Point`)
-results_filtered <- left_join(results_filtered,
-  readiness,
-  by = join_by(
-    location_id == `Sampling Point`
-  )
-)
-
-results_filtered$wbid <- results_filtered$nmp_wbid
-
-path <- paste0(
-  "C:/Users/",
-  user,
-  "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/classification-latest-published.xlsx"
+  user_path,
+  "Readiness Data/classification/classification-latest-published.xlsx"
 )
 
 class <- readxl::read_excel(path = path)
 
 aspt_class <- filter(
   class,
-  REPORTING_PARAMETER == "Macroinvertebrates (ASPT)" &
-    ON_WATER_BODY == "Y"
+  REPORTING_PARAMETER == "Macroinvertebrates (ASPT)"
+  # &
+  #   ON_WATER_BODY == "Y"
 )
 aspt_class$parameter <- "Macroinvertebrates (ASPT) - Rivers"
 
 ntaxa_class <- filter(
   class,
-  REPORTING_PARAMETER == "Macroinvertebrates (NTAXA)" &
-    ON_WATER_BODY == "Y"
+  REPORTING_PARAMETER == "Macroinvertebrates (NTAXA)" 
+  # &
+  #   ON_WATER_BODY == "Y"
 )
 ntaxa_class$parameter <- "Macroinvertebrates (NTAXA) - Rivers"
 
 diatom_class <- filter(
   class,
-  REPORTING_PARAMETER == "Phytobenthos (diatoms)" &
-    ON_WATER_BODY == "Y"
+  REPORTING_PARAMETER == "Phytobenthos (diatoms)" 
+  # &
+  #   ON_WATER_BODY == "Y"
 )
 diatom_class$parameter <- "Phytobenthos (diatoms) - Rivers"
 
@@ -684,7 +809,7 @@ table(invert_test$Class, invert_test$STATUS_DESCRIPTION)
 
 # Check Years
 
-2022 can include results from with data only from 2019. Only include locations with data from 2021 or 2022, 2023 or 2024.
+Only include locations with data from 2021, 2022, 2023, 2024, 2025.
 
 ```{r}
 results_filtered$`Years included` <-
@@ -701,6 +826,8 @@ results_filtered$check[results_filtered$check == FALSE] <-
 results_filtered$check[results_filtered$check == FALSE] <-
   grepl("2024", results_filtered$`Years included`[results_filtered$check == FALSE])
 
+results_filtered$check[results_filtered$check == FALSE] <-
+  grepl("2025", results_filtered$`Years included`[results_filtered$check == FALSE])
 
 results_filtered <- results_filtered[results_filtered$check == TRUE, ]
 ```
@@ -754,14 +881,15 @@ results_filtered <- unique(results_filtered)
 What's reportable?
 
 ```{r}
-# 2024
+# 2025
 # Use replocs? If on replocs then use.
 
 user <- Sys.info()["user"]
 path <- paste0(
   "C:/Users/",
   user,
-  "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/replocs-live.csv"
+  user_path,
+  "Readiness Data/classification/replocs-live.csv"
 )
 
 replocs <- read.csv(path)
@@ -769,14 +897,14 @@ replocs <- read.csv(path)
 results_filtered$lookup[
   results_filtered$Parameter == "Macroinvertebrates (ASPT) - Rivers" |
     results_filtered$Parameter == "Macroinvertebrates (NTAXA) - Rivers"
-] <- "Macro-invertebrates (WHPT)"
+] <- "Macroinvertebrates (ASPT)"
 
 results_filtered$lookup[
   results_filtered$Parameter == "Phytobenthos (diatoms) - Rivers"
 ] <- "Phytobenthos (diatoms)"
 
 replocs$LOCATION_CODE <- as.character(replocs$LOCATION_CODE)
-replocs <- filter(replocs, CLASSIFICATION_PARAMETER %in% c("3688", "3968"))
+replocs <- filter(replocs, CLASSIFICATION_PARAMETER %in% c("3952", "3968"))
 replocs <- select(
   replocs,
   LOCATION_CODE,
@@ -807,21 +935,35 @@ table(diatoms_reportable$Class, diatoms_reportable$`Previous class`)
 table(inverts_reportable$Class, inverts_reportable$`Previous class`)
 ```
 
+## Final Filters
+
+```{r}
+# only update samples taken in last year 
+ results_filtered <- results_filtered[grepl("2025", results_filtered$`Years included`), ]
+ 
+# remove investigative
+# keep mon_purp where NA for now.
+ 
+  results_filtered <- results_filtered[results_filtered$mon_purp == "Understanding the environment" | is.na(results_filtered$mon_purp), ]
+ 
+```
+
 # Save data
 
 ```{r}
 user <- Sys.info()["user"]
-folder <- "/OneDrive - Scottish Environment Protection Agency/DNA Data/Readiness Data/classification/"
+folder <- "Readiness Data/classification/"
 file_path <- paste0(
   "C:/Users/",
   user,
+  user_path,
   folder
 )
 
 # Classification data final
 class_path <- paste0(
   file_path,
-  "2024-classification-final.csv"
+  "2025-classification-final.csv"
 )
 write.csv(results_filtered,
   file = class_path,
@@ -831,7 +973,7 @@ write.csv(results_filtered,
 # Classification diatom final
 diatoms_path <- paste0(
   file_path,
-  "2024-classification-diatoms-final.csv"
+  "2025-classification-diatoms-final.csv"
 )
 write.csv(diatoms_reportable,
   file = diatoms_path,
@@ -840,7 +982,7 @@ write.csv(diatoms_reportable,
 
 inverts_path <- paste0(
   file_path,
-  "2024-classification-inverts-final.csv"
+  "2025-classification-inverts-final.csv"
 )
 
 # Sample level classification
@@ -863,21 +1005,21 @@ results_sample <- left_join(results,
 )
 samples_path <- paste0(
   file_path,
-  "sample-classification-2024.csv"
+  "sample-classification-2025.csv"
 )
 write.csv(results_sample, file = samples_path, row.names = FALSE)
 
 # Alkalinity
 alkalinity_path <- paste0(
   file_path,
-  "alkalinity-2024.csv"
+  "alkalinity-2025.csv"
 )
 write.csv(alkalinity, file = alkalinity_path, row.names = FALSE)
 
 # Raw data
 raw_path <- paste0(
   file_path,
-  "data-2024.csv"
+  "data-2025.csv"
 )
 write.csv(data, file = raw_path, row.names = FALSE)
 ```

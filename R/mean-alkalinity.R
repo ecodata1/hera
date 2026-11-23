@@ -4,7 +4,7 @@ mean_alkalinity <- function(data, sample_n = 10) {
   # Filter out chemistry
   ecology_results <- data[data$PARAMETER != "PAC" &
     data$QUESTION == "Taxon abundance", ]
-  # only requiresd columns to save memory
+  # only required columns to save memory
   ecology_results <- ecology_results[, c(
     "SAMPLE_ID",
     "CHEMISTRY_SITE",

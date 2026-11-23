@@ -141,11 +141,9 @@ assessment_function <- function(data, ...) {
     input, 
     metrics = c("epsi","whpt","riverfly")
     )
- 
   output <- dplyr::select(
     output, sample_id, question, response, parameter
   )
-
   return(output)
 }
 ```

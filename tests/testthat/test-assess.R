@@ -106,3 +106,32 @@ test_that("MPFF Compliance works", {
     round(89594.9653487682, 0)
   )
 })
+
+
+test_that("RICT works", {
+  data <- hera::demo_data
+  data <- data[data$sample_id == 1017980,]
+  output <- hera::assess(
+    data,
+    "RICT",
+    preds = TRUE
+  )
+
+  # test on pre-calculated results
+  # Result before predictors.csv update 2025-03-16
+  testthat::expect_equal(
+    round(as.numeric(
+      output$response[output$question %in% c("EQR_ASPT", "EQR_NTAXA")]),6),
+    round(as.numeric(c("0.871378661745642", "0.742180537119864")), 6))
+  # Results after predictors.csv file update 2025-03-16
+  data <- hera::demo_data
+  data <- data[data$sample_id == 1017980,]
+  output <- hera::assess(
+    data,
+    "RICT"
+  )
+  testthat::expect_equal(
+    round(as.numeric(
+      output$response[output$question %in% c("EQR_ASPT", "EQR_NTAXA")]),6),
+   round(as.numeric(c("0.894291", "0.661283")), 6))
+})

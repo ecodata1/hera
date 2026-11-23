@@ -100,5 +100,5 @@ test_that("Check NGR are correct", {
 
   # These ngrs are valid mismatches because the RICT temperature grid not
   # covering all land area
-  testthat::expect_equal(mismatch_ngr$location_id, 134730)
+  testthat::expect_equal(mismatch_ngr$location_id, c(207458,4423, 134730))
 })

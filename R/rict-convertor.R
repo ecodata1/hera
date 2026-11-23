@@ -79,7 +79,10 @@ convert_rict <- function(data) {
         depths <- filter(sample, question %in% c(
           "River Depth 1",
           "River Depth 2",
-          "River Depth 3"
+          "River Depth 3",
+          "Depth 1",
+          "Depth 2",
+          "Depth 3"
         ))
         if (nrow(depths) < 1) {
           # some samples don't have Depths or mean_depth...so return NA
