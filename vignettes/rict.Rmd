@@ -363,10 +363,13 @@ assessment_function <- function(data, ...) {
     names(data) <- tolower(names(data))
     data <- data.frame(data, check.names = TRUE)
     names(data) <- tolower(names(data))
-
     data$date_taken <- as.Date(data$date_taken)
     data$season <- season(data$date_taken)
     data <- dplyr::filter(data, season != 4)
+    # check is only winter season and return if no data
+    if(nrow(data) == 0) {
+      return(NULL)
+    }
 
     # summarise_data <- dplyr::group_by(
     #   data,
