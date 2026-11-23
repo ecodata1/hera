@@ -197,8 +197,8 @@ Alternatively, we can select a list of specific assessments from the
     # A tibble: 2 × 1
       assessment               
       <chr>                    
-    1 Macroinvertebrate Metrics
-    2 DARLEQ3                  
+    1 DARLEQ3                  
+    2 Macroinvertebrate Metrics
 
 ``` r
 data %>%
@@ -206,12 +206,12 @@ data %>%
   select(sample_id, question, response) %>%
   slice_sample(n = 4)
 # A tibble: 4 × 3
-  sample_id question        response        
-  <chr>     <chr>           <chr>           
-1 919681    lake_TYPE       HA              
-2 3294945   SPEAR class TL2 Good            
-3 1101214   Riverfly ASPT   2.33333333333333
-4 621928    EPSI Score TL2  77.6726304894278
+  sample_id question      response         
+  <chr>     <chr>         <chr>            
+1 282587    Riverfly ASPT 1.25             
+2 1250462   WHPT_P_NTAXA  16               
+3 2141643   eTDI5LM       53.8155110499444 
+4 1564589   EQR_TDI5LM    0.504807701553179
 ```
 
 ##### 4.2.2.1 Assessment Reports
@@ -448,6 +448,7 @@ Agency’s data.gov.uk web service and convert to the required `hera`
 input format.
 
 ``` r
+
 environment_agency_data <- hera:::get_data(location_id = c(43378, 92751))
 tibble(environment_agency_data)
 ```
@@ -455,6 +456,7 @@ tibble(environment_agency_data)
 We can then run this EA data through `hera`:
 
 ``` r
+
 report <- hera::assess(environment_agency_data)
 report %>%
   select(date_taken, question, response) %>%
@@ -479,10 +481,10 @@ hera::catalogue
   assessment                data               assessment_function
   <chr>                     <list>             <list>             
 1 Bacterial Tufts           <tibble [10 × 12]> <fn>               
-2 Macroinvertebrate Metrics <tibble [22 × 10]> <fn>               
-3 Bankside Consistency      <tibble [17 × 12]> <fn>               
-4 MPFF Compliance           <tibble [34 × 10]> <fn>               
-5 DARLEQ3                   <tibble [36 × 12]> <fn>               
+2 Bankside Consistency      <tibble [17 × 12]> <fn>               
+3 MPFF Compliance           <tibble [34 × 10]> <fn>               
+4 DARLEQ3                   <tibble [36 × 12]> <fn>               
+5 Macroinvertebrate Metrics <tibble [17 × 10]> <fn>               
 6 RICT                      <tibble [30 × 12]> <fn>               
 ```
 

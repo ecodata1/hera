@@ -28,6 +28,7 @@ Install the development version from
 [GitHub](https://github.com/ecodata1/hera) with:
 
 ``` r
+
 # install.packages("devtools")
 devtools::install_github("ecodata1/hera")
 ```
@@ -43,6 +44,7 @@ website](https://ecodata1.github.io/hera/articles/hera_specifications.html)
 Assess some demo data for various environmental risks:
 
 ``` r
+
 library(hera)
 data <- assess(hera::demo_data)
 data[1:5, c("sample_id", "parameter", "question", "response")]
@@ -60,6 +62,7 @@ Alternatively, you can view the `catalogue` and select which assessments
 to be run.
 
 ``` r
+
 catalogue
 #> # A tibble: 6 × 3
 #>   assessment                data               assessment_function
@@ -75,6 +78,7 @@ catalogue
 Then select which assessment(s) you wish to run by name:
 
 ``` r
+
 assessments <- assess(demo_data,
   name = c(
     "RICT",

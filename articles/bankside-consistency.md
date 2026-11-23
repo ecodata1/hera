@@ -12,22 +12,22 @@ invertebrates analysis to check consistency with Water Body Status.
 
 Basic details about the assessment.
 
-| question   | response                                                        |
-|:-----------|:----------------------------------------------------------------|
-| name_short | Bankside Consistency                                            |
-| name_long  | Rapid Assessment of Bankside Consistency with Water Body Status |
-| parameter  | River Family Inverts                                            |
-| status     | testing                                                         |
-| type       | metric                                                          |
+| question | response |
+|:---|:---|
+| name_short | Bankside Consistency |
+| name_long | Rapid Assessment of Bankside Consistency with Water Body Status |
+| parameter | River Family Inverts |
+| status | testing |
+| type | metric |
 
 ## Input
 
 A list of questions required to run the assessment.
 
-| location_id | sample_id | date_taken | question        | response | label    | parameter            |
-|:------------|:----------|:-----------|:----------------|:---------|:---------|:---------------------|
-| 206972      | 12345     | 2019-11-21 | Taxon abundance | 12       | Baetidae | River Family Inverts |
-| 206972      | 54321     | 2025-11-21 | Live abundance  | 21       | Baetidae | BANKSIDE_INVERTS     |
+| location_id | sample_id | date_taken | question | response | label | parameter |
+|:---|:---|:---|:---|:---|:---|:---|
+| 206972 | 12345 | 2019-11-21 | Taxon abundance | 12 | Baetidae | River Family Inverts |
+| 206972 | 54321 | 2025-11-21 | Live abundance | 21 | Baetidae | BANKSIDE_INVERTS |
 
 ## Assessment
 
@@ -36,6 +36,7 @@ Function code used to run this assessment.
 Code
 
 ``` r
+
 assessment_function <- function(data, ...) {
   # Some calculated a statistic...
   # Note, any non-standard base R library must be called using require().

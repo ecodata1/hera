@@ -33,6 +33,7 @@ Function code used to run this assessment.
 Code
 
 ``` r
+
 assessment_function <- function(data, ...) {
   # Calculated invert metrics...
   # Note, any non-standard base R library must be call using require().
@@ -40,6 +41,8 @@ assessment_function <- function(data, ...) {
   require(whpt)
   require(macroinvertebrateMetrics)
   input <- data
+  # tidy old, messy archive data
+  input$label <- gsub("sp.", "", input$label)
   input$label <- trimws(input$label)
   input <- dplyr::filter(
     input,
@@ -62,14 +65,13 @@ assessment_function <- function(data, ...) {
   input <- dplyr::select(
     input, "sample_id", "question", "response", "label", "parameter"
   )
-  output <- macroinvertebrateMetrics::calc_metric(input, metrics = c("epsi", "riverfly", "whpt"))
-  sample_details <- select(input, sample_id, parameter)
-  sample_details <- distinct(sample_details)
+  output <- macroinvertebrateMetrics::calc_metric(
+    input, 
+    metrics = c("epsi","whpt","riverfly")
+    )
   output <- dplyr::select(
-    output, sample_id, question, response
+    output, sample_id, question, response, parameter
   )
-  output <- inner_join(output, sample_details, by = join_by(sample_id))
-
   return(output)
 }
 ```
@@ -98,15 +100,15 @@ The outcome of your assessment.
 |:-------------------|:----------------------------------|
 | EPSI Score TL2     | 100                               |
 | EPSI Condition TL2 | Minimally sedimented/unsedimented |
-| Riverfly Score     | 2                                 |
-| Riverfly NTAXA     | 1                                 |
-| Riverfly ASPT      | 2                                 |
 | WHPT_SCORE         | 5.9                               |
 | WHPT_ASPT          | 5.9                               |
 | WHPT_NTAXA         | 1                                 |
 | WHPT_P_SCORE       | 5.5                               |
 | WHPT_P_ASPT        | 5.5                               |
 | WHPT_P_NTAXA       | 1                                 |
+| Riverfly Score     | 2                                 |
+| Riverfly NTAXA     | 1                                 |
+| Riverfly ASPT      | 2                                 |
 
 ## Check
 

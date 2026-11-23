@@ -30,12 +30,12 @@ The first piece of information to add is details on what your assessment
 is called and its status. This table shows the options to to choose from
 and which fields are required.
 
-| Columns    | Required | Details                                                                                                          |
-|:-----------|:---------|:-----------------------------------------------------------------------------------------------------------------|
-| name_short | TRUE     | Short name for assessment \< 26 characters for example an abbrivation like TDI                                   |
-| name_long  | TRUE     | Long name for assessment                                                                                         |
-| parameter  | TRUE     | Parameter or observation method being assessed for example Freshwater Diatoms, River Barriers or Estaurine Fish. |
-| status     | FALSE    | Required - either: ‘prototype’, ‘development’,‘on-hold’, ‘consultation’,‘deprecated’ or ‘deployed’               |
+| Columns | Required | Details |
+|:---|:---|:---|
+| name_short | TRUE | Short name for assessment \< 26 characters for example an abbrivation like TDI |
+| name_long | TRUE | Long name for assessment |
+| parameter | TRUE | Parameter or observation method being assessed for example Freshwater Diatoms, River Barriers or Estaurine Fish. |
+| status | FALSE | Required - either: ‘prototype’, ‘development’,‘on-hold’, ‘consultation’,‘deprecated’ or ‘deployed’ |
 
 #### Example
 
@@ -46,6 +46,7 @@ into the ‘hera’ package for future reference.
 Code:
 
 ``` r
+
 description <- tribble(
   ~question, ~response,
   "name_short", "LEAFPACS",
@@ -69,17 +70,18 @@ description
 
 Create a demo input data.
 
-| Columns   | Required | Details                                                                                                                                    |
-|:----------|:---------|:-------------------------------------------------------------------------------------------------------------------------------------------|
-| sample_id | TRUE     | Sample ID for example 1234523                                                                                                              |
-| question  | TRUE     | Question you have recorded a repsonse too                                                                                                  |
-| response  | TRUE     | Example response                                                                                                                           |
-| label     | FALSE    | Some question also have an associated ‘label’ for instance Taxon abundance will have a label for the Taxon name - is not required enter NA |
-| …         | FALSE    | …                                                                                                                                          |
+| Columns | Required | Details |
+|:---|:---|:---|
+| sample_id | TRUE | Sample ID for example 1234523 |
+| question | TRUE | Question you have recorded a repsonse too |
+| response | TRUE | Example response |
+| label | FALSE | Some question also have an associated ‘label’ for instance Taxon abundance will have a label for the Taxon name - is not required enter NA |
+| … | FALSE | … |
 
 For example:
 
 ``` r
+
 input <- tibble(
   sample_id = c("12345", "12345"),
   question = c("Taxon abundance", "Alkalinity"),
@@ -135,6 +137,7 @@ within the documentation for this assessment.The `hera_format` function
 will also check the data for errors or omissions.
 
 ``` r
+
 standard_format <- hera:::hera_format(description = description) # format table
 standard_format %>%
   knitr::kable()
@@ -150,6 +153,7 @@ saved in the `catalogue` nested dataframe.
 You may need to `unnest` the list columns to see all the information.
 
 ``` r
+
 catalogue %>%
   filter(assessment == "Example") %>%
   unnest(data)

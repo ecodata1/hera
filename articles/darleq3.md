@@ -25,10 +25,10 @@ alkalinity. If ‘alkalinity’ column not included, alkalinity will be
 calculated from rows with ‘alkalinity’ question using the response
 column value.
 
-| location_id | sample_id | date_taken | question        | response | label                | parameter     |
-|:------------|:----------|:-----------|:----------------|:---------|:---------------------|:--------------|
-| 8175        | 12345     | 2019-11-21 | Taxon abundance | 12       | Gomphonema olivaceum | River Diatoms |
-| 8175        | 12345     | 2019-11-21 | Alkalinity      | 45       | NA                   | Chemistry     |
+| location_id | sample_id | date_taken | question | response | label | parameter |
+|:---|:---|:---|:---|:---|:---|:---|
+| 8175 | 12345 | 2019-11-21 | Taxon abundance | 12 | Gomphonema olivaceum | River Diatoms |
+| 8175 | 12345 | 2019-11-21 | Alkalinity | 45 | NA | Chemistry |
 
 ## Assessment
 
@@ -37,6 +37,7 @@ Function code used to assess your input data and return an outcome.
 Code
 
 ``` r
+
 assessment_function <- function(data, metric = "TDI5LM") {
   require(dplyr)
   require(tidyr)

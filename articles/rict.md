@@ -22,9 +22,9 @@ required.
 
 A list of questions required to run this assessment.
 
-| location_id | sample_id | date_taken | question        | response | label    | parameter            |
-|:------------|:----------|:-----------|:----------------|:---------|:---------|:---------------------|
-| 206972      | 12345     | 2019-11-21 | Taxon abundance | 12       | Baetidae | River Family Inverts |
+| location_id | sample_id | date_taken | question | response | label | parameter |
+|:---|:---|:---|:---|:---|:---|:---|
+| 206972 | 12345 | 2019-11-21 | Taxon abundance | 12 | Baetidae | River Family Inverts |
 
 ## Assessment
 
@@ -33,6 +33,7 @@ Returns RICT output
 Code
 
 ``` r
+
 assessment_function <- function(data, preds = FALSE) {
   # Calculated some statistic...
   # Note, any non-standard base R library must be call using require().
@@ -310,10 +311,13 @@ assessment_function <- function(data, preds = FALSE) {
     names(data) <- tolower(names(data))
     data <- data.frame(data, check.names = TRUE)
     names(data) <- tolower(names(data))
-
     data$date_taken <- as.Date(data$date_taken)
     data$season <- season(data$date_taken)
     data <- dplyr::filter(data, season != 4)
+    # check is only winter season and return if no data
+    if(nrow(data) == 0) {
+      return(NULL)
+    }
 
     # summarise_data <- dplyr::group_by(
     #   data,

@@ -2,14 +2,14 @@
 
 ## Assessments
 
-| name                                                                                                                                |
-|:------------------------------------------------------------------------------------------------------------------------------------|
-| [Bacterial Tufts Metric](https://ecodata1.github.io/hera/articles/bacterial-tufts.md)                                               |
-| [Freshwater Macroinvertebrate Metrics](https://ecodata1.github.io/hera/articles/macroinvertebrate-metrics.md)                       |
+| name |
+|:---|
+| [Bacterial Tufts Metric](https://ecodata1.github.io/hera/articles/bacterial-tufts.md) |
 | [Rapid Assessment of Bankside Consistency with Water Body Status](https://ecodata1.github.io/hera/articles/bankside-consistency.md) |
-| [Marine Pen Fish farm Compliance](https://ecodata1.github.io/hera/articles/mpff-compliance.md)                                      |
-| [UKTAG River Assessment Method Macrophytes and Phytobenthos](https://ecodata1.github.io/hera/articles/darleq3.md)                   |
-| [RICT](https://ecodata1.github.io/hera/articles/rict.md)                                                                            |
+| [Marine Pen Fish farm Compliance](https://ecodata1.github.io/hera/articles/mpff-compliance.md) |
+| [UKTAG River Assessment Method Macrophytes and Phytobenthos](https://ecodata1.github.io/hera/articles/darleq3.md) |
+| [Freshwater Macroinvertebrate Metrics](https://ecodata1.github.io/hera/articles/macroinvertebrate-metrics.md) |
+| [RICT](https://ecodata1.github.io/hera/articles/rict.md) |
 
 ## Outputs
 
@@ -18,22 +18,6 @@
 | Bacterial Tufts           | Sewage fungus cover        |
 | Bacterial Tufts           | Sewage fungus density      |
 | Bacterial Tufts           | Bacterial Tuft Class       |
-| Macroinvertebrate Metrics | EPSI Score TL2             |
-| Macroinvertebrate Metrics | EPSI Condition TL2         |
-| Macroinvertebrate Metrics | PSI Score TL3              |
-| Macroinvertebrate Metrics | PSI Condition TL3          |
-| Macroinvertebrate Metrics | Riverfly Score             |
-| Macroinvertebrate Metrics | Riverfly NTAXA             |
-| Macroinvertebrate Metrics | Riverfly ASPT              |
-| Macroinvertebrate Metrics | SPEAR ratio TL2            |
-| Macroinvertebrate Metrics | SPEAR toxic ratio TL2      |
-| Macroinvertebrate Metrics | SPEAR class TL2            |
-| Macroinvertebrate Metrics | WHPT_SCORE                 |
-| Macroinvertebrate Metrics | WHPT_ASPT                  |
-| Macroinvertebrate Metrics | WHPT_NTAXA                 |
-| Macroinvertebrate Metrics | WHPT_P_SCORE               |
-| Macroinvertebrate Metrics | WHPT_P_ASPT                |
-| Macroinvertebrate Metrics | WHPT_P_NTAXA               |
 | Bankside Consistency      | season                     |
 | Bankside Consistency      | Reference NTAXA            |
 | Bankside Consistency      | Reference ASPT             |
@@ -74,6 +58,17 @@
 | DARLEQ3                   | CoCMPB                     |
 | DARLEQ3                   | ROM_GM                     |
 | DARLEQ3                   | Years included             |
+| Macroinvertebrate Metrics | EPSI Score TL2             |
+| Macroinvertebrate Metrics | EPSI Condition TL2         |
+| Macroinvertebrate Metrics | WHPT_SCORE                 |
+| Macroinvertebrate Metrics | WHPT_ASPT                  |
+| Macroinvertebrate Metrics | WHPT_NTAXA                 |
+| Macroinvertebrate Metrics | WHPT_P_SCORE               |
+| Macroinvertebrate Metrics | WHPT_P_ASPT                |
+| Macroinvertebrate Metrics | WHPT_P_NTAXA               |
+| Macroinvertebrate Metrics | Riverfly Score             |
+| Macroinvertebrate Metrics | Riverfly NTAXA             |
+| Macroinvertebrate Metrics | Riverfly ASPT              |
 | RICT                      | RICT Reference WHPT ASPT   |
 | RICT                      | RICT Rerference WHPT NTAXA |
 | RICT                      | RICT Rerference ARMI Score |
